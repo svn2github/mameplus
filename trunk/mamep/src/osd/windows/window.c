@@ -31,7 +31,6 @@
 #include "window.h"
 #include "video.h"
 #include "input.h"
-#include "debugwin.h"
 #include "strconv.h"
 #include "config.h"
 #include "winutf8.h"
@@ -351,10 +350,6 @@ void winwindow_process_events(running_machine &machine, int ingame, bool nodispa
 	MSG message;
 
 	assert(GetCurrentThreadId() == main_threadid);
-
-	// if we're running, disable some parts of the debugger
-	if (ingame && (machine.debug_flags & DEBUG_FLAG_OSD_ENABLED) != 0)
-		debugwin_update_during_game(machine);
 
 	// remember the last time we did this
 	last_event_check = GetTickCount();
@@ -1289,37 +1284,41 @@ LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wpar
 
 		// input events
 		case WM_MOUSEMOVE:
-			ui_input_push_mouse_move_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+			if (!wininput_should_hide_mouse())
+				ui_input_push_mouse_move_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 			break;
 
 		case WM_MOUSELEAVE:
-			ui_input_push_mouse_leave_event(window->machine(), window->target);
+			if (!wininput_should_hide_mouse())
+				ui_input_push_mouse_leave_event(window->machine(), window->target);
 			break;
 
 		case WM_LBUTTONDOWN:
-		{
-			DWORD ticks = GetTickCount();
-			ui_input_push_mouse_down_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+			if (!wininput_should_hide_mouse())
+			{
+				DWORD ticks = GetTickCount();
+				ui_input_push_mouse_down_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 
-			// check for a double-click
-			if (ticks - window->lastclicktime < GetDoubleClickTime() &&
-				GET_X_LPARAM(lparam) >= window->lastclickx - 4 && GET_X_LPARAM(lparam) <= window->lastclickx + 4 &&
-				GET_Y_LPARAM(lparam) >= window->lastclicky - 4 && GET_Y_LPARAM(lparam) <= window->lastclicky + 4)
-			{
-				window->lastclicktime = 0;
-				ui_input_push_mouse_double_click_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
-			}
-			else
-			{
-				window->lastclicktime = ticks;
-				window->lastclickx = GET_X_LPARAM(lparam);
-				window->lastclicky = GET_Y_LPARAM(lparam);
+				// check for a double-click
+				if (ticks - window->lastclicktime < GetDoubleClickTime() &&
+					GET_X_LPARAM(lparam) >= window->lastclickx - 4 && GET_X_LPARAM(lparam) <= window->lastclickx + 4 &&
+					GET_Y_LPARAM(lparam) >= window->lastclicky - 4 && GET_Y_LPARAM(lparam) <= window->lastclicky + 4)
+				{
+					window->lastclicktime = 0;
+					ui_input_push_mouse_double_click_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+				}
+				else
+				{
+					window->lastclicktime = ticks;
+					window->lastclickx = GET_X_LPARAM(lparam);
+					window->lastclicky = GET_Y_LPARAM(lparam);
+				}
 			}
 			break;
-		}
 
 		case WM_LBUTTONUP:
-			ui_input_push_mouse_up_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+			if (!wininput_should_hide_mouse())
+				ui_input_push_mouse_up_event(window->machine(), window->target, GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 			break;
 
 		case WM_CHAR:

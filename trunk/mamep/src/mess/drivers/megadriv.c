@@ -83,7 +83,7 @@ READ8_MEMBER(md_cons_state::mess_md_io_read_data_port)
 			}
 		}
 
-	//  mame_printf_debug("read io data port stage %d port %d %02x\n",mess_io_stage[portnum],portnum,retdata);
+	//  osd_printf_debug("read io data port stage %d port %d %02x\n",mess_io_stage[portnum],portnum,retdata);
 
 		retdata |= (retdata << 8);
 	}
@@ -151,7 +151,7 @@ WRITE16_MEMBER(md_cons_state::mess_md_io_write_data_port)
 		}
 	}
 	m_megadrive_io_data_regs[portnum] = data;
-	//mame_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
+	//osd_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
 }
 
 
@@ -680,12 +680,6 @@ ROM_END
 
 /****************************************** SegaCD emulation ****************************************/
 
-struct cdrom_interface scd_cdrom =
-{
-	"scd_cdrom",
-	NULL
-};
-
 static MACHINE_CONFIG_START( genesis_scd, md_cons_state )
 	MCFG_FRAGMENT_ADD( md_ntsc )
 
@@ -696,8 +690,10 @@ static MACHINE_CONFIG_START( genesis_scd, md_cons_state )
 	MCFG_SCREEN_VBLANK_DRIVER(md_cons_state, screen_eof_console)
 
 	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
+	MCFG_GFX_PALETTE("gen_vdp:palette")
 
-	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("scd_cdrom")
 
 	MCFG_SOFTWARE_LIST_ADD("cd_list","segacd")
 MACHINE_CONFIG_END
@@ -712,8 +708,10 @@ static MACHINE_CONFIG_START( md_scd, md_cons_state )
 	MCFG_SCREEN_VBLANK_DRIVER(md_cons_state, screen_eof_console)
 
 	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_EUROPE, 0)
+	MCFG_GFX_PALETTE("gen_vdp:palette")
 
-	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("scd_cdrom")
 
 	MCFG_SOFTWARE_LIST_ADD("cd_list","megacd")
 MACHINE_CONFIG_END
@@ -728,8 +726,10 @@ static MACHINE_CONFIG_START( mdj_scd, md_cons_state )
 	MCFG_SCREEN_VBLANK_DRIVER(md_cons_state, screen_eof_console)
 
 	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_JAPAN, 0)
+	MCFG_GFX_PALETTE("gen_vdp:palette")
 
-	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("scd_cdrom")
 
 	MCFG_SOFTWARE_LIST_ADD("cd_list","megacdj")
 MACHINE_CONFIG_END
@@ -738,7 +738,10 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
 
 	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
-	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
+	MCFG_GFX_PALETTE("gen_vdp:palette")
+
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("scd_cdrom")
 
 	MCFG_MACHINE_START_OVERRIDE(md_cons_state, ms_megacd)
 

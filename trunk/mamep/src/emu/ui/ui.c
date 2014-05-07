@@ -305,7 +305,7 @@ void ui_manager::setup_palette()
 	ui_transparency = machine().options().int_value(OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, machine().options().value(OPTION_UI_TRANSPARENCY));
+		osd_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, machine().options().value(OPTION_UI_TRANSPARENCY));
 		ui_transparency = 215;
 	}
 #endif /* TRANS_UI */
@@ -330,7 +330,7 @@ void ui_manager::setup_palette()
 				pal[1] < 0 || pal[1] >= 256 ||
 				pal[2] < 0 || pal[2] >= 256 )
 			{
-				mame_printf_error(_("error: invalid value for palette: %s\n"), value);
+				osd_printf_error(_("error: invalid value for palette: %s\n"), value);
 				continue;
 			}
 

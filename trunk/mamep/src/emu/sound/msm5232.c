@@ -31,7 +31,7 @@ void msm5232_device::device_start()
 
 	init(clock(), rate);
 
-	m_stream = machine().sound().stream_alloc(*this, 0, 11, rate, this);
+	m_stream = machine().sound().stream_alloc(*this, 0, 11, rate);
 
 	/* register with the save state system */
 	machine().save().register_postload(save_prepost_delegate(FUNC(msm5232_device::postload), this));
@@ -217,9 +217,9 @@ static FILE *sample[9];
 /*
     C24 = external capacity
 
-    mame_printf_debug("Time constant T=R*C =%f sec.\n",R51*C24);
-    mame_printf_debug("Cap fully charged after 5T=%f sec (sample=%f). Level=%f\n",(R51*C24)*5,(R51*C24)*5*sample_rate , VMAX*0.99326 );
-    mame_printf_debug("Cap charged after 5T=%f sec (sample=%f). Level=%20.16f\n",(R51*C24)*5,(R51*C24)*5*sample_rate ,
+    osd_printf_debug("Time constant T=R*C =%f sec.\n",R51*C24);
+    osd_printf_debug("Cap fully charged after 5T=%f sec (sample=%f). Level=%f\n",(R51*C24)*5,(R51*C24)*5*sample_rate , VMAX*0.99326 );
+    osd_printf_debug("Cap charged after 5T=%f sec (sample=%f). Level=%20.16f\n",(R51*C24)*5,(R51*C24)*5*sample_rate ,
            VMAX*(1.0-pow(2.718,-0.0748/(R51*C24))) );
 */
 #endif

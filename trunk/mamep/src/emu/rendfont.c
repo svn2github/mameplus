@@ -189,7 +189,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 	{
 		int loaded = 0;
 		astring filename_local(ui_lang_info[lang_get_langcode()].name, PATH_SEPARATOR, filename);
-//		mame_printf_warning("%s\n", filename_local);
+//		osd_printf_warning("%s\n", filename_local);
 
 	 	if (filename_local.len() > 0 && load_cached_bdf(filename_local))
 			loaded++;
@@ -695,7 +695,7 @@ bool render_font::load_bdf()
 
 			// some progress for big fonts
 			if (++charcount % 256 == 0)
-				mame_printf_warning(_("Loading BDF font... (%d characters loaded)\n"), charcount);
+				osd_printf_warning(_("Loading BDF font... (%d characters loaded)\n"), charcount);
 		}
 	}
 
@@ -866,7 +866,7 @@ bool render_font::load_cached_cmd(emu_file &file, UINT32 hash)
 
 bool render_font::save_cached(const char *filename, UINT32 hash)
 {
-	mame_printf_warning("Generating cached BDF font...\n");
+	osd_printf_warning("Generating cached BDF font...\n");
 
 	// attempt to open the file
 	emu_file file(manager().machine().options().font_path(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE);

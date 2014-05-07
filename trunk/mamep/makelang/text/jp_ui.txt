@@ -1,4 +1,4 @@
-# osd/winui/layout.c: 210 osd/winui/winui.c: 3660
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3657
 %d games
 %d ゲーム
 
@@ -198,11 +198,11 @@ Mameリリースノート(&M)
 &Picture Area\tAlt+P
 画像エリア(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3820, 7288
 &Play
 プレイ(&P)
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7242
+# osd/winui/layout.c: 208 osd/winui/winui.c: 3870, 7239
 &Play %s
 プレイ(&P) %s
 
@@ -286,7 +286,7 @@ Mameリリースノート(&M)
 &Working
 動作可(&W)
 
-# osd/winui/winui.c: 6664
+# osd/winui/winui.c: 6661
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
@@ -358,7 +358,7 @@ All
 All Games
 全アーケード
 
-# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
+# osd/winui/winui.c: 6316, 6319, 6322, 6325, 6328, 6332, 6337, 6341, 6344, 6347, 6350, 6353, 6357
 All files (*.*)
 全てのファイル (*.*)
 
@@ -482,7 +482,7 @@ BIOS options\nCustom options used by all games in the %s
 Backdrops
 バックドロップ
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 139
 Background Images
 背景画像
 
@@ -610,7 +610,7 @@ CPU
 Cabinet
 筐体
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 130
 Cabinets
 筐体
 
@@ -678,7 +678,7 @@ Colors aren't 100% accurate
 Colors:
 色数:
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 140
 Comment Files
 コメントファイル
 
@@ -730,7 +730,7 @@ Control &Panel
 Control Panel
 コンパネ
 
-# osd/winui/layout.c: 134
+# osd/winui/layout.c: 133
 Control Panels
 コントロールパネル
 
@@ -742,7 +742,7 @@ Control Type
 Control Type:
 コントロール:
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 136
 Controller Files
 コントローラ定義ファイル
 
@@ -762,15 +762,15 @@ Controllers
 Correct:
 正常:
 
-# osd/winui/winui.c: 4797
+# osd/winui/winui.c: 4794
 Could not create '%s'
 '%s' が作成できません
 
-# osd/winui/winui.c: 6565
+# osd/winui/winui.c: 6562
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# osd/winui/winui.c: 6677
+# osd/winui/winui.c: 6674
 Could not open '%s' as a valid savestate file.
 '%s'は正常なステートとして開けません。
 
@@ -778,7 +778,7 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 ゲーム画面外をカット
 
-# osd/winui/layout.c: 143
+# osd/winui/layout.c: 142
 Crosshair Files
 十\字線ファイル
 
@@ -798,7 +798,7 @@ Cursor text (floating)
 Cursor text (selected)
 カーソ\ル文字 (選択時)
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4647, 4675
 Custom
 カスタム
 
@@ -1110,7 +1110,7 @@ Error
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
-# osd/winui/winui.c: 7740
+# osd/winui/winui.c: 7737
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
@@ -1126,7 +1126,7 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 143
 External Folder List
 外部フォルダリスト
 
@@ -1170,7 +1170,7 @@ Flip screen upside-down
 Flyer
 広告
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 129
 Flyers
 広告
 
@@ -1178,7 +1178,7 @@ Flyers
 Fold&er List\tAlt+D
 フォルダリスト(&E)\tAlt+D
 
-# osd/winui/layout.c: 142
+# osd/winui/layout.c: 141
 Font Files
 フォントファイル
 
@@ -1242,7 +1242,7 @@ Game protection isn't fully emulated
 Game requires external artwork files
 ゲームは外部のアートワークファイルが必要です
 
-# osd/winui/winui.c: 3456
+# osd/winui/winui.c: 3453
 Game search %d%% complete
 ゲームの検索 %d%% 完了
 
@@ -1294,7 +1294,7 @@ Microsoft's DirectX Webページを表\示
 Grouped
 グループ化
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 137
 Hard Drive Difference
 ハードディスク差分ファイル
 
@@ -1310,7 +1310,7 @@ Help
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# osd/winui/layout.c: 149
+# osd/winui/layout.c: 148
 High Scores
 ハイスコア
 
@@ -1322,7 +1322,7 @@ History
 Homebrew
 自家製
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5681
 Horizontal
 横型
 
@@ -1338,11 +1338,11 @@ How cheats work
 INTERFACE OPTIONS
 インターフェースオプション
 
-# osd/winui/layout.c: 146
+# osd/winui/layout.c: 145
 IPS Files
 IPSファイル
 
-# osd/winui/layout.c: 139
+# osd/winui/layout.c: 138
 Icons
 アイコン
 
@@ -1350,7 +1350,7 @@ Icons
 Image Enhancement
 イメージを向上
 
-# osd/winui/winui.c: 5395
+# osd/winui/winui.c: 5392
 Image Files (*.png)
 画像ファイル (*.png)
 
@@ -1390,15 +1390,15 @@ INIファイル
 Input Files (*.inp)
 再生ファイル (*.inp)
 
-# osd/winui/winui.c: 6589
+# osd/winui/winui.c: 6586
 Input file format version mismatch
 入力ファイルの形式が間違っています
 
-# osd/winui/winui.c: 6584
+# osd/winui/winui.c: 6581
 Input file invalid or in an older, unsupported format
 入力ファイルは無効であるかサポートされない古い形式です
 
-# osd/winui/winui.c: 6578
+# osd/winui/winui.c: 6575
 Input file is corrupt or invalid (missing header)
 入力ファイルが壊れているか無効です(ヘッダが見つかりません)
 
@@ -1478,7 +1478,7 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# osd/winui/layout.c: 154
+# osd/winui/layout.c: 153
 Language Files
 言語ファイル
 
@@ -1514,7 +1514,7 @@ GUIとMAMEコアの言語を切り替えます
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 MAMEは妥当性チェックに失敗しました。  GUIは動作しますが、エミュレーションの実行に失敗します。
 
-# osd/winui/winui.c: 6319
+# osd/winui/winui.c: 6316
 MAME input files (*.inp,*.zip)
 MAME再生ファイル (*.inp,*.zip)
 
@@ -1522,7 +1522,7 @@ MAME再生ファイル (*.inp,*.zip)
 MAME release notes
 MAMEリリースノートを表\示します
 
-# osd/winui/winui.c: 6322
+# osd/winui/winui.c: 6319
 MAME savestate files (*.sta)
 MAMEステートファイル (*.sta)
 
@@ -1566,17 +1566,13 @@ Manufacturer
 Marquee
 マーキー
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 131
 Marquees
 マーキー
 
 # osd/winui/layout.c: 96
 Mechanical
 機械的
-
-# osd/winui/layout.c: 129
-Memory Card
-メモリカード
 
 # osd/winui/mameui.rc: 877
 Miscellaneous
@@ -1614,7 +1610,7 @@ NAVIGATION JOYSTICK CODES
 NAVIGATION KEY CODES
 ナビゲーションキーコード
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 135
 NVRAM
 NVRAMファイル
 
@@ -1622,7 +1618,7 @@ NVRAMファイル
 New game changes
 新しいゲームの変更点を表\示します
 
-# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5699, 5733
+# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5696, 5730
 No
 いいえ
 
@@ -1638,7 +1634,7 @@ No Dump
 No PCB Info available for this game.
 このゲームにPCB情報がありません。
 
-# osd/winui/winui.c: 3850
+# osd/winui/winui.c: 3847
 No Selection
 選択されていません
 
@@ -1726,11 +1722,11 @@ PCB
 PCB Info
 PCB情報
 
-# osd/winui/layout.c: 152
+# osd/winui/layout.c: 151
 PCB Info Files
 PCB情報ファイル
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 134
 PCBs
 PCB
 
@@ -1846,19 +1842,19 @@ Positional device
 Pr&operties
 プロパティ(&O)
 
-# osd/winui/winui.c: 3884, 7256
+# osd/winui/winui.c: 3881, 7253
 Propert&ies for %s
 %sのプロパティ(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3827, 7298
 Propert&ies for Driver
 ドライバのプロパティ(&I)
 
-# osd/winui/winui.c: 3896, 7270
+# osd/winui/winui.c: 3893, 7267
 Properties &for %s BIOS
 %s BIOSのプロパティ(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3834, 3899, 7273, 7311
 Properties &for BIOS
 BIOSのプロパティ(&F)
 
@@ -1894,11 +1890,11 @@ ROMが見つかりません
 Randomly select a game.
 ゲームをランダムに選択します
 
-# osd/winui/layout.c: 82 osd/winui/winui.c: 5724
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 ラスタ
 
-# osd/winui/winui.c: 3593
+# osd/winui/winui.c: 3590
 Ready
 起動中
 
@@ -2050,7 +2046,7 @@ Scale screen
 Screen
 画面
 
-# osd/winui/winui.c: 3415
+# osd/winui/winui.c: 3412
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
@@ -2154,7 +2150,7 @@ Select Story tab
 Select Title tab
 タイトルタブの選択
 
-# osd/winui/winui.c: 5404
+# osd/winui/winui.c: 5401
 Select a Background Image
 背景画像を選択
 
@@ -2534,7 +2530,7 @@ Throttle
 Title
 タイトル
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 132
 Titles
 タイトル画面
 
@@ -2698,7 +2694,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 ユーザインターフェース\n\n
 
-# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5722
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5719
 Vector
 ベクタ
 
@@ -2718,7 +2714,7 @@ Vector options\nCustom options used by all games in the Vector
 Version 9
 バージョン 9
 
-# osd/winui/layout.c: 81 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5681
 Vertical
 縦型
 
@@ -2770,7 +2766,7 @@ Wrong Colors
 Year
 製造年
 
-# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5697, 5731
+# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5694, 5728
 Yes
 はい
 
@@ -2846,43 +2842,43 @@ by S&amples
 by T&rackball
 トラックボール(&R)
 
-# osd/winui/winui.c: 6350
+# osd/winui/winui.c: 6347
 cheats (*.dat)
 チートファイル (*.dat)
 
-# osd/winui/winui.c: 6340
+# osd/winui/winui.c: 6337
 gamelists (*.lst)
 ゲームリスト (*.lst)
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6350
 history (*.dat)
 歴史ファイル (*.dat)
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6353
 mameinfo (*.dat)
 MAME情報ファイル (*.dat)
 
-# osd/winui/winui.c: 6344
+# osd/winui/winui.c: 6341
 maps (*.map,*.txt)
 マップファイル (*.map,*.txt)
 
-# osd/winui/winui.c: 6347
+# osd/winui/winui.c: 6344
 scripts (*.txt,*.dat)
 スクリプト (*.txt,*.dat)
 
-# osd/winui/winui.c: 6325
+# osd/winui/winui.c: 6322
 sounds (*.wav)
 サウンドファイル (*.wav)
 
-# osd/winui/winui.c: 6360
+# osd/winui/winui.c: 6357
 story (*.dat)
 ストーリーファイル (*.dat)
 
-# osd/winui/winui.c: 6331
+# osd/winui/winui.c: 6328
 videos (*.avi)
 動画ファイル (*.avi)
 
-# osd/winui/winui.c: 6328
+# osd/winui/winui.c: 6325
 videos (*.mng)
 動画ファイル (*.mng)
 
@@ -2898,7 +2894,7 @@ Christopher Kirmse and the MAMEUI team
 Copyright (C) 1997-2011 The MAME Team
 
 
-# osd/winui/winui.c: 3513, 3537
+# osd/winui/winui.c: 3510, 3534
 Invalid Button Index
 
 
@@ -2914,7 +2910,7 @@ MAMEUI has detected an old version of comctl32.dll\n\nGame Properties, many conf
 MAMEUI version by
 
 
-# osd/winui/winui.c: 3518
+# osd/winui/winui.c: 3515
 Modify 'The'
 
 

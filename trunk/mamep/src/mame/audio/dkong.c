@@ -1330,25 +1330,6 @@ ADDRESS_MAP_END
 
 /*************************************
  *
- *  Sound interfaces
- *
- *************************************/
-
-static const nesapu_interface nes_interface_1 = { "n2a03a" };
-static const nesapu_interface nes_interface_2 = { "n2a03b" };
-
-const tms5110_interface tms_interface = {
-	NULL,
-	NULL,
-	DEVCB_DEVICE_LINE_MEMBER("m58819", tms6100_device, tms6100_m0_w),
-	DEVCB_DEVICE_LINE_MEMBER("m58819", tms6100_device, tms6100_m1_w),
-	DEVCB_DEVICE_MEMBER("m58819", tms6100_device, tms6100_addr_w),
-	DEVCB_DEVICE_LINE_MEMBER("m58819", tms6100_device, tms6100_data_r),
-	DEVCB_DEVICE_LINE_MEMBER("m58819", tms6100_device, tms6100_romclock_w)
-};
-
-/*************************************
- *
  *  Machine driver
  *
  *************************************/
@@ -1411,9 +1392,12 @@ MACHINE_CONFIG_DERIVED( radarscp1_audio, radarscp_audio )
 	MCFG_DEVICE_ADD("m58819", M58819, 0)
 
 	MCFG_SOUND_ADD("tms", M58817, XTAL_640kHz)
-	MCFG_DEVICE_CONFIG(tms_interface)
+	MCFG_TMS5110_M0_CB(DEVWRITELINE("m58819", tms6100_device, tms6100_m0_w))
+	MCFG_TMS5110_M1_CB(DEVWRITELINE("m58819", tms6100_device, tms6100_m1_w))
+	MCFG_TMS5110_ADDR_CB(DEVWRITE8("m58819", tms6100_device, tms6100_addr_w))
+	MCFG_TMS5110_DATA_CB(DEVREADLINE("m58819", tms6100_device, tms6100_data_r))
+	MCFG_TMS5110_ROMCLK_CB(DEVWRITELINE("m58819", tms6100_device, tms6100_romclock_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_FRAGMENT( dkongjr_audio )
@@ -1469,11 +1453,11 @@ MACHINE_CONFIG_FRAGMENT( dkong3_audio )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("nesapu1", NES_APU, N2A03_DEFAULTCLOCK)
-	MCFG_SOUND_CONFIG(nes_interface_1)
+	MCFG_NES_APU_CPU("n2a03a")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("nesapu2", NES_APU, N2A03_DEFAULTCLOCK)
-	MCFG_SOUND_CONFIG(nes_interface_2)
+	MCFG_NES_APU_CPU("n2a03b")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 MACHINE_CONFIG_END

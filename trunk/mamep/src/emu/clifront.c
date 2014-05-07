@@ -295,7 +295,7 @@ int cli_frontend::execute(int argc, char **argv)
 #ifdef MAME_DEBUG
 	// TODO: this will only be printed when the executable is exited and not when selecting a new set via the internal UI - it needs to be placed somewhere else where it can be printed and reset after each run (check Average Speed location)
 	if (*(m_options.command()) == 0)
-		mame_printf_info("%d tagmap lookups\n", g_tagmap_finds);
+		osd_printf_info("%d tagmap lookups\n", g_tagmap_finds);
 #endif
 
 	return m_result;
@@ -333,12 +333,12 @@ void cli_frontend::listfull(const char *gamename)
 		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "No matching games found for '%s'", gamename);
 
 	// print the header
-	mame_printf_info(_("Name:             Description:\n"));
+	osd_printf_info(_("Name:             Description:\n"));
 
 	// iterate through drivers and output the info
 	while (drivlist.next())
 		if ((drivlist.driver().flags & GAME_NO_STANDALONE) == 0)
-			mame_printf_info("%-18s\"%s\"\n", drivlist.driver().name, _LST(drivlist.driver().description));
+			osd_printf_info("%-18s\"%s\"\n", drivlist.driver().name, _LST(drivlist.driver().description));
 }
 
 
@@ -357,7 +357,7 @@ void cli_frontend::listsource(const char *gamename)
 	// iterate through drivers and output the info
 	astring filename;
 	while (drivlist.next())
-		mame_printf_info("%-16s %s\n", drivlist.driver().name, core_filename_extract_base(filename, drivlist.driver().source_file).cstr());
+		osd_printf_info("%-16s %s\n", drivlist.driver().name, core_filename_extract_base(filename, drivlist.driver().source_file).cstr());
 }
 
 
@@ -389,12 +389,12 @@ void cli_frontend::listclones(const char *gamename)
 		if (original_count == 0)
 			throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "No matching games found for '%s'", gamename);
 		else
-			mame_printf_info(_("Found %d matches for '%s' but none were clones\n"), drivlist.count(), gamename);
+			osd_printf_info(_("Found %d matches for '%s' but none were clones\n"), drivlist.count(), gamename);
 		return;
 	}
 
 	// print the header
-	mame_printf_info(_("Name:            Clone of:\n"));
+	osd_printf_info(_("Name:            Clone of:\n"));
 
 	// iterate through drivers and output the info
 	drivlist.reset();
@@ -402,7 +402,7 @@ void cli_frontend::listclones(const char *gamename)
 	{
 		int clone_of = drivlist.clone();
 		if (clone_of != -1 && (drivlist.driver(clone_of).flags & GAME_IS_BIOS_ROOT) == 0)
-			mame_printf_info("%-16s %-8s\n", drivlist.driver().name, drivlist.driver(clone_of).name);
+			osd_printf_info("%-16s %-8s\n", drivlist.driver().name, drivlist.driver(clone_of).name);
 	}
 }
 
@@ -439,7 +439,7 @@ void cli_frontend::listbrothers(const char *gamename)
 	}
 
 	// print the header
-	mame_printf_info(_("Source file:     Name:            Parent:\n"));
+	osd_printf_info(_("Source file:     Name:            Parent:\n"));
 
 	// output the entries found
 	drivlist.reset();
@@ -447,7 +447,7 @@ void cli_frontend::listbrothers(const char *gamename)
 	while (drivlist.next())
 	{
 		int clone_of = drivlist.clone();
-		mame_printf_info("%-16s %-16s %-16s\n", core_filename_extract_base(filename, drivlist.driver().source_file).cstr(), drivlist.driver().name, (clone_of == -1 ? "" : drivlist.driver(clone_of).name));
+		osd_printf_info("%-16s %-16s %-16s\n", core_filename_extract_base(filename, drivlist.driver().source_file).cstr(), drivlist.driver().name, (clone_of == -1 ? "" : drivlist.driver(clone_of).name));
 	}
 }
 
@@ -475,7 +475,7 @@ void cli_frontend::listcrc(const char *gamename)
 					// if we have a CRC, display it
 					UINT32 crc;
 					if (hash_collection(ROM_GETHASHDATA(rom)).crc(crc))
-						mame_printf_info("%08x %-16s \t %-8s \t %s\n", crc, ROM_GETNAME(rom), device->shortname(), device->name());
+						osd_printf_info("%08x %-16s \t %-8s \t %s\n", crc, ROM_GETNAME(rom), device->shortname(), device->name());
 				}
 	}
 }
@@ -500,9 +500,9 @@ void cli_frontend::listroms(const char *gamename)
 	{
 		// print a header
 		if (!first)
-			mame_printf_info("\n");
+			osd_printf_info("\n");
 		first = false;
-		mame_printf_info(_("ROMs required for driver \"%s\".\n"
+		osd_printf_info(_("ROMs required for driver \"%s\".\n"
 				"Name                    Size Checksum\n"), drivlist.driver().name);
 
 		// iterate through roms
@@ -518,27 +518,27 @@ void cli_frontend::listroms(const char *gamename)
 
 					// start with the name
 					const char *name = ROM_GETNAME(rom);
-					mame_printf_info("%-20s ", name);
+					osd_printf_info("%-20s ", name);
 
 					// output the length next
 					if (length >= 0)
-						mame_printf_info("%7d", length);
+						osd_printf_info("%7d", length);
 					else
-						mame_printf_info("       ");
+						osd_printf_info("       ");
 
 					// output the hash data
 					hash_collection hashes(ROM_GETHASHDATA(rom));
 					if (!hashes.flag(hash_collection::FLAG_NO_DUMP))
 					{
 						if (hashes.flag(hash_collection::FLAG_BAD_DUMP))
-							mame_printf_info(" BAD");
-						mame_printf_info(" %s", hashes.macro_string(tempstr));
+							osd_printf_info(" BAD");
+						osd_printf_info(" %s", hashes.macro_string(tempstr));
 					}
 					else
-						mame_printf_info(_(" NO GOOD DUMP KNOWN"));
+						osd_printf_info(_(" NO GOOD DUMP KNOWN"));
 
 					// end with a CR
-					mame_printf_info("\n");
+					osd_printf_info("\n");
 				}
 	}
 }
@@ -567,16 +567,16 @@ void cli_frontend::listsamples(const char *gamename)
 
 		// print a header
 		if (!first)
-			mame_printf_info("\n");
+			osd_printf_info("\n");
 		first = false;
-		mame_printf_info(_("Samples required for driver \"%s\".\n"), drivlist.driver().name);
+		osd_printf_info(_("Samples required for driver \"%s\".\n"), drivlist.driver().name);
 
 		// iterate over samples devices and print the samples from each one
 		for (samples_device *device = iter.first(); device != NULL; device = iter.next())
 		{
 			samples_iterator sampiter(*device);
 			for (const char *samplename = sampiter.first(); samplename != NULL; samplename = sampiter.next())
-				mame_printf_info("%s\n", samplename);
+				osd_printf_info("%s\n", samplename);
 		}
 	}
 }
@@ -822,30 +822,30 @@ void cli_frontend::verifyroms(const char *gamename)
 			// output the summary of the audit
 			astring summary_string;
 			auditor.summarize(drivlist.driver().name,&summary_string);
-			mame_printf_info("%s", summary_string.cstr());
+			osd_printf_info("%s", summary_string.cstr());
 
 			// output the name of the driver and its clone
-			mame_printf_info("romset %s ", drivlist.driver().name);
+			osd_printf_info("romset %s ", drivlist.driver().name);
 			int clone_of = drivlist.clone();
 			if (clone_of != -1)
-				mame_printf_info("[%s] ", drivlist.driver(clone_of).name);
+				osd_printf_info("[%s] ", drivlist.driver(clone_of).name);
 
 			// switch off of the result
 			switch (summary)
 			{
 				case media_auditor::INCORRECT:
-					mame_printf_info(_("is bad\n"));
+					osd_printf_info(_("is bad\n"));
 					incorrect++;
 					break;
 
 				case media_auditor::CORRECT:
-					mame_printf_info(_("is good\n"));
+					osd_printf_info(_("is good\n"));
 					correct++;
 					break;
 
 				case media_auditor::BEST_AVAILABLE:
 				case media_auditor::NONE_NEEDED:
-					mame_printf_info(_("is best available\n"));
+					osd_printf_info(_("is best available\n"));
 					correct++;
 					break;
 
@@ -882,26 +882,26 @@ void cli_frontend::verifyroms(const char *gamename)
 							// output the summary of the audit
 							astring summary_string;
 							auditor.summarize(dev->shortname(),&summary_string);
-							mame_printf_info("%s", summary_string.cstr());
+							osd_printf_info("%s", summary_string.cstr());
 
 							// display information about what we discovered
-							mame_printf_info("romset %s ", dev->shortname());
+							osd_printf_info("romset %s ", dev->shortname());
 
 							// switch off of the result
 							switch (summary)
 							{
 								case media_auditor::INCORRECT:
-									mame_printf_info(_("is bad\n"));
+									osd_printf_info(_("is bad\n"));
 									incorrect++;
 									break;
 
 								case media_auditor::CORRECT:
-									mame_printf_info(_("is good\n"));
+									osd_printf_info(_("is good\n"));
 									correct++;
 									break;
 
 								case media_auditor::BEST_AVAILABLE:
-									mame_printf_info(_("is best available\n"));
+									osd_printf_info(_("is best available\n"));
 									correct++;
 									break;
 
@@ -947,26 +947,26 @@ void cli_frontend::verifyroms(const char *gamename)
 									// output the summary of the audit
 									astring summary_string;
 									auditor.summarize(dev->shortname(),&summary_string);
-									mame_printf_info("%s", summary_string.cstr());
+									osd_printf_info("%s", summary_string.cstr());
 
 									// display information about what we discovered
-									mame_printf_info("romset %s ", dev->shortname());
+									osd_printf_info("romset %s ", dev->shortname());
 
 									// switch off of the result
 									switch (summary)
 									{
 										case media_auditor::INCORRECT:
-											mame_printf_info(_("is bad\n"));
+											osd_printf_info(_("is bad\n"));
 											incorrect++;
 											break;
 
 										case media_auditor::CORRECT:
-											mame_printf_info(_("is good\n"));
+											osd_printf_info(_("is good\n"));
 											correct++;
 											break;
 
 										case media_auditor::BEST_AVAILABLE:
-											mame_printf_info(_("is best available\n"));
+											osd_printf_info(_("is best available\n"));
 											correct++;
 											break;
 
@@ -1005,7 +1005,7 @@ void cli_frontend::verifyroms(const char *gamename)
 	{
 		if (incorrect > 0)
 			throw emu_fatalerror(MAMERR_MISSING_FILES, "%d romsets found, %d were OK.\n", correct + incorrect, correct);
-		mame_printf_info(_("%d romsets found, %d were OK.\n"), correct, correct);
+		osd_printf_info(_("%d romsets found, %d were OK.\n"), correct, correct);
 	}
 }
 
@@ -1044,29 +1044,29 @@ void cli_frontend::verifysamples(const char *gamename)
 			// output the summary of the audit
 			astring summary_string;
 			auditor.summarize(drivlist.driver().name,&summary_string);
-			mame_printf_info("%s", summary_string.cstr());
+			osd_printf_info("%s", summary_string.cstr());
 
 			// output the name of the driver and its clone
-			mame_printf_info(_("sampleset %s "), drivlist.driver().name);
+			osd_printf_info(_("sampleset %s "), drivlist.driver().name);
 			int clone_of = drivlist.clone();
 			if (clone_of != -1)
-				mame_printf_info("[%s] ", drivlist.driver(clone_of).name);
+				osd_printf_info("[%s] ", drivlist.driver(clone_of).name);
 
 			// switch off of the result
 			switch (summary)
 			{
 				case media_auditor::INCORRECT:
-					mame_printf_info(_("is bad\n"));
+					osd_printf_info(_("is bad\n"));
 					incorrect++;
 					break;
 
 				case media_auditor::CORRECT:
-					mame_printf_info(_("is good\n"));
+					osd_printf_info(_("is good\n"));
 					correct++;
 					break;
 
 				case media_auditor::BEST_AVAILABLE:
-					mame_printf_info(_("is best available\n"));
+					osd_printf_info(_("is best available\n"));
 					correct++;
 					break;
 
@@ -1097,7 +1097,7 @@ void cli_frontend::verifysamples(const char *gamename)
 	{
 		if (incorrect > 0)
 			throw emu_fatalerror(MAMERR_MISSING_FILES, "%d samplesets found, %d were OK.\n", correct + incorrect, correct);
-		mame_printf_info(_("%d samplesets found, %d were OK.\n"), correct, correct);
+		osd_printf_info(_("%d samplesets found, %d were OK.\n"), correct, correct);
 	}
 }
 #define SOFTLIST_XML_BEGIN "<?xml version=\"1.0\"?>\n" \
@@ -1363,26 +1363,26 @@ void cli_frontend::verifysoftware(const char *gamename)
 								// output the summary of the audit
 								astring summary_string;
 								auditor.summarize(swinfo->shortname(), &summary_string);
-								mame_printf_info("%s", summary_string.cstr());
+								osd_printf_info("%s", summary_string.cstr());
 
 								// display information about what we discovered
-								mame_printf_info("romset %s:%s ", swlistdev->list_name(), swinfo->shortname());
+								osd_printf_info("romset %s:%s ", swlistdev->list_name(), swinfo->shortname());
 
 								// switch off of the result
 								switch (summary)
 								{
 									case media_auditor::INCORRECT:
-										mame_printf_info(_("is bad\n"));
+										osd_printf_info(_("is bad\n"));
 										incorrect++;
 										break;
 
 									case media_auditor::CORRECT:
-										mame_printf_info(_("is good\n"));
+										osd_printf_info(_("is good\n"));
 										correct++;
 										break;
 
 									case media_auditor::BEST_AVAILABLE:
-										mame_printf_info(_("is best available\n"));
+										osd_printf_info(_("is best available\n"));
 										correct++;
 										break;
 
@@ -1411,7 +1411,7 @@ void cli_frontend::verifysoftware(const char *gamename)
 	{
 		if (incorrect > 0)
 			throw emu_fatalerror(MAMERR_MISSING_FILES, "%d romsets found in %d software lists, %d were OK.\n", correct + incorrect, nrlists, correct);
-		mame_printf_info("%d romsets found in %d software lists, %d romsets were OK.\n", correct, nrlists, correct);
+		osd_printf_info("%d romsets found in %d software lists, %d romsets were OK.\n", correct, nrlists, correct);
 	}
 
 }
@@ -1431,7 +1431,7 @@ void cli_frontend::getsoftlist(const char *gamename)
 	{
 		software_list_device_iterator iter(drivlist.config().root_device());
 		for (software_list_device *swlistdev = iter.first(); swlistdev != NULL; swlistdev = iter.next())
-			if (core_strwildcmp(swlistdev->list_name(), gamename) == 0 && list_map.add(swlistdev->list_name(), 0, false) != TMERR_DUPLICATE)
+			if (core_strwildcmp(gamename, swlistdev->list_name()) == 0 && list_map.add(swlistdev->list_name(), 0, false) != TMERR_DUPLICATE)
 				if (swlistdev->first_software_info() != NULL)
 				{
 					if (isfirst) { fprintf( out, SOFTLIST_XML_BEGIN); isfirst = FALSE; }
@@ -1464,7 +1464,7 @@ void cli_frontend::verifysoftlist(const char *gamename)
 	{
 		software_list_device_iterator iter(drivlist.config().root_device());
 		for (software_list_device *swlistdev = iter.first(); swlistdev != NULL; swlistdev = iter.next())
-			if (core_strwildcmp(swlistdev->list_name(), gamename) == 0 && list_map.add(swlistdev->list_name(), 0, false) != TMERR_DUPLICATE)
+			if (core_strwildcmp(gamename, swlistdev->list_name()) == 0 && list_map.add(swlistdev->list_name(), 0, false) != TMERR_DUPLICATE)
 				if (swlistdev->first_software_info() != NULL)
 				{
 					matched++;
@@ -1485,26 +1485,26 @@ void cli_frontend::verifysoftlist(const char *gamename)
 							// output the summary of the audit
 							astring summary_string;
 							auditor.summarize(swinfo->shortname(), &summary_string);
-							mame_printf_info("%s", summary_string.cstr());
+							osd_printf_info("%s", summary_string.cstr());
 
 							// display information about what we discovered
-							mame_printf_info("romset %s:%s ", swlistdev->list_name(), swinfo->shortname());
+							osd_printf_info("romset %s:%s ", swlistdev->list_name(), swinfo->shortname());
 
 							// switch off of the result
 							switch (summary)
 							{
 								case media_auditor::INCORRECT:
-									mame_printf_info(_("is bad\n"));
+									osd_printf_info(_("is bad\n"));
 									incorrect++;
 									break;
 
 								case media_auditor::CORRECT:
-									mame_printf_info(_("is good\n"));
+									osd_printf_info(_("is good\n"));
 									correct++;
 									break;
 
 								case media_auditor::BEST_AVAILABLE:
-									mame_printf_info(_("is best available\n"));
+									osd_printf_info(_("is best available\n"));
 									correct++;
 									break;
 
@@ -1533,7 +1533,7 @@ void cli_frontend::verifysoftlist(const char *gamename)
 	{
 		if (incorrect > 0)
 			throw emu_fatalerror(MAMERR_MISSING_FILES, "%d romsets found in %d software lists, %d were OK.\n", correct + incorrect, matched, correct);
-		mame_printf_info("%d romsets found in %d software lists, %d romsets were OK.\n", correct, matched, correct);
+		osd_printf_info("%d romsets found in %d software lists, %d romsets were OK.\n", correct, matched, correct);
 	}
 }
 
@@ -1547,7 +1547,7 @@ void cli_frontend::romident(const char *filename)
 	media_identifier ident(m_options);
 
 	// identify the file, then output results
-	mame_printf_info(_("Identifying %s....\n"), filename);
+	osd_printf_info(_("Identifying %s....\n"), filename);
 	ident.identify(filename);
 
 	// return the appropriate error code
@@ -1606,27 +1606,27 @@ void cli_frontend::listgames(const char *gamename)
 		{
 			char name[200];
 
-			mame_printf_info("%-5s%-36s ", drivlist.driver().year, _MANUFACT(drivlist.driver().manufacturer));
+			osd_printf_info("%-5s%-36s ", drivlist.driver().year, _MANUFACT(drivlist.driver().manufacturer));
 
 			if (lang_message_is_enabled(UI_MSG_LIST))
 			{
 				strcpy(name, _LST(drivlist.driver().description));
-				mame_printf_info("\"%s\"\n", name);
+				osd_printf_info("\"%s\"\n", name);
 				continue;
 			}
 
 			namecopy(name, drivlist.driver().description);
-			mame_printf_info("\"%s",name);
+			osd_printf_info("\"%s",name);
 
 			/* print the additional description only if we are listing clones */
 			{
 				const char *pdest = strstr(drivlist.driver().description, " (");
 
 				if (pdest != NULL && pdest > drivlist.driver().description)
-					mame_printf_info("%s", pdest);
+					osd_printf_info("%s", pdest);
 			}
 
-			mame_printf_info("\"\n");
+			osd_printf_info("\"\n");
 
 			count++;
 		}
@@ -1659,7 +1659,7 @@ void cli_frontend::execute_commands(const char *exename)
 	{
 		astring helpstring;
 		emulator_info::printf_usage(exename, emulator_info::get_gamenoun());
-		mame_printf_info(_("\n\nOptions:\n%s"), m_options.output_help(helpstring));
+		osd_printf_info(_("\n\nOptions:\n%s"), m_options.output_help(helpstring));
 		return;
 	}
 
@@ -1761,10 +1761,10 @@ void cli_frontend::execute_commands(const char *exename)
 
 void cli_frontend::display_help()
 {
-	mame_printf_info(_("%s v%s - %s\n%s\n\n"), emulator_info::get_applongname(),build_version,emulator_info::get_fulllongname(),emulator_info::get_copyright_info());
-	mame_printf_info("%s\n", emulator_info::get_disclaimer());
+	osd_printf_info(_("%s v%s - %s\n%s\n\n"), emulator_info::get_applongname(),build_version,emulator_info::get_fulllongname(),emulator_info::get_copyright_info());
+	osd_printf_info("%s\n", emulator_info::get_disclaimer());
 	emulator_info::printf_usage(emulator_info::get_appname(),emulator_info::get_gamenoun());
-	mame_printf_info(_("\n\n"
+	osd_printf_info(_("\n\n"
 			"        %s -showusage    for a brief list of options\n"
 			"        %s -showconfig   for a list of configuration options\n"
 			"        %s -listmedia    for a full list of supported media\n"
@@ -1909,7 +1909,7 @@ void media_identifier::identify_file(const char *name)
 	{
 		// output the name
 		astring basename;
-		mame_printf_info("%-20s", core_filename_extract_base(basename, name).cstr());
+		osd_printf_info("%-20s", core_filename_extract_base(basename, name).cstr());
 		m_total++;
 
 		// attempt to open as a CHD; fail if not
@@ -1917,7 +1917,7 @@ void media_identifier::identify_file(const char *name)
 		chd_error err = chd.open(name);
 		if (err != CHDERR_NONE)
 		{
-			mame_printf_info(_("NOT A CHD\n"));
+			osd_printf_info(_("NOT A CHD\n"));
 			m_nonroms++;
 			return;
 		}
@@ -1925,7 +1925,7 @@ void media_identifier::identify_file(const char *name)
 		// error on writable CHDs
 		if (!chd.compressed())
 		{
-			mame_printf_info(_("is a writeable CHD\n"));
+			osd_printf_info(_("is a writeable CHD\n"));
 			return;
 		}
 
@@ -1937,7 +1937,7 @@ void media_identifier::identify_file(const char *name)
 		// determine whether this file exists
 		int found = find_by_hash(hashes, chd.logical_bytes());
 		if (found == 0)
-			mame_printf_info(_("NO MATCH\n"));
+			osd_printf_info(_("NO MATCH\n"));
 		else
 			m_matches++;
 	}
@@ -1985,7 +1985,7 @@ void media_identifier::identify_data(const char *name, const UINT8 *data, int le
 	// output the name
 	m_total++;
 	astring basename;
-	mame_printf_info("%-20s", core_filename_extract_base(basename, name).cstr());
+	osd_printf_info("%-20s", core_filename_extract_base(basename, name).cstr());
 
 	// see if we can find a match in the ROMs
 	int found = find_by_hash(hashes, length);
@@ -1996,13 +1996,13 @@ void media_identifier::identify_data(const char *name, const UINT8 *data, int le
 		// if not a power of 2, assume it is a non-ROM file
 		if ((length & (length - 1)) != 0)
 		{
-			mame_printf_info(_("NOT A ROM\n"));
+			osd_printf_info(_("NOT A ROM\n"));
 			m_nonroms++;
 		}
 
 		// otherwise, it's just not a match
 		else
-			mame_printf_info(_("NO MATCH\n"));
+			osd_printf_info(_("NO MATCH\n"));
 	}
 
 	// if we did find it, count it as a match
@@ -2037,8 +2037,8 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 
 						// output information about the match
 						if (found)
-							mame_printf_info("                    ");
-						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), m_drivlist.driver().name, _LST(m_drivlist.driver().description));
+							osd_printf_info("                    ");
+						osd_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), m_drivlist.driver().name, _LST(m_drivlist.driver().description));
 						found++;
 					}
 				}
@@ -2059,8 +2059,8 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 
 								// output information about the match
 								if (found)
-									mame_printf_info("                    ");
-								mame_printf_info("= %s%-20s  %s:%s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), swlistdev->list_name(), swinfo->shortname(), swinfo->longname());
+									osd_printf_info("                    ");
+								osd_printf_info("= %s%-20s  %s:%s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), swlistdev->list_name(), swinfo->shortname(), swinfo->longname());
 								found++;
 							}
 						}
@@ -2091,7 +2091,7 @@ void setup_language(emu_options &options)
 		set_osdcore_acp(ui_lang_info[langcode].codepage);
 
 		if (core_stricmp(langname, "auto"))
-			mame_printf_warning("Invalid language value %s; reverting to %s\n",
+			osd_printf_warning("Invalid language value %s; reverting to %s\n",
 		                langname, ui_lang_info[langcode].description);
 	}
 

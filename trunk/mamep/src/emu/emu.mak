@@ -56,7 +56,6 @@ EMUOBJS = \
 	$(EMUOBJ)/config.o \
 	$(EMUOBJ)/crsshair.o \
 	$(EMUOBJ)/debugger.o \
-	$(EMUOBJ)/delegate.o \
 	$(EMUOBJ)/devdelegate.o \
 	$(EMUOBJ)/devcb.o \
 	$(EMUOBJ)/devcb2.o \
@@ -125,7 +124,6 @@ EMUOBJS = \
 	$(EMUOBJ)/ui/filesel.o \
 	$(EMUOBJ)/ui/imgcntrl.o \
 	$(EMUOBJ)/ui/imginfo.o \
-	$(EMUOBJ)/ui/bbcontrl.o \
 	$(EMUOBJ)/ui/barcode.o \
 	$(EMUOBJ)/ui/tapectrl.o \
 	$(EMUOBJ)/ui/viewgfx.o \
@@ -148,6 +146,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debugint/debugint.o \
 	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/webengine.o \
+	$(OSDOBJ)/osdcore.o \
 	$(OSDOBJ)/osdepend.o \
 	$(OSDOBJ)/osdnet.o \
 
@@ -188,6 +187,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/netlist.o     \
 	$(EMUMACHINE)/nvram.o       \
 	$(EMUMACHINE)/ram.o         \
+	$(EMUMACHINE)/legscsi.o     \
 	$(EMUMACHINE)/terminal.o    \
 
 EMUIMAGEDEVOBJS = \
@@ -195,6 +195,7 @@ EMUIMAGEDEVOBJS = \
 	$(EMUIMAGEDEV)/cartslot.o   \
 	$(EMUIMAGEDEV)/cassette.o   \
 	$(EMUIMAGEDEV)/chd_cd.o     \
+	$(EMUIMAGEDEV)/diablo.o     \
 	$(EMUIMAGEDEV)/flopdrv.o    \
 	$(EMUIMAGEDEV)/floppy.o     \
 	$(EMUIMAGEDEV)/harddriv.o   \

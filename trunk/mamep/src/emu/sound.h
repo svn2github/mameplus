@@ -19,13 +19,17 @@
 
 
 //**************************************************************************
+//  CONSTANTS
+//**************************************************************************
+
+const int STREAM_SYNC       = -1;       // special rate value indicating a one-sample-at-a-time stream
+                                        // with actual rate defined by its input
+
+//**************************************************************************
 //  MACROS
 //**************************************************************************
 
-// legacy
-#define STREAM_UPDATE(name) void name(device_t *device, sound_stream *stream, void *param, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
-
-
+typedef delegate<void (sound_stream &, stream_sample_t **inputs, stream_sample_t **outputs, int samples)> stream_update_delegate;
 
 //**************************************************************************
 //  TYPE DEFINITIONS
@@ -91,7 +95,7 @@ class sound_stream
 	static const UINT32 FRAC_MASK               = FRAC_ONE - 1;
 
 	// construction/destruction
-	sound_stream(device_t &device, int inputs, int outputs, int sample_rate, void *param = NULL, stream_update_func callback = &sound_stream::device_stream_update_stub);
+	sound_stream(device_t &device, int inputs, int outputs, int sample_rate, stream_update_delegate callback);
 
 public:
 	// getters
@@ -126,46 +130,47 @@ private:
 	void apply_sample_rate_changes();
 
 	// internal helpers
-	static STREAM_UPDATE( device_stream_update_stub );
 	void recompute_sample_rate_data();
 	void allocate_resample_buffers();
 	void allocate_output_buffers();
 	void postload();
 	void generate_samples(int samples);
 	stream_sample_t *generate_resampled_data(stream_input &input, UINT32 numsamples);
+	void sync_update(void *, INT32);
 
 	// linking information
-	device_t &          m_device;               // owning device
-	sound_stream *      m_next;                 // next stream in the chain
+	device_t &          m_device;                     // owning device
+	sound_stream *      m_next;                       // next stream in the chain
 
 	// general information
-	UINT32              m_sample_rate;          // sample rate of this stream
-	UINT32              m_new_sample_rate;      // newly-set sample rate for the stream
+	UINT32              m_sample_rate;                // sample rate of this stream
+	UINT32              m_new_sample_rate;            // newly-set sample rate for the stream
+	bool                m_synchronous;                // synchronous stream that runs at the rate of its input
 
 	// timing information
-	attoseconds_t       m_attoseconds_per_sample;// number of attoseconds per sample
-	INT32               m_max_samples_per_update;// maximum samples per update
+	attoseconds_t       m_attoseconds_per_sample;     // number of attoseconds per sample
+	INT32               m_max_samples_per_update;     // maximum samples per update
+	emu_timer *         m_sync_timer;                 // update timer for synchronous streams
 
 	// input information
-	dynamic_array<stream_input> m_input;        // list of streams we directly depend upon
-	dynamic_array<stream_sample_t *> m_input_array; // array of inputs for passing to the callback
+	dynamic_array<stream_input> m_input;              // list of streams we directly depend upon
+	dynamic_array<stream_sample_t *> m_input_array;   // array of inputs for passing to the callback
 
 	// resample buffer information
-	UINT32              m_resample_bufalloc;    // allocated size of each resample buffer
+	UINT32              m_resample_bufalloc;          // allocated size of each resample buffer
 
 	// output information
-	dynamic_array<stream_output> m_output;      // list of streams which directly depend upon us
-	dynamic_array<stream_sample_t *> m_output_array; // array of outputs for passing to the callback
+	dynamic_array<stream_output> m_output;            // list of streams which directly depend upon us
+	dynamic_array<stream_sample_t *> m_output_array;  // array of outputs for passing to the callback
 
 	// output buffer information
-	UINT32              m_output_bufalloc;      // allocated size of each output buffer
-	INT32               m_output_sampindex;     // current position within each output buffer
-	INT32               m_output_update_sampindex;// position at time of last global update
-	INT32               m_output_base_sampindex;// sample at base of buffer, relative to the current emulated second
+	UINT32              m_output_bufalloc;            // allocated size of each output buffer
+	INT32               m_output_sampindex;           // current position within each output buffer
+	INT32               m_output_update_sampindex;    // position at time of last global update
+	INT32               m_output_base_sampindex;      // sample at base of buffer, relative to the current emulated second
 
 	// callback information
-	stream_update_func  m_callback;             // callback function
-	void *              m_param;                // callback function parameter
+	stream_update_delegate  m_callback;                   // callback function
 };
 
 
@@ -199,7 +204,7 @@ public:
 	attoseconds_t update_attoseconds() const { return m_update_attoseconds; }
 
 	// stream creation
-	sound_stream *stream_alloc(device_t &device, int inputs, int outputs, int sample_rate, void *param = NULL, sound_stream::stream_update_func callback = NULL);
+	sound_stream *stream_alloc(device_t &device, int inputs, int outputs, int sample_rate, stream_update_delegate callback = stream_update_delegate());
 
 	// global controls
 	void set_attenuation(int attenuation);

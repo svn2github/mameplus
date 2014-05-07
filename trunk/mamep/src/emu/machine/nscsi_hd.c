@@ -16,6 +16,11 @@ nscsi_harddisk_device::nscsi_harddisk_device(const machine_config &mconfig, devi
 void nscsi_harddisk_device::device_start()
 {
 	nscsi_full_device::device_start();
+	save_item(NAME(block));
+	save_item(NAME(lba));
+	save_item(NAME(cur_lba));
+	save_item(NAME(blocks));
+	save_item(NAME(bytes_per_sector));
 }
 
 void nscsi_harddisk_device::device_reset()
@@ -33,10 +38,9 @@ void nscsi_harddisk_device::device_reset()
 	cur_lba = -1;
 }
 
-harddisk_interface nscsi_harddisk_device::hd_intf = { "scsi_hdd", NULL };
-
 static MACHINE_CONFIG_FRAGMENT(scsi_harddisk)
-	MCFG_HARDDISK_CONFIG_ADD("image", nscsi_harddisk_device::hd_intf)
+	MCFG_HARDDISK_ADD("image")
+	MCFG_HARDDISK_INTERFACE("scsi_hdd")
 MACHINE_CONFIG_END
 
 machine_config_constructor nscsi_harddisk_device::device_mconfig_additions() const

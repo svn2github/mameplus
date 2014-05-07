@@ -126,6 +126,7 @@ i80188_cpu_device::i80188_cpu_device(const machine_config &mconfig, const char *
 {
 	memcpy(m_timing, m_i80186_timing, sizeof(m_i80186_timing));
 	m_fetch_xor = 0;
+	static_set_irq_acknowledge_callback(*this, device_irq_acknowledge_delegate(FUNC(i80186_cpu_device::int_callback), this));
 }
 
 i80186_cpu_device::i80186_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
@@ -139,6 +140,7 @@ i80186_cpu_device::i80186_cpu_device(const machine_config &mconfig, const char *
 {
 	memcpy(m_timing, m_i80186_timing, sizeof(m_i80186_timing));
 	m_fetch_xor = BYTE_XOR_LE(0);
+	static_set_irq_acknowledge_callback(*this, device_irq_acknowledge_delegate(FUNC(i80186_cpu_device::int_callback), this));
 }
 
 i80186_cpu_device::i80186_cpu_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source, int data_bus_size)
@@ -639,11 +641,13 @@ void i80186_cpu_device::device_reset()
 	m_dma[1].drq_delay = false;
 	m_dma[0].drq_state = false;
 	m_dma[1].drq_state = false;
-	m_timer[0].control = 0;
-	m_timer[1].control = 0;
-	m_timer[2].control = 0;
-
-	set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(i80186_cpu_device::int_callback),this));
+	for(int i = 0; i < ARRAY_LENGTH(m_timer); ++i)
+	{
+		m_timer[i].control = 0;
+		m_timer[i].time_timer_active = 0;
+		m_timer[i].maxA = 0;
+		m_timer[i].maxB = 0;
+	}
 }
 
 UINT8 i80186_cpu_device::read_port_byte(UINT16 port)

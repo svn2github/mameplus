@@ -397,7 +397,6 @@ OSDOBJS = \
 	$(SDLOBJ)/window.o \
 	$(SDLOBJ)/output.o \
 	$(SDLOBJ)/watchdog.o \
-	$(SDLOBJ)/sdlmidi.o
 
 ifdef NO_USE_MIDI
 DEFS += -DDISABLE_MIDI=1
@@ -478,7 +477,7 @@ else
 INCPATH += `sdl-config --cflags | sed 's:/SDL::'`
 CCOMFLAGS += -DNO_SDL_GLEXT
 # Remove libSDLmain, as its symbols conflict with SDLMain_tmpl.m
-LIBS += `sdl-config --libs | sed 's/-lSDLmain//'` -lpthread
+LIBS += `sdl-config --libs | sed 's/-lSDLmain//'` -lpthread -framework OpenGL
 DEFS += -DMACOSX_USE_LIBSDL
 endif   # MACOSX_USE_LIBSDL
 
@@ -802,8 +801,6 @@ TESTKEYSOBJS = \
 testkeys$(EXE): $(TESTKEYSOBJS) $(LIBUTIL) $(LIBOCORE) $(SDLUTILMAIN)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-$(SDLOBJ)/sdlmidi.o: $(SRC)/osd/portmedia/pmmidi.inc
 
 #-------------------------------------------------
 # clean up

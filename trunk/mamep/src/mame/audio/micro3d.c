@@ -166,7 +166,7 @@ void micro3d_sound_device::noise_sh_w(UINT8 data)
 const device_type MICRO3D = &device_creator<micro3d_sound_device>;
 
 micro3d_sound_device::micro3d_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, MICRO3D, "Microprose Custom", tag, owner, clock, "micro3d_sound", __FILE__),
+	: device_t(mconfig, MICRO3D, "Microprose Audio Custom", tag, owner, clock, "micro3d_sound", __FILE__),
 		device_sound_interface(mconfig, *this),
 		m_vcf(0),
 		m_vcq(0),
@@ -197,7 +197,7 @@ void micro3d_sound_device::device_config_complete()
 void micro3d_sound_device::device_start()
 {
 	/* Allocate the stream */
-	m_stream = machine().sound().stream_alloc(*this, 0, 2, machine().sample_rate(), this);
+	m_stream = machine().sound().stream_alloc(*this, 0, 2, machine().sample_rate());
 	filter_init(machine(), &m_filter, machine().sample_rate());
 
 	configure_filter(&m_noise_filters[0], 2.7e3 + 2.7e3, 1.0e-6);

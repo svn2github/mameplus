@@ -54,16 +54,12 @@
 //**************************************************************************
 
 #define MACHINE_START_NAME(name)    machine_start_##name
-#define MACHINE_START(name)         void MACHINE_START_NAME(name)(running_machine &machine) // legacy
 #define MACHINE_START_CALL_MEMBER(name) MACHINE_START_NAME(name)()
-#define MACHINE_START_CALL_LEGACY(name) MACHINE_START_NAME(name)(machine())
 #define DECLARE_MACHINE_START(name) void MACHINE_START_NAME(name)()
 #define MACHINE_START_MEMBER(cls,name) void cls::MACHINE_START_NAME(name)()
 
 #define MACHINE_RESET_NAME(name)    machine_reset_##name
-#define MACHINE_RESET(name)         void MACHINE_RESET_NAME(name)(running_machine &machine) // legacy
 #define MACHINE_RESET_CALL_MEMBER(name) MACHINE_RESET_NAME(name)()
-#define MACHINE_RESET_CALL_LEGACY(name) MACHINE_RESET_NAME(name)(machine())
 #define DECLARE_MACHINE_RESET(name) void MACHINE_RESET_NAME(name)()
 #define MACHINE_RESET_MEMBER(cls,name) void cls::MACHINE_RESET_NAME(name)()
 
@@ -77,7 +73,6 @@
 #define SOUND_RESET_MEMBER(cls,name) void cls::SOUND_RESET_NAME(name)()
 
 #define VIDEO_START_NAME(name)      video_start_##name
-#define VIDEO_START(name)           void VIDEO_START_NAME(name)(running_machine &machine) // legacy
 #define VIDEO_START_CALL_MEMBER(name)       VIDEO_START_NAME(name)()
 #define DECLARE_VIDEO_START(name)   void VIDEO_START_NAME(name)()
 #define VIDEO_START_MEMBER(cls,name) void cls::VIDEO_START_NAME(name)()
@@ -97,9 +92,6 @@
 class gfxdecode_device;
 class palette_device;
 typedef delegate<void ()> driver_callback_delegate;
-
-// legacy callback functions
-/*ATTR_DEPRECATED*/ typedef void (*legacy_callback_func)(running_machine &machine);
 
 
 // ======================> driver_device
@@ -130,7 +122,6 @@ public:
 
 	// inline configuration helpers
 	static void static_set_game(device_t &device, const game_driver &game);
-	ATTR_DEPRECATED static void static_set_callback(device_t &device, callback_type type, legacy_callback_func callback);
 	static void static_set_callback(device_t &device, callback_type type, driver_callback_delegate callback);
 
 	// generic helpers
@@ -263,22 +254,6 @@ protected:
 
 	// device_memory_interface overrides
 	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const;
-
-	// internal helpers
-	inline UINT16 paletteram16_le(offs_t offset) const { return m_generic_paletteram_8[offset & ~1] | (m_generic_paletteram_8[offset |  1] << 8); }
-	inline UINT16 paletteram16_be(offs_t offset) const { return m_generic_paletteram_8[offset |  1] | (m_generic_paletteram_8[offset & ~1] << 8); }
-	inline UINT16 paletteram16_split(offs_t offset) const { return m_generic_paletteram_8[offset] | (m_generic_paletteram2_8[offset] << 8); }
-	inline UINT32 paletteram32_be(offs_t offset) const { return m_generic_paletteram_16[offset | 1] | (m_generic_paletteram_16[offset & ~1] << 16); }
-
-public:
-	// generic pointers
-	optional_shared_ptr<UINT8> m_generic_paletteram_8;
-	optional_shared_ptr<UINT8> m_generic_paletteram2_8;
-	optional_shared_ptr<UINT16> m_generic_paletteram_16;
-	optional_shared_ptr<UINT16> m_generic_paletteram2_16;
-	optional_shared_ptr<UINT32> m_generic_paletteram_32;
-	optional_shared_ptr<UINT32> m_generic_paletteram2_32;
-
 private:
 	// helpers
 	void irq_pulse_clear(void *ptr, INT32 param);
@@ -291,7 +266,6 @@ private:
 	// internal state
 	const game_driver *     m_system;                   // pointer to the game driver
 	driver_callback_delegate m_callbacks[CB_COUNT];     // start/reset callbacks
-	legacy_callback_func    m_legacy_callbacks[CB_COUNT]; // legacy start/reset callbacks
 
 	// generic audio
 	UINT16                  m_latch_clear_value;

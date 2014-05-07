@@ -109,7 +109,6 @@
 
 #define PALETTE_INIT_NAME(_Name) palette_init_##_Name
 #define DECLARE_PALETTE_INIT(_Name) void PALETTE_INIT_NAME(_Name)(palette_device &palette)
-#define PALETTE_INIT(_Name) void PALETTE_INIT_NAME(_Name)(palette_device &dummy, palette_device &palette) // legacy
 #define PALETTE_INIT_MEMBER(_Class, _Name) void _Class::PALETTE_INIT_NAME(_Name)(palette_device &palette)
 
 // standard 3-3-2 formats
@@ -125,6 +124,7 @@
 #define PALETTE_FORMAT_xxxxRRRRBBBBGGGG raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<4,4,4, 8,0,4>)
 #define PALETTE_FORMAT_xxxxRRRRGGGGBBBB raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<4,4,4, 8,4,0>)
 #define PALETTE_FORMAT_RRRRGGGGBBBBxxxx raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<4,4,4, 12,8,4>)
+#define PALETTE_FORMAT_GGGGBBBBRRRRxxxx raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<4,4,4, 4,12,8>)
 
 // standard 4-4-4-4 formats
 #define PALETTE_FORMAT_IIIIRRRRGGGGBBBB raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_irgb_decoder<4,4,4,4, 12,8,4,0>)
@@ -142,7 +142,11 @@
 #define PALETTE_FORMAT_xRGBRRRRGGGGBBBB raw_to_rgb_converter(2, &raw_to_rgb_converter::xRGBRRRRGGGGBBBB_decoder)
 
 // standard 5-6-5 formats
+#define PALETTE_FORMAT_RRRRRGGGGGGBBBBB raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<5,6,5, 11,5,0>)
 #define PALETTE_FORMAT_BBBBBGGGGGGRRRRR raw_to_rgb_converter(2, &raw_to_rgb_converter::standard_rgb_decoder<5,6,5, 0,5,11>)
+
+// standard 5-5-5-1 formats
+#define PALETTE_FORMAT_IRRRRRGGGGGBBBBB raw_to_rgb_converter(2, &raw_to_rgb_converter::IRRRRRGGGGGBBBBB_decoder)
 
 // standard 8-8-8 formats
 #define PALETTE_FORMAT_XRGB raw_to_rgb_converter(4, &raw_to_rgb_converter::standard_rgb_decoder<8,8,8, 16,8,0>)
@@ -150,6 +154,7 @@
 #define PALETTE_FORMAT_XBRG raw_to_rgb_converter(4, &raw_to_rgb_converter::standard_rgb_decoder<8,8,8, 8,0,16>)
 #define PALETTE_FORMAT_XGRB raw_to_rgb_converter(4, &raw_to_rgb_converter::standard_rgb_decoder<8,8,8, 8,16,0>)
 #define PALETTE_FORMAT_RGBX raw_to_rgb_converter(4, &raw_to_rgb_converter::standard_rgb_decoder<8,8,8, 24,16,8>)
+#define PALETTE_FORMAT_GRBX raw_to_rgb_converter(4, &raw_to_rgb_converter::standard_rgb_decoder<8,8,8, 16,24,8>)
 
 
 
@@ -174,6 +179,9 @@
 
 #define MCFG_PALETTE_FORMAT(_format) \
 	palette_device::static_set_format(*device, PALETTE_FORMAT_##_format);
+
+#define MCFG_PALETTE_MEMBITS(_width) \
+	palette_device::static_set_membits(*device, _width);
 
 #define MCFG_PALETTE_ENDIANNESS(_endianness) \
 	palette_device::static_set_endianness(*device, _endianness);
@@ -288,16 +296,9 @@ public:
 		return rgb_t(r, g, b);
 	}
 
-	static rgb_t BBGGRRII_decoder(UINT32 raw)
-	{
-		UINT8 i = (raw >> 0) & 3;
-		UINT8 r = pal4bit(((raw >> 0) & 0x0c) | i);
-		UINT8 g = pal4bit(((raw >> 2) & 0x0c) | i);
-		UINT8 b = pal4bit(((raw >> 4) & 0x0c) | i);
-		return rgb_t(r, g, b);
-	}
-
 	// other standard decoders
+	static rgb_t BBGGRRII_decoder(UINT32 raw);
+	static rgb_t IRRRRRGGGGGBBBBB_decoder(UINT32 raw);
 	static rgb_t RRRRGGGGBBBBRGBx_decoder(UINT32 raw);  // bits 3/2/1 are LSb
 	static rgb_t xRGBRRRRGGGGBBBB_decoder(UINT32 raw);  // bits 14/13/12 are LSb
 
@@ -324,6 +325,7 @@ public:
 	// static configuration
 	static void static_set_init(device_t &device, palette_init_delegate init);
 	static void static_set_format(device_t &device, raw_to_rgb_converter raw_to_rgb);
+	static void static_set_membits(device_t &device, int membits);
 	static void static_set_endianness(device_t &device, endianness_t endianness);
 	static void static_set_entries(device_t &device, int entries);
 	static void static_set_indirect_entries(device_t &device, int entries);
@@ -369,6 +371,8 @@ public:
 	DECLARE_READ8_MEMBER(read);
 	DECLARE_WRITE8_MEMBER(write);
 	DECLARE_WRITE8_MEMBER(write_ext);
+	DECLARE_WRITE8_MEMBER(write_indirect);
+	DECLARE_WRITE8_MEMBER(write_indirect_ext);
 	DECLARE_READ16_MEMBER(read);
 	DECLARE_WRITE16_MEMBER(write);
 	DECLARE_WRITE16_MEMBER(write_ext);
@@ -402,7 +406,7 @@ protected:
 	void allocate_color_tables();
 	void allocate_shadow_tables();
 
-	void update_for_write(offs_t byte_offset, int bytes_modified);
+	void update_for_write(offs_t byte_offset, int bytes_modified, bool indirect = false);
 public: // needed by konamigx
 	void set_shadow_dRGB32(int mode, int dr, int dg, int db, bool noclip);
 protected:
@@ -414,8 +418,10 @@ private:
 	int                 m_indirect_entries;     // number of indirect colors in the palette
 	bool                m_enable_shadows;       // are shadows enabled?
 	bool                m_enable_hilights;      // are hilights enabled?
-	endianness_t        m_endianness;           // endianness of palette RAM
-	bool                m_endianness_supplied;  // endianness supplied in static config
+	int                 m_membits;              // width of palette RAM, if different from native
+	bool                m_membits_supplied;     // true if membits forced in static config
+	endianness_t        m_endianness;           // endianness of palette RAM, if different from native
+	bool                m_endianness_supplied;  // true if endianness forced in static config
 
 	// palette RAM
 	raw_to_rgb_converter m_raw_to_rgb;          // format of palette RAM

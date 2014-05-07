@@ -45,7 +45,6 @@ public:
 	UINT16 m_rotate_ctrl[8];
 	rectangle m_hack_cliprect;
 
-	DECLARE_WRITE32_MEMBER(color_ram_w);
 	DECLARE_WRITE32_MEMBER(groundfx_input_w);
 	DECLARE_READ32_MEMBER(groundfx_adc_r);
 	DECLARE_WRITE32_MEMBER(groundfx_adc_w);

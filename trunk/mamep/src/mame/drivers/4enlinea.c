@@ -295,7 +295,6 @@ void isa8_cga_4enlinea_device::device_start()
 	m_vram_size = 0x4000;
 	m_vram.resize(m_vram_size);
 
-	m_update_row = NULL;
 	//m_isa->install_device(0x3bf, 0x3bf, 0, 0, NULL, write8_delegate( FUNC(isa8_cga_4enlinea_device::_4enlinea_mode_control_w), this ) );
 	m_isa->install_device(0x3d0, 0x3df, 0, 0, read8_delegate( FUNC(isa8_cga_4enlinea_device::_4enlinea_io_read), this ), write8_delegate( FUNC(isa8_cga_device::io_write), this ) );
 	m_isa->install_bank(0x8000, 0xbfff, 0, 0, "bank1", m_vram);
@@ -461,28 +460,6 @@ void _4enlinea_state::machine_reset()
 {
 }
 
-
-/**********************************
-*         CRTC Interface          *
-**********************************/
-
-
-
-/***********************************
-*         Sound Interface          *
-***********************************/
-
-static const ay8910_interface ay8910_intf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("IN-P2"),
-	DEVCB_INPUT_PORT("IN-P1"),
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
 /***********************************
 *         Machine Drivers          *
 ***********************************/
@@ -490,22 +467,6 @@ static const ay8910_interface ay8910_intf =
 SLOT_INTERFACE_START( 4enlinea_isa8_cards )
 	SLOT_INTERFACE_INTERNAL("4enlinea",  ISA8_CGA_4ENLINEA)
 SLOT_INTERFACE_END
-
-static const isa8bus_interface _4enlinea_isabus_intf =
-{
-	// interrupts
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-
-	// dma request
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 /* TODO: irq sources are unknown */
 INTERRUPT_GEN_MEMBER(_4enlinea_state::_4enlinea_irq)
@@ -540,7 +501,8 @@ static MACHINE_CONFIG_START( 4enlinea, _4enlinea_state )
 	MCFG_CPU_IO_MAP(audio_portmap)
 	MCFG_CPU_PERIODIC_INT_DRIVER(_4enlinea_state, _4enlinea_audio_irq, 60) //TODO
 
-	MCFG_ISA8_BUS_ADD("isa", ":maincpu", _4enlinea_isabus_intf)
+	MCFG_DEVICE_ADD("isa", ISA8, 0)
+	MCFG_ISA8_CPU(":maincpu")
 	MCFG_ISA8_SLOT_ADD("isa", "isa1", 4enlinea_isa8_cards, "4enlinea", true)
 
 
@@ -556,7 +518,8 @@ static MACHINE_CONFIG_START( 4enlinea, _4enlinea_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8910, SND_AY_CLOCK)
-	MCFG_SOUND_CONFIG(ay8910_intf)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("IN-P2"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("IN-P1"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 

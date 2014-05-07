@@ -272,7 +272,7 @@ WRITE8_MEMBER(suprgolf_state::rom_bank_select_w)
 
 	//popmessage("%08x %02x",((data & 0x3f) * 0x4000),data);
 
-//  mame_printf_debug("ROM_BANK 0x8000 - %X @%X\n",data,space.device().safe_pcbase());
+//  osd_printf_debug("ROM_BANK 0x8000 - %X @%X\n",data,space.device().safe_pcbase());
 	membank("bank2")->set_base(region_base + (data&0x3f ) * 0x4000);
 
 	m_msm_nmi_mask = data & 0x40;
@@ -282,7 +282,7 @@ WRITE8_MEMBER(suprgolf_state::rom_bank_select_w)
 WRITE8_MEMBER(suprgolf_state::rom2_bank_select_w)
 {
 	UINT8 *region_base = memregion("user2")->base();
-//  mame_printf_debug("ROM_BANK 0x4000 - %X @%X\n",data,space.device().safe_pcbase());
+//  osd_printf_debug("ROM_BANK 0x4000 - %X @%X\n",data,space.device().safe_pcbase());
 
 	membank("bank1")->set_base(region_base + (data&0x0f) * 0x4000);
 
@@ -416,28 +416,18 @@ INPUT_PORTS_END
 
 WRITE8_MEMBER(suprgolf_state::suprgolf_writeA)
 {
-	mame_printf_debug("ymwA\n");
+	osd_printf_debug("ymwA\n");
 }
 
 WRITE8_MEMBER(suprgolf_state::suprgolf_writeB)
 {
-	mame_printf_debug("ymwA\n");
+	osd_printf_debug("ymwA\n");
 }
 
 WRITE_LINE_MEMBER(suprgolf_state::irqhandler)
 {
 	//m_maincpu->set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
 }
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW0"),
-	DEVCB_INPUT_PORT("DSW1"),
-	DEVCB_DRIVER_MEMBER(suprgolf_state,suprgolf_writeA),
-	DEVCB_DRIVER_MEMBER(suprgolf_state,suprgolf_writeB),
-};
 
 WRITE_LINE_MEMBER(suprgolf_state::adpcm_int)
 {
@@ -474,27 +464,6 @@ void suprgolf_state::machine_reset()
 	m_msm_nmi_mask = 0;
 }
 
-static I8255A_INTERFACE( ppi8255_intf_0 )
-{
-	DEVCB_DRIVER_MEMBER(suprgolf_state,p1_r),                       /* Port A read */
-	DEVCB_NULL,                                 /* Port A write */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,p2_r),                       /* Port B read */
-	DEVCB_NULL,                                 /* Port B write */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,pedal_extra_bits_r),         /* Port C read */
-	DEVCB_NULL                                  /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_intf_1 )
-{
-	DEVCB_INPUT_PORT("SYSTEM"),                 /* Port A read */
-	DEVCB_NULL,                                 /* Port A write */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,rom_bank_select_r),          /* Port B read */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,rom_bank_select_w),          /* Port B write */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,suprgolf_vregs_r),           /* Port C read */
-	DEVCB_DRIVER_MEMBER(suprgolf_state,suprgolf_vregs_w)                /* Port C write */
-};
-
-
 #define MASTER_CLOCK XTAL_12MHz
 
 static MACHINE_CONFIG_START( suprgolf, suprgolf_state )
@@ -505,10 +474,17 @@ static MACHINE_CONFIG_START( suprgolf, suprgolf_state )
 	MCFG_CPU_IO_MAP(io_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", suprgolf_state,  irq0_line_hold)
 
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(suprgolf_state, p1_r))
+	MCFG_I8255_IN_PORTB_CB(READ8(suprgolf_state, p2_r))
+	MCFG_I8255_IN_PORTC_CB(READ8(suprgolf_state, pedal_extra_bits_r))
 
-
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf_0 )
-	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_intf_1 )
+	MCFG_DEVICE_ADD("ppi8255_1", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("SYSTEM"))
+	MCFG_I8255_IN_PORTB_CB(READ8(suprgolf_state, rom_bank_select_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(suprgolf_state, rom_bank_select_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(suprgolf_state, suprgolf_vregs_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(suprgolf_state, suprgolf_vregs_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -527,7 +503,10 @@ static MACHINE_CONFIG_START( suprgolf, suprgolf_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, MASTER_CLOCK/4) /* guess */
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(suprgolf_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW0"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW1"))
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(suprgolf_state, suprgolf_writeA))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(suprgolf_state, suprgolf_writeB))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.5)
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_384kHz) /* guess */

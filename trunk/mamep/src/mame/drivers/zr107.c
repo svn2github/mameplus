@@ -174,7 +174,8 @@ Check gticlub.c for details on the bottom board.
 #include "sound/k056800.h"
 #include "sound/k054539.h"
 #include "video/k001604.h"
-#include "video/gticlub.h"
+#include "video/k001005.h"
+#include "video/k001006.h"
 #include "video/k054156_k054157_k056832.h"
 #include "video/konami_helper.h"
 
@@ -191,7 +192,23 @@ public:
 		m_k056800(*this, "k056800"),
 		m_k056832(*this, "k056832"),
 		m_workram(*this, "workram"),
-		m_palette(*this, "palette") { }
+		m_in0(*this, "IN0"),
+		m_in1(*this, "IN1"),
+		m_in2(*this, "IN2"),
+		m_in3(*this, "IN3"),
+		m_in4(*this, "IN4"),
+		m_out4(*this, "OUT4"),
+		m_eepromout(*this, "EEPROMOUT"),
+		m_analog1(*this, "ANALOG1"),
+		m_analog2(*this, "ANALOG2"),
+		m_analog3(*this, "ANALOG3"),
+		m_palette(*this, "palette"),
+		m_k001005(*this, "k001005"),
+		m_k001006_1(*this, "k001006_1"),
+		m_k001006_2(*this, "k001006_2"),
+		m_generic_paletteram_32(*this, "paletteram"),
+		m_konppc(*this, "konppc") { }
+
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
@@ -200,7 +217,13 @@ public:
 	required_device<k056800_device> m_k056800;
 	optional_device<k056832_device> m_k056832;
 	optional_shared_ptr<UINT32> m_workram;
+	required_ioport m_in0, m_in1, m_in2, m_in3, m_in4, m_out4, m_eepromout, m_analog1, m_analog2, m_analog3;
 	required_device<palette_device> m_palette;
+	optional_device<k001005_device> m_k001005;
+	optional_device<k001006_device> m_k001006_1;
+	optional_device<k001006_device> m_k001006_2;
+	required_shared_ptr<UINT32> m_generic_paletteram_32;
+	required_device<konppc_device> m_konppc;
 
 	UINT32 *m_sharc_dataram;
 	UINT8 m_led_reg0;
@@ -229,6 +252,7 @@ public:
 	UINT32 screen_update_jetwave(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(zr107_vblank);
 	WRITE_LINE_MEMBER(k054539_irq_gen);
+	ADC083X_INPUT_CB(adc0838_callback);
 
 protected:
 	virtual void machine_start();
@@ -241,8 +265,6 @@ protected:
 
 VIDEO_START_MEMBER(zr107_state,jetwave)
 {
-	K001005_init(machine());
-	K001006_init(machine(),m_palette);
 }
 
 
@@ -252,7 +274,7 @@ UINT32 zr107_state::screen_update_jetwave(screen_device &screen, bitmap_rgb32 &b
 
 	m_k001604->draw_back_layer(bitmap, cliprect);
 
-	K001005_draw(bitmap, cliprect);
+	m_k001005->draw(bitmap, cliprect);
 
 	m_k001604->draw_front_layer(screen, bitmap, cliprect);
 
@@ -291,9 +313,6 @@ VIDEO_START_MEMBER(zr107_state,zr107)
 	m_k056832->set_layer_offs(5, -29, -27);
 	m_k056832->set_layer_offs(6, -29, -27);
 	m_k056832->set_layer_offs(7, -29, -27);
-
-	K001006_init(machine(),m_palette);
-	K001005_init(machine());
 }
 
 UINT32 zr107_state::screen_update_zr107(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
@@ -301,7 +320,7 @@ UINT32 zr107_state::screen_update_zr107(screen_device &screen, bitmap_rgb32 &bit
 	bitmap.fill(m_palette->pen(0), cliprect);
 
 	m_k056832->tilemap_draw(screen, bitmap, cliprect, 1, 0, 0);
-	K001005_draw(bitmap, cliprect);
+	m_k001005->draw(bitmap, cliprect);
 	m_k056832->tilemap_draw(screen, bitmap, cliprect, 0, 0, 0);
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
@@ -316,18 +335,24 @@ UINT32 zr107_state::screen_update_zr107(screen_device &screen, bitmap_rgb32 &bit
 READ8_MEMBER(zr107_state::sysreg_r)
 {
 	UINT32 r = 0;
-	static const char *const portnames[] = { "IN0", "IN1", "IN2", "IN3", "IN4" };
 
 	switch (offset)
 	{
 		case 0: /* I/O port 0 */
-		case 1: /* I/O port 1 */
-		case 2: /* I/O port 2 */
-		case 3: /* System Port 0 */
-		case 4: /* System Port 1 */
-			r = ioport(portnames[offset])->read();
+			r = m_in0->read();
 			break;
-
+		case 1: /* I/O port 1 */
+			r = m_in1->read();
+			break;
+		case 2: /* I/O port 2 */
+			r = m_in2->read();
+			break;
+		case 3: /* System Port 0 */
+			r = m_in3->read();
+			break;
+		case 4: /* System Port 1 */
+			r = m_in4->read();
+			break;
 		case 5: /* Parallel data port */
 			break;
 	}
@@ -347,7 +372,7 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
 			break;
 
 		case 2: /* Parallel data register */
-			mame_printf_debug("Parallel data = %02X\n", data);
+			osd_printf_debug("Parallel data = %02X\n", data);
 			break;
 
 		case 3: /* System Register 0 */
@@ -361,9 +386,9 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
 			    0x02 = EEPCLK
 			    0x01 = EEPDI
 			*/
-			ioport("EEPROMOUT")->write(data & 0x07, 0xff);
+			m_eepromout->write(data & 0x07, 0xff);
 			m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
-			mame_printf_debug("System register 0 = %02X\n", data);
+			osd_printf_debug("System register 0 = %02X\n", data);
 			break;
 
 		case 4: /* System Register 1 */
@@ -381,9 +406,9 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
 				m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)    /* CG Board 0 IRQ Ack */
 				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
-			set_cgboard_id((data >> 4) & 3);
-			ioport("OUT4")->write(data, 0xff);
-			mame_printf_debug("System register 1 = %02X\n", data);
+			m_konppc->set_cgboard_id((data >> 4) & 3);
+			m_out4->write(data, 0xff);
+			osd_printf_debug("System register 1 = %02X\n", data);
 			break;
 
 		case 5: /* System Register 2 */
@@ -444,12 +469,12 @@ static ADDRESS_MAP_START( zr107_map, AS_PROGRAM, 32, zr107_state )
 	AM_RANGE(0x74060000, 0x7406003f) AM_READWRITE(ccu_r, ccu_w)
 	AM_RANGE(0x74080000, 0x74081fff) AM_RAM_WRITE(paletteram32_w) AM_SHARE("paletteram")
 	AM_RANGE(0x740a0000, 0x740a3fff) AM_DEVREAD("k056832", k056832_device, rom_long_r)
-	AM_RANGE(0x78000000, 0x7800ffff) AM_READWRITE_LEGACY(cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)        /* 21N 21K 23N 23K */
-	AM_RANGE(0x78010000, 0x7801ffff) AM_WRITE_LEGACY(cgboard_dsp_shared_w_ppc)
-	AM_RANGE(0x78040000, 0x7804000f) AM_READWRITE_LEGACY(K001006_0_r, K001006_0_w)
-	AM_RANGE(0x780c0000, 0x780c0007) AM_READWRITE_LEGACY(cgboard_dsp_comm_r_ppc, cgboard_dsp_comm_w_ppc)
+	AM_RANGE(0x78000000, 0x7800ffff) AM_DEVREADWRITE("konppc", konppc_device, cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)        /* 21N 21K 23N 23K */
+	AM_RANGE(0x78010000, 0x7801ffff) AM_DEVWRITE("konppc", konppc_device, cgboard_dsp_shared_w_ppc)
+	AM_RANGE(0x78040000, 0x7804000f) AM_DEVREADWRITE("k001006_1", k001006_device, read, write)
+	AM_RANGE(0x780c0000, 0x780c0007) AM_DEVREADWRITE("konppc", konppc_device, cgboard_dsp_comm_r_ppc, cgboard_dsp_comm_w_ppc)
 	AM_RANGE(0x7e000000, 0x7e003fff) AM_READWRITE8(sysreg_r, sysreg_w, 0xffffffff)
-	AM_RANGE(0x7e008000, 0x7e009fff) AM_DEVREADWRITE8("k056230", k056230_device, k056230_r, k056230_w, 0xffffffff)               /* LANC registers */
+	AM_RANGE(0x7e008000, 0x7e009fff) AM_DEVREADWRITE8("k056230", k056230_device, read, write, 0xffffffff)               /* LANC registers */
 	AM_RANGE(0x7e00a000, 0x7e00bfff) AM_DEVREADWRITE("k056230", k056230_device, lanc_ram_r, lanc_ram_w)      /* LANC Buffer RAM (27E) */
 	AM_RANGE(0x7e00c000, 0x7e00c00f) AM_DEVREADWRITE8("k056800", k056800_device, host_r, host_w, 0xffffffff)
 	AM_RANGE(0x7f800000, 0x7f9fffff) AM_ROM AM_SHARE("share2")
@@ -470,13 +495,13 @@ static ADDRESS_MAP_START( jetwave_map, AS_PROGRAM, 32, zr107_state )
 	AM_RANGE(0x74010000, 0x7401ffff) AM_MIRROR(0x80000000) AM_RAM_WRITE(jetwave_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x74020000, 0x7403ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001604", k001604_device, tile_r, tile_w)
 	AM_RANGE(0x74040000, 0x7407ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001604", k001604_device, char_r, char_w)
-	AM_RANGE(0x78000000, 0x7800ffff) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)      /* 21N 21K 23N 23K */
-	AM_RANGE(0x78010000, 0x7801ffff) AM_MIRROR(0x80000000) AM_WRITE_LEGACY(cgboard_dsp_shared_w_ppc)
-	AM_RANGE(0x78040000, 0x7804000f) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(K001006_0_r, K001006_0_w)
-	AM_RANGE(0x78080000, 0x7808000f) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(K001006_1_r, K001006_1_w)
-	AM_RANGE(0x780c0000, 0x780c0007) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(cgboard_dsp_comm_r_ppc, cgboard_dsp_comm_w_ppc)
+	AM_RANGE(0x78000000, 0x7800ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("konppc", konppc_device, cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)      /* 21N 21K 23N 23K */
+	AM_RANGE(0x78010000, 0x7801ffff) AM_MIRROR(0x80000000) AM_DEVWRITE("konppc", konppc_device, cgboard_dsp_shared_w_ppc)
+	AM_RANGE(0x78040000, 0x7804000f) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001006_1", k001006_device, read, write)
+	AM_RANGE(0x78080000, 0x7808000f) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001006_2", k001006_device, read, write)
+	AM_RANGE(0x780c0000, 0x780c0007) AM_MIRROR(0x80000000) AM_DEVREADWRITE("konppc", konppc_device, cgboard_dsp_comm_r_ppc, cgboard_dsp_comm_w_ppc)
 	AM_RANGE(0x7e000000, 0x7e003fff) AM_MIRROR(0x80000000) AM_READWRITE8(sysreg_r, sysreg_w, 0xffffffff)
-	AM_RANGE(0x7e008000, 0x7e009fff) AM_MIRROR(0x80000000) AM_DEVREADWRITE8("k056230", k056230_device, k056230_r, k056230_w, 0xffffffff)             /* LANC registers */
+	AM_RANGE(0x7e008000, 0x7e009fff) AM_MIRROR(0x80000000) AM_DEVREADWRITE8("k056230", k056230_device, read, write, 0xffffffff)             /* LANC registers */
 	AM_RANGE(0x7e00a000, 0x7e00bfff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k056230", k056230_device, lanc_ram_r, lanc_ram_w)    /* LANC Buffer RAM (27E) */
 	AM_RANGE(0x7e00c000, 0x7e00c00f) AM_MIRROR(0x80000000) AM_DEVREADWRITE8("k056800", k056800_device, host_r, host_w, 0xffffffff)
 	AM_RANGE(0x7f000000, 0x7f3fffff) AM_MIRROR(0x80000000) AM_ROM AM_REGION("user2", 0)
@@ -528,10 +553,10 @@ WRITE32_MEMBER(zr107_state::dsp_dataram_w)
 }
 
 static ADDRESS_MAP_START( sharc_map, AS_DATA, 32, zr107_state )
-	AM_RANGE(0x400000, 0x41ffff) AM_READWRITE_LEGACY(cgboard_0_shared_sharc_r, cgboard_0_shared_sharc_w)
+	AM_RANGE(0x400000, 0x41ffff) AM_DEVREADWRITE("konppc", konppc_device, cgboard_0_shared_sharc_r, cgboard_0_shared_sharc_w)
 	AM_RANGE(0x500000, 0x5fffff) AM_READWRITE(dsp_dataram_r, dsp_dataram_w)
-	AM_RANGE(0x600000, 0x6fffff) AM_READWRITE_LEGACY(K001005_r, K001005_w)
-	AM_RANGE(0x700000, 0x7000ff) AM_READWRITE_LEGACY(cgboard_0_comm_sharc_r, cgboard_0_comm_sharc_w)
+	AM_RANGE(0x600000, 0x6fffff) AM_DEVREADWRITE("k001005", k001005_device, read, write)
+	AM_RANGE(0x700000, 0x7000ff) AM_DEVREADWRITE("konppc", konppc_device, cgboard_0_comm_sharc_r, cgboard_0_comm_sharc_w)
 ADDRESS_MAP_END
 
 /*****************************************************************************/
@@ -675,16 +700,16 @@ INPUT_PORTS_END
 
 /* ADC0838 Interface */
 
-static double adc0838_callback( device_t *device, UINT8 input )
+ADC083X_INPUT_CB(zr107_state::adc0838_callback)
 {
 	switch (input)
 	{
 	case ADC083X_CH0:
-		return (double)(5 * device->machine().root_device().ioport("ANALOG1")->read()) / 255.0;
+		return (double)(5 * m_analog1->read()) / 255.0;
 	case ADC083X_CH1:
-		return (double)(5 * device->machine().root_device().ioport("ANALOG2")->read()) / 255.0;
+		return (double)(5 * m_analog2->read()) / 255.0;
 	case ADC083X_CH2:
-		return (double)(5 * device->machine().root_device().ioport("ANALOG3")->read()) / 255.0;
+		return (double)(5 * m_analog3->read()) / 255.0;
 	case ADC083X_CH3:
 		return 0;
 	case ADC083X_COM:
@@ -719,12 +744,6 @@ static const k056832_interface zr107_k056832_intf =
 	1, 0,
 	KONAMI_ROM_DEINTERLEAVE_NONE,
 	game_tile_callback, "none"
-};
-
-static const k056230_interface zr107_k056230_intf =
-{
-	"maincpu",
-	0
 };
 
 /* PowerPC interrupts
@@ -762,7 +781,8 @@ static MACHINE_CONFIG_START( zr107, zr107_state )
 
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
-	MCFG_K056230_ADD("k056230", zr107_k056230_intf)
+	MCFG_DEVICE_ADD("k056230", K056230, 0)
+	MCFG_K056230_CPU("maincpu")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -781,6 +801,13 @@ static MACHINE_CONFIG_START( zr107, zr107_state )
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
 
+	MCFG_DEVICE_ADD("k001005", K001005, 0)
+	MCFG_K001005_TEXEL_CHIP("k001006_1")
+
+	MCFG_DEVICE_ADD("k001006_1", K001006, 0)
+	MCFG_K001006_GFX_REGION("gfx1")
+	MCFG_K001006_TEX_LAYOUT(0)
+
 	MCFG_K056800_ADD("k056800", XTAL_18_432MHz)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_1))
 
@@ -796,17 +823,13 @@ static MACHINE_CONFIG_START( zr107, zr107_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_DEVICE_ADD("adc0838", ADC0838, 0)
-	MCFG_ADC083X_INPUT_CALLBACK(adc0838_callback)
+	MCFG_ADC083X_INPUT_CB(zr107_state, adc0838_callback)
+	
+	MCFG_DEVICE_ADD("konppc", KONPPC, 0)
+	MCFG_KONPPC_CGBOARD_NUMBER(1)
+	MCFG_KONPPC_CGBOARD_TYPE(CGBOARD_TYPE_ZR107)
 MACHINE_CONFIG_END
 
-
-static const k001604_interface jetwave_k001604_intf =
-{
-	0, 1,   /* gfx index 1 & 2 */
-	0, 0,       /* layer_size, roz_size */
-	0,      /* text layer mem offset */
-	16384,  /* roz layer mem offset */
-};
 
 static MACHINE_CONFIG_START( jetwave, zr107_state )
 
@@ -826,7 +849,8 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
-	MCFG_K056230_ADD("k056230", zr107_k056230_intf)
+	MCFG_DEVICE_ADD("k056230", K056230, 0)
+	MCFG_K056230_CPU("maincpu")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -841,9 +865,28 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
-	MCFG_K001604_ADD("k001604", jetwave_k001604_intf)
+	MCFG_DEVICE_ADD("k001604", K001604, 0)
+	MCFG_K001604_GFX_INDEX1(0)
+	MCFG_K001604_GFX_INDEX2(1)
+	MCFG_K001604_LAYER_SIZE(0)
+	MCFG_K001604_ROZ_SIZE(0)
+	MCFG_K001604_TXT_OFFSET(0)
+	MCFG_K001604_ROZ_OFFSET(16384)
 	MCFG_K001604_GFXDECODE("gfxdecode")
 	MCFG_K001604_PALETTE("palette")
+
+	MCFG_DEVICE_ADD("k001005", K001005, 0)
+	MCFG_K001005_TEXEL_CHIP("k001006_1")
+
+	MCFG_DEVICE_ADD("k001006_1", K001006, 0)
+	MCFG_K001006_GFX_REGION("gfx1")
+	MCFG_K001006_TEX_LAYOUT(0)
+
+	// The second K001006 chip connects to the second K001005 chip.
+	// Hook this up when the K001005 separation is understood (seems the load balancing is done on hardware).
+	MCFG_DEVICE_ADD("k001006_2", K001006, 0)
+	MCFG_K001006_GFX_REGION("gfx1")
+	MCFG_K001006_TEX_LAYOUT(0)
 
 	MCFG_K056800_ADD("k056800", XTAL_18_432MHz)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_1))
@@ -861,7 +904,11 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_DEVICE_ADD("adc0838", ADC0838, 0)
-	MCFG_ADC083X_INPUT_CALLBACK(adc0838_callback)
+	MCFG_ADC083X_INPUT_CB(zr107_state, adc0838_callback)
+	
+	MCFG_DEVICE_ADD("konppc", KONPPC, 0)
+	MCFG_KONPPC_CGBOARD_NUMBER(1)
+	MCFG_KONPPC_CGBOARD_TYPE(CGBOARD_TYPE_GTICLUB)
 MACHINE_CONFIG_END
 
 /*****************************************************************************/
@@ -871,19 +918,15 @@ DRIVER_INIT_MEMBER(zr107_state,common)
 	m_sharc_dataram = auto_alloc_array(machine(), UINT32, 0x100000/4);
 	m_led_reg0 = m_led_reg1 = 0x7f;
 	m_ccu_vcth = m_ccu_vctl = 0;
-
-	K001005_preprocess_texture_data(memregion("gfx1")->base(), memregion("gfx1")->bytes(), 0);
 }
 
 DRIVER_INIT_MEMBER(zr107_state,zr107)
 {
-	init_konami_cgboard(machine(), 1, CGBOARD_TYPE_ZR107);
 	init_common();
 }
 
 DRIVER_INIT_MEMBER(zr107_state,jetwave)
 {
-	init_konami_cgboard(machine(), 1, CGBOARD_TYPE_GTICLUB);
 	init_common();
 }
 

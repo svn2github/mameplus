@@ -40,7 +40,8 @@ public:
 		m_io_in1(*this, "IN1"),
 		m_io_in2(*this, "IN2"),
 		m_io_in3(*this, "IN3"),
-		m_palette(*this, "palette")
+		m_palette(*this, "palette"),
+		m_generic_paletteram_32(*this, "paletteram")
 	{ }
 
 	/* memory pointers */
@@ -96,12 +97,15 @@ public:
 	UINT32 screen_update_backfire_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(deco32_vbl_interrupt);
 	void descramble_sound();
-
+	DECO16IC_BANK_CB_MEMBER(bank_callback);
+	DECOSPR_PRIORITY_CB_MEMBER(pri_callback);
+						   
 	required_ioport m_io_in0;
 	required_ioport m_io_in1;
 	required_ioport m_io_in2;
 	required_ioport m_io_in3;
 	required_device<palette_device> m_palette;
+	required_shared_ptr<UINT32> m_generic_paletteram_32;
 	DECLARE_WRITE_LINE_MEMBER(sound_irq_gen);
 };
 
@@ -446,45 +450,18 @@ INTERRUPT_GEN_MEMBER(backfire_state::deco32_vbl_interrupt)
 }
 
 
-
-static int backfire_bank_callback( int bank )
+DECO16IC_BANK_CB_MEMBER(backfire_state::bank_callback)
 {
-	//  mame_printf_debug("bank callback %04x\n",bank); // bit 1 gets set too?
+	//  osd_printf_debug("bank callback %04x\n",bank); // bit 1 gets set too?
 	bank = bank >> 4;
 	bank = (bank & 1) | ((bank & 4) >> 1) | ((bank & 2) << 1);
 
 	return bank * 0x1000;
 }
 
-static const deco16ic_interface backfire_deco16ic_tilegen1_intf =
+DECOSPR_PRIORITY_CB_MEMBER(backfire_state::pri_callback)
 {
-	0, 1,
-	0x0f, 0x0f, /* trans masks (default values) */
-	0x00, 0x40, /* color base */
-	0x0f, 0x0f, /* color masks (default values) */
-	backfire_bank_callback,
-	backfire_bank_callback,
-	0,1
-};
-
-static const deco16ic_interface backfire_deco16ic_tilegen2_intf =
-{
-	0, 1,
-	0x0f, 0x0f, /* trans masks (default values) */
-	0x10, 0x50, /* color base */
-	0x0f, 0x0f, /* color masks (default values) */
-	backfire_bank_callback,
-	backfire_bank_callback,
-	2,3
-};
-
-void backfire_state::machine_start()
-{
-}
-
-UINT16 backfire_pri_callback(UINT16 x)
-{
-	switch (x & 0xc000)
+	switch (pri & 0xc000)
 	{
 		case 0x0000: return 0;    // numbers, people, cars when in the air, status display..
 		case 0x4000: return 0xf0; // cars most of the time
@@ -492,6 +469,10 @@ UINT16 backfire_pri_callback(UINT16 x)
 		case 0xc000: return 0xf0; // car wheels in race?
 	}
 	return 0;
+}
+
+void backfire_state::machine_start()
+{
 }
 
 static MACHINE_CONFIG_START( backfire, backfire_state )
@@ -525,28 +506,51 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 	MCFG_SCREEN_UPDATE_DRIVER(backfire_state, screen_update_backfire_right)
 	MCFG_SCREEN_PALETTE("palette")
 
-
-	MCFG_DECO16IC_ADD("tilegen1", backfire_deco16ic_tilegen1_intf)
+	MCFG_DEVICE_ADD("tilegen1", DECO16IC, 0)
 	MCFG_DECO16IC_SET_SCREEN("lscreen")
+	MCFG_DECO16IC_SPLIT(0)
+	MCFG_DECO16IC_WIDTH12(1)
+	MCFG_DECO16IC_PF1_TRANS_MASK(0x0f)
+	MCFG_DECO16IC_PF2_TRANS_MASK(0x0f)
+	MCFG_DECO16IC_PF1_COL_BANK(0x00)
+	MCFG_DECO16IC_PF2_COL_BANK(0x40)
+	MCFG_DECO16IC_PF1_COL_MASK(0x0f)
+	MCFG_DECO16IC_PF2_COL_MASK(0x0f)
+	MCFG_DECO16IC_BANK1_CB(backfire_state, bank_callback)
+	MCFG_DECO16IC_BANK2_CB(backfire_state, bank_callback)
+	MCFG_DECO16IC_PF12_8X8_BANK(0)
+	MCFG_DECO16IC_PF12_16X16_BANK(1)
 	MCFG_DECO16IC_GFXDECODE("gfxdecode")
 	MCFG_DECO16IC_PALETTE("palette")
 
-	MCFG_DECO16IC_ADD("tilegen2", backfire_deco16ic_tilegen2_intf)
+	MCFG_DEVICE_ADD("tilegen2", DECO16IC, 0)
 	MCFG_DECO16IC_SET_SCREEN("lscreen")
+	MCFG_DECO16IC_SPLIT(0)
+	MCFG_DECO16IC_WIDTH12(1)
+	MCFG_DECO16IC_PF1_TRANS_MASK(0x0f)
+	MCFG_DECO16IC_PF2_TRANS_MASK(0x0f)
+	MCFG_DECO16IC_PF1_COL_BANK(0x10)
+	MCFG_DECO16IC_PF2_COL_BANK(0x50)
+	MCFG_DECO16IC_PF1_COL_MASK(0x0f)
+	MCFG_DECO16IC_PF2_COL_MASK(0x0f)
+	MCFG_DECO16IC_BANK1_CB(backfire_state, bank_callback)
+	MCFG_DECO16IC_BANK2_CB(backfire_state, bank_callback)
+	MCFG_DECO16IC_PF12_8X8_BANK(2)
+	MCFG_DECO16IC_PF12_16X16_BANK(3)
 	MCFG_DECO16IC_GFXDECODE("gfxdecode")
 	MCFG_DECO16IC_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	MCFG_VIDEO_SET_SCREEN("lscreen")
-	decospr_device::set_gfx_region(*device, 4);
-	decospr_device::set_pri_callback(*device, backfire_pri_callback);
+	MCFG_DECO_SPRITE_GFX_REGION(4)
+	MCFG_DECO_SPRITE_PRIORITY_CB(backfire_state, pri_callback)
 	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
 	MCFG_DECO_SPRITE_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	MCFG_VIDEO_SET_SCREEN("rscreen")
-	decospr_device::set_gfx_region(*device, 5);
-	decospr_device::set_pri_callback(*device, backfire_pri_callback);
+	MCFG_DECO_SPRITE_GFX_REGION(5)
+	MCFG_DECO_SPRITE_PRIORITY_CB(backfire_state, pri_callback)
 	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
 	MCFG_DECO_SPRITE_PALETTE("palette")
 
@@ -708,7 +712,7 @@ void backfire_state::descramble_sound()
 
 READ32_MEMBER(backfire_state::backfire_speedup_r)
 {
-	//mame_printf_debug( "%08x\n",space.device().safe_pc());
+	//osd_printf_debug( "%08x\n",space.device().safe_pc());
 
 	if (space.device() .safe_pc()== 0xce44)  space.device().execute().spin_until_time(attotime::from_usec(400)); // backfire
 	if (space.device().safe_pc() == 0xcee4)  space.device().execute().spin_until_time(attotime::from_usec(400)); // backfirea

@@ -34,7 +34,8 @@ public:
 		m_deco_tilegen2(*this, "tilegen2"),
 		m_gfxdecode(*this, "gfxdecode"),
 		m_screen(*this, "screen"),
-		m_palette(*this, "palette")
+		m_palette(*this, "palette"),
+		m_generic_paletteram_32(*this, "paletteram")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -95,6 +96,7 @@ public:
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
+	required_shared_ptr<UINT32> m_generic_paletteram_32;
 
 	UINT8 m_irq_source;
 	DECLARE_WRITE_LINE_MEMBER(sound_irq_nslasher);
@@ -168,6 +170,10 @@ public:
 	UINT16 port_b_tattass(int unused);
 	void tattass_sound_cb( address_space &space, UINT16 data, UINT16 mem_mask );
 
+	DECO16IC_BANK_CB_MEMBER(fghthist_bank_callback);
+	DECO16IC_BANK_CB_MEMBER(captaven_bank_callback);
+	DECO16IC_BANK_CB_MEMBER(tattass_bank_callback);
+	DECOSPR_PRIORITY_CB_MEMBER(captaven_pri_callback);
 };
 
 class dragngun_state : public deco32_state
@@ -202,4 +208,7 @@ public:
 	void screen_eof_dragngun(screen_device &screen, bool state);
 	void dragngun_draw_sprites( bitmap_rgb32 &bitmap, const rectangle &cliprect, const UINT32 *spritedata);
 	READ32_MEMBER( dragngun_unk_video_r );
+	
+	DECO16IC_BANK_CB_MEMBER(bank_1_callback);
+	DECO16IC_BANK_CB_MEMBER(bank_2_callback);
 };

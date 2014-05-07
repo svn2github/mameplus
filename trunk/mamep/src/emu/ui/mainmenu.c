@@ -19,7 +19,6 @@
 #include "ui/filemngr.h"
 #include "ui/filesel.h"
 #include "ui/barcode.h"
-#include "ui/bbcontrl.h"
 #include "ui/tapectrl.h"
 #include "ui/mainmenu.h"
 #include "ui/miscmenu.h"
@@ -31,7 +30,6 @@
 #include "imagedev/cassette.h"
 #include "imagedev/bitbngr.h"
 #include "machine/bcreader.h"
-
 
 
 /***************************************************************************
@@ -93,11 +91,6 @@ void ui_menu_main::populate()
 		cassette_device_iterator cassiter(machine().root_device());
 		if (cassiter.first() != NULL)
 			item_append(_("Tape Control"), NULL, 0, (void *)MESS_MENU_TAPE_CONTROL);
-
-		/* add bitbanger control menu */
-		bitbanger_device_iterator bititer(machine().root_device());
-		if (bititer.first() != NULL)
-			item_append("Bitbanger Control", NULL, 0, (void *)MESS_MENU_BITBANGER_CONTROL);
 	}
 
 	if (machine().ioport().has_bioses())
@@ -149,12 +142,8 @@ void ui_menu_main::populate()
 
 #ifdef CMD_LIST
 	/* add command list menu */
-	item_append(_("Show Command List"), NULL, 0, (void *)COMMAND);
+		item_append(_("Show Command List"), NULL, 0, (void *)COMMAND);
 #endif /* CMD_LIST */
-
-	/* add memory card menu */
-	if (machine().config().m_memcard_handler != NULL)
-		item_append("Memory Card", NULL, 0, (void *)MEMORY_CARD);
 
 	/* add reset and exit menus */
 	menu_text.printf(_("Select New %s"),emulator_info::get_capstartgamenoun());
@@ -227,10 +216,6 @@ void ui_menu_main::handle()
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_mess_tape_control(machine(), container, NULL)));
 			break;
 
-		case MESS_MENU_BITBANGER_CONTROL:
-			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_mess_bitbanger_control(machine(), container, NULL)));
-			break;
-
 		case SLOT_DEVICES:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_slot_devices(machine(), container)));
 			break;
@@ -274,10 +259,6 @@ void ui_menu_main::handle()
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command(machine(), container)));
 			break;
 #endif /* CMD_LIST */
-
-		case MEMORY_CARD:
-			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_memory_card(machine(), container)));
-			break;
 
 		case SELECT_GAME:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_select_game(machine(), container, 0)));

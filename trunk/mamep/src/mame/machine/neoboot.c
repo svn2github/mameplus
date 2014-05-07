@@ -584,7 +584,7 @@ void neogeo_state::decrypt_ct2k3sp()
 void neogeo_state::decrypt_matrimbl()
 {
 	UINT8 *src2 = memregion("audiocpu")->base()+0x10000;
-	UINT8 *dst2 = global_alloc_array(UINT8, 0x20000);
+	dynamic_buffer dst2(0x20000);
 	int i, j=0;
 	memcpy(dst2,src2,0x20000);
 	for(i=0x00000;i<0x20000;i++)
@@ -615,7 +615,6 @@ void neogeo_state::decrypt_matrimbl()
 		}
 		src2[j]=dst2[i];
 	}
-	auto_free(machine(), dst2);
 	memcpy(src2-0x10000,src2,0x10000);
 	kof2002_decrypt_68k();
 	cthd2003_c(0);
@@ -1140,14 +1139,13 @@ void neogeo_state::cthd2k3a_px_decrypt()
 void neogeo_state::kf2k2mp_px_decrypt()
 {
 	unsigned char *src = memregion("maincpu")->base();
-	unsigned char *dst = (unsigned char*)malloc(0x80);
-	int i, j;
+	dynamic_array<unsigned char> dst(0x80);
 
 	if (dst)
 	{
-		for (i = 0; i < 0x500000; i+=0x80)
+		for (int i = 0; i < 0x500000; i+=0x80)
 		{
-			for (j = 0; j < 0x80 / 2; j++)
+			for (int j = 0; j < 0x80 / 2; j++)
 			{
 				int ofst = BITSWAP8( j, 6, 7, 2, 3, 4, 5, 0, 1 );
 				memcpy(dst + j * 2, src + i + ofst * 2, 2);
@@ -1155,7 +1153,6 @@ void neogeo_state::kf2k2mp_px_decrypt()
 			memcpy(src + i, dst, 0x80);
 		}
 	}
-	auto_free(machine(), dst);
 }
 
 void neogeo_state::cthd2003_AES_protection()

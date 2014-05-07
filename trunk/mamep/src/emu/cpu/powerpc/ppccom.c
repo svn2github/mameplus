@@ -191,7 +191,7 @@ INLINE void set_decrementer(powerpc_state *ppc, UINT32 newdec)
 	if (PRINTF_DECREMENTER)
 	{
 		UINT64 total = ppc->device->total_cycles();
-		mame_printf_debug("set_decrementer: olddec=%08X newdec=%08X divisor=%d totalcyc=%08X%08X timer=%08X%08X\n",
+		osd_printf_debug("set_decrementer: olddec=%08X newdec=%08X divisor=%d totalcyc=%08X%08X timer=%08X%08X\n",
 				curdec, newdec, ppc->tb_divisor,
 				(UINT32)(total >> 32), (UINT32)total, (UINT32)(cycles_until_done >> 32), (UINT32)cycles_until_done);
 	}
@@ -310,7 +310,7 @@ INLINE int sign_double(double x)
     structure based on the configured type
 -------------------------------------------------*/
 
-void ppccom_init(powerpc_state *ppc, powerpc_flavor flavor, UINT32 cap, int tb_divisor, legacy_cpu_device *device, device_irq_acknowledge_callback irqcallback)
+void ppccom_init(powerpc_state *ppc, powerpc_flavor flavor, UINT32 cap, int tb_divisor, legacy_cpu_device *device, device_irq_acknowledge_delegate irqcallback)
 {
 	const powerpc_config *config = (const powerpc_config *)device->static_config();
 
@@ -917,7 +917,7 @@ void ppccom_execute_mfspr(powerpc_state *ppc)
 	}
 
 	/* default handling */
-	mame_printf_debug("SPR %03X read\n", ppc->param0);
+	osd_printf_debug("SPR %03X read\n", ppc->param0);
 	ppc->param1 = ppc->spr[ppc->param0];
 }
 
@@ -1066,7 +1066,7 @@ void ppccom_execute_mtspr(powerpc_state *ppc)
 	}
 
 	/* default handling */
-	mame_printf_debug("SPR %03X write = %08X\n", ppc->param0, ppc->param1);
+	osd_printf_debug("SPR %03X write = %08X\n", ppc->param0, ppc->param1);
 	ppc->spr[ppc->param0] = ppc->param1;
 }
 
@@ -1121,7 +1121,7 @@ void ppccom_execute_mfdcr(powerpc_state *ppc)
 
 	/* default handling */
 	if (ppc->dcr_read_func.isnull()) {
-		mame_printf_debug("DCR %03X read\n", ppc->param0);
+		osd_printf_debug("DCR %03X read\n", ppc->param0);
 		if (ppc->param0 < ARRAY_LENGTH(ppc->dcr))
 			ppc->param1 = ppc->dcr[ppc->param0];
 		else
@@ -1213,7 +1213,7 @@ void ppccom_execute_mtdcr(powerpc_state *ppc)
 
 	/* default handling */
 	if (ppc->dcr_write_func.isnull()) {
-		mame_printf_debug("DCR %03X write = %08X\n", ppc->param0, ppc->param1);
+		osd_printf_debug("DCR %03X write = %08X\n", ppc->param0, ppc->param1);
 		if (ppc->param0 < ARRAY_LENGTH(ppc->dcr))
 			ppc->dcr[ppc->param0] = ppc->param1;
 	} else {
@@ -2342,9 +2342,9 @@ updateirq:
     ppc4xx_spu_r - serial port read handler
 -------------------------------------------------*/
 
-static READ8_HANDLER( ppc4xx_spu_r )
+READ8_MEMBER( ppc4xx_device::ppc4xx_spu_r )
 {
-	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space.device())->token();
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(this)->token();
 	UINT8 result = 0xff;
 
 	switch (offset)
@@ -2369,9 +2369,9 @@ static READ8_HANDLER( ppc4xx_spu_r )
     ppc4xx_spu_w - serial port write handler
 -------------------------------------------------*/
 
-static WRITE8_HANDLER( ppc4xx_spu_w )
+WRITE8_MEMBER( ppc4xx_device::ppc4xx_spu_w )
 {
-	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space.device())->token();
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(this)->token();
 	UINT8 oldstate, newstate;
 
 	if (PRINTF_SPU)
@@ -2435,8 +2435,8 @@ static WRITE8_HANDLER( ppc4xx_spu_w )
     the 4XX
 -------------------------------------------------*/
 
-static ADDRESS_MAP_START( internal_ppc4xx, AS_PROGRAM, 32, legacy_cpu_device )
-	AM_RANGE(0x40000000, 0x4000000f) AM_READWRITE8_LEGACY(ppc4xx_spu_r, ppc4xx_spu_w, 0xffffffff)
+static ADDRESS_MAP_START( internal_ppc4xx, AS_PROGRAM, 32, ppc4xx_device )
+	AM_RANGE(0x40000000, 0x4000000f) AM_READWRITE8(ppc4xx_spu_r, ppc4xx_spu_w, 0xffffffff)
 ADDRESS_MAP_END
 
 

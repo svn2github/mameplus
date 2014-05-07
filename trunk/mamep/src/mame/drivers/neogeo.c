@@ -443,7 +443,6 @@
 #include "cpu/z80/z80.h"
 #include "sound/2610intf.h"
 #include "imagedev/cartslot.h"
-#include "mcfglgcy.h"
 #include "neogeo.lh"
 
 
@@ -773,14 +772,11 @@ WRITE16_MEMBER(neogeo_state::save_ram_w)
  *
  *************************************/
 
-#define MEMCARD_SIZE    0x0800
-
-
 CUSTOM_INPUT_MEMBER(neogeo_state::get_memcard_status)
 {
 	// D0 and D1 are memcard 1 and 2 presence indicators, D2 indicates memcard
 	// write protect status (we are always write enabled)
-	return (memcard_present(machine()) == -1) ? 0x07 : 0x00;
+	return (m_memcard->present() == -1) ? 0x07 : 0x00;
 }
 
 
@@ -790,8 +786,8 @@ READ16_MEMBER(neogeo_state::memcard_r)
 
 	UINT16 ret;
 
-	if (memcard_present(machine()) != -1)
-		ret = m_memcard_data[offset] | 0xff00;
+	if (m_memcard->present() != -1)
+		ret = m_memcard->read(space, offset) | 0xff00;
 	else
 		ret = 0xffff;
 
@@ -805,33 +801,10 @@ WRITE16_MEMBER(neogeo_state::memcard_w)
 
 	if (ACCESSING_BITS_0_7)
 	{
-		if (memcard_present(machine()) != -1)
-			m_memcard_data[offset] = data;
+		if (m_memcard->present() != -1)
+			 m_memcard->write(space, offset, data);
 	}
 }
-
-
-MEMCARD_HANDLER( neogeo )
-{
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-	switch (action)
-	{
-	case MEMCARD_CREATE:
-		memset(state->m_memcard_data, 0, MEMCARD_SIZE);
-		file.write(state->m_memcard_data, MEMCARD_SIZE);
-		break;
-
-	case MEMCARD_INSERT:
-		file.read(state->m_memcard_data, MEMCARD_SIZE);
-		break;
-
-	case MEMCARD_EJECT:
-		file.write(state->m_memcard_data, MEMCARD_SIZE);
-		break;
-	}
-}
-
-
 
 /*************************************
  *
@@ -1138,9 +1111,6 @@ void neogeo_state::machine_start()
 
 	create_interrupt_timers();
 
-	/* initialize the memcard data structure */
-	m_memcard_data = auto_alloc_array_clear(machine(), UINT8, MEMCARD_SIZE);
-
 	/* irq levels for MVS / AES */
 	m_vblank_level = 1;
 	m_raster_level = 2;
@@ -1166,7 +1136,6 @@ void neogeo_state::machine_start()
 	save_item(NAME(m_controller_select));
 	save_item(NAME(m_main_cpu_bank_address));
 	save_item(NAME(m_save_ram_unlocked));
-	save_pointer(NAME(m_memcard_data), 0x800);
 	save_item(NAME(m_output_data));
 	save_item(NAME(m_output_latch));
 	save_item(NAME(m_el_value));
@@ -1869,7 +1838,7 @@ static MACHINE_CONFIG_DERIVED( neogeo, neogeo_base )
 	MCFG_UPD4990A_ADD("upd4990a", XTAL_32_768kHz, NULL, NULL)
 
 	MCFG_NVRAM_ADD_0FILL("saveram")
-	MCFG_MEMCARD_HANDLER(neogeo)
+	MCFG_NEOGEO_MEMCARD_ADD("memcard")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mvs, neogeo )
@@ -1965,11 +1934,11 @@ MACHINE_CONFIG_END
 	ROM_SYSTEM_BIOS(22, "unibios10", "Universe Bios (Hack, Ver. 1.0)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS(22, "uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ \
 	ROM_SYSTEM_BIOS(23, "debug",     "Debug MVS (Hack?)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 23,"neodebug.rom",     0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(23, "neodebug.rom",      0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
 	ROM_SYSTEM_BIOS(24, "asia-aes",  "Asia AES" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 24,"neo-epo.sp1",      0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
-	ROM_SYSTEM_BIOS(25, "japan-aes",  "Japan AES" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 25,"neo-po.sp1",       0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
+	ROM_LOAD16_WORD_SWAP_BIOS(24, "neo-epo.sp1",       0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
+	ROM_SYSTEM_BIOS(25, "japan-aes", "Japan AES" ) \
+	ROM_LOAD16_WORD_SWAP_BIOS(25, "neo-po.sp1",        0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
 
 
 #define NEO_BIOS_AUDIO_64K(name, hash) \
@@ -3352,6 +3321,31 @@ ROM_START( roboarmy )
 	ROM_LOAD16_BYTE( "032-c3.c3", 0x200000, 0x080000, CRC(40adfccd) SHA1(b11f866dd70ba0ed9123424508355cb948b19bdc) ) /* Plane 0,1 */ /* TC534200 */
 	ROM_LOAD16_BYTE( "032-c4.c4", 0x200001, 0x080000, CRC(462571de) SHA1(5c3d610d492f91564423873b3b434dcda700373f) ) /* Plane 2,3 */ /* TC534200 */
 ROM_END
+
+	/* Disabled for now, this looks like an emulation hack. Can someone confirm this set is real? */
+#if 0
+ROM_START( roboarma )
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "032-p1h.p1", 0x000000, 0x080000, CRC(27c773cb) SHA1(597ca73f142b1129cc7780540bb9cfacd47bc6ce) ) /* TC534200 */
+	/* Chip label p1h does not exist; if this is real what is the correct chip label? */
+
+	NEO_SFIX_128K( "032-s1.s1", CRC(ac0daa1b) SHA1(93bae4697dc403fce19422752a514326ccf66a91) ) /* TC531000 */
+
+	NEO_BIOS_AUDIO_128K( "032-m1.m1", CRC(35ec952d) SHA1(8aed30e26d7e2c70dbce5de752df416091066f7b) ) /* TC531001 */
+
+	ROM_REGION( 0x200000, "ymsnd", 0 )
+	ROM_LOAD( "032-v1.v1", 0x000000, 0x100000, CRC(63791533) SHA1(4479e9308cdc906b9e03b985303f4ebedd00512f) ) /* TC538200 */
+	ROM_LOAD( "032-v2.v2", 0x100000, 0x100000, CRC(eb95de70) SHA1(b34885201116d2b3bbdee15ec7b5961cf5c069e1) ) /* TC538200 */
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x300000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "032-c1.c1", 0x000000, 0x100000, CRC(97984c6c) SHA1(deea59c0892f05dc7db98cb57b3eb83688dc57f0) ) /* Plane 0,1 */ /* TC538200 */
+	ROM_LOAD16_BYTE( "032-c2.c2", 0x000001, 0x100000, CRC(65773122) SHA1(2c0162a8e971e5e57933e4ae16040bf824ffdefe) ) /* Plane 2,3 */ /* TC538200 */
+	ROM_LOAD16_BYTE( "032-c3.c3", 0x200000, 0x080000, CRC(40adfccd) SHA1(b11f866dd70ba0ed9123424508355cb948b19bdc) ) /* Plane 0,1 */ /* TC534200 */
+	ROM_LOAD16_BYTE( "032-c4.c4", 0x200001, 0x080000, CRC(462571de) SHA1(5c3d610d492f91564423873b3b434dcda700373f) ) /* Plane 2,3 */ /* TC534200 */
+ROM_END
+#endif
 
 /****************************************
  ID-0033
@@ -12194,8 +12188,6 @@ ROM_START( lhcdb )
 	ROM_LOAD16_BYTE( "lhcdb-c4.bin", 0x800001, 0x400000, CRC(8b7c236b) SHA1(1cb3fe81f433a2180c85be935e340da3c55aafdb) )
 ROM_END
 
-
-
 /*************************************
  *
  *  Game-specific inits
@@ -13077,6 +13069,7 @@ DRIVER_INIT_MEMBER(neogeo_state,jckeygpd)
 //  m_maincpu->space(AS_PROGRAM).install_read_port(0x2c0000, 0x2c0001, "IN6");
 }
 
+
 READ16_MEMBER( neogeo_state::sbp_lowerrom_r )
 {
 	UINT16* rom = (UINT16*)memregion("maincpu")->base();
@@ -13776,7 +13769,7 @@ GAME( 1994, fightfeva,  fightfev, neogeo,   neogeo, neogeo_state,   neogeo,   RO
 GAME( 1994, pspikes2,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Video System Co.", "Power Spikes II (NGM-068)", GAME_SUPPORTS_SAVE )
 GAME( 1994, sonicwi2,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 / Sonic Wings 2", GAME_SUPPORTS_SAVE )
 GAME( 1995, sonicwi3,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 / Sonic Wings 3", GAME_SUPPORTS_SAVE )
-GAME( 1997, popbounc,   neogeo,   neogeo,   popbounc, neogeo_state, neogeo,   ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
+GAME( 1997, popbounc,   neogeo,   neogeo,   popbounc, neogeo_state, popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
 
 /* Visco */
 GAME( 1992, androdun,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Visco", "Andro Dunos (NGM-049)(NGH-049)", GAME_SUPPORTS_SAVE )

@@ -310,7 +310,7 @@ public:
 	virtual ~netlist_object_t();
 
 	ATTR_COLD void init_object(netlist_base_t &nl, const pstring &aname);
-	ATTR_COLD bool isInitalized() { return (m_netlist != NULL); }
+	ATTR_COLD bool isInitialized() { return (m_netlist != NULL); }
 
 	ATTR_COLD const pstring name() const;
 
@@ -623,10 +623,10 @@ public:
 	netlist_matrix_solver_t *m_solver;
 	netlist_core_terminal_t * RESTRICT m_railterminal;
 
-	ATTR_HOT void solve();
+	ATTR_HOT void schedule_solve();
 
-	netlist_list_t<netlist_core_terminal_t *> m_registered; // save post-start m_list ...
-	plinked_list<netlist_core_terminal_t> m_list;
+	netlist_list_t<netlist_core_terminal_t *> m_core_terms; // save post-start m_list ...
+	plinked_list<netlist_core_terminal_t> m_list_active;
 
 	ATTR_COLD void rebuild_list();     /* rebuild m_list after a load */
 

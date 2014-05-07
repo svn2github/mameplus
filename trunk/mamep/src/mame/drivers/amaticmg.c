@@ -794,51 +794,6 @@ GFXDECODE_END
 
 
 /************************************
-*          CRTC Interface           *
-************************************/
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	4,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-
-/************************************
-*      PPI 8255 (x3) Interface      *
-************************************/
-
-static I8255A_INTERFACE( ppi8255_intf_0 )
-{
-	DEVCB_INPUT_PORT("IN0"),        /* Port A read */
-	DEVCB_NULL,                     /* Port A write */
-	DEVCB_INPUT_PORT("IN1"),        /* Port B read */
-	DEVCB_NULL,                     /* Port B write */
-	DEVCB_INPUT_PORT("IN2"),        /* Port C read */
-	DEVCB_NULL                      /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_intf_1 )
-{
-	DEVCB_NULL,                     /* Port A read */
-	DEVCB_DRIVER_MEMBER(amaticmg_state,out_a_w),            /* Port A write */
-	DEVCB_INPUT_PORT("SW1"),        /* Port B read */
-	DEVCB_NULL,                     /* Port B write */
-	DEVCB_NULL,                     /* Port C read */
-	DEVCB_DRIVER_MEMBER(amaticmg_state,out_c_w)         /* Port C write */
-};
-
-
-/************************************
 *       Machine Start & Reset       *
 ************************************/
 
@@ -870,9 +825,17 @@ static MACHINE_CONFIG_START( amaticmg, amaticmg_state )
 //  MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* 3x 8255 */
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf_0 )
-	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_intf_1 )
-//  MCFG_PPI8255_ADD( "ppi8255_2", ppi8255_intf[2] )
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("IN0"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN1"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("IN2"))
+
+	MCFG_DEVICE_ADD("ppi8255_1", I8255A, 0)
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(amaticmg_state, out_a_w))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("SW1"))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(amaticmg_state, out_c_w))
+
+//	MCFG_DEVICE_ADD("ppi8255_2", I8255A, 0)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -883,7 +846,9 @@ static MACHINE_CONFIG_START( amaticmg, amaticmg_state )
 	MCFG_SCREEN_UPDATE_DRIVER(amaticmg_state, screen_update_amaticmg)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK)
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(4)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", amaticmg)
 

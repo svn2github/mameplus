@@ -46,7 +46,6 @@ public:
 	optional_shared_ptr<UINT16> m_tmnt2_rom;
 	optional_shared_ptr<UINT16> m_sunset_104000;
 	optional_shared_ptr<UINT16> m_tmnt2_1c0800;
-//  UINT16 *    m_paletteram;    // currently this uses generic palette handling
 
 	/* video-related */
 	int        m_layer_colorbase[3];
@@ -123,7 +122,6 @@ public:
 	DECLARE_WRITE16_MEMBER(tmnt2_1c0800_w);
 	DECLARE_READ8_MEMBER(k054539_ctrl_r);
 	DECLARE_WRITE8_MEMBER(k054539_ctrl_w);
-	DECLARE_WRITE16_MEMBER(tmnt_paletteram_word_w);
 	DECLARE_WRITE16_MEMBER(tmnt_0a0000_w);
 	DECLARE_WRITE16_MEMBER(punkshot_0a0020_w);
 	DECLARE_WRITE16_MEMBER(lgtnfght_0a0018_w);

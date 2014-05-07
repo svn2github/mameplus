@@ -1548,44 +1548,6 @@ static GFXDECODE_START(aristmk4)
 	GFXDECODE_ENTRY("tile_gfx",0x0,layout8x8x6, 0, 8 )
 GFXDECODE_END
 
-static const ay8910_interface ay8910_config1 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(aristmk4_state,zn434_w) // Port write to set Vout of the DA convertors ( 2 x ZN434 )
-};
-
-static const ay8910_interface ay8910_config2 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL, // Port A read
-	DEVCB_NULL, // Port B read
-	DEVCB_DRIVER_MEMBER(aristmk4_state,pblp_out),   // Port A write - goes to lamps on the buttons x8
-	DEVCB_DRIVER_MEMBER(aristmk4_state,pbltlp_out)  // Port B write - goes to lamps on the buttons x4 and light tower x4
-};
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	/* in fact is a mc6845 driving 4 pixels by memory address.
-	that's why the big horizontal parameters */
-
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	4,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
 /* read m/c number */
 
 READ8_MEMBER(aristmk4_state::pa1_r)
@@ -1602,17 +1564,6 @@ READ8_MEMBER(aristmk4_state::pc1_r)
 {
 	return 0;
 }
-
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	DEVCB_DRIVER_MEMBER(aristmk4_state,pa1_r),              /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_DRIVER_MEMBER(aristmk4_state,pb1_r),              /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_DRIVER_MEMBER(aristmk4_state,pc1_r),              /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
 
 /* same as Casino Winner HW */
 PALETTE_INIT_MEMBER(aristmk4_state, aristmk4)
@@ -1713,8 +1664,11 @@ static MACHINE_CONFIG_START( aristmk4, aristmk4_state )
 	MCFG_PALETTE_ADD("palette", 512)
 	MCFG_PALETTE_INIT_OWNER(aristmk4_state, aristmk4)
 
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(aristmk4_state, pa1_r))
+	MCFG_I8255_IN_PORTB_CB(READ8(aristmk4_state, pb1_r))
+	MCFG_I8255_IN_PORTC_CB(READ8(aristmk4_state, pc1_r))
 
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf )
 	MCFG_DEVICE_ADD("via6522_0", VIA6522, 0) /* 1 MHz.(only 1 or 2 MHz.are valid) */
 	MCFG_VIA6522_READPA_HANDLER(READ8(aristmk4_state, via_a_r))
 	MCFG_VIA6522_READPB_HANDLER(READ8(aristmk4_state, via_b_r))
@@ -1732,18 +1686,25 @@ static MACHINE_CONFIG_START( aristmk4, aristmk4_state )
 	MCFG_PIA_CA2_HANDLER(WRITELINE(aristmk4_state, mkiv_pia_ca2))
 	MCFG_PIA_CB2_HANDLER(WRITELINE(aristmk4_state, mkiv_pia_cb2))
 
-	MCFG_MC6845_ADD("crtc", C6545_1, "screen", MAIN_CLOCK/8, mc6845_intf) // TODO: type is unknown
+	MCFG_MC6845_ADD("crtc", C6545_1, "screen", MAIN_CLOCK/8) // TODO: type is unknown
+	/* in fact is a mc6845 driving 4 pixels by memory address.
+	 that's why the big horizontal parameters */
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(4)
+
 	MCFG_MC146818_ADD( "rtc", XTAL_4_194304Mhz )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	// the Mark IV has X 2 AY8910 sound chips which are tied to the VIA
 	MCFG_SOUND_ADD("ay1", AY8910 , MAIN_CLOCK/8)
-	MCFG_SOUND_CONFIG(ay8910_config1)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(aristmk4_state, zn434_w)) // Port write to set Vout of the DA convertors ( 2 x ZN434 )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	MCFG_SOUND_ADD("ay2", AY8910 , MAIN_CLOCK/8)
-	MCFG_SOUND_CONFIG(ay8910_config2)
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(aristmk4_state, pblp_out))   // Port A write - goes to lamps on the buttons x8
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(aristmk4_state, pbltlp_out))  // Port B write - goes to lamps on the buttons x4 and light tower x4
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	MCFG_SAMPLES_ADD("samples", meter_samples_interface)

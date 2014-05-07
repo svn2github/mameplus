@@ -80,29 +80,6 @@ ioport_constructor epson_tf20_device::device_input_ports() const
 //  machine configurations
 //-------------------------------------------------
 
-static UPD7201_INTERFACE( tf20_upd7201_intf )
-{
-	0, 0, 0, 0,
-
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, epson_tf20_device, txda_w),
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, epson_tf20_device, dtra_w),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 static SLOT_INTERFACE_START( tf20_floppies )
 	SLOT_INTERFACE( "sd320", EPSON_SD_320 )
 SLOT_INTERFACE_END
@@ -111,13 +88,16 @@ static MACHINE_CONFIG_FRAGMENT( tf20 )
 	MCFG_CPU_ADD("19b", Z80, XTAL_CR1 / 2) /* uPD780C */
 	MCFG_CPU_PROGRAM_MAP(cpu_mem)
 	MCFG_CPU_IO_MAP(cpu_io)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DEVICE(DEVICE_SELF, epson_tf20_device,irq_callback)
 
 	// 64k internal ram
 	MCFG_RAM_ADD("ram")
 	MCFG_RAM_DEFAULT_SIZE("64k")
 
 	// upd7201 serial interface
-	MCFG_UPD7201_ADD("3a", XTAL_CR1 / 2, tf20_upd7201_intf)
+	MCFG_UPD7201_ADD("3a", XTAL_CR1 / 2, 0, 0, 0, 0)
+	MCFG_Z80DART_OUT_TXDA_CB(WRITELINE(epson_tf20_device, txda_w))
+	MCFG_Z80DART_OUT_DTRA_CB(WRITELINE(epson_tf20_device, dtra_w))
 
 	// floppy disk controller
 	MCFG_UPD765A_ADD("5a", true, true)
@@ -172,8 +152,6 @@ void epson_tf20_device::device_start()
 
 	m_timer_serial = timer_alloc(0, NULL);
 	m_timer_tc = timer_alloc(1, NULL);
-
-	m_cpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(epson_tf20_device::irq_callback),this));
 
 	m_fd0 = subdevice<floppy_connector>("5a:0")->get_device();
 	m_fd1 = subdevice<floppy_connector>("5a:1")->get_device();

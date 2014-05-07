@@ -84,7 +84,7 @@ MOD0- 3 - early boards with small RAM allocations
 MOD4- Some modifications on the PCB that didnt work, so field engineers reverted them to MOD3.
 MOD5- board revision with bigger RAM and reset sensitivity circuit added on the PCB.
 
-MOD6- adaption of the PCB to use small daughter card with 6116 RAM
+MOD6- adaptation of the PCB to use small daughter card with 6116 RAM
 
 Collectors have gone further with zero power RAM and the like, but these are the ones out in the wild.
 
@@ -136,8 +136,6 @@ public:
 	optional_device<roc10937_t> m_vfd;
 
 
-int m_alpha_data_line;
-int m_alpha_clock;
 int m_triac_ic3;
 int m_triac_ic4;
 int m_triac_ic5;
@@ -595,18 +593,9 @@ READ8_MEMBER(mpu3_state::pia_ic6_portb_r)
 WRITE8_MEMBER(mpu3_state::pia_ic6_porta_w)
 {
 	LOG(("%s: IC6 PIA Port A Set to %2x (Alpha)\n", machine().describe_context(),data));
-	if ( data & 0x08 ) m_vfd->reset();
-
-	m_alpha_data_line = ((data & 0x20) >> 5);
-
-	if (m_alpha_clock != ((data & 0x10) >>4))
-	{
-		if (!m_alpha_clock)//falling edge
-		{
-			m_vfd->shift_data(m_alpha_data_line?1:0);
-		}
-	}
-	m_alpha_clock = (data & 0x10) >>4;
+	m_vfd->por(!(data&0x08));
+	m_vfd->data((data & 0x20) >> 5);
+	m_vfd->sclk((data & 0x10) >>4);
 }
 
 WRITE8_MEMBER(mpu3_state::pia_ic6_portb_w)
@@ -850,7 +839,7 @@ static MACHINE_CONFIG_START( mpu3base, mpu3_state )
 	MCFG_CPU_ADD("maincpu", M6808, MPU3_MASTER_CLOCK)///4)
 	MCFG_CPU_PROGRAM_MAP(mpu3_basemap)
 
-	MCFG_MSC1937_ADD("vfd",0,LEFT_TO_RIGHT)
+	MCFG_MSC1937_ADD("vfd",0)
 
 	MCFG_TIMER_DRIVER_ADD_PERIODIC("50hz", mpu3_state, gen_50hz, attotime::from_hz(100))
 	MCFG_TIMER_DRIVER_ADD_PERIODIC("555_ic10", mpu3_state, ic10_callback, PERIOD_OF_555_ASTABLE(10000,1000,0.0000001))

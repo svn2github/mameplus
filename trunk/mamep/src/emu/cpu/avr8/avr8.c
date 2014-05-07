@@ -2897,7 +2897,7 @@ READ8_MEMBER( avr8_device::regs_r )
 /* Two-wire registers: */
 		case AVR8_REGIDX_TWCR:
 		/*TODO: needed for Replicator 1
-		BLOQUEIA PROGRESSO DA EXECU??O DO FIRMWARE no endere?o 105EC*/
+		BLOQUEIA PROGRESSO DA EXECUCAO DO FIRMWARE no endereco 105EC*/
 			return m_r[offset];
 
 		case AVR8_REGIDX_TWSR:

@@ -502,46 +502,6 @@ static GFXDECODE_START( gluck2 )
 	GFXDECODE_ENTRY( "gfx", 0x3800, tilelayout, 0, 16 )
 GFXDECODE_END
 
-
-/********************************************
-*              CRTC Interface               *
-********************************************/
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-
-/*************************************************
-*                Sound Interfaces                *
-*************************************************/
-
-static const ay8910_interface ay8910_intf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("SW3"),
-	DEVCB_INPUT_PORT("SW2"),
-
-/*  Output ports have a minimal activity during init.
-    They seems unused (at least for Good Luck II)
-*/
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
 /*********************************************
 *              Machine Drivers               *
 *********************************************/
@@ -572,13 +532,19 @@ static MACHINE_CONFIG_START( gluck2, gluck2_state )
 	MCFG_PALETTE_ADD("palette", 0x100)
 	MCFG_PALETTE_INIT_OWNER(gluck2_state, gluck2)
 
-	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/16, mc6845_intf) /* guess */
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/16) /* guess */
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ay8910", AY8910, MASTER_CLOCK/8)    /* guess */
-	MCFG_SOUND_CONFIG(ay8910_intf)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("SW3"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("SW2"))
+/*  Output ports have a minimal activity during init.
+    They seems unused (at least for Good Luck II)
+*/
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MCFG_SOUND_ADD("ymsnd", YM2413, SND_CLOCK)

@@ -4,6 +4,7 @@
 #include "cpu/m68000/m68000.h"
 #include "cpu/adsp2100/adsp2100.h"
 #include "cpu/scudsp/scudsp.h"
+#include "cpu/sh2/sh2.h"
 
 #define MAX_FILTERS (24)
 #define MAX_BLOCKS  (200)
@@ -144,8 +145,8 @@ public:
 	UINT8     m_system_output;
 	UINT16    m_serial_tx;
 
-	required_device<cpu_device> m_maincpu;
-	required_device<cpu_device> m_slave;
+	required_device<sh2_device> m_maincpu;
+	required_device<sh2_device> m_slave;
 	required_device<m68000_base_device> m_audiocpu;
 	required_device<scudsp_cpu_device> m_scudsp;
 	optional_device<eeprom_serial_93cxx_device> m_eeprom;
@@ -638,7 +639,7 @@ public:
 	int numfiles;            // # of entries in current directory
 	int firstfile;           // first non-directory file
 
-	static void m68k_reset_callback(device_t *device);
+	DECLARE_WRITE_LINE_MEMBER(m68k_reset_callback);
 	int DectoBCD(int num);
 
 	DECLARE_WRITE_LINE_MEMBER(scudsp_end_w);

@@ -597,17 +597,17 @@ static INPUT_PORTS_START( quester )
 	PORT_INCLUDE( ns1 )
 
 	PORT_MODIFY( "CONTROL0" )
-	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED )     /* paddle */
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle strobe */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle strobe */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_MODIFY( "CONTROL1" )
-	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED )     /* paddle */
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle strobe */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )     /* paddle strobe */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_MODIFY( "DIPSW" )
@@ -636,11 +636,11 @@ static INPUT_PORTS_START( tankfrc4 )
 	PORT_INCLUDE( ns1 )
 
 	PORT_MODIFY( "CONTROL0" )
-	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_SPECIAL ) /* multiplexed inputs */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN3 )
 
 	PORT_MODIFY( "CONTROL1" )
-	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_SPECIAL ) /* multiplexed inputs */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN4 )
 
 	PORT_START( "IN0" )
@@ -731,7 +731,7 @@ static INPUT_PORTS_START( berabohm )
 	PORT_INCLUDE( ns1 )
 
 	PORT_MODIFY( "CONTROL0" )
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL )
 
 	PORT_MODIFY( "CONTROL1" )
 	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL )    /* timing from the buttons interface */
@@ -913,11 +913,11 @@ static INPUT_PORTS_START( faceoff )
 	PORT_INCLUDE( ns1 )
 
 	PORT_MODIFY( "CONTROL0" )
-	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_SPECIAL ) /* multiplexed inputs */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_MODIFY( "CONTROL1" )
-	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_SPECIAL ) /* multiplexed inputs */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START( "IN0" )
@@ -1056,12 +1056,6 @@ GFXDECODE_END
 
 
 
-static const namco_interface namco_config =
-{
-	8,          /* number of voices */
-	1           /* stereo */
-};
-
 /*
     namcos1 has two 8bit dac channel. But They are mixed before pre-amp.
     And,they are connected with pre-amp through active LPF.
@@ -1075,7 +1069,7 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
-	MCFG_CPU_ADD("sub", M6809,XTAL_49_152MHz/32)
+	MCFG_CPU_ADD("subcpu", M6809,XTAL_49_152MHz/32)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
@@ -1115,7 +1109,8 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
 	MCFG_SOUND_ADD("namco", NAMCO_CUS30, XTAL_49_152MHz/2048/2)
-	MCFG_SOUND_CONFIG(namco_config)
+	MCFG_NAMCO_AUDIO_VOICES(8)
+	MCFG_NAMCO_AUDIO_STEREO(1)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 

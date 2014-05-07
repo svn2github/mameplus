@@ -44,7 +44,7 @@
 const device_type MC6846 = &device_creator<mc6846_device>;
 
 mc6846_device::mc6846_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, MC6846, "Motorola MC6846 programmable timer", tag, owner, clock, "mc6846", __FILE__),
+	: device_t(mconfig, MC6846, "MC6846 Programmable Timer", tag, owner, clock, "mc6846", __FILE__),
 	m_out_port_cb(*this),
 	m_out_cp1_cb(*this),
 	m_out_cp2_cb(*this),
@@ -116,6 +116,8 @@ void mc6846_device::device_reset()
 	m_csr1_to_be_cleared = 0;
 	m_csr2_to_be_cleared = 0;
 	m_timer_started = 0;
+	m_old_cif = 0;
+	m_old_cto = 0;
 	m_interval->reset();
 	m_one_shot->reset();
 }

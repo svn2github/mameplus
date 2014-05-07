@@ -92,11 +92,6 @@ WRITE8_MEMBER(iqblock_state::iqblock_irqack_w)
 	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
-READ8_MEMBER(iqblock_state::extrarom_r)
-{
-	return memregion("user1")->base()[offset];
-}
-
 
 WRITE8_MEMBER(iqblock_state::port_C_w)
 {
@@ -111,17 +106,6 @@ WRITE8_MEMBER(iqblock_state::port_C_w)
 	/* bit 7 could be a second coin counter, but coin 2 doesn't seem to work... */
 }
 
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	DEVCB_INPUT_PORT("P1"),             /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("P2"),             /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("EXTRA"),          /* Port C read */
-	DEVCB_DRIVER_MEMBER(iqblock_state,port_C_w)             /* Port C write */
-};
-
-
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, iqblock_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("rambase")
@@ -131,16 +115,15 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( main_portmap, AS_IO, 8, iqblock_state )
 	AM_RANGE(0x2000, 0x23ff) AM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x2800, 0x2bff) AM_DEVWRITE("palette", palette_device, write_ext) AM_SHARE("palette_ext")
-	AM_RANGE(0x6000, 0x603f) AM_WRITE(iqblock_fgscroll_w)
-	AM_RANGE(0x6800, 0x69ff) AM_WRITE(iqblock_fgvideoram_w) /* initialized up to 6fff... bug or larger tilemap? */
-	AM_RANGE(0x7000, 0x7fff) AM_WRITE(iqblock_bgvideoram_w)
 	AM_RANGE(0x5080, 0x5083) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
 	AM_RANGE(0x5090, 0x5090) AM_READ_PORT("SW0")
 	AM_RANGE(0x50a0, 0x50a0) AM_READ_PORT("SW1")
 	AM_RANGE(0x50b0, 0x50b1) AM_DEVWRITE("ymsnd", ym2413_device, write) // UM3567_data_port_0_w
 	AM_RANGE(0x50c0, 0x50c0) AM_WRITE(iqblock_irqack_w)
-	AM_RANGE(0x7000, 0x7fff) AM_READ(iqblock_bgvideoram_r)
-	AM_RANGE(0x8000, 0xffff) AM_READ(extrarom_r)
+	AM_RANGE(0x6000, 0x603f) AM_WRITE(iqblock_fgscroll_w)
+	AM_RANGE(0x6800, 0x69ff) AM_WRITE(iqblock_fgvideoram_w) AM_SHARE("fgvideoram") /* initialized up to 6fff... bug or larger tilemap? */
+	AM_RANGE(0x7000, 0x7fff) AM_RAM_WRITE(iqblock_bgvideoram_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0x8000, 0xffff) AM_ROM AM_REGION("user1", 0)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( iqblock )
@@ -278,7 +261,11 @@ static MACHINE_CONFIG_START( iqblock, iqblock_state )
 	MCFG_CPU_IO_MAP(main_portmap)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", iqblock_state, iqblock_irq, "screen", 0, 1)
 
-	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
+	MCFG_DEVICE_ADD("ppi8255", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("P1"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("P2"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("EXTRA"))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(iqblock_state, port_C_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -351,7 +338,7 @@ Notes:
 */
 
 ROM_START( iqblock )
-	ROM_REGION( 0x20000, "maincpu", 0 ) /* 64k for code + 64K for extra RAM */
+	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "u7.v5",        0x0000, 0x10000, CRC(811f306e) SHA1(d0aef80f1624002d05721276358f26a3ef69a3f6) )
 
 	ROM_REGION( 0x8000, "user1", 0 )
@@ -411,7 +398,7 @@ Notes:
 */
 
 ROM_START( grndtour )
-	ROM_REGION( 0x20000, "maincpu", 0 ) /* 64k for code + 64K for extra RAM */
+	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "grand7.u7",        0x0000, 0x10000, CRC(95cac31e) SHA1(47bbcce6981ea3d38e0aa49ccd3762a4529f3c96) )
 
 	ROM_REGION( 0x8000, "user1", 0 )
@@ -440,11 +427,6 @@ DRIVER_INIT_MEMBER(iqblock_state,iqblock)
 		if ((i & 0x0090) == 0x0010) rom[i] ^= 0x20;
 	}
 
-	/* initialize pointers for I/O mapped RAM */
-	m_generic_paletteram_8.set_target(rom + 0x12000, 0x800);
-	m_generic_paletteram2_8.set_target(rom + 0x12800, 0x800);
-	m_fgvideoram = rom + 0x16800;
-	m_bgvideoram = rom + 0x17000;
 	m_maincpu->space(AS_PROGRAM).install_write_handler(0xfe26, 0xfe26, write8_delegate(FUNC(iqblock_state::iqblock_prot_w),this));
 	m_video_type=1;
 }
@@ -462,11 +444,6 @@ DRIVER_INIT_MEMBER(iqblock_state,grndtour)
 		if ((i & 0x0060) == 0x0040) rom[i] ^= 0x20;
 	}
 
-	/* initialize pointers for I/O mapped RAM */
-	m_generic_paletteram_8.set_target(rom + 0x12000, 0x800);
-	m_generic_paletteram2_8.set_target(rom + 0x12800, 0x800);
-	m_fgvideoram = rom + 0x16800;
-	m_bgvideoram = rom + 0x17000;
 	m_maincpu->space(AS_PROGRAM).install_write_handler(0xfe39, 0xfe39, write8_delegate(FUNC(iqblock_state::grndtour_prot_w),this));
 	m_video_type=0;
 }

@@ -82,7 +82,7 @@ static int load_ips_file(running_machine &machine, ips_chunk **p, const char *ip
 	UINT8 buffer[8];
 	int len;
 
-	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
+	osd_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	astring fname(ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
 	emu_file file(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);
@@ -212,7 +212,7 @@ static int parse_ips_patch(running_machine &machine, ips_entry **ips_p, const ch
 	file_error filerr;
 	int result = 0;
 
-	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine.system().name, patch_name, INDEX_EXT);
+	osd_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine.system().name, patch_name, INDEX_EXT);
 
 	astring fname(machine.system().name, PATH_SEPARATOR, patch_name, INDEX_EXT);
 	emu_file fpDat(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);

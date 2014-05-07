@@ -16,24 +16,13 @@
 
 #define MAX_CONFIG_LINE_SIZE 48
 
-#define VERBOSE 0
-
 static emu_timer *timer;
 
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
-struct _memory_range
+struct memory_range
 {
 	UINT32 cpu, addr, num_bytes, start_value, end_value;
-	struct _memory_range *next;
+	struct memory_range *next;
 };
-typedef struct _memory_range memory_range;
-
 
 static struct
 {
@@ -41,20 +30,8 @@ static struct
 	memory_range *mem_range;
 } state;
 
-static int is_highscore_enabled(running_machine &machine)
-{
-	/* disable high score when record/playback is on */
-	if (machine.ioport().has_record_file() || machine.ioport().has_playback_file())
-		return FALSE;
 
-	return TRUE;
-}
-
-
-
-/*****************************************************************************/
-
-static void copy_to_memory (running_machine &machine, int cpu, int addr, const UINT8 *source, int num_bytes)
+static void copy_to_memory (running_machine &machine, int cpu, int addr, UINT8 *source, int num_bytes)
 {
 	int i;
 	address_space *targetspace;
@@ -220,70 +197,61 @@ static void hiscore_free (void)
 static void hiscore_load (running_machine &machine)
 {
 	file_error filerr;
-	if (is_highscore_enabled(machine))
-	{
-		astring fname(machine.basename(), ".hi");
-		emu_file f(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_READ);
-		filerr = f.open(fname);
-		state.hiscores_have_been_loaded = 1;
-		LOG(("hiscore_load\n"));
-		if (filerr == FILERR_NONE)
-		{
-			memory_range *mem_range = state.mem_range;
-			LOG(("loading...\n"));
-			while (mem_range)
-			{
-				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
+  	emu_file f(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_READ);
+  	filerr = f.open(machine.basename(), ".hi");				
+	state.hiscores_have_been_loaded = 1;
 
-				if (data)
-				{
-			/*  this buffer will almost certainly be small
-                        enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case */
-					f.read(data, mem_range->num_bytes);
-					copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
-					global_free_array(data);
-				}
-				mem_range = mem_range->next;
+	if (filerr == FILERR_NONE)
+	{
+		memory_range *mem_range = state.mem_range;
+
+		while (mem_range)
+		{
+			UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
+
+			if (data)
+			{
+				/*  this buffer will almost certainly be small
+                  	enough to be dynamically allocated, but let's
+                  	avoid memory trashing just in case */
+          			f.read(data, mem_range->num_bytes);
+				copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+				global_free_array(data);
 			}
-			f.close();
+			mem_range = mem_range->next;
 		}
+		f.close();
 	}
 }
 
 static void hiscore_save (running_machine &machine)
 {
-    file_error filerr;
-	if (is_highscore_enabled(machine))
-	{
-		astring fname(machine.basename(), ".hi");
- 		emu_file f(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-		filerr = f.open(fname);
-		LOG(("hiscore_save\n"));
-		if (filerr == FILERR_NONE)
-		{
-			memory_range *mem_range = state.mem_range;
-			LOG(("saving...\n"));
-			while (mem_range)
-			{
-				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
+	file_error filerr;
+  	emu_file f(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+  	filerr = f.open(machine.basename(), ".hi");
 
-				if (data)
-				{
-					/*  this buffer will almost certainly be small
-                        enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case */
-					copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
-					f.write(data, mem_range->num_bytes);
-					global_free_array(data);
-				}
-				mem_range = mem_range->next;
+	if (filerr == FILERR_NONE)
+	{
+		memory_range *mem_range = state.mem_range;
+
+		while (mem_range)
+		{
+			UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
+
+			if (data)
+			{
+				/*  this buffer will almost certainly be small
+				    enough to be dynamically allocated, but let's
+				    avoid memory trashing just in case */
+				copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+				f.write(data, mem_range->num_bytes);
+				global_free_array(data);
 			}
-			f.close();
+			mem_range = mem_range->next;
 		}
+		f.close();
 	}
 }
-
 
 /* call hiscore_update periodically (i.e. once per frame) */
 static TIMER_CALLBACK( hiscore_periodic )
@@ -309,59 +277,57 @@ void hiscore_close (running_machine &machine)
 	hiscore_free();
 }
 
-
-/*****************************************************************************/
-/* public API */
-
 /* call hiscore_open once after loading a game */
 void hiscore_init (running_machine &machine)
 {
 	memory_range *mem_range = state.mem_range;
+	address_space *initspace;
 	file_error filerr;
-	const char *db_filename = machine.options().value(OPTION_HISCORE_FILE); /* high score definition file */
 	const char *name = machine.system().name;
 	state.hiscores_have_been_loaded = 0;
 
 	while (mem_range)
 	{
-
 		if (strstr(machine.system().source_file,"cinemat.c") > 0)
 		{
-			machine.cpu[mem_range->cpu]->memory().space(AS_DATA).write_byte(mem_range->addr, ~mem_range->start_value);
-			machine.cpu[mem_range->cpu]->memory().space(AS_DATA).write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
+			initspace = &machine.cpu[mem_range->cpu]->memory().space(AS_DATA);
+			initspace->write_byte(mem_range->addr, ~mem_range->start_value);
+			initspace->write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
 			mem_range = mem_range->next;
 		}
 		else
 		{
-			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM).write_byte(mem_range->addr, ~mem_range->start_value);
-			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM).write_byte(mem_range->addr + mem_range->num_bytes-1,~mem_range->end_value);
+			initspace = &machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM);
+			initspace->write_byte(mem_range->addr, ~mem_range->start_value);
+			initspace->write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
 			mem_range = mem_range->next;
 		}
 	}
 
 	state.mem_range = NULL;
 	emu_file f(OPEN_FLAG_READ);
-	filerr = f.open(db_filename);
-	if (filerr == FILERR_NONE)
+  	filerr = f.open("hiscore", ".dat");
+
+	if(filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];
 		enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
 		mode = FIND_NAME;
 
-		while (f.gets (buffer, MAX_CONFIG_LINE_SIZE))
+		while (f.gets(buffer, MAX_CONFIG_LINE_SIZE))
 		{
-			if (mode==FIND_NAME)
+			if (mode == FIND_NAME)
 			{
 				if (matching_game_name (buffer, name))
 				{
 					mode = FIND_DATA;
-					LOG(("hs config found!\n"));
 				}
 			}
 			else if (is_mem_range (buffer))
 			{
 				const char *pBuf = buffer;
-				mem_range = global_alloc_array(memory_range, sizeof(memory_range));
+				mem_range = (memory_range *)malloc(sizeof(memory_range));
+
 				if (mem_range)
 				{
 					mem_range->cpu = hexstr2num (&pBuf);
@@ -400,7 +366,7 @@ void hiscore_init (running_machine &machine)
 					break;
 			}
 		}
-		f.close ();
+		f.close();
 	}
 
 	timer = machine.scheduler().timer_alloc(FUNC(hiscore_periodic));

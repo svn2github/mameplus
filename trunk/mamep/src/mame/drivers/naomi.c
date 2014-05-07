@@ -204,7 +204,7 @@ Naomi 2 / GD-ROM             |           |              |
 
 NAOMI ROM cart usage
 -------------------------
-There are 5 known types of carts manufactured by Sega: 171-7885A, 171-7919A, 171-7978B, 171-8132B, 171-8346C
+There are 6 known types of carts manufactured by Sega: 171-7885A, 171-7919A, 171-7930B, 171-7978B, 171-8132B, 171-8346C
 There are also 2 types of carts manufactured by Namco: MASK-B, MASK-C
 
 837-14124  171-7885A (C) Sega 1998
@@ -257,6 +257,7 @@ Game                                 on cart    IC22#   # of SOP56  IC37#    IC4
 Crackin' DJ part 2                   840-0068C  23674   20 (64Mb)   present  present   317-0311-COM
 Inu No Osanpo / Dog Walking (Rev A)  840-0073C  22294A  16 (64Mb)   present  present   317-0316-JPN
 Soul Surfer (Rev A)                  840-0095C  23838C  21 (64Mb)   present  present   not present   todo: verify if it's Rev A or Rev C
+Star Horse (server)                  840-0055C  23626   17 (64Mb)   present  present   not present
 The King of Route 66 (Rev A)         840-0087C  23819A  20 (64Mb)   present  present   not present
 
 
@@ -300,7 +301,7 @@ Airline Pilots (Rev A)                          840-0005C  21739A  11 (64Mb)   p
 Airline Pilots Deluxe (Rev B)                   ?          21787B  11 (64Mb)   present  315-6213  317-0251-COM   2 know BIOS 21801 (USA), 21802 (EXP)
 Cosmic Smash                                    840-0044C  23428    8 (64Mb)   ?        315-6213  317-0289-COM   joystick + 2 buttons
 Cosmic Smash (Rev A)                            840-0044C  23428A   8 (64Mb)   ?        315-6213  317-0289-COM   joystick + 2 buttons
-Crazy Taxi                                      840-0002C  21684   15 (64Mb)   ?        315-6213  317-0248-COM
+Crazy Taxi                                      840-0002C  21684   13 (64Mb)*  ?        315-6213  317-0248-COM   * ic8 and ic9 are not present
 Dead Or Alive 2                                 841-0003C  22121   21 (64Mb)   present  315-6213  317-5048-COM   joystick + 3 buttons
 Dead Or Alive 2 Millennium                      841-0003C  DOA2 M  21 (64Mb)   present  315-6213  317-5048-COM   joystick + 3 buttons
 Death Crimson OX                                841-0016C  23524   10 (64Mb)   present  315-6213  317-5066-COM
@@ -336,9 +337,59 @@ Touch de UNO! / Unou Nouryoku Check Machine     840-0008C  22073    4 (64Mb)   p
 Toy Fighter / Waffupu                           840-0011C  22035   10 (64Mb)   present  315-6212  317-0257-COM   joystick + 3 buttons
 Virtua NBA                                      840-0021C  23073   21 (64Mb)   present  315-6213  not present
 Virtua NBA (original)                           840-0021C  23073   21 (64Mb)   ?        315-6213  not present
-Virtua Striker 2 Ver. 2000 (Rev C)              840-0010C  21929C  15 (64Mb)   present  315-6213  317-0258-COM   joystick + 3 buttons (+1x 32Mb)
+Virtua Striker 2 Ver. 2000 (Rev C)              840-0010C  21929C  14 (64Mb)*  present  315-6213  317-0258-COM   joystick + 3 buttons *(+1x 32Mb)
 Virtua Tennis / Power Smash                     840-0015C  22927   11 (64Mb)   present  315-6213  317-0263-COM
 Zombie Revenge                                  840-0003C  21707   19 (64Mb)   ?        315-6213  317-0249-COM   joystick + 3 buttons
+
+
+
+171-7930B (C) Sega 1998
+|------------------------------------------------------------------|
+|        JJJJJJ      SW2                        ----CN2----        -|
+| SW1    PPPPPP                                                     |
+|        134567                                                     |
+|  C                                                                |
+|  N                                                                |
+|  D                                                         IC16   | male side
+|  B    OSC1                        IC41              IC44          |
+|  2            SCSI                          IC40                  |
+|  5            CTRL                                                |
+|                                                                   |
+|        ----CN3----                                                |
+|-------------------------------------------------------------------|
+
+ |------------------------------------------------------------------|
+|-       ----CN2----                                                |
+|                                                                   |
+| IC37S IC35S IC33S IC31S IC29S IC27S IC25S IC23S IC21S IC19S IC17S |
+|                                                                   |
+|                                                                   |
+|       IC36S IC34S IC32S IC30S IC28S IC26S IC24S IC22S IC20S IC18S | female side
+|                                                                   |
+|                                                                   |
+|       IC38S                                                       |
+|                                                                   |
+|        ----CN1----                            ----CN3----         |
+|-------------------------------------------------------------------|
+Notes:
+      OSC1  - oscillator 20.000MHz
+     JP1-7  - JUMPER unknown function
+	   SW1  - PUSHBUTTON
+	   SW2  - 8X2 DIPswitch
+ SCSI-CTRL  - SCSI-II controller MB86604A
+    CNDB25  - DB-25 SCSI-II connector
+IC17S-IC38S - FlashROM (SOP56), 64Mb.
+      IC16  - EPROM (DIP42), not populated.
+      IC40  - FPGA ACTEL A54SX32A (QFP208) SEGA part number 315-6257A
+      IC41  - 8bit CMOS Microcontroller (DIP8) Microchip PIC12C508A (internal EPROM memory 512x12)
+      IC44  - SRAM (SOJ28) 32kx8, CY7C199
+   CN1/2/3  - connectors joining to main board
+
+Games known to use this PCB include....
+                                     Sticker  EPROM        MASKROMs    
+Game                                 on cart  IC16#        # of SOP56  Notes
+----------------------------------------------------------------------------------------------------
+Puyo Puyo Fever (prototype)          *        not present  22 (64Mb)   no cart, only development PCB
 
 
 
@@ -388,15 +439,16 @@ Games known to use this PCB include....
 Game                                           on cart    IC11#   # of SOP44 IC13S#   IC1#          Notes
 ----------------------------------------------------------------------------------------------------------------------------
 Club Kart Prize                                840-0129C  ?       16 (64Mb)  present  317-0368-COM  no sticker on ic11
-Club Kart Prize Ver B                          840-0137C  24149   16 (64Mb)  present  317-0368-COM
+Club Kart Prize Ver. B                         840-0137C  24149   16 (64Mb)  present  317-0368-COM
 Giant Gram 2000                                840-0039C  23377   20 (64Mb)  present  317-0296-COM
 Kick '4' Cash                                  840-0140C  24212   16 (64Mb)  present  317-0397-COM
-Marvel Vs. Capcom 2 New Age of Heroes (Rev A)  841-0007C  23085A  14 (64Mb)  present  317-5058-COM  +2x 32Mb (full cart #:841-0007C-03)
+Marvel Vs. Capcom 2 New Age of Heroes (Rev A)  841-0007C  23085A  14 (64Mb)* present  317-5058-COM  *(+2x 32Mb) full cart #:841-0007C-03
 MushiKing The King of Beetles 2K3 2ND          840-0150C  24217    6 (64Mb)  present  317-0394-COM
 Quiz Ah Megamisama                             840-0030C  23227   16 (64Mb)  present  317-0280-JPN
 Shootout Pool                                  840-0098C  23844    4 (64Mb)  present  317-0336-COM
 Shootout Pool - Shootout Pool Prize            840-0128C  24065    4 (64Mb)  present  317-0367-COM
 Shootout Pool Medal                            840-0136C  24148    4 (64Mb)  present  317-0367-COM
+SWP Hopper Board                               840-0130C  24083   20 (64Mb)  present  317-0339-COM  Maskroms are not really used, they are recycled from other games; there is an additional 837-14381 IO board
 Touch de UNO! 2                                840-0022C  23071    6 (64Mb)  present  317-0276-JPN
 Virtua Fighter 4 Evolution                     840-0106B  23934   20 (64Mb)  present  317-0339-COM
 Virtua Tennis 2 / Power Smash 2 (Rev A)        840-0084C  22327A  18 (64Mb)  present  317-0320-COM
@@ -452,6 +504,8 @@ Mobile Suit Gundam: Federation Vs. Zeon         841-0017C  23638   10 (128Mb)  3
 Moero Justice Gakuen / Project Justice (Rev A)  841-0015C  23548A  11 (128Mb)  315-6319A  present   317-5065-COM
 Oinori-daimyoujin Matsuri                       840-0126B  24053    5 (128Mb)  315-6319A  present   not present
 Samba de Amigo Ver. 2000                        840-0047C  23600   21  (64Mb)  315-6319A  present   317-0295-COM
+Star Horse (big screens)                        840-0054C  23625    4 (128Mb)  315-6319   present   not present
+Star Horse (client)                             840-0056C  23627    6 (128Mb)* 315-6319   present   not present   * +1 (64Mb)
 Star Horse Progress (Rev A)                     840-0123C  24122A   7 (128Mb)  315-6319A  present   not present   requires an additional middle board n? 837-13785
 Virtua Striker 3 (Rev B)                        840-0061C  23663B  11 (128Mb)  315-6319A  present   317-0310-COM
 Virtua Striker 3 (Rev C)                        840-0061C  23663C  11 (128Mb)  315-6319A  present   317-0310-COM
@@ -495,21 +549,23 @@ Notes:
       CN4   - 6 legs connector for ISP programming
 
    Games known to use this PCB include....
-                                       Sticker    EPROM        FLASHROMs   XC3S50   PIC16C621A    XCF01S
-Game                                   on cart    IC7#         # of SOP56  IC2#     IC3#          IC4#     Notes
-------------------------------------------------------------------------------------------------------------------------------
+                                                    Sticker    EPROM        FLASHROMs   XC3S50   PIC16C621A    XCF01S
+Game                                                on cart    IC7#         # of SOP56  IC2#     IC3#          IC4#     Notes
+-------------------------------------------------------------------------------------------------------------------------------------------
 /Akatsuki Denkou Senki Blitz Kampf
-\Ausf. Achse                           841-0058C  not present  4 (512Mb)   present  317-5130-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "5A" - IC#10 & IC#11 are empty
-Dynamite Deka EX / Asian Dynamite      840-0175C  not present  4 (512Mb)   present  317-0495-COM  present  IC2# is labeled "VER.2"
-Illmatic Envelope                      841-0059C  not present  4 (512Mb)   present  317-5131-JPN  present  IC2# is labeled "VER.2" - IC#11 is empty
-Mamoru-kun wa Norowarete Shimatta      841-0060C  not present  4 (512Mb)   present  317-5132-JPN  present  IC2# is labeled "VER.2"
-Melty Blood Actress Again              841-0061C  not present  6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
-Melty Blood Actress Again (Rev A)      841-0061C  24455        6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
-Mushiking - The King Of Beetles II ENG 840-0164C  24357        2 (512Mb)   present  317-0437-COM  present  IC4# is marked "18"
-Poka Suka Ghost / Manic Panic Ghost    840-0170C  not present  5 (512Mb)   present  317-0461-COM  present
-Radirgy Noa                            841-0062C  not present  4 (512Mb)   present  317-5138-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "8A"
-Shooting Love 2007                     841-0057C  not present  4 (512Mb)   present  317-5129-JPN  present  IC2# is labeled "VER.2"
-Touch De Zunou (Rev A)                 840-0166C  not present  2 (512Mb)   present  317-0435-JPN  present  IC4# is marked "18"
+\Ausf. Achse                                        841-0058C  not present  4 (512Mb)   present  317-5130-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "5A" - IC#10 & IC#11 are empty
+Dynamite Deka EX / Asian Dynamite                   840-0175C  not present  4 (512Mb)   present  317-0495-COM  present  IC2# is labeled "VER.2"
+Illmatic Envelope                                   841-0059C  not present  4 (512Mb)   present  317-5131-JPN  present  IC2# is labeled "VER.2" - IC#11 is empty
+Mamoru-kun wa Norowarete Shimatta                   841-0060C  not present  4 (512Mb)   present  317-5132-JPN  present  IC2# is labeled "VER.2"
+Manic Panic Ghost!                                  840-0170C  not present  5 (512Mb)   present  317-0461-COM  present
+Melty Blood Actress Again                           841-0061C  not present  6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
+Melty Blood Actress Again (Rev A)                   841-0061C  24455        6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
+Mushiking - The King Of Beetles II ENG (Ver. 1.001) 840-0164C  not present  2 (512Mb)   present  317-0437-COM  present
+Mushiking - The King Of Beetles II ENG (Ver. 2.001) 840-0164C  24357        2 (512Mb)   present  317-0437-COM  present  IC4# is marked "18"
+Poka Suka Ghost                                     840-0170C  not present  5 (512Mb)   present  317-0461-COM  present
+Radirgy Noa                                         841-0062C  not present  4 (512Mb)   present  317-5138-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "8A"
+Shooting Love 2007                                  841-0057C  not present  4 (512Mb)   present  317-5129-JPN  present  IC2# is labeled "VER.2"
+Touch De Zunou (Rev A)                              840-0166C  not present  2 (512Mb)   present  317-0435-JPN  present  IC4# is marked "18"
 
 
 
@@ -563,9 +619,9 @@ Notes:
 \Code: Veronica (Ver. E)             F1X   25709801  1 (64Mb)  14 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5075-COM  BHF2
 /Shin Nihon Prowrestling Toukon                                                                                                       /FL0 & FL1 have pin55 raised from PCB.
 \Retsuden 4 Arcade Edition (Ver. A)  F2X   25349801  2 (64Mb)  15 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5040-COM  TRF1        \They are connected togheter and go to pin89 on 2K.
-World Kicks (Ver. A)                 F2X   25209801  2 (32Mb)   9 (128Mb)  not present  NAODEC2A  NAODEC1A  317-5040-COM  WK2-WK3
-World Kicks PCB (Ver. A)             F2X   25509801  2 (32Mb)   9 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5040-COM  WKC1
-World Kicks PCB                      F2X   25509801  ? (??Mb)   ? (128Mb)  ?            ?         ?         ?
+World Kicks PCB (WKC1 Ver. A)        F2    25509801  2 (64Mb)   9 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5040-COM  WKC1
+World Kicks (WK2 Ver. A)             F2    25209801  2 (64Mb)   9 (128Mb)  not present  NAODEC2A  NAODEC1A  317-5040-COM  WK2
+World Kicks (WK3 Ver. A)             F2    25209801  2 (64Mb)   9 (128Mb)  not present  NAODEC2A  NAODEC1A  317-5040-COM  WK3
 
 (1) note: the number in the game code has the following meaning: 1 = Japan, 2 = Asia, 3 = US, 4 = World.
 
@@ -615,7 +671,7 @@ Mazan: Flash of the Blade (Ver. A)  F1X   25869812  1 (64Mb)   8 (128Mb)  presen
 Mazan: Flash of the Blade (Ver. A)  F1X   25869812  1 (64Mb)   8 (128Mb)  present  NAODEC3  317-0266-COM  MAZ3
 Ninja Assault (Ver. A)              F3    25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA1
 Ninja Assault (Ver. A)              F3    25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA2
-Ninja Assault (Ver. A)              F2X   25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA3
+Ninja Assault (Ver. A)              F3    25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA3
 Ninja Assault (Ver. A)              F3    25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA4
 
 (1) note: the number in the game code has the following meaning: 1 = Japan, 2 = Asia, 3 = US, 4 = World.
@@ -1690,7 +1746,7 @@ inline int naomi_state::decode_reg32_64(UINT32 offset, UINT64 mem_mask, UINT64 *
 	// non 32-bit accesses have not yet been seen here, we need to know when they are
 	if ((mem_mask != U64(0xffffffff00000000)) && (mem_mask != U64(0x00000000ffffffff)))
 	{
-		mame_printf_verbose("%s:Wrong mask!\n", machine().describe_context());
+		osd_printf_verbose("%s:Wrong mask!\n", machine().describe_context());
 //      debugger_break(machine);
 	}
 
@@ -1726,7 +1782,7 @@ READ64_MEMBER(naomi_state::aw_modem_r )
 		return U64(0xffffffffffffffff);
 	}
 
-	mame_printf_verbose("MODEM:  Unmapped read %08x\n", 0x600000+reg*4);
+	osd_printf_verbose("MODEM:  Unmapped read %08x\n", 0x600000+reg*4);
 	return 0;
 }
 
@@ -1738,7 +1794,7 @@ WRITE64_MEMBER(naomi_state::aw_modem_w )
 
 	reg = decode_reg32_64(offset, mem_mask, &shift);
 	dat = (UINT32)(data >> shift);
-	mame_printf_verbose("MODEM: [%08x=%x] write %" I64FMT "x to %x, mask %" I64FMT "x\n", 0x600000+reg*4, dat, data, offset, mem_mask);
+	osd_printf_verbose("MODEM: [%08x=%x] write %" I64FMT "x to %x, mask %" I64FMT "x\n", 0x600000+reg*4, dat, data, offset, mem_mask);
 }
 
 static ADDRESS_MAP_START( aw_map, AS_PROGRAM, 64, naomi_state )
@@ -6526,7 +6582,7 @@ ROM_START( gundmgd )
 	ROM_LOAD("gundmgd-default-eeprom.bin", 0, 0x80, CRC(dc80fa1e) SHA1(5a412576b9fd4899ab0c11f93257600a5eb8b994))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0001", 0, SHA1(dbb307167d0aa306dcea0c132e80f45dc06f7deb) )
+	DISK_IMAGE_READONLY( "gdl-0001", 0, SHA1(0430b7c8e6cc82998ded511bc52a9fb2a10002cd) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5069-COM)
@@ -6543,7 +6599,7 @@ ROM_START( sfz3ugd )
 	ROM_LOAD("sfz3ugd-default-eeprom.bin", 0, 0x80, CRC(699dd01b) SHA1(1a1e6fd1e47ed58a2afbf7f632fccf72a4708531))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0002", 0, SHA1(dfaa96d79bff884388b441da862853b0a8c0bae6) )
+	DISK_IMAGE_READONLY( "gdl-0002", 0, SHA1(fceb1014a1c673c91a4529fff75aebfd734d5f4e) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5072-COM)
@@ -6556,7 +6612,7 @@ ROM_START( cvsgd )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0004", 0, SHA1(a2f3321a191d90cba7af9c2970211f495a0708d3) )
+	DISK_IMAGE_READONLY( "gdl-0004", 0, SHA1(3a9c7c4a97461a354addc645a1c275ae6a17daa7) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5076-JPN)
@@ -6569,7 +6625,7 @@ ROM_START( starseek )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0005", 0, SHA1(9778c00e063f29cb401d1877f277e97ec84c7dc4) )
+	DISK_IMAGE_READONLY( "gdl-0005", 0, SHA1(04bb039110950a5ec99f79a3a2e114fe3cbb86a6) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A-20 (317-5077-JPN)
@@ -6585,7 +6641,7 @@ ROM_START( gundmxgd )
 	ROM_LOAD("gundmxgd-default-eeprom.bin", 0, 0x80, CRC(dc0e8d45) SHA1(4088d25fdf7399552882b9656b66dff2345c376e))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0006", 0, SHA1(fa159c2208517a09b8018390120128b5226b9146) )
+	DISK_IMAGE_READONLY( "gdl-0006", 0, SHA1(4f3e37363a8533995a4579137c7ea01252f8faca) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5079-COM)
@@ -6598,7 +6654,7 @@ ROM_START( cvs2gd )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0007a", 0, SHA1(c76e76f7c21322c9006d91d283c81d7e18a9c8d4) )
+	DISK_IMAGE_READONLY( "gdl-0007a", 0, SHA1(2c7969edc7ce9af1101d4803b47b321dc05503e8) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5078-COM)
@@ -6611,7 +6667,7 @@ ROM_START( ikaruga )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0010", 0, SHA1(cdae4618adfd8eab5a06fbb491ce18a0286e3cae) )
+	DISK_IMAGE_READONLY( "gdl-0010", 0, SHA1(58a592ba217847808940608548a1bfdf0ae9e713) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5081-JPN)
@@ -6624,7 +6680,7 @@ ROM_START( ggxx )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0011", 0, SHA1(2083bcdb090034822c1c4d49ee1c3f890fd070f8) )
+	DISK_IMAGE_READONLY( "gdl-0011", 0, SHA1(642177a24a14a1b9afd0aab59a3e0074dfa6e5b8) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5082-COM)
@@ -6666,7 +6722,7 @@ ROM_START( chocomk )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0014a", 0, SHA1(f2e94fef622e3142aaaf95c8a013356eb72eae82) )
+	DISK_IMAGE_READONLY( "gdl-0014a", 0, SHA1(5b7d9c091e033cbd1bb27eea7c91d54086449496) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5085-JPN)
@@ -6682,7 +6738,7 @@ ROM_START( quizqgd )
 	ROM_LOAD("quizqgd-default-eeprom.bin", 0, 0x80, CRC(46c10aa3) SHA1(0a082243399a45c1c9d757f59ed660b3b7a9730d))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0017", 0, SHA1(a47ed967d038beac720219add6a2efd133363566) )
+	DISK_IMAGE_READONLY( "gdl-0017", 0, SHA1(2cdf36ca3a1bd25aa1f68240da3e318df375c652) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5090-JPN)
@@ -6695,7 +6751,7 @@ ROM_START( azumanga )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0018", 0, SHA1(857d405b733c1de3534275a91afb939aec4e1279) )
+	DISK_IMAGE_READONLY( "gdl-0018", 0, SHA1(749a56dd64ab697f17470d8ae797f7e20e9eb646) )
 
 	ROM_REGION( 0x50, "pic", ROMREGION_ERASE)
 	//PIC16C622A (317-5091-JPN)
@@ -6708,7 +6764,7 @@ ROM_START( ggxxrl )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0019a", 0, SHA1(f6253bf2f49a7feb7079f6a262d87634415bdaa0) )
+	DISK_IMAGE_READONLY( "gdl-0019a", 0, SHA1(95b017c2faedf19cabfd1e6cd99a67ac27d76422) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5092-JPN)
@@ -6740,7 +6796,7 @@ ROM_START( shikgam2 )
 	ROM_LOAD("shikgam2-default-eeprom.bin", 0, 0x80, CRC(5fb60e27) SHA1(a64242083a718f0a4b1d2e4707f5eb7480265719))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0021", 0, SHA1(ca572f71d559b36206a5d70bdeb2db9aebcb227b) )
+	DISK_IMAGE_READONLY( "gdl-0021", 0, SHA1(c88bfabcd6ec74fa99c7a6e5cec50f526f074ed2) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5095-JPN)
@@ -6772,7 +6828,7 @@ ROM_START( bdrdown )
 	ROM_LOAD("bdrdown-default-eeprom.bin", 0, 0x80, CRC(5b19727c) SHA1(1dd9c721d58e4542d04afe17baa77980d0ed8b6a))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0023a", 0, SHA1(b8b8c8aeb09e2657095268bd54e71461b1af2abe) )
+	DISK_IMAGE_READONLY( "gdl-0023a", 0, SHA1(1bd2594ca5be9423aad1a848f14d8891c0b2806a) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5097-JPN)
@@ -6789,7 +6845,7 @@ ROM_START( psyvar2 )
 	ROM_LOAD("psyvar2-default-eeprom.bin", 0, 0x80, CRC(9d8661f3) SHA1(c696277a7b488bee6ddb33a1d5345a85c1567cbe))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0024", 0, SHA1(f7046f901ede9c70f40d3ff6c022116380c95bd5) )
+	DISK_IMAGE_READONLY( "gdl-0024", 0, SHA1(4898b21fb1f44f34fcf1730f64cb0491e9195327) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5100-JPN)
@@ -6805,7 +6861,7 @@ ROM_START( cfield )
 	ROM_LOAD("cfield-default-eeprom.bin", 0, 0x80, CRC(a7acb6bf) SHA1(5aae6366bfb3ee3120da405abb93e2007cd94683))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0025", 0, SHA1(a57ad350fd0b7a18f204629aa9418ed7533f8057) )
+	DISK_IMAGE_READONLY( "gdl-0025", 0, SHA1(a43ea67bcba2a32fc99dd2739653564f85f700a3) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5102-COM)
@@ -6821,7 +6877,7 @@ ROM_START( trizeal )
 	ROM_LOAD("trizeal-default-eeprom.bin", 0, 0x80, CRC(ac0847ce) SHA1(ec12a6bbf074bf3bfe2e9bfe2855b7bd7e699f3c))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0026", 0, SHA1(2aacd8400d91db8bb1c103b915f6d808e9aef333) )
+	DISK_IMAGE_READONLY( "gdl-0026", 0, SHA1(9288904f376a07177975b7c453e2ad2bf491c3e2) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5103-JPN)
@@ -6834,7 +6890,7 @@ ROM_START( meltybld )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0028c", 0, SHA1(b24a36bf73145837d1722eb9f7ad0f227dbc053a) )
+	DISK_IMAGE_READONLY( "gdl-0028c", 0, SHA1(9759abdb822b5bff8ad064ebf3a79417c128d377) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5104-JPN)
@@ -6850,7 +6906,7 @@ ROM_START( senko )
 	ROM_LOAD("senko-default-eeprom.bin", 0, 0x80, CRC(b3d3be09) SHA1(55af4f6e35f82f683682bf731d3070bc275d6e57))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0030a", 0, SHA1(85503fc0793b883f84b191f5ea50c763773c6f59) )
+	DISK_IMAGE_READONLY( "gdl-0030a", 0, SHA1(50813f6bde947c5b045a67827ba86b6ab0c29f5c) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5107-JPN)
@@ -6866,7 +6922,7 @@ ROM_START( senkoo )
 	ROM_LOAD("senkoo-default-eeprom.bin", 0, 0x80, CRC(a2203a7f) SHA1(2a3a52667b9c8e0c9b4e4003b7c6965cd4de11f3))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0030", 0, SHA1(8a532a28d32ff100aac872b07b2641f4b5843518) )
+	DISK_IMAGE_READONLY( "gdl-0030", 0, SHA1(2ea7d93343b2826a25363642bc4d378dca531638) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5107-JPN)
@@ -6882,7 +6938,7 @@ ROM_START( ss2005 )
 	ROM_LOAD("ss2005-default-eeprom.bin", 0, 0x80, CRC(26bd9003) SHA1(f35551c96c49eef5473ff50a94b82ef5110b0f10))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0031", 0, SHA1(3af2e1f24e57c0767a6c4f6e281d83caf8e256ba) )
+	DISK_IMAGE_READONLY( "gdl-0031", 0, SHA1(1fdc3084b95bfdb64a77461f34b471e464573160) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5108-JPN)
@@ -6927,7 +6983,7 @@ ROM_START( radirgya )
 	ROM_LOAD("radirgy-default-eeprom.bin", 0, 0x80, CRC(8d60a282) SHA1(6d81dec88a1ade45e1edf2bdb3683c6cd0651eeb))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0032a", 0, SHA1(c7873c8b2281e3b5123d3dff360d471415f8fc48) )
+	DISK_IMAGE_READONLY( "gdl-0032a", 0, SHA1(9316e0ff90fab69f57b23afbb60de7e6344c2a45) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5110-JPN)
@@ -6940,7 +6996,7 @@ ROM_START( ggxxsla )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0033a", 0, SHA1(50659d60fcca9bb2e2a05eb90fa1a13aaa04a161) )
+	DISK_IMAGE_READONLY( "gdl-0033a", 0, SHA1(c2a6b57b11f2528a212e186f9fa2127120aca111) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5111-JPN)
@@ -6953,7 +7009,7 @@ ROM_START( kurucham )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0034", 0, BAD_DUMP SHA1(10fd7edb0b620133c003d686e5af2ed27004fa09) )
+	DISK_IMAGE_READONLY( "gdl-0034", 0, SHA1(48a7d20811a6658d749c495db8aa802d1172a8db) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5115-JPN)
@@ -6969,7 +7025,7 @@ ROM_START( undefeat )
 	ROM_LOAD("undefeat-default-eeprom.bin", 0, 0x80, CRC(9d2b071c) SHA1(88d90c23b9c2a6aa61bdf318d074a9cfa5c145e5))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0035", 0, SHA1(3beade0a544b549ee06be5b51536950e3eaabe71) )
+	DISK_IMAGE_READONLY( "gdl-0035", 0, SHA1(cee38c3953fad9f05dbbc669eebb465fc4c9db8b) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5117-JPN)
@@ -6985,7 +7041,7 @@ ROM_START( trgheart )
 	ROM_LOAD("trgheart-default-eeprom.bin", 0, 0x80, CRC(7faff313) SHA1(1bc25e4595ef050e82eb820842ba6ccd63b6703e))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0036a", 0, SHA1(82bc92b0485f6db74465dbe257cf28f9e92ac0fc) )
+	DISK_IMAGE_READONLY( "gdl-0036a", 0, SHA1(05b0d6fde7282db97fb58ad941090e356e02934c) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5121-JPN)
@@ -7011,7 +7067,7 @@ ROM_START( senkosp )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0038", 0, SHA1(841c7a233cfdb2dbb43032f34e3b99cfaa01c32b) )
+	DISK_IMAGE_READONLY( "gdl-0038", 0, SHA1(15955788d403a1991aa1be26ed9ace60fd909622) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5123-COM)
@@ -7037,7 +7093,7 @@ ROM_START( meltyba )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0039a", 0, BAD_DUMP SHA1(e6aa3d65b43a20606e6754bcb8665438770a1f8c) )
+	DISK_IMAGE_READONLY( "gdl-0039a", 0, SHA1(5a405492fbb77f7b7ba1ba14f0e19e19fcce571e) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-5124-JPN)
@@ -7053,7 +7109,7 @@ ROM_START( karous )
 	ROM_LOAD("karous-default-eeprom.bin", 0, 0x80, CRC(b017451c) SHA1(a16d8e2cde8ebe0e2dd6d0b5c027bcdff56a809b))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0040", 0, SHA1(a3ca75c20aff34c35bc8e0af609b7353cb9123d9) )
+	DISK_IMAGE_READONLY( "gdl-0040", 0, SHA1(16db8962307a7259e4a5321be7e3b76ac391b539) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5125-COM)
@@ -7088,7 +7144,7 @@ ROM_START( ggxxac )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gdl-0041", 0, BAD_DUMP SHA1(3a589e1c79ead971c821a7566032b0187e339684) )
+	DISK_IMAGE_READONLY( "gdl-0041", 0, SHA1(a18b75415ef316023665fa9f5d4c95ef2ff27d7b) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-5126-JPN)
@@ -7138,7 +7194,7 @@ ROM_START( confmiss )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0001", 0, SHA1(bc06dca75393c60d6cc349ff30caca6d5b40d5ce) )
+	DISK_IMAGE_READONLY( "gds-0001", 0, SHA1(ccad52a642dc31ad37df90a1434e468d5386e82f) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	ROM_LOAD("317-0298-com.pic", 0x00, 0x4000, CRC(15971bf6) SHA1(815152ab05edb1789a26898cfd66b5a7c4a1f765) )
@@ -7149,7 +7205,7 @@ ROM_START( sprtjam )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0003", 0, SHA1(1f7e2d0d37f92c70a333ac86c4393d631680a12a) )
+	DISK_IMAGE_READONLY( "gds-0003", 0, SHA1(79a0d8e1aa3e6f660ef4f302d9d54c1a6d2057e3) )
 
 	//PIC16C622A (317-0300-COM)
 	//(sticker 253-5508-0300)
@@ -7164,7 +7220,7 @@ ROM_START( slashout )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0004", 0, SHA1(b5bcec8a7c4983e1c7ebddd54cbf708213d62c08) )
+	DISK_IMAGE_READONLY( "gds-0004", 0, SHA1(afcaa4f5efaf9ffad3a687d1d5bd9270bbf94281) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0302-COM)
@@ -7177,7 +7233,7 @@ ROM_START( spkrbtl )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0005", 0, SHA1(916cfd1ef7fc16877ec7e8d16b0098843ca1cf24) )
+	DISK_IMAGE_READONLY( "gds-0005", 0, SHA1(a3abd6df5cbe3ec4eadf54c8471caee31dd8c452) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0303-COM)
@@ -7255,7 +7311,7 @@ ROM_START( dygolf )
 	ROM_LOAD("epr-22084.ic3", 0x0000, 0x10000, CRC(18cf58bb) SHA1(1494f8215231929e41bbe2a133658d01882fbb0f) )
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0009a", 0, SHA1(eaf0e18cbe7c65cec1e22215d3c2982c7c246677) )
+	DISK_IMAGE_READONLY( "gds-0009a", 0, SHA1(ee94d7b7f0b84517a8e1662b477be0be7e04dd1c) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0308-COM)
@@ -7268,7 +7324,7 @@ ROM_START( wsbbgd )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0010", 0, SHA1(413521b3e10568bcb386aaac7d1bac5b402a6d89) )
+	DISK_IMAGE_READONLY( "gds-0010", 0, SHA1(581a44fb2afab1f8a384ed58559fd6308e787864) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0309-COM)
@@ -7281,7 +7337,7 @@ ROM_START( vtennisg )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0011", 0, SHA1(57740cc5eee8f9f09479a4e2794812254fb4c38a) )
+	DISK_IMAGE_READONLY( "gds-0011", 0, SHA1(5ae669832805139f973dc86ab7cab66aa8166ac0) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-0312-COM)
@@ -7294,7 +7350,7 @@ ROM_START( shaktmsp )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0013", 0, SHA1(47372ae3bd5ada0981e549f9b4d974f0112ce4c8) )
+	DISK_IMAGE_READONLY( "gds-0013", 0, SHA1(5a40ba644ffb7650e8f9774a9d583b30874e9dee) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)   // 317-0315-COM
 	ROM_LOAD( "317-0315-com.pic", 0x000000, 0x004000, CRC(c225b08b) SHA1(37ac664524a9e4e37cc9af1e509759295f659e0d) )
@@ -7305,7 +7361,7 @@ ROM_START( vtennis2 )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0015a", 0, SHA1(352d2d8e4bd352ae649170bfce6bd839189b8527) )
+	DISK_IMAGE_READONLY( "gds-0015a", 0, SHA1(5db1ef70b6db63f8a15e1d64cdf0170e80209eb4) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	ROM_LOAD("317-0318-exp.pic", 0x00, 0x4000, CRC(83de4047) SHA1(1808ac0d8353b92296de37f98b490a42a0e141cf) )
@@ -7335,7 +7391,7 @@ ROM_START( shaktamb )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0016", 0, SHA1(59772dd03074b2411c963c1d3c44fa10ffd453e2) )
+	DISK_IMAGE_READONLY( "gds-0016", 0, SHA1(c44f50ded8054d7d89b00c720120ccc6dd9686e0) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	ROM_LOAD( "317-0321-com.pic", 0x000000, 0x004000, CRC(81519e71) SHA1(a30d25f81c77384ed26faa67c942802f2f3d7817) )
@@ -7372,7 +7428,7 @@ ROM_START( vathlete )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0019", 0, SHA1(66df07df458b3b557354adeee6f8fc91ed9d4a99) )
+	DISK_IMAGE_READONLY( "gds-0019", 0, SHA1(ab062cfc0e731ddb1c6bb3acf83650b20b3f7b4a) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0330-COM)
@@ -7445,7 +7501,7 @@ ROM_START( mok )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0022", 0, SHA1(9bf37f5831e8c7f6f97a665bd66078b30324322f) )
+	DISK_IMAGE_READONLY( "gds-0022", 0, SHA1(ddd6bf6a93f44f04199b278149ded19b26cdcab4) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	ROM_LOAD("317-0333-com.pic", 0x00, 0x4000, CRC(15fb7792) SHA1(03932ba9b1738d5ab75b2a465cc3254e75f59f63) )
@@ -7458,7 +7514,7 @@ ROM_START( ngdup23a )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0023a", 0, SHA1(d7589613890c8f4d0e137d80ac4fefc8ceb07f74) )
+	DISK_IMAGE_READONLY( "gds-0023a", 0, SHA1(cfd49a1f56e4ddd198f2237a87d412d48c1251e1) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF) // uses the vf4 pic
 	//PIC16C622A (317-0314-COM)
@@ -7485,7 +7541,7 @@ ROM_START( ngdup23e )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0023e", 0, SHA1(cc592e5b32273f93866c4447e1fb56751911992c))
+	DISK_IMAGE_READONLY( "gds-0023e", 0, SHA1(ec5d6dea6ca7b0e461f4d4571ece40cb755b9249))
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF) // uses the vf4 final tuned pic
 	//PIC16C622A (317-0387-COM)
@@ -7519,7 +7575,7 @@ ROM_START( puyofev )
 	ROM_LOAD("puyofev-default-eeprom.bin", 0, 0x80, CRC(42e5fd40) SHA1(e805bca22ae192e26965ba00534e6b87a3df238f))
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0031", 0, SHA1(2b7f1861cd68dbbe9fce51aa87a366540da391e5) )
+	DISK_IMAGE_READONLY( "gds-0031", 0, SHA1(500146b9023522fd2798e3e72de4ebfa54e9bf32) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-0375-COM)
@@ -7532,7 +7588,7 @@ ROM_START( ndcfboxa )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0042a", 0, SHA1(619fd9ebd52fb418526f741ddacbd3edf7dcb4f5) )
+	DISK_IMAGE_READONLY( "gds-0042a", 0, SHA1(a6f9d402c9f57fc8a5378090e6ff7d2d58810454) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-0567-EXP)
@@ -7926,7 +7982,7 @@ ROM_START( vstrik3 )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0006", 0, SHA1(4acaff18a46cc14df27be1dcf07dedfb976d39cf) )
+	DISK_IMAGE_READONLY( "gds-0006", 0, SHA1(44bfd24f44272c8fd7f5f9294005c6cc53222ef3) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0304-COM)
@@ -7967,7 +8023,7 @@ ROM_START( vf4c )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0012c", 0, SHA1(cd90baf7cf3011144abb48677a473242d22c4601) )
+	DISK_IMAGE_READONLY( "gds-0012c", 0, SHA1(dcaeddea0dc089eadda8ba4579328aca3a613c4b) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0314-COM)
@@ -8005,7 +8061,7 @@ ROM_START( beachspi )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0014", 0, SHA1(40adbf9c7b1cc3549d6c6eab0101201a5a112a2a) )
+	DISK_IMAGE_READONLY( "gds-0014", 0, SHA1(2d784ed2f5c00189af8480c9ab5ae9d8b7a152d2) )
 
 	//PIC16C622A (317-0317-COM)
 	//(sticker 253-5508-0317)
@@ -8033,7 +8089,7 @@ ROM_START( vf4evo )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0024b", 0, SHA1(dddd9ab674dc0e7ad5b63b24b132b351a271650d) )
+	DISK_IMAGE_READONLY( "gds-0024b", 0, SHA1(42fba5d95454750ad80df2ce0db2996f71307914) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0338-JPN)
@@ -8047,7 +8103,7 @@ ROM_START( vf4evoa )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0024a", 0, SHA1(948f1ed9f4f2fa09c005c76b04de58b1789e65a8) )
+	DISK_IMAGE_READONLY( "gds-0024a", 0, SHA1(92fa11005708d7b1c1d2608dfc3033c30a885b47) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0338-JPN)
@@ -8060,7 +8116,18 @@ ROM_START( initdexp )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0025", 0, SHA1(db480a414e7dd507b62cf519c2eafa3d9427340a) )
+	DISK_IMAGE_READONLY( "gds-0025a", 0, SHA1(d6ec4295122e3d69b9e109778ab1cb0cb0dfc839) )
+
+	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
+	ROM_LOAD("317-0343-com.pic", 0x00, 0x4000, CRC(80eea4eb) SHA1(5aedc0d52a2a8a2d186ca591094835d972574092) )
+ROM_END
+
+ROM_START( initdexpo )
+	NAOMI2_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	DISK_REGION( "gdrom" )
+	DISK_IMAGE_READONLY( "gds-0025", 0, SHA1(00f4c62a16862e814798df9fa6ed0471745760b7) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	ROM_LOAD("317-0343-com.pic", 0x00, 0x4000, CRC(80eea4eb) SHA1(5aedc0d52a2a8a2d186ca591094835d972574092) )
@@ -8108,7 +8175,7 @@ ROM_START( initdv3j )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0032c", 0, SHA1(3f8920531145f3061c44219c6d2b35920d570167) )
+	DISK_IMAGE_READONLY( "gds-0032c", 0, SHA1(d92bca7c8a7920c99b23710f5bdbeed1fbec12d2) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0379-JPN 253-5508-0379J)
@@ -8132,19 +8199,20 @@ ROM_START( initdv3e )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0033", 0, SHA1(f7a9e02c0949c3e2db1f013e94f2a6ef9efc439d) )
+	DISK_IMAGE_READONLY( "gds-0033", 0, SHA1(98fb1bd119fc33ef14fcaba3eb2347836469a75b) )
 
 	ROM_REGION( 0x4300, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0384-COM)
 	ROM_LOAD( "317-0384-com.pic", 0x000000, 0x004300, CRC(081ccd51) SHA1(598b3bd9e8b16f5954d15738c1ca55703609b690) )
 ROM_END
 
-ROM_START( vf4tuned ) // this GD-ROM contain two copies of the same game file
+// gds-0036x GD-ROMs have two copies of identical game file, and two boot files BHX1.BIN and BHX1.1GB, so can be two PICs too
+ROM_START( vf4tuned )
 	NAOMI2_BIOS
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0036f", 0, SHA1(197ee1b09531f9bf204033de182e39ec5128d9f6) )
+	DISK_IMAGE_READONLY( "gds-0036f", 0, SHA1(68edece4239e5adfef9df143defb711ff2b4db72) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0387-COM)
@@ -8157,7 +8225,7 @@ ROM_START( vf4tunedd )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0036d", 0, BAD_DUMP SHA1(2f7654307a4c978c5af6c8238c44e70275dd34f9) )
+	DISK_IMAGE_READONLY( "gds-0036d", 0, SHA1(2a2737e035f690946897bbb25943f2c5230eca99) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0387-COM)
@@ -8172,7 +8240,7 @@ ROM_START( vf4tuneda )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0036a", 0, BAD_DUMP SHA1(cd630fc4e8f7ed5641b85c609584d7efe0eac137) )
+	DISK_IMAGE_READONLY( "gds-0036a", 0, SHA1(b6c9cbe09b4cbe0faefe0bb09f429a6856663eaa) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0387-COM)
@@ -8185,7 +8253,7 @@ ROM_START( inidv3cy )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0039b", 0, SHA1(49521709c44a4eee1b384455940b3fec6e03e8fe) )
+	DISK_IMAGE_READONLY( "gds-0039b", 0, SHA1(b5eaae06ee3c81d57c0190bd709c690372a4cca6) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C621A (317-0406-COM)
@@ -8740,7 +8808,7 @@ ROM_END
 /* 0164 */ GAME( 2005, mushi2ea, mushik2e, naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "MushiKing II - The King Of Beetle II ENG (Ver. 2.001)", GAME_FLAGS )
 /* 0166 */ GAME( 2006, zunou,    naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Touch De Zunou (Rev A)", GAME_FLAGS )
 /* 0170 */ GAME( 2007, manicpnc, naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Manic Panic Ghosts!", GAME_FLAGS )
-/* 0170 */ GAME( 2007, pokasuka, naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Pokasuka Ghost", GAME_FLAGS )
+/* 0170 */ GAME( 2007, pokasuka, manicpnc, naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Pokasuka Ghost", GAME_FLAGS )
 /* 0175 */ GAME( 2007, asndynmt, naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Asian Dynamite", GAME_FLAGS )
 // 0177 Rythm Tengoku (Japan)
 // 00xx Mayjinsen (Formation Battle in May) - prototype, never released
@@ -8854,7 +8922,8 @@ GAME( 2003, puyofevp, naomi, naomim1, naomi, naomi_state, naomi, ROT0, "Sega", "
 // 0024  Virtua Fighter 4 Evolution
 /* 0024A */ GAME( 2002, vf4evoa,  vf4evo,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Virtua Fighter 4 Evolution (Rev A) (GDS-0024A)", GAME_FLAGS )
 /* 0024B */ GAME( 2002, vf4evo,   naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Virtua Fighter 4 Evolution (Rev B) (GDS-0024B)", GAME_FLAGS )
-/* 0025  */ GAME( 2002, initdexp, naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage (Export) (GDS-0025)", GAME_FLAGS )
+/* 0025  */ GAME( 2002, initdexpo,initdexp,naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage (Export) (GDS-0025)", GAME_FLAGS )
+/* 0025A */ GAME( 2002, initdexp, naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage (Export) (Rev A) (GDS-0025A)", GAME_FLAGS )
 /* 0026  */ GAME( 2002, initdv2jo,initdv2j,naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage Ver. 2 (Japan) (GDS-0026)", GAME_FLAGS )
 // 0026A Initial D Arcade Stage Ver. 2 (Japan) (Rev A)
 /* 0026B */ GAME( 2002, initdv2j, naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage Ver. 2 (Japan) (Rev. B) (GDS-0026B)", GAME_FLAGS )

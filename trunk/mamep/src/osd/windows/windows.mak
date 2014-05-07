@@ -286,9 +286,6 @@ ifeq ($(findstring 4.4.,$(TEST_GCC)),)
 	LDFLAGS += -static-libstdc++
 endif
 
-ifeq ($(findstring 4.8.,$(TEST_GCC)),4.8.)
-	CCOMFLAGS += -Wno-narrowing -Wno-attributes -Wno-unused-local-typedefs
-endif
 # add the windows libraries
 LIBS += -luser32 -lgdi32 -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi -lwsock32
 
@@ -320,7 +317,6 @@ OSDCOREOBJS = \
 	$(WINOBJ)/winsocket.o \
 	$(WINOBJ)/winwork.o \
 	$(WINOBJ)/winptty.o \
-	$(WINOBJ)/winmidi.o
 
 
 #-------------------------------------------------
@@ -354,7 +350,6 @@ CCOMFLAGS += -DDIRECT3D_VERSION=0x0900
 # extra dependencies
 $(WINOBJ)/drawdd.o :    $(SRC)/emu/rendersw.inc
 $(WINOBJ)/drawgdi.o :   $(SRC)/emu/rendersw.inc
-$(WINOBJ)/winmidi.o:    $(SRC)/osd/portmedia/pmmidi.inc
 
 ifndef USE_QTDEBUG
 # add debug-specific files

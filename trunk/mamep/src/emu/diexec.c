@@ -48,7 +48,6 @@ device_execute_interface::device_execute_interface(const machine_config &mconfig
 		m_timed_interrupt_period(attotime::zero),
 		m_is_octal(false),
 		m_nextexec(NULL),
-		m_driver_irq_legacy(0),
 		m_timedint_timer(NULL),
 		m_profiler(PROFILER_IDLE),
 		m_icountptr(NULL),
@@ -123,6 +122,20 @@ void device_execute_interface::static_set_periodic_int(device_t &device, device_
 		throw emu_fatalerror("MCFG_DEVICE_PERIODIC_INT called on device '%s' with no execute interface", device.tag());
 	exec->m_timed_interrupt = function;
 	exec->m_timed_interrupt_period = rate;
+}
+
+
+//-------------------------------------------------
+//  set_irq_acknowledge_callback - configuration helper
+//  to setup callback for IRQ acknowledge
+//-------------------------------------------------
+
+void device_execute_interface::static_set_irq_acknowledge_callback(device_t &device, device_irq_acknowledge_delegate callback)
+{
+	device_execute_interface *exec;
+	if (!device.interface(exec))
+		throw emu_fatalerror("MCFG_DEVICE_IRQ_ACKNOWLEDGE called on device '%s' with no execute interface", device.tag());
+	exec->m_driver_irq = callback;
 }
 
 
@@ -202,29 +215,6 @@ void device_execute_interface::abort_timeslice()
 		m_cycles_running -= delta;
 		*m_icountptr -= delta;
 	}
-}
-
-
-//-------------------------------------------------
-//  set_irq_acknowledge_callback - install a driver-specific
-//  callback for IRQ acknowledge
-//-------------------------------------------------
-
-void device_execute_interface::set_irq_acknowledge_callback(device_irq_acknowledge_callback callback)
-{
-	m_driver_irq_legacy = callback;
-}
-
-
-//-------------------------------------------------
-//  set_irq_acknowledge_callback - install a driver-specific
-//  callback for IRQ acknowledge
-//-------------------------------------------------
-
-void device_execute_interface::set_irq_acknowledge_callback(device_irq_acknowledge_delegate callback)
-{
-	m_driver_irq = callback;
-	m_driver_irq_legacy = NULL;
 }
 
 
@@ -329,14 +319,13 @@ void device_execute_interface::trigger(int trigid)
 attotime device_execute_interface::local_time() const
 {
 	// if we're active, add in the time from the current slice
-	attotime result = m_localtime;
 	if (executing())
 	{
 		assert(m_cycles_running >= *m_icountptr);
 		int cycles = m_cycles_running - *m_icountptr;
-		result += cycles_to_attotime(cycles);
+		return m_localtime + cycles_to_attotime(cycles);
 	}
-	return result;
+	return m_localtime;
 }
 
 
@@ -461,15 +450,15 @@ void device_execute_interface::interface_validity_check(validity_checker &valid)
 	{
 		screen_device_iterator iter(device().mconfig().root_device());
 		if (iter.first() == NULL)
-			mame_printf_error("VBLANK interrupt specified, but the driver is screenless\n");
+			osd_printf_error("VBLANK interrupt specified, but the driver is screenless\n");
 		else if (m_vblank_interrupt_screen != NULL && device().siblingdevice(m_vblank_interrupt_screen) == NULL)
-			mame_printf_error("VBLANK interrupt references a non-existant screen tag '%s'\n", m_vblank_interrupt_screen);
+			osd_printf_error("VBLANK interrupt references a non-existant screen tag '%s'\n", m_vblank_interrupt_screen);
 	}
 
 	if (!m_timed_interrupt.isnull() && m_timed_interrupt_period == attotime::zero)
-		mame_printf_error("Timed interrupt handler specified with 0 period\n");
+		osd_printf_error("Timed interrupt handler specified with 0 period\n");
 	else if (m_timed_interrupt.isnull() && m_timed_interrupt_period != attotime::zero)
-		mame_printf_error("No timer interrupt handler specified, but has a non-0 period given\n");
+		osd_printf_error("No timer interrupt handler specified, but has a non-0 period given\n");
 }
 
 
@@ -483,7 +472,7 @@ void device_execute_interface::interface_pre_start()
 	// bind delegates
 	m_vblank_interrupt.bind_relative_to(*device().owner());
 	m_timed_interrupt.bind_relative_to(*device().owner());
-	m_driver_irq.bind_relative_to(device());
+	m_driver_irq.bind_relative_to(*device().owner());
 
 	// fill in the initial states
 	device_iterator iter(device().machine().root_device());
@@ -492,22 +481,9 @@ void device_execute_interface::interface_pre_start()
 	m_profiler = profile_type(index + PROFILER_DEVICE_FIRST);
 	m_inttrigger = index + TRIGGER_INT;
 
-	// fill in the input states and IRQ callback information
-	for (int line = 0; line < ARRAY_LENGTH(m_input); line++)
-		m_input[line].start(this, line);
-
 	// allocate timers if we need them
 	if (m_timed_interrupt_period != attotime::zero)
 		m_timedint_timer = device().machine().scheduler().timer_alloc(FUNC(static_trigger_periodic_interrupt), (void *)this);
-
-	// register for save states
-	device().save_item(NAME(m_suspend));
-	device().save_item(NAME(m_nextsuspend));
-	device().save_item(NAME(m_eatcycles));
-	device().save_item(NAME(m_nexteatcycles));
-	device().save_item(NAME(m_trigger));
-	device().save_item(NAME(m_totalcycles));
-	device().save_item(NAME(m_localtime));
 }
 
 
@@ -520,6 +496,19 @@ void device_execute_interface::interface_post_start()
 {
 	// make sure somebody set us up the icount
 	assert_always(m_icountptr != NULL, "m_icountptr never initialized!");
+
+	// register for save states
+	device().save_item(NAME(m_suspend));
+	device().save_item(NAME(m_nextsuspend));
+	device().save_item(NAME(m_eatcycles));
+	device().save_item(NAME(m_nexteatcycles));
+	device().save_item(NAME(m_trigger));
+	device().save_item(NAME(m_totalcycles));
+	device().save_item(NAME(m_localtime));
+
+	// fill in the input states and IRQ callback information
+	for (int line = 0; line < ARRAY_LENGTH(m_input); line++)
+		m_input[line].start(this, line);
 }
 
 
@@ -611,26 +600,24 @@ void device_execute_interface::interface_clock_changed()
 
 
 //-------------------------------------------------
-//  static_standard_irq_callback - IRQ acknowledge
+//  standard_irq_callback_member - IRQ acknowledge
 //  callback; handles HOLD_LINE case and signals
 //  to the debugger
 //-------------------------------------------------
 
-IRQ_CALLBACK( device_execute_interface::static_standard_irq_callback )
+IRQ_CALLBACK_MEMBER( device_execute_interface::standard_irq_callback_member )
 {
-	return device->execute().standard_irq_callback(irqline);
+	return device.execute().standard_irq_callback(irqline);
 }
 
 int device_execute_interface::standard_irq_callback(int irqline)
 {
 	// get the default vector and acknowledge the interrupt if needed
 	int vector = m_input[irqline].default_irq_callback();
-	LOG(("static_standard_irq_callback('%s', %d) $%04x\n", device().tag(), irqline, vector));
+	LOG(("standard_irq_callback('%s', %d) $%04x\n", device().tag(), irqline, vector));
 
 	// if there's a driver callback, run it to get the vector
-	if (m_driver_irq_legacy != NULL)
-		vector = (*m_driver_irq_legacy)(&device(), irqline);
-	else if (!m_driver_irq.isnull())
+	if (!m_driver_irq.isnull())
 		vector = m_driver_irq(device(),irqline);
 
 	// notify the debugger

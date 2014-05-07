@@ -74,7 +74,7 @@ ifneq ($(OS2_SHELL),)
 TARGETOS = os2
 else
 
-UNAME = $(shell uname -a)
+UNAME = $(shell uname -mps)
 
 ifeq ($(firstword $(filter Linux,$(UNAME))),Linux)
 TARGETOS = linux
@@ -264,6 +264,9 @@ BUILD_MIDILIB = 1
 # uncomment next line to enable networking
 # USE_NETWORK = 1
 
+# uncomment to enable SSE2 optimized code and SSE2 code generation
+# SSE2 = 1
+
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
 # OPTIMIZE = 3
@@ -363,6 +366,10 @@ ifeq ($(OSD),sdl)
 ifeq ($(TARGETOS),win32)
 PREFIXSDL = sdl
 endif
+endif
+
+ifeq ($(OSD),osdmini)
+PREFIXSDL = mini
 endif
 
 # 64-bit builds get a '64' suffix
@@ -611,6 +618,10 @@ CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
 ifdef LTO
 CCOMFLAGS += -flto
 endif
+endif
+
+ifdef SSE2
+CCOMFLAGS += -msse2
 endif
 
 # add a basic set of warnings
@@ -937,7 +948,7 @@ tests: $(REGTESTS)
 
 mak: maketree $(MAKEMAK_TARGET)
 	@echo Rebuilding $(SUBTARGET).mak...
-	$(MAKEMAK) $(SRC)/targets/$(SUBTARGET).lst -I$(SRC)/emu -I$(SRC)/mame -I$(SRC)/mame/layout -I$(SRC)/mess -I$(SRC)/mess/layout $(SRC) > $(SUBTARGET).mak
+	$(MAKEMAK) $(SRC)/targets/$(SUBTARGET).lst -I. -I$(SRC)/emu -I$(SRC)/mame -I$(SRC)/mame/layout -I$(SRC)/mess -I$(SRC)/mess/layout $(SRC) > $(SUBTARGET).mak
 	$(MAKEMAK) $(SRC)/targets/$(SUBTARGET).lst > $(SUBTARGET).lst
 
 #-------------------------------------------------

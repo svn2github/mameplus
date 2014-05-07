@@ -136,7 +136,7 @@ void docastle_state::draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, 
 			 p = palette
 			 t = tile number
 
-			 */
+			*/
 
 			code = m_spriteram[offs + 3];
 			color = m_spriteram[offs + 2] & 0x0f;
@@ -162,7 +162,7 @@ void docastle_state::draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, 
 			 p = palette
 			 t = tile number
 
-			 */
+			*/
 
 			code = m_spriteram[offs + 3];
 			color = m_spriteram[offs + 2] & 0x1f;

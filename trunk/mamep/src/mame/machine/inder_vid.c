@@ -28,9 +28,8 @@ static ADDRESS_MAP_START( megaphx_tms_map, AS_PROGRAM, 16, inder_vid_device )
 	AM_RANGE(0x04000010, 0x0400001f) AM_DEVREADWRITE8("ramdac",ramdac_device,pal_r,pal_w,0x00ff)
 	AM_RANGE(0x04000030, 0x0400003f) AM_DEVWRITE8("ramdac",ramdac_device,index_r_w,0x00ff)
 	AM_RANGE(0x04000090, 0x0400009f) AM_WRITENOP
-
+	AM_RANGE(0x7fc00000, 0x7fffffff) AM_RAM AM_MIRROR(0x80000000)
 	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREADWRITE("tms", tms34010_device, io_register_r, io_register_w)
-	AM_RANGE(0xffc00000, 0xffffffff) AM_RAM
 ADDRESS_MAP_END
 
 
@@ -109,11 +108,6 @@ static ADDRESS_MAP_START( ramdac_map, AS_0, 8, inder_vid_device )
 	AM_RANGE(0x000, 0x3ff) AM_DEVREADWRITE("ramdac",ramdac_device,ramdac_pal_r,ramdac_rgb888_w)
 ADDRESS_MAP_END
 
-static RAMDAC_INTERFACE( ramdac_intf )
-{
-	1
-};
-
 static MACHINE_CONFIG_FRAGMENT( inder_vid )
 	MCFG_CPU_ADD("tms", TMS34010, XTAL_40MHz)
 	MCFG_CPU_CONFIG(tms_config_megaphx)
@@ -126,8 +120,8 @@ static MACHINE_CONFIG_FRAGMENT( inder_vid )
 
 	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map, "palette")
-
+	MCFG_RAMDAC_ADD("ramdac", ramdac_map, "palette")
+	MCFG_RAMDAC_SPLIT_READ(1)
 
 MACHINE_CONFIG_END
 

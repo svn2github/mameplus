@@ -31,8 +31,8 @@ class sega_32x_device : public device_t
 public:
 	sega_32x_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source);
 
-	required_device<cpu_device> m_master_cpu;
-	required_device<cpu_device> m_slave_cpu;
+	required_device<sh2_device> m_master_cpu;
+	required_device<sh2_device> m_slave_cpu;
 	required_device<dac_device> m_lch_pwm;
 	required_device<dac_device> m_rch_pwm;
 
@@ -111,6 +111,8 @@ public:
 	DECLARE_WRITE16_MEMBER( _32x_sh2_slave_401c_w );
 	DECLARE_WRITE16_MEMBER( _32x_sh2_master_401e_w );
 	DECLARE_WRITE16_MEMBER( _32x_sh2_slave_401e_w );
+
+	SH2_DMA_FIFO_DATA_AVAILABLE_CB(_32x_fifo_available_callback);
 
 	void _32x_render_videobuffer_to_screenbuffer_helper(int scanline);
 	void _32x_render_videobuffer_to_screenbuffer(int x, UINT32 priority, UINT16 &lineptr);
@@ -193,6 +195,15 @@ private:
 	UINT16* m_32x_palette;
 	UINT16* m_32x_palette_lookup;
 
+	UINT16 m_fifo_block_a[4];
+	UINT16 m_fifo_block_b[4];
+	UINT16* m_current_fifo_block;
+	UINT16* m_current_fifo_readblock;
+	int m_current_fifo_write_pos;
+	int m_current_fifo_read_pos;
+	int m_fifo_block_a_full;
+	int m_fifo_block_b_full;
+	
 	required_device<palette_device> m_palette;
 };
 

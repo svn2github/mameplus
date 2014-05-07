@@ -321,19 +321,6 @@ WRITE_LINE_MEMBER(powerins_state::irqhandler)
 	m_soundcpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
-};
-
-static const nmk112_interface powerins_nmk112_intf =
-{
-	"oki1", "oki2", 0
-};
-
-
 static MACHINE_CONFIG_START( powerins, powerins_state )
 
 	/* basic machine hardware */
@@ -371,10 +358,11 @@ static MACHINE_CONFIG_START( powerins, powerins_state )
 
 	MCFG_SOUND_ADD("ym2203", YM2203, 12000000 / 8)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(powerins_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 
-	MCFG_NMK112_ADD("nmk112", powerins_nmk112_intf)
+	MCFG_DEVICE_ADD("nmk112", NMK112, 0)
+	MCFG_NMK112_ROM0("oki1")
+	MCFG_NMK112_ROM1("oki2")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( powerina, powerins )

@@ -67,14 +67,6 @@ Lots of byte-wise registers.  A partial map:
 /* K055555 5-bit-per-pixel priority encoder */
 /* This device has 48 8-bit-wide registers */
 
-
-void k055555_device::K055555_vh_start(running_machine &machine)
-{
-	machine.save().save_item(NAME(m_regs));
-
-	memset(m_regs, 0, 64*sizeof(UINT8));
-}
-
 void k055555_device::K055555_write_reg(UINT8 regnum, UINT8 regdat)
 {
 	static const char *const rnames[46] =
@@ -236,7 +228,7 @@ int k055555_device::k055555_get_palette_index( device_t *device, int idx )
 const device_type K055555 = &device_creator<k055555_device>;
 
 k055555_device::k055555_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, K055555, "Konami 055555", tag, owner, clock, "k055555", __FILE__)
+	: device_t(mconfig, K055555, "K055555 Priority Encoder", tag, owner, clock, "k055555", __FILE__)
 {
 }
 

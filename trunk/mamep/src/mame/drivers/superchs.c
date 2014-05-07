@@ -93,19 +93,6 @@ WRITE32_MEMBER(superchs_state::cpua_ctrl_w)
 	}
 }
 
-WRITE32_MEMBER(superchs_state::superchs_palette_w)
-{
-	int a,r,g,b;
-	COMBINE_DATA(&m_generic_paletteram_32[offset]);
-
-	a = m_generic_paletteram_32[offset];
-	r = (a &0xff0000) >> 16;
-	g = (a &0xff00) >> 8;
-	b = (a &0xff);
-
-	m_palette->set_pen_color(offset,rgb_t(r,g,b));
-}
-
 READ32_MEMBER(superchs_state::superchs_input_r)
 {
 	switch (offset)
@@ -198,7 +185,7 @@ static ADDRESS_MAP_START( superchs_map, AS_PROGRAM, 32, superchs_state )
 	AM_RANGE(0x1b0000, 0x1b002f) AM_DEVREADWRITE("tc0480scp", tc0480scp_device, ctrl_long_r, ctrl_long_w)
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_SHARE("shared_ram")
 	AM_RANGE(0x240000, 0x240003) AM_WRITE(cpua_ctrl_w)
-	AM_RANGE(0x280000, 0x287fff) AM_RAM_WRITE(superchs_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x280000, 0x287fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x2c0000, 0x2c07ff) AM_RAM AM_SHARE("snd_shared")
 	AM_RANGE(0x300000, 0x300007) AM_READWRITE(superchs_input_r, superchs_input_w)   /* eerom etc. */
 	AM_RANGE(0x340000, 0x340003) AM_READWRITE(superchs_stick_r, superchs_stick_w)   /* stick int request */
@@ -312,16 +299,6 @@ GFXDECODE_END
                  MACHINE DRIVERS
 ***********************************************************/
 
-static const tc0480scp_interface superchs_tc0480scp_intf =
-{
-	1, 2,       /* gfxnum, txnum */
-	0,          /* pixels */
-	0x20, 0x08, /* x_offset, y_offset */
-	-1, 0,      /* text_xoff, text_yoff */
-	0, 0,       /* flip_xoff, flip_yoff */
-	0           /* col_base */
-};
-
 static MACHINE_CONFIG_START( superchs, superchs_state )
 
 	/* basic machine hardware */
@@ -348,9 +325,13 @@ static MACHINE_CONFIG_START( superchs, superchs_state )
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", superchs)
 	MCFG_PALETTE_ADD("palette", 8192)
+	MCFG_PALETTE_FORMAT(XRGB)
 
-
-	MCFG_TC0480SCP_ADD("tc0480scp", superchs_tc0480scp_intf)
+	MCFG_DEVICE_ADD("tc0480scp", TC0480SCP, 0)
+	MCFG_TC0480SCP_GFX_REGION(1)
+	MCFG_TC0480SCP_TX_REGION(2)
+	MCFG_TC0480SCP_OFFSETS(0x20, 0x08)
+	MCFG_TC0480SCP_OFFSETS_TX(-1, 0)
 	MCFG_TC0480SCP_GFXDECODE("gfxdecode")
 	MCFG_TC0480SCP_PALETTE("palette")
 

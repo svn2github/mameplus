@@ -52,6 +52,8 @@ public:
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
 
+	dynamic_array<UINT8> m_paletteram;
+
 	UINT8 m_sound_state[2];
 	UINT8 m_sound_rate;
 	UINT16 m_sound_addr;

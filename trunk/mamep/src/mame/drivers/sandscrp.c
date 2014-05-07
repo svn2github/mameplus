@@ -1,8 +1,8 @@
 /*
 
-    Sand Scorpion
+    Sand Scorpion    (C) 1992 FACE
 
-(C) 1992 FACE
+driver by   Luca Elia (l.elia@tin.it)
 
 PCB Number: Z03VA-001
 
@@ -469,23 +469,6 @@ WRITE_LINE_MEMBER(sandscrp_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"), /* Port A Read */
-	DEVCB_INPUT_PORT("DSW2"), /* Port B Read */
-	DEVCB_NULL, /* Port A Write */
-	DEVCB_NULL, /* Port B Write */
-};
-
-
-static const kaneko_pandora_interface sandscrp_pandora_config =
-{
-	0,  /* gfx_region */
-	0, 0    /* x_offs, y_offs */
-};
-
 static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 
 	/* basic machine hardware */
@@ -498,7 +481,6 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 	MCFG_CPU_IO_MAP(sandscrp_soundport)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))  /* a guess, and certainly wrong */
-
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -522,7 +504,7 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 	MCFG_DEVICE_ADD("calc1_mcu", KANEKO_HIT, 0)
 	kaneko_hit_device::set_type(*device, 0);
 
-	MCFG_KANEKO_PANDORA_ADD("pandora", sandscrp_pandora_config)
+	MCFG_DEVICE_ADD("pandora", KANEKO_PANDORA, 0)
 	MCFG_KANEKO_PANDORA_GFXDECODE("gfxdecode")
 	MCFG_KANEKO_PANDORA_PALETTE("palette")
 
@@ -535,7 +517,8 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 4000000)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(sandscrp_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW2"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.25)
 MACHINE_CONFIG_END

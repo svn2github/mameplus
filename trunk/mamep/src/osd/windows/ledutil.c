@@ -52,10 +52,10 @@ typedef int running_machine;
 
 // note you need to compile as a console app to have any of
 // these printfs show up
-#define DEBUG_VERSION		0
+#define DEBUG_VERSION       0
 
 #if DEBUG_VERSION
-#define DEBUG_PRINTF(x)		printf x
+#define DEBUG_PRINTF(x)     printf x
 #else
 #define DEBUG_PRINTF(x)
 #endif
@@ -99,16 +99,16 @@ typedef int running_machine;
 
 struct KEYBOARD_INDICATOR_PARAMETERS
 {
-    USHORT UnitId;             // Unit identifier.
-    USHORT LedFlags;           // LED indicator state.
+	USHORT UnitId;             // Unit identifier.
+	USHORT LedFlags;           // LED indicator state.
 };
 
 
 struct id_map_entry
 {
-	id_map_entry *			next;
-	const char *			name;
-	WPARAM					id;
+	id_map_entry *          next;
+	const char *            name;
+	WPARAM                  id;
 };
 
 
@@ -117,24 +117,24 @@ struct id_map_entry
 //  GLOBAL VARIABLES
 //============================================================
 
-static int					ledmethod;
-static int					original_state;
-static int					current_state;
-static int					pause_state;
-static HANDLE				hKbdDev;
+static int                  ledmethod;
+static int                  original_state;
+static int                  current_state;
+static int                  pause_state;
+static HANDLE               hKbdDev;
 
-static HWND					mame_target;
-static HWND					listener_hwnd;
+static HWND                 mame_target;
+static HWND                 listener_hwnd;
 
-static id_map_entry *		idmaplist;
+static id_map_entry *       idmaplist;
 
 // message IDs
-static UINT					om_mame_start;
-static UINT					om_mame_stop;
-static UINT					om_mame_update_state;
-static UINT					om_mame_register_client;
-static UINT					om_mame_unregister_client;
-static UINT					om_mame_get_id_string;
+static UINT                 om_mame_start;
+static UINT                 om_mame_stop;
+static UINT                 om_mame_update_state;
+static UINT                 om_mame_register_client;
+static UINT                 om_mame_unregister_client;
+static UINT                 om_mame_get_id_string;
 
 
 
@@ -272,9 +272,9 @@ static int create_window_class(void)
 		WNDCLASS wc = { 0 };
 
 		// initialize the description of the window class
-		wc.lpszClassName	= WINDOW_CLASS;
-		wc.hInstance		= GetModuleHandle(NULL);
-		wc.lpfnWndProc		= listener_window_proc;
+		wc.lpszClassName    = WINDOW_CLASS;
+		wc.hInstance        = GetModuleHandle(NULL);
+		wc.lpfnWndProc      = listener_window_proc;
 
 		// register the class; fail if we can't
 		if (!RegisterClass(&wc))
@@ -624,9 +624,9 @@ static int led_get_state(void)
 
 		case LED_METHOD_PS2:
 		{
-			KEYBOARD_INDICATOR_PARAMETERS OutputBuffer;	  // Output buffer for DeviceIoControl
-			ULONG				DataLength = sizeof(KEYBOARD_INDICATOR_PARAMETERS);
-			ULONG				ReturnedLength; // Number of bytes returned in output buffer
+			KEYBOARD_INDICATOR_PARAMETERS OutputBuffer;   // Output buffer for DeviceIoControl
+			ULONG               DataLength = sizeof(KEYBOARD_INDICATOR_PARAMETERS);
+			ULONG               ReturnedLength; // Number of bytes returned in output buffer
 
 			// Address first keyboard
 			OutputBuffer.UnitId = 0;
@@ -687,10 +687,10 @@ static void led_set_state(int state)
 
 		case LED_METHOD_PS2:
 		{
-			KEYBOARD_INDICATOR_PARAMETERS InputBuffer;	  // Input buffer for DeviceIoControl
-			ULONG				DataLength = sizeof(KEYBOARD_INDICATOR_PARAMETERS);
-			ULONG				ReturnedLength; // Number of bytes returned in output buffer
-			UINT				LedFlags=0;
+			KEYBOARD_INDICATOR_PARAMETERS InputBuffer;    // Input buffer for DeviceIoControl
+			ULONG               DataLength = sizeof(KEYBOARD_INDICATOR_PARAMETERS);
+			ULONG               ReturnedLength; // Number of bytes returned in output buffer
+			UINT                LedFlags=0;
 
 			// Demangle lights to match 95/98
 			if (state & 0x1) LedFlags |= KEYBOARD_NUM_LOCK_ON;

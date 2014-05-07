@@ -45,6 +45,7 @@ public:
 	optional_device<decospr_device> m_sprgen2;
 
 	int m_video_control;
+	DECO16IC_BANK_CB_MEMBER(bank_callback);
 
 	DECLARE_READ16_MEMBER( sshangha_protection_region_8_146_r );
 	DECLARE_WRITE16_MEMBER( sshangha_protection_region_8_146_w );

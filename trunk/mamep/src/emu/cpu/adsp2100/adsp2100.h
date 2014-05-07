@@ -183,37 +183,22 @@ enum
 //  INTERFACE CONFIGURATION MACROS
 //**************************************************************************
 
-#define MCFG_ADSP21XX_CONFIG(_config) \
-	adsp21xx_device::static_set_config(*device, _config);
+#define MCFG_ADSP21XX_SPORT_RX_CB(_devcb) \
+	devcb = &adsp21xx_device::set_sport_rx_callback(*device, DEVCB2_##_devcb);
 
+#define MCFG_ADSP21XX_SPORT_TX_CB(_devcb) \
+	devcb = &adsp21xx_device::set_sport_tx_callback(*device, DEVCB2_##_devcb);
+
+#define MCFG_ADSP21XX_TIMER_FIRED_CB(_devcb) \
+	devcb = &adsp21xx_device::set_timer_fired_callback(*device, DEVCB2_##_devcb);
 
 //**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
 
-class adsp21xx_device;
-
-// transmit and receive data callbacks types
-typedef INT32 (*adsp21xx_rx_func)(adsp21xx_device &device, int port);
-typedef void  (*adsp21xx_tx_func)(adsp21xx_device &device, int port, INT32 data);
-typedef void  (*adsp21xx_timer_func)(adsp21xx_device &device, int enable);
-
-
-// ======================> adsp21xx_config
-
-struct adsp21xx_config
-{
-	adsp21xx_rx_func        m_sport_rx_callback;    // callback for serial receive
-	adsp21xx_tx_func        m_sport_tx_callback;    // callback for serial transmit
-	adsp21xx_timer_func     m_timer_fired;          // callback for timer fired
-};
-
-
-
 // ======================> adsp21xx_device
 
-class adsp21xx_device : public cpu_device,
-						public adsp21xx_config
+class adsp21xx_device : public cpu_device
 {
 protected:
 	enum
@@ -232,7 +217,9 @@ protected:
 
 public:
 	// inline configuration helpers
-	static void static_set_config(device_t &device, const adsp21xx_config &config);
+	template<class _Object> static devcb2_base &set_sport_rx_callback(device_t &device, _Object object) { return downcast<adsp21xx_device &>(device).m_sport_rx_cb.set_callback(object); }
+	template<class _Object> static devcb2_base &set_sport_tx_callback(device_t &device, _Object object) { return downcast<adsp21xx_device &>(device).m_sport_tx_cb.set_callback(object); }
+	template<class _Object> static devcb2_base &set_timer_fired_callback(device_t &device, _Object object) { return downcast<adsp21xx_device &>(device).m_timer_fired_cb.set_callback(object); }
 
 	// public interfaces
 	void load_boot_data(UINT8 *srcdata, UINT32 *dstdata);
@@ -468,6 +455,10 @@ protected:
 	UINT8               m_condition_table[0x1000];
 	UINT16              m_mask_table[0x4000];
 	UINT16              m_reverse_table[0x4000];
+
+	devcb2_read32        	m_sport_rx_cb;    // callback for serial receive
+	devcb2_write32        	m_sport_tx_cb;    // callback for serial transmit
+	devcb2_write_line     	m_timer_fired_cb;          // callback for timer fired
 
 	// debugging
 #if ADSP_TRACK_HOTSPOTS

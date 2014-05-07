@@ -104,29 +104,6 @@ static int get_cmd_len(int cbyte)
 	return 6;
 }
 
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void ncr539x_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const NCR539Xinterface *intf = reinterpret_cast<const NCR539Xinterface *>(static_config());
-	if (intf != NULL)
-	{
-		*static_cast<NCR539Xinterface *>(this) = *intf;
-	}
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_out_irq_cb, 0, sizeof(m_out_irq_cb));
-		memset(&m_out_drq_cb, 0, sizeof(m_out_drq_cb));
-	}
-}
-
 //**************************************************************************
 //  LIVE DEVICE
 //**************************************************************************
@@ -137,8 +114,10 @@ const device_type NCR539X = &device_creator<ncr539x_device>;
 //  ncr539x_device - constructor/destructor
 //-------------------------------------------------
 
-ncr539x_device::ncr539x_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, NCR539X, "539x SCSI", tag, owner, clock, "ncr539x", __FILE__)
+ncr539x_device::ncr539x_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
+	legacy_scsi_host_adapter(mconfig, NCR539X, "539x SCSI", tag, owner, clock, "ncr539x", __FILE__),
+	m_out_irq_cb(*this),
+	m_out_drq_cb(*this)
 {
 }
 
@@ -148,21 +127,11 @@ ncr539x_device::ncr539x_device(const machine_config &mconfig, const char *tag, d
 
 void ncr539x_device::device_start()
 {
-	memset(m_scsi_devices, 0, sizeof(m_scsi_devices));
+	legacy_scsi_host_adapter::device_start();
 
 	// resolve line callbacks
-	m_out_irq_func.resolve(m_out_irq_cb, *this);
-	m_out_drq_func.resolve(m_out_drq_cb, *this);
-
-	// try to open the devices
-	for( device_t *device = owner()->first_subdevice(); device != NULL; device = device->next() )
-	{
-		scsihle_device *scsidev = dynamic_cast<scsihle_device *>(device);
-		if( scsidev != NULL )
-		{
-			m_scsi_devices[scsidev->GetDeviceID()] = scsidev;
-		}
-	}
+	m_out_irq_cb.resolve_safe();
+	m_out_drq_cb.resolve_safe();
 
 	m_operation_timer = timer_alloc(0, NULL);
 }
@@ -173,8 +142,6 @@ void ncr539x_device::device_start()
 
 void ncr539x_device::device_reset()
 {
-	memset(m_scsi_devices, 0, sizeof(m_scsi_devices));
-
 	m_fifo_ptr = 0;
 	m_irq_status = 0;
 	m_status = SCSI_PHASE_STATUS;
@@ -189,38 +156,19 @@ void ncr539x_device::device_reset()
 	m_chipid_available = false;
 	m_chipid_lock = false;
 
-	m_out_irq_func(CLEAR_LINE);
-	m_out_drq_func(CLEAR_LINE);
+	m_out_irq_cb(CLEAR_LINE);
+	m_out_drq_cb(CLEAR_LINE);
 }
 
 void ncr539x_device::dma_read_data(int bytes, UINT8 *pData)
 {
-	if (m_scsi_devices[m_last_id])
-	{
-		if (VERBOSE)
-			logerror("NCR539x: issuing read for %d bytes\n", bytes);
-		m_scsi_devices[m_last_id]->ReadData(pData, bytes);
-	}
-	else
-	{
-		logerror("ncr539x: read unknown device SCSI ID %d\n", m_last_id);
-	}
+	read_data(pData, bytes);
 }
 
 
 void ncr539x_device::dma_write_data(int bytes, UINT8 *pData)
 {
-	if (bytes)
-	{
-		if (m_scsi_devices[m_last_id])
-		{
-			m_scsi_devices[m_last_id]->WriteData(pData, bytes);
-		}
-		else
-		{
-			logerror("ncr539x: write to unknown device SCSI ID %d\n", m_last_id);
-		}
-	}
+	write_data(pData, bytes);
 }
 
 void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int param, void *ptr)
@@ -233,13 +181,13 @@ void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int par
 			// if this is a DMA command, raise DRQ now
 			if (m_command & 0x80)
 			{
-				m_out_drq_func(ASSERT_LINE);
+				m_out_drq_cb(ASSERT_LINE);
 			}
 
 			switch (m_command & 0x7f)
 			{
 				case 0x41:  // select without ATN steps
-					if (m_scsi_devices[m_last_id])
+					if (select(m_last_id))
 					{
 						m_irq_status |= IRQ_STATUS_SERVICE_REQUEST | IRQ_STATUS_SUCCESS;
 						// we should now be in the command phase
@@ -267,11 +215,11 @@ void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int par
 						m_status |= MAIN_STATUS_INTERRUPT;
 						m_irq_status |= IRQ_STATUS_DISCONNECTED;
 					}
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x42:  // Select with ATN steps
-					if (m_scsi_devices[m_last_id])
+					if (select(m_last_id))
 					{
 						m_irq_status |= IRQ_STATUS_SERVICE_REQUEST | IRQ_STATUS_SUCCESS;
 						// we should now be in the command phase
@@ -298,7 +246,7 @@ void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int par
 						m_status |= MAIN_STATUS_INTERRUPT;
 						m_irq_status |= IRQ_STATUS_DISCONNECTED;
 					}
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x11:  // initiator command complete
@@ -308,7 +256,7 @@ void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int par
 					m_irq_status = IRQ_STATUS_SERVICE_REQUEST;
 					m_status &= ~7; // clear phase bits
 					m_status |= MAIN_STATUS_INTERRUPT | SCSI_PHASE_DATAIN;  // go to data in phase (?)
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 
 					// this puts status and message bytes into the FIFO (todo: what are these?)
 					m_fifo_ptr = 0;
@@ -326,7 +274,7 @@ void ncr539x_device::device_timer(emu_timer &timer, device_timer_id tid, int par
 					#endif
 					m_irq_status = IRQ_STATUS_SERVICE_REQUEST;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				default:
@@ -407,7 +355,7 @@ READ8_MEMBER( ncr539x_device::read )
 							m_irq_status = IRQ_STATUS_SERVICE_REQUEST;
 							m_status &= 0x7;    // clear everything but the phase bits
 							m_status |= MAIN_STATUS_INTERRUPT | MAIN_STATUS_COUNT_TO_ZERO;
-							m_out_irq_func(ASSERT_LINE);
+							m_out_irq_cb(ASSERT_LINE);
 
 							// if no data at all, drop the phase
 							if ((m_buffer_remaining + m_total_data) == 0)
@@ -436,7 +384,7 @@ READ8_MEMBER( ncr539x_device::read )
 			rv = m_irq_status;
 			// clear the interrupt state
 			m_status &= ~MAIN_STATUS_INTERRUPT;
-			m_out_irq_func(CLEAR_LINE);
+			m_out_irq_cb(CLEAR_LINE);
 			break;
 
 		case 6:
@@ -515,7 +463,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 				case 0x00:  // NOP
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 
 					// DMA NOP?  allow chip ID
 					if ((m_command == 0x80) && (!m_chipid_lock))
@@ -529,7 +477,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 					update_fifo_internal_state(0);
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x02:  // Reset device
@@ -537,14 +485,14 @@ WRITE8_MEMBER( ncr539x_device::write )
 
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x03:  // Reset SCSI bus
 					m_status = 0;
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x10:  // information transfer (must happen immediately)
@@ -553,7 +501,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 					m_irq_status = IRQ_STATUS_SUCCESS;
 
 					int phase;
-					m_scsi_devices[m_last_id]->GetPhase( &phase );
+					phase = get_phase();
 
 					#if VERBOSE
 					printf("Information transfer: phase %d buffer remaining %x\n", phase, m_buffer_remaining);
@@ -577,7 +525,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 
 							if (amtToGet > 0)
 							{
-								m_scsi_devices[m_last_id]->ReadData(m_buffer, amtToGet);
+								read_data(m_buffer, amtToGet);
 
 								m_total_data -= amtToGet;
 								m_buffer_offset = 0;
@@ -611,7 +559,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 							m_xfer_count = m_dma_size;
 							m_fifo_ptr = 0;
 							update_fifo_internal_state(fifo_fill_size);
-							m_out_drq_func(ASSERT_LINE);
+							m_out_drq_cb(ASSERT_LINE);
 						}
 
 						m_status |= MAIN_STATUS_COUNT_TO_ZERO;
@@ -635,7 +583,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 						m_buffer_offset = 0;
 						m_buffer_remaining = 0;
 					}
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x24:  // Terminate steps
@@ -644,7 +592,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 					#endif
 					m_irq_status = IRQ_STATUS_SUCCESS | IRQ_STATUS_DISCONNECTED;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					m_fifo_ptr = 0;
 					update_fifo_internal_state(0);
 					break;
@@ -655,7 +603,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 					#endif
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x44:  // Enable selection/reselection
@@ -664,11 +612,11 @@ WRITE8_MEMBER( ncr539x_device::write )
 					#endif
 					m_irq_status = IRQ_STATUS_SUCCESS;
 					m_status |= MAIN_STATUS_INTERRUPT;
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				case 0x47:  // Reselect with ATN3 steps
-					if (m_scsi_devices[m_last_id])
+					if (select(m_last_id))
 					{
 						m_irq_status |= IRQ_STATUS_SERVICE_REQUEST | IRQ_STATUS_SUCCESS;
 						// we should now be in the command phase
@@ -695,7 +643,7 @@ WRITE8_MEMBER( ncr539x_device::write )
 						m_status |= MAIN_STATUS_INTERRUPT;
 						m_irq_status |= IRQ_STATUS_DISCONNECTED;
 					}
-					m_out_irq_func(ASSERT_LINE);
+					m_out_irq_cb(ASSERT_LINE);
 					break;
 
 				default:    // other commands are not instantaneous
@@ -775,10 +723,9 @@ void ncr539x_device::exec_fifo()
 {
 	int length, phase;
 
-	m_scsi_devices[m_last_id]->SetCommand(&m_fifo[0], 12);
-	m_scsi_devices[m_last_id]->ExecCommand();
-	m_scsi_devices[m_last_id]->GetLength(&length);
-	m_scsi_devices[m_last_id]->GetPhase(&phase);
+	send_command(&m_fifo[0], 12);
+	length = get_length();
+	phase = get_phase();
 
 	#if VERBOSE
 	printf("Command executed (id %d), new phase %d, length %x\n", m_last_id, phase, length);
@@ -839,14 +786,14 @@ void ncr539x_device::fifo_write(UINT8 data)
 			#if VERBOSE
 			printf("Flushing buffer to device, %x bytes left in buffer (%x total)\n", m_xfer_count, m_total_data);
 			#endif
-			m_scsi_devices[m_last_id]->WriteData(m_buffer, flush_size);
+			write_data(m_buffer, flush_size);
 			m_buffer_offset = 0;
 
 			// need a service request here too
 			m_irq_status = IRQ_STATUS_SERVICE_REQUEST;
 			m_status &= 7;
 			m_status |= MAIN_STATUS_INTERRUPT;
-			m_out_irq_func(ASSERT_LINE);
+			m_out_irq_cb(ASSERT_LINE);
 		}
 
 		if ((m_xfer_count == 0) && (m_total_data == 0))
@@ -858,7 +805,7 @@ void ncr539x_device::fifo_write(UINT8 data)
 			m_buffer_offset = 0;
 			m_irq_status = IRQ_STATUS_SERVICE_REQUEST;
 			m_status = MAIN_STATUS_INTERRUPT | SCSI_PHASE_STATUS;
-			m_out_irq_func(ASSERT_LINE);
+			m_out_irq_cb(ASSERT_LINE);
 		}
 	}
 }

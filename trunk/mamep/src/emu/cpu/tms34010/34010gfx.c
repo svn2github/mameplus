@@ -10,7 +10,7 @@
 #ifndef RECURSIVE_INCLUDE
 
 
-#define LOG_GFX_OPS 1
+#define LOG_GFX_OPS 0
 #define LOGGFX(x) do { if (LOG_GFX_OPS && tms->device->machine().input().code_pressed(KEYCODE_L)) logerror x; } while (0)
 
 
@@ -106,14 +106,14 @@ static int apply_window(tms34010_state *tms, const char *inst_name,int srcbpp, U
 			SET_V_LOG(tms, 1);
 		}
 
+
 		/* clip Y */
 		diff = WSTART_Y(tms) - sy;
 		if (diff > 0)
 		{
-#if 0 // littlerb and megaphx do not work correctly with this enabled, see items dropping into playfield from top
 			if (srcaddr)
-				*srcaddr += diff * SPTCH(tms);
-#endif
+				*srcaddr += diff * tms->convsp;
+
 			sy += diff;
 			SET_V_LOG(tms, 1);
 		}
@@ -1097,11 +1097,13 @@ static void FUNCTION_NAME(pixblt)(tms34010_state *tms, int src_is_linear, int ds
 		/* handle flipping the addresses */
 		yreverse = (IOREG(tms, REG_CONTROL) >> 9) & 1;
 		if (!src_is_linear || !dst_is_linear)
+		{
 			if (yreverse)
 			{
-				saddr += (dy - 1) * SPTCH(tms);
-				daddr += (dy - 1) * DPTCH(tms);
+				saddr += (dy - 1) * tms->convsp;
+				daddr += (dy - 1) * tms->convdp;
 			}
+		}
 
 		tms->st |= STBIT_P;
 
@@ -1406,7 +1408,7 @@ static void FUNCTION_NAME(pixblt_r)(tms34010_state *tms, int src_is_linear, int 
 
 		/* compute the starting addresses */
 		saddr = src_is_linear ? SADDR(tms) : SXYTOL(tms,SADDR_XY(tms));
-if ((saddr & (BITS_PER_PIXEL - 1)) != 0) mame_printf_debug("PIXBLT_R%d with odd saddr\n", BITS_PER_PIXEL);
+if ((saddr & (BITS_PER_PIXEL - 1)) != 0) osd_printf_debug("PIXBLT_R%d with odd saddr\n", BITS_PER_PIXEL);
 		saddr &= ~(BITS_PER_PIXEL - 1);
 
 		/* compute the bounds of the operation */
@@ -1423,7 +1425,7 @@ if ((saddr & (BITS_PER_PIXEL - 1)) != 0) mame_printf_debug("PIXBLT_R%d with odd 
 		}
 		else
 			daddr = DADDR(tms);
-if ((daddr & (BITS_PER_PIXEL - 1)) != 0) mame_printf_debug("PIXBLT_R%d with odd daddr\n", BITS_PER_PIXEL);
+if ((daddr & (BITS_PER_PIXEL - 1)) != 0) osd_printf_debug("PIXBLT_R%d with odd daddr\n", BITS_PER_PIXEL);
 		daddr &= ~(BITS_PER_PIXEL - 1);
 		LOGGFX(("  saddr=%08X daddr=%08X sptch=%08X dptch=%08X\n", saddr, daddr, SPTCH(tms), DPTCH(tms)));
 
@@ -1451,8 +1453,8 @@ if ((daddr & (BITS_PER_PIXEL - 1)) != 0) mame_printf_debug("PIXBLT_R%d with odd 
 			daddr += dx * BITS_PER_PIXEL;
 			if (yreverse)
 			{
-				saddr += (dy - 1) * SPTCH(tms);
-				daddr += (dy - 1) * DPTCH(tms);
+				saddr += (dy - 1) * tms->convsp;
+				daddr += (dy - 1) * tms->convdp;
 			}
 		}
 

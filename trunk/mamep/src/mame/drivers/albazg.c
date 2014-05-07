@@ -200,41 +200,6 @@ WRITE8_MEMBER(albazg_state::yumefuda_output_w)
 	flip_screen_set(~data & 0x20);
 }
 
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"),
-	DEVCB_INPUT_PORT("DSW2"),
-	DEVCB_DRIVER_MEMBER(albazg_state,yumefuda_output_w),
-	DEVCB_NULL
-};
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	DEVCB_NULL,                     /* Port A read */
-	DEVCB_DRIVER_MEMBER(albazg_state,mux_w),            /* Port A write */
-	DEVCB_INPUT_PORT("SYSTEM"),     /* Port B read */
-	DEVCB_NULL,                     /* Port B write */
-	DEVCB_DRIVER_MEMBER(albazg_state,mux_r),            /* Port C read */
-	DEVCB_NULL                      /* Port C write */
-};
-
 /***************************************************************************************/
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, albazg_state )
@@ -390,7 +355,10 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 
 	MCFG_WATCHDOG_VBLANK_INIT(8) // timing is unknown
 
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf )
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(albazg_state, mux_w))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("SYSTEM"))
+	MCFG_I8255_IN_PORTC_CB(READ8(albazg_state, mux_r))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -401,7 +369,9 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 	MCFG_SCREEN_UPDATE_DRIVER(albazg_state, screen_update_yumefuda)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_MC6845_ADD("crtc", H46505, "screen", MASTER_CLOCK/16, mc6845_intf)   /* hand tuned to get ~60 fps */
+	MCFG_MC6845_ADD("crtc", H46505, "screen", MASTER_CLOCK/16)   /* hand tuned to get ~60 fps */
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", yumefuda )
 	MCFG_PALETTE_ADD("palette", 0x80)
@@ -412,7 +382,9 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, MASTER_CLOCK/16) /* guessed to use the same xtal as the crtc */
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW2"))
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(albazg_state, yumefuda_output_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 

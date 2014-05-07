@@ -11,7 +11,6 @@
 #include "cpu/z80/z80.h"
 #include "machine/i8255.h"
 #include "machine/rp5c01.h"
-#include "machine/wd17xx.h"
 #include "machine/buffer.h"
 #include "bus/centronics/ctronics.h"
 #include "sound/ay8910.h"
@@ -30,16 +29,25 @@
 //#include "osdepend.h"
 #include "hashfile.h"
 #include "includes/msx_slot.h"
+#include "machine/wd_fdc.h"
+#include "imagedev/floppy.h"
 
 #define MSX_MAX_CARTS   (2)
 
 #define TC8521_TAG  "rtc"
+
+#define MCFG_MSX_LAYOUT(_layout) \
+	msx_state::set_layout(*owner, msx_slot_layout_##_layout);
+
+#define MCFG_MSX_RAMIO_SET_BITS(_ramio_set_bits) \
+	msx_state::set_ramio_set_bits(*owner, _ramio_set_bits);
 
 class msx_state : public driver_device
 {
 public:
 	msx_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+		m_layout(NULL),
 		m_maincpu(*this, "maincpu"),
 		m_v9938(*this, "v9938"),
 		m_v9958(*this, "v9958"),
@@ -49,7 +57,10 @@ public:
 		m_k051649(*this, "k051649"),
 		m_dac(*this, "dac"),
 		m_rtc(*this, TC8521_TAG),
-		m_wd179x(*this, "wd179x"),
+		m_fdc(*this, "fdc"),
+		m_floppy0(*this, "fdc:0"),
+		m_floppy1(*this, "fdc:1"),
+		m_floppy(NULL),
 		m_bank1(*this, "bank1"),
 		m_bank2(*this, "bank2"),
 		m_bank3(*this, "bank3"),
@@ -62,6 +73,7 @@ public:
 		m_bank10(*this, "bank10"),
 		m_bank11(*this, "bank11"),
 		m_region_maincpu(*this, "maincpu"),
+		m_region_kanji(*this, "kanji"),
 		m_io_joy0(*this, "JOY0"),
 		m_io_joy1(*this, "JOY1"),
 		m_io_dsw(*this, "DSW"),
@@ -73,6 +85,10 @@ public:
 		m_io_key3(*this, "KEY3"),
 		m_io_key4(*this, "KEY4"),
 		m_io_key5(*this, "KEY5") { }
+
+	// static configuration helpers
+	static void set_layout(device_t &device, const msx_slot_layout *layout) { downcast<msx_state &>(device).m_layout = layout; }
+	static void set_ramio_set_bits(device_t &device, UINT8 ramio_set_bits) { downcast<msx_state &>(device).m_ramio_set_bits = ramio_set_bits; }
 
 	DECLARE_WRITE8_MEMBER(msx_page0_w);
 	DECLARE_WRITE8_MEMBER(msx_page0_1_w);
@@ -112,8 +128,6 @@ public:
 	int m_rtc_latch;
 	/* disk */
 	UINT8 m_dsk_stat;
-	/* kanji */
-	UINT8 *m_kanji_mem;
 	int m_kanji_latch;
 	/* memory */
 	const msx_slot_layout *m_layout;
@@ -146,7 +160,12 @@ public:
 	optional_device<k051649_device> m_k051649;
 	required_device<dac_device> m_dac;
 	optional_device<rp5c01_device> m_rtc;
-	optional_device<fd1793_device> m_wd179x;
+	optional_device<wd_fdc_analog_t> m_fdc;
+	optional_device<floppy_connector> m_floppy0;
+	optional_device<floppy_connector> m_floppy1;
+	floppy_image_device *m_floppy;
+	DECLARE_FLOPPY_FORMATS(floppy_formats);
+
 	DECLARE_READ8_MEMBER(msx_psg_port_a_r);
 	DECLARE_READ8_MEMBER(msx_psg_port_b_r);
 	DECLARE_WRITE8_MEMBER(msx_psg_port_a_w);
@@ -190,6 +209,7 @@ public:
 
 protected:
 	required_memory_region m_region_maincpu;
+	optional_memory_region m_region_kanji;
 	required_ioport m_io_joy0;
 	required_ioport m_io_joy1;
 	required_ioport m_io_dsw;
@@ -203,13 +223,5 @@ protected:
 	required_ioport m_io_key5;
 };
 
-
-/*----------- defined in machine/msx.c -----------*/
-
-extern const i8255_interface msx_ppi8255_interface;
-extern const wd17xx_interface msx_wd17xx_interface;
-/* start/stop functions */
-
-/* I/O functions */
 
 #endif /* __MSX_H__ */

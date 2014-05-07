@@ -194,15 +194,6 @@ WRITE_LINE_MEMBER(dlair_state::write_speaker)
 }
 
 
-static Z80CTC_INTERFACE( ctc_intf )
-{
-	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_IRQ0),   /* interrupt handler */
-	DEVCB_DRIVER_LINE_MEMBER(dlair_state, write_speaker),         /* ZC/TO0 callback */
-	DEVCB_NULL,         /* ZC/TO1 callback */
-	DEVCB_NULL          /* ZC/TO2 callback */
-};
-
-
 static const z80sio_interface sio_intf =
 {
 	DEVCB_DRIVER_LINE_MEMBER(dlair_state, dleuro_interrupt),    /* interrupt handler */
@@ -382,7 +373,7 @@ CUSTOM_INPUT_MEMBER(dlair_state::laserdisc_command_r)
 READ8_MEMBER(dlair_state::laserdisc_r)
 {
 	UINT8 result = laserdisc_data_r();
-	mame_printf_debug("laserdisc_r = %02X\n", result);
+	osd_printf_debug("laserdisc_r = %02X\n", result);
 	return result;
 }
 
@@ -696,23 +687,6 @@ static GFXDECODE_START( dlair )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  Sound chip definitions
- *
- *************************************/
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"),
-	DEVCB_INPUT_PORT("DSW2")
-};
-
-
-
 /*************************************
  *
  *  Machine drivers
@@ -733,7 +707,8 @@ static MACHINE_CONFIG_START( dlair_base, dlair_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, MASTER_CLOCK_US/8)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW2"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.33)
 MACHINE_CONFIG_END
 
@@ -762,7 +737,10 @@ static MACHINE_CONFIG_START( dleuro, dlair_state )
 	MCFG_CPU_PROGRAM_MAP(dleuro_map)
 	MCFG_CPU_IO_MAP(dleuro_io_map)
 
-	MCFG_Z80CTC_ADD("ctc", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, ctc_intf)
+	MCFG_DEVICE_ADD("ctc", Z80CTC, MASTER_CLOCK_EURO/4 /* same as "maincpu" */)
+	MCFG_Z80CTC_INTR_CB(INPUTLINE("maincpu", INPUT_LINE_IRQ0))
+	MCFG_Z80CTC_ZC0_CB(WRITELINE(dlair_state, write_speaker))
+
 	MCFG_Z80SIO_ADD("sio", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, sio_intf)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_hz(MASTER_CLOCK_EURO/(16*16*16*16*16*8)))

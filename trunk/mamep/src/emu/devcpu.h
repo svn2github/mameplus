@@ -164,9 +164,12 @@ enum
 
 #define MCFG_CPU_VBLANK_INT_DRIVER MCFG_DEVICE_VBLANK_INT_DRIVER
 #define MCFG_CPU_PERIODIC_INT_DRIVER MCFG_DEVICE_PERIODIC_INT_DRIVER
+#define MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER MCFG_DEVICE_IRQ_ACKNOWLEDGE_DRIVER
+#define MCFG_CPU_IRQ_ACKNOWLEDGE_DEVICE MCFG_DEVICE_IRQ_ACKNOWLEDGE_DEVICE
 
 #define MCFG_CPU_VBLANK_INT_REMOVE MCFG_DEVICE_VBLANK_INT_REMOVE
 #define MCFG_CPU_PERIODIC_INT_REMOVE MCFG_DEVICE_PERIODIC_INT_REMOVE
+#define MCFG_CPU_IRQ_ACKNOWLEDGE_REMOVE MCFG_DEVICE_IRQ_ACKNOWLEDGE_REMOVE
 
 
 //**************************************************************************
@@ -208,7 +211,7 @@ const device_type name = &legacy_device_creator<basename##_device>
 #define CPU_SET_INFO_CALL(name)         CPU_SET_INFO_NAME(name)(device, state, info)
 
 #define CPU_INIT_NAME(name)             cpu_init_##name
-#define CPU_INIT(name)                  void CPU_INIT_NAME(name)(legacy_cpu_device *device, device_irq_acknowledge_callback irqcallback)
+#define CPU_INIT(name)                  void CPU_INIT_NAME(name)(legacy_cpu_device *device, device_irq_acknowledge_delegate irqcallback)
 #define CPU_INIT_CALL(name)             CPU_INIT_NAME(name)(device, irqcallback)
 
 #define CPU_RESET_NAME(name)            cpu_reset_##name
@@ -294,7 +297,7 @@ class legacy_cpu_device;
 // CPU interface functions
 typedef void (*cpu_get_info_func)(legacy_cpu_device *device, UINT32 state, cpuinfo *info);
 typedef void (*cpu_set_info_func)(legacy_cpu_device *device, UINT32 state, cpuinfo *info);
-typedef void (*cpu_init_func)(legacy_cpu_device *device, device_irq_acknowledge_callback irqcallback);
+typedef void (*cpu_init_func)(legacy_cpu_device *device, device_irq_acknowledge_delegate irqcallback);
 typedef void (*cpu_reset_func)(legacy_cpu_device *device);
 typedef void (*cpu_exit_func)(legacy_cpu_device *device);
 typedef void (*cpu_execute_func)(legacy_cpu_device *device);

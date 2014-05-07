@@ -9,6 +9,7 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_ram(*this, "ram"),
 		m_spriteram(*this, "spriteram"),
+		m_paletteram(*this, "palette"),
 		m_robocop_shared_ram(*this, "robocop_shared"),
 		m_hippodrm_shared_ram(*this, "hippodrm_shared"),
 		m_tilegen1(*this, "tilegen1"),
@@ -24,10 +25,9 @@ public:
 
 	required_shared_ptr<UINT16> m_ram;
 	required_shared_ptr<UINT16> m_spriteram;
+	required_shared_ptr<UINT16> m_paletteram;
 	optional_shared_ptr<UINT8> m_robocop_shared_ram;
 	optional_shared_ptr<UINT8> m_hippodrm_shared_ram;
-	dynamic_array<UINT16> m_paletteram;
-	dynamic_array<UINT16> m_paletteram_ext;
 
 	optional_device<deco_bac06_device> m_tilegen1;
 	optional_device<deco_bac06_device> m_tilegen2;
@@ -65,8 +65,6 @@ public:
 	DECLARE_READ16_MEMBER(robocop_68000_share_r);
 	DECLARE_WRITE16_MEMBER(robocop_68000_share_w);
 	DECLARE_WRITE16_MEMBER(dec0_update_sprites_w);
-	DECLARE_WRITE16_MEMBER(dec0_paletteram_rg_w);
-	DECLARE_WRITE16_MEMBER(dec0_paletteram_b_w);
 	DECLARE_WRITE16_MEMBER(dec0_priority_w);
 	DECLARE_READ16_MEMBER(ffantasybl_242024_r);
 	DECLARE_READ16_MEMBER(ffantasybl_vblank_r);
@@ -88,7 +86,6 @@ public:
 	UINT32 screen_update_hippodrm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_slyspy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_midres(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	void update_24bitcol(int offset);
 	void baddudes_i8751_write(int data);
 	void birdtry_i8751_write(int data);
 	void dec0_i8751_write(int data);
@@ -125,7 +122,6 @@ public:
 	}
 	UINT16 m_automat_scroll_regs[4];
 
-	DECLARE_VIDEO_START(automat);
 	UINT32 screen_update_automat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_secretab(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	DECLARE_WRITE_LINE_MEMBER(automat_vclk_cb);

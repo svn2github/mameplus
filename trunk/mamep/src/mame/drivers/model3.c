@@ -662,34 +662,28 @@ ALL VROM ROMs are 16M MASK
 #include "includes/model3.h"
 
 
-static void real3d_dma_callback(running_machine &machine, UINT32 src, UINT32 dst, int length, int byteswap);
-
-
-
-static void update_irq_state(running_machine &machine)
+void model3_state::update_irq_state()
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	if ((state->m_irq_enable & state->m_irq_state) || state->m_scsi_irq_state)
+	if ((m_irq_enable & m_irq_state) || m_scsi_irq_state)
 	{
-//      printf("IRQ set: state %x enable %x scsi %x\n", state->m_irq_state, state->m_irq_enable, state->m_scsi_irq_state);
-		state->m_maincpu->set_input_line(PPC_IRQ, ASSERT_LINE);
-		state->m_scsi_irq_state = 0;
+//      printf("IRQ set: state %x enable %x scsi %x\n", m_irq_state, m_irq_enable, m_scsi_irq_state);
+		m_maincpu->set_input_line(PPC_IRQ, ASSERT_LINE);
+		m_scsi_irq_state = 0;
 	}
 	else
 	{
-//      printf("IRQ clear: state %x enable %x scsi %x\n", state->m_irq_state, state->m_irq_enable, state->m_scsi_irq_state);
-		state->m_maincpu->set_input_line(PPC_IRQ, CLEAR_LINE);
+//      printf("IRQ clear: state %x enable %x scsi %x\n", m_irq_state, m_irq_enable, m_scsi_irq_state);
+		m_maincpu->set_input_line(PPC_IRQ, CLEAR_LINE);
 	}
 }
 
-void model3_set_irq_line(running_machine &machine, UINT8 bit, int line)
+void model3_state::set_irq_line(UINT8 bit, int line)
 {
-	model3_state *state = machine.driver_data<model3_state>();
 	if (line != CLEAR_LINE)
-		state->m_irq_state |= bit;
+		m_irq_state |= bit;
 	else
-		state->m_irq_state &= ~bit;
-	update_irq_state(machine);
+		m_irq_state &= ~bit;
+	update_irq_state();
 }
 
 
@@ -1056,20 +1050,17 @@ WRITE64_MEMBER(model3_state::scsi_w)
 	}
 }
 
-static UINT32 scsi_fetch(running_machine &machine, UINT32 dsp)
+LSI53C810_FETCH_CB(model3_state::scsi_fetch)
 {
-	model3_state *drvstate = machine.driver_data<model3_state>();
-	address_space &space = drvstate->m_maincpu->space(AS_PROGRAM);
-	UINT32 result;
-	result = space.read_dword(dsp);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
+	UINT32 result = space.read_dword(dsp);
 	return FLIPENDIAN_INT32(result);
 }
 
-static void scsi_irq_callback(running_machine &machine, int state)
+LSI53C810_IRQ_CB(model3_state::scsi_irq_callback)
 {
-	model3_state *drvstate = machine.driver_data<model3_state>();
-	drvstate->m_scsi_irq_state = state;
-	update_irq_state(machine);
+	m_scsi_irq_state = state;
+	update_irq_state();
 }
 
 /*****************************************************************************/
@@ -1088,7 +1079,7 @@ READ64_MEMBER(model3_state::real3d_dma_r)
 			}
 			break;
 	}
-	mame_printf_debug("real3d_dma_r: %08X, %08X%08X\n", offset, (UINT32)(mem_mask >> 32), (UINT32)(mem_mask));
+	osd_printf_debug("real3d_dma_r: %08X, %08X%08X\n", offset, (UINT32)(mem_mask >> 32), (UINT32)(mem_mask));
 	return 0;
 }
 
@@ -1112,21 +1103,21 @@ WRITE64_MEMBER(model3_state::real3d_dma_w)
 				int length = FLIPENDIAN_INT32((UINT32)(data >> 32)) * 4;
 				if (m_dma_endian & 0x80)
 				{
-					real3d_dma_callback(machine(), m_dma_source, m_dma_dest, length, 0);
+					real3d_dma_callback(m_dma_source, m_dma_dest, length, 0);
 				}
 				else
 				{
-					real3d_dma_callback(machine(), m_dma_source, m_dma_dest, length, 1);
+					real3d_dma_callback(m_dma_source, m_dma_dest, length, 1);
 				}
 				m_dma_irq |= 0x01;
-				scsi_irq_callback(machine(), 1);
+				scsi_irq_callback(1);
 				return;
 			}
 			else if(ACCESSING_BITS_16_23)
 			{
 				if(data & 0x10000) {
 					m_dma_irq &= ~0x1;
-					scsi_irq_callback(machine(), 0);
+					scsi_irq_callback(0);
 				}
 				return;
 			}
@@ -1157,46 +1148,37 @@ WRITE64_MEMBER(model3_state::real3d_dma_w)
 	logerror("real3d_dma_w: %08X, %08X%08X, %08X%08X", offset, (UINT32)(data >> 32), (UINT32)(data), (UINT32)(mem_mask >> 32), (UINT32)(mem_mask));
 }
 
-static void real3d_dma_callback(running_machine &machine, UINT32 src, UINT32 dst, int length, int byteswap)
+LSI53C810_DMA_CB(model3_state::real3d_dma_callback)
 {
-	model3_state *drvstate = machine.driver_data<model3_state>();
-	address_space &space = drvstate->m_maincpu->space(AS_PROGRAM);
 	switch(dst >> 24)
 	{
 		case 0x88:      /* Display List End Trigger */
-			real3d_display_list_end(machine);
+			real3d_display_list_end();
 			break;
 		case 0x8c:      /* Display List RAM 2 */
-			real3d_display_list2_dma(space, src, dst, length, byteswap);
+			real3d_display_list2_dma(src, dst, length, byteswap);
 			break;
 		case 0x8e:      /* Display List RAM 1 */
-			real3d_display_list1_dma(space, src, dst, length, byteswap);
+			real3d_display_list1_dma(src, dst, length, byteswap);
 			break;
 		case 0x90:      /* VROM Texture Download */
-			real3d_vrom_texture_dma(space, src, dst, length, byteswap);
+			real3d_vrom_texture_dma(src, dst, length, byteswap);
 			break;
 		case 0x94:      /* Texture FIFO */
-			real3d_texture_fifo_dma(space, src, length, byteswap);
+			real3d_texture_fifo_dma(src, length, byteswap);
 			break;
 		case 0x98:      /* Polygon RAM */
-			real3d_polygon_ram_dma(space, src, dst, length, byteswap);
+			real3d_polygon_ram_dma(src, dst, length, byteswap);
 			break;
 		case 0x9c:      /* Unknown */
 			break;
 		default:
-			logerror("dma_callback: %08X, %08X, %d at %08X", src, dst, length, machine.device("maincpu")->safe_pc());
+			logerror("dma_callback: %08X, %08X, %d at %08X", src, dst, length, machine().device("maincpu")->safe_pc());
 			break;
 	}
 }
 
 /*****************************************************************************/
-
-static const struct LSI53C810interface lsi53c810_intf =
-{
-	&scsi_irq_callback,
-	&real3d_dma_callback,
-	&scsi_fetch,
-};
 
 static void configure_fast_ram(running_machine &machine)
 {
@@ -1212,7 +1194,7 @@ TIMER_CALLBACK_MEMBER(model3_state::model3_sound_timer_tick)
 {
 	if (m_sound_irq_enable)
 	{
-		model3_set_irq_line(machine(), 0x40, ASSERT_LINE);
+		set_irq_line(0x40, ASSERT_LINE);
 	}
 }
 
@@ -1241,59 +1223,58 @@ MACHINE_START_MEMBER(model3_state,model3_21)
 	m_sound_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(model3_state::model3_sound_timer_tick),this));
 }
 
-static void model3_init(running_machine &machine, int step)
+void model3_state::model3_init(int step)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	state->m_step = step;
+	m_step = step;
 
-	state->m_sound_irq_enable = 0;
-	state->m_sound_timer->adjust(attotime::never);
+	m_sound_irq_enable = 0;
+	m_sound_timer->adjust(attotime::never);
 
-	state->membank("bank1")->set_base(state->memregion( "user1" )->base() + 0x800000 ); /* banked CROM */
+	membank("bank1")->set_base(memregion( "user1" )->base() + 0x800000 ); /* banked CROM */
 
-	state->membank("bank4")->set_base(state->memregion("samples")->base() + 0x200000);
-	state->membank("bank5")->set_base(state->memregion("samples")->base() + 0x600000);
+	membank("bank4")->set_base(memregion("samples")->base() + 0x200000);
+	membank("bank5")->set_base(memregion("samples")->base() + 0x600000);
 
 	// copy the 68k vector table into RAM
-	memcpy(state->m_soundram, state->memregion("audiocpu")->base()+0x80000, 16);
-	machine.device("audiocpu")->reset();
+	memcpy(m_soundram, memregion("audiocpu")->base()+0x80000, 16);
+	machine().device("audiocpu")->reset();
 
-	model3_machine_init(machine, step); // step 1.5
-	model3_tap_reset(machine);
+	m_m3_step = step; // step = BCD hardware rev.  0x10 for 1.0, 0x15 for 1.5, 0x20 for 2.0, etc.
+	tap_reset();
 
-	if(step < 0x20) {
-		if( core_stricmp(machine.system().name, "vs215") == 0 ||
-			core_stricmp(machine.system().name, "vs29815") == 0 ||
-			core_stricmp(machine.system().name, "bass") == 0 )
+	if (step < 0x20) {
+		if( core_stricmp(machine().system().name, "vs215") == 0 ||
+			core_stricmp(machine().system().name, "vs29815") == 0 ||
+			core_stricmp(machine().system().name, "bass") == 0 )
 		{
-			mpc106_init(machine);
+			mpc106_init(machine());
 		}
 		else
 		{
-			mpc105_init(machine);
+			mpc105_init(machine());
 		}
-		state->m_real3d_device_id = 0x16c311db; /* PCI Vendor ID (11db = SEGA), Device ID (16c3 = 315-5827) */
+		m_real3d_device_id = 0x16c311db; /* PCI Vendor ID (11db = SEGA), Device ID (16c3 = 315-5827) */
 	}
 	else {
-		mpc106_init(machine);
+		mpc106_init(machine());
 		// some step 2+ games need the older PCI ID (obvious symptom:
 		// vbl is enabled briefly then disabled so the game hangs)
-		if (core_stricmp(machine.system().name, "magtruck") == 0 ||
-			core_stricmp(machine.system().name, "von254g") == 0)
+		if (core_stricmp(machine().system().name, "magtruck") == 0 ||
+			core_stricmp(machine().system().name, "von254g") == 0)
 		{
-			state->m_real3d_device_id = 0x16c311db; /* PCI Vendor ID (11db = SEGA), Device ID (16c3 = 315-5827) */
+			m_real3d_device_id = 0x16c311db; /* PCI Vendor ID (11db = SEGA), Device ID (16c3 = 315-5827) */
 		}
 		else
 		{
-			state->m_real3d_device_id = 0x178611db; /* PCI Vendor ID (11db = SEGA), Device ID (1786 = 315-6022) */
+			m_real3d_device_id = 0x178611db; /* PCI Vendor ID (11db = SEGA), Device ID (1786 = 315-6022) */
 		}
 	}
 }
 
-MACHINE_RESET_MEMBER(model3_state,model3_10){ model3_init(machine(), 0x10); }
-MACHINE_RESET_MEMBER(model3_state,model3_15){ model3_init(machine(), 0x15); }
-MACHINE_RESET_MEMBER(model3_state,model3_20){ model3_init(machine(), 0x20); }
-MACHINE_RESET_MEMBER(model3_state,model3_21){ model3_init(machine(), 0x21); }
+MACHINE_RESET_MEMBER(model3_state,model3_10){ model3_init(0x10); }
+MACHINE_RESET_MEMBER(model3_state,model3_15){ model3_init(0x15); }
+MACHINE_RESET_MEMBER(model3_state,model3_20){ model3_init(0x20); }
+MACHINE_RESET_MEMBER(model3_state,model3_21){ model3_init(0x21); }
 
 
 READ64_MEMBER(model3_state::model3_ctrl_r)
@@ -1443,7 +1424,7 @@ WRITE64_MEMBER(model3_state::model3_ctrl_w)
 						}
 						break;
 					default:
-						//mame_printf_debug("Lightgun: Unknown command %02X at %08X\n", (UINT32)(data >> 24), space.device().safe_pc());
+						//osd_printf_debug("Lightgun: Unknown command %02X at %08X\n", (UINT32)(data >> 24), space.device().safe_pc());
 						break;
 				}
 			}
@@ -1484,7 +1465,7 @@ READ64_MEMBER(model3_state::model3_sys_r)
 		case 0x10/8:
 			if (ACCESSING_BITS_56_63)
 			{
-				UINT64 res = model3_tap_read(machine());
+				UINT64 res = tap_read();
 
 				return res<<61;
 			}
@@ -1563,8 +1544,7 @@ WRITE64_MEMBER(model3_state::model3_sys_w)
 			if (ACCESSING_BITS_24_31)
 			{
 				data >>= 24;
-				model3_tap_write(machine(),
-					(data >> 6) & 1,// TCK
+				tap_write((data >> 6) & 1,// TCK
 					(data >> 2) & 1,// TMS
 					(data >> 5) & 1,// TDI
 					(data >> 7) & 1 // TRST
@@ -1617,7 +1597,7 @@ WRITE8_MEMBER(model3_state::model3_sound_w)
 	{
 		case 0:
 			// clear the interrupt
-			model3_set_irq_line(machine(), 0x40, CLEAR_LINE);
+			set_irq_line(0x40, CLEAR_LINE);
 
 			if (m_dsbz80 != NULL)
 			{
@@ -1651,14 +1631,14 @@ WRITE8_MEMBER(model3_state::model3_sound_w)
 
 READ64_MEMBER(model3_state::network_r)
 {
-	mame_printf_debug("network_r: %02X at %08X\n", offset, space.device().safe_pc());
+	osd_printf_debug("network_r: %02X at %08X\n", offset, space.device().safe_pc());
 	return m_network_ram[offset];
 }
 
 WRITE64_MEMBER(model3_state::network_w)
 {
 	COMBINE_DATA(m_network_ram + offset);
-	mame_printf_debug("network_w: %02X, %08X%08X at %08X\n", offset, (UINT32)(data >> 32), (UINT32)(data), space.device().safe_pc());
+	osd_printf_debug("network_w: %02X, %08X%08X at %08X\n", offset, (UINT32)(data >> 32), (UINT32)(data), space.device().safe_pc());
 }
 
 
@@ -5395,9 +5375,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(model3_state::model3_interrupt)
 	int scanline = param;
 
 	if (scanline == 384)
-		model3_set_irq_line(machine(), 0x02, ASSERT_LINE);
+		set_irq_line(0x02, ASSERT_LINE);
 	else if(scanline == 0)
-		model3_set_irq_line(machine(), 0x0d, ASSERT_LINE);
+		set_irq_line(0x0d, ASSERT_LINE);
 }
 
 static const powerpc_config model3_10 =
@@ -5456,8 +5436,13 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
-	MCFG_SCSIBUS_ADD("scsi")
-	MCFG_LSI53C810_ADD( "scsi:lsi53c810", lsi53c810_intf)
+	MCFG_DEVICE_ADD("scsi", SCSI_PORT, 0)
+
+	MCFG_DEVICE_ADD("lsi53c810", LSI53C810, 0)
+	MCFG_LSI53C810_IRQ_CB(model3_state, scsi_irq_callback)
+	MCFG_LSI53C810_DMA_CB(model3_state, real3d_dma_callback)
+	MCFG_LSI53C810_FETCH_CB(model3_state, scsi_fetch)
+	MCFG_LEGACY_SCSI_PORT("scsi")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( model3_15, model3_state )
@@ -5496,8 +5481,13 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
-	MCFG_SCSIBUS_ADD("scsi")
-	MCFG_LSI53C810_ADD( "scsi:lsi53c810", lsi53c810_intf)
+	MCFG_DEVICE_ADD("scsi", SCSI_PORT, 0)
+
+	MCFG_DEVICE_ADD("lsi53c810", LSI53C810, 0)
+	MCFG_LSI53C810_IRQ_CB(model3_state, scsi_irq_callback)
+	MCFG_LSI53C810_DMA_CB(model3_state, real3d_dma_callback)
+	MCFG_LSI53C810_FETCH_CB(model3_state, scsi_fetch)
+	MCFG_LEGACY_SCSI_PORT("scsi")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED(scud, model3_15)

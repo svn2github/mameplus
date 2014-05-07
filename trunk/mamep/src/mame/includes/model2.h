@@ -16,7 +16,6 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_workram(*this, "workram"),
 		m_bufferram(*this, "bufferram"),
-		m_paletteram32(*this, "paletteram32"),
 		m_colorxlat(*this, "colorxlat"),
 		m_textureram0(*this, "textureram0"),
 		m_textureram1(*this, "textureram1"),
@@ -37,7 +36,7 @@ public:
 
 	required_shared_ptr<UINT32> m_workram;
 	required_shared_ptr<UINT32> m_bufferram;
-	required_shared_ptr<UINT32> m_paletteram32;
+	UINT16 *m_palram;
 	required_shared_ptr<UINT32> m_colorxlat;
 	required_shared_ptr<UINT32> m_textureram0;
 	required_shared_ptr<UINT32> m_textureram1;
@@ -101,21 +100,32 @@ public:
 	raster_state *m_raster;
 	geo_state *m_geo;
 	bitmap_rgb32 m_sys24_bitmap;
+	UINT32 m_videocontrol;
+	UINT32 m_soundack;
+	void model2_check_irq_state();
+	void model2_check_irqack_state(UINT32 data);
+	UINT8 m_gearsel;
+	UINT8 m_lightgun_mux;
 
 	DECLARE_CUSTOM_INPUT_MEMBER(_1c00000_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(_1c0001c_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(srallyc_gearbox_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(rchase2_devices_r);
 	DECLARE_READ32_MEMBER(timers_r);
 	DECLARE_WRITE32_MEMBER(timers_w);
-	DECLARE_WRITE32_MEMBER(pal32_w);
+	DECLARE_READ16_MEMBER(model2_palette_r);
+	DECLARE_WRITE16_MEMBER(model2_palette_w);
 	DECLARE_WRITE32_MEMBER(ctrl0_w);
 	DECLARE_WRITE32_MEMBER(analog_2b_w);
 	DECLARE_READ32_MEMBER(fifoctl_r);
+	DECLARE_READ32_MEMBER(model2o_fifoctrl_r);
 	DECLARE_READ32_MEMBER(videoctl_r);
+	DECLARE_WRITE32_MEMBER(videoctl_w);
 	DECLARE_WRITE32_MEMBER(rchase2_devices_w);
 	DECLARE_WRITE32_MEMBER(srallyc_devices_w);
 	DECLARE_READ32_MEMBER(copro_prg_r);
 	DECLARE_WRITE32_MEMBER(copro_prg_w);
+	DECLARE_READ32_MEMBER(copro_ctl1_r);
 	DECLARE_WRITE32_MEMBER(copro_ctl1_w);
 	DECLARE_WRITE32_MEMBER(copro_function_port_w);
 	DECLARE_READ32_MEMBER(copro_fifo_r);
@@ -130,7 +140,8 @@ public:
 	DECLARE_WRITE32_MEMBER(geo_prg_w);
 	DECLARE_READ32_MEMBER(geo_r);
 	DECLARE_WRITE32_MEMBER(geo_w);
-	DECLARE_READ32_MEMBER(hotd_unk_r);
+	DECLARE_READ32_MEMBER(hotd_lightgun_r);
+	DECLARE_WRITE32_MEMBER(hotd_lightgun_w);
 	DECLARE_READ32_MEMBER(sonic_unk_r);
 	DECLARE_READ32_MEMBER(daytona_unk_r);
 	DECLARE_READ32_MEMBER(desert_unk_r);
@@ -161,6 +172,10 @@ public:
 	DECLARE_WRITE32_MEMBER(copro_sharc_buffer_w);
 	DECLARE_READ32_MEMBER(copro_tgp_buffer_r);
 	DECLARE_WRITE32_MEMBER(copro_tgp_buffer_w);
+	DECLARE_READ8_MEMBER(tgpid_r);
+	DECLARE_READ32_MEMBER(copro_status_r);
+	DECLARE_READ32_MEMBER(polygon_count_r);
+
 	DECLARE_READ8_MEMBER(driveio_port_r);
 	DECLARE_WRITE8_MEMBER(driveio_port_w);
 	DECLARE_READ8_MEMBER(driveio_port_str_r);
@@ -196,6 +211,15 @@ public:
 	DECLARE_READ_LINE_MEMBER(copro_tgp_fifoin_pop_ok);
 	DECLARE_READ32_MEMBER(copro_tgp_fifoin_pop);
 	DECLARE_WRITE32_MEMBER(copro_tgp_fifoout_push);
+	DECLARE_READ8_MEMBER(virtuacop_lightgun_r);
+	DECLARE_READ8_MEMBER(virtuacop_lightgun_offscreen_r);
+
+	bool copro_fifoin_pop(device_t *device, UINT32 *result,UINT32 offset, UINT32 mem_mask);
+	void copro_fifoin_push(device_t *device, UINT32 data, UINT32 offset, UINT32 mem_mask);
+	UINT32 copro_fifoout_pop(address_space &space, UINT32 offset, UINT32 mem_mask);
+	void copro_fifoout_push(device_t *device, UINT32 data,UINT32 offset,UINT32 mem_mask);
+
+	void model2_3d_frame_end( bitmap_rgb32 &bitmap, const rectangle &cliprect );
 };
 
 /*----------- defined in video/model2.c -----------*/

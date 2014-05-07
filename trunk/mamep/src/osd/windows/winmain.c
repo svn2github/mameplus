@@ -29,7 +29,6 @@
 #include "winmain.h"
 #include "window.h"
 #include "video.h"
-#include "sound.h"
 #include "input.h"
 #include "output.h"
 #include "config.h"
@@ -39,9 +38,6 @@
 #include "winutil.h"
 #include "debugger.h"
 #include "winfile.h"
-#ifdef USE_NETWORK
-#include "netdev.h"
-#endif
 
 #define DEBUG_SLOW_LOCKS    0
 
@@ -253,7 +249,6 @@ static int is_double_click_start(int argc);
 static DWORD WINAPI watchdog_thread_entry(LPVOID lpParameter);
 static LONG WINAPI exception_filter(struct _EXCEPTION_POINTERS *info);
 static void winui_output_error(delegate_late_bind *__dummy, const char *format, va_list argptr);
-static void win_mame_file_output_callback(delegate_late_bind *param, const char *format, va_list argptr);
 
 
 
@@ -474,24 +469,11 @@ int main(int argc, char *argv[])
 	if (win_is_gui_application() || is_double_click_start(argc))
 	{
 		// if we are a GUI app, output errors to message boxes
-		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
+		osd_set_output_channel(OSD_OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
 
 		// make sure any console window that opened on our behalf is nuked
 		FreeConsole();
 	}
-	else
-		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
-
-	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
-	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
-	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
-	mame_set_output_channel(OUTPUT_CHANNEL_LOG, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
-
-	// set up language for windows
-	assign_msg_catategory(UI_MSG_OSD0, "windows");
-
-	osd_init_midi();
 
 	// parse config and cmdline options
 	DWORD result = 0;
@@ -501,9 +483,6 @@ int main(int argc, char *argv[])
 		cli_frontend frontend(options, osd);
 		result = frontend.execute(argc, argv);
 	}
-
-	osd_shutdown_midi();
-
 	// free symbols
 	symbols = NULL;
 	ui_lang_shutdown();
@@ -643,9 +622,6 @@ void windows_osd_interface::init(running_machine &machine)
 	if (!(machine.debug_flags & DEBUG_FLAG_OSD_ENABLED))
 		SetThreadPriority(GetCurrentThread(), options.priority());
 
-	// ensure we get called on the way out
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(osd_exit), &machine));
-
 	// get number of processors
 	stemp = options.numprocessors();
 
@@ -656,19 +632,14 @@ void windows_osd_interface::init(running_machine &machine)
 		osd_num_processors = atoi(stemp);
 		if (osd_num_processors < 1)
 		{
-			mame_printf_warning(_WINDOWS("Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n"));
+			osd_printf_warning(_WINDOWS("Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n"));
 			osd_num_processors = 0;
 		}
 	}
 
 	// initialize the subsystems
-	winvideo_init(machine);
-	winsound_init(machine);
-	wininput_init(machine);
-	winoutput_init(machine);
-#ifdef USE_NETWORK
-	winnetdev_init(machine);
-#endif
+	osd_interface::init_subsystems();
+	
 	// notify listeners of screen configuration
 	astring tempstring;
 	for (win_window_info *info = win_window_list; info != NULL; info = info->next)
@@ -724,7 +695,7 @@ void windows_osd_interface::init(running_machine &machine)
 //  osd_exit
 //============================================================
 
-void windows_osd_interface::osd_exit(running_machine &machine)
+void windows_osd_interface::osd_exit()
 {
 	// no longer have a machine
 	g_current_machine = NULL;
@@ -732,10 +703,8 @@ void windows_osd_interface::osd_exit(running_machine &machine)
 	// cleanup sockets
 	win_cleanup_sockets();
 
-	#ifdef USE_NETWORK
-	winnetdev_deinit(machine);
-	#endif
-
+	osd_interface::exit_subsystems();
+	
 	// take down the watchdog thread if it exists
 	if (watchdog_thread != NULL)
 	{
@@ -766,24 +735,9 @@ void windows_osd_interface::osd_exit(running_machine &machine)
 		timeEndPeriod(caps.wPeriodMin);
 
 	// one last pass at events
-	winwindow_process_events(machine, 0, 0);
+	winwindow_process_events(machine(), 0, 0);
 }
 
-
-//============================================================
-//  win_mame_file_output_callback
-//============================================================
-
-static void win_mame_file_output_callback(delegate_late_bind *param, const char *format, va_list argptr)
-{
-	char buf[5000];
-	CHAR *s;
-
-	vsnprintf(buf, ARRAY_LENGTH(buf), format, argptr);
-	s = astring_from_utf8(buf);
-	fputs(s, (FILE *)param);
-	osd_free(s);
-}
 
 //-------------------------------------------------
 //  font_open - attempt to "open" a handle to the

@@ -46,7 +46,6 @@ public:
 	DECLARE_WRITE16_MEMBER(twin16_CPUB_register_w);
 	DECLARE_WRITE16_MEMBER(fround_CPU_register_w);
 	DECLARE_WRITE16_MEMBER(twin16_text_ram_w);
-	DECLARE_WRITE16_MEMBER(twin16_paletteram_word_w);
 	DECLARE_WRITE16_MEMBER(fround_gfx_bank_w);
 	DECLARE_WRITE16_MEMBER(twin16_video_register_w);
 	DECLARE_READ16_MEMBER(twin16_sprite_status_r);

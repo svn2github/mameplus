@@ -17,7 +17,7 @@ TODO:
 - 02851: tetriskr: Corrupt game graphics after some time of gameplay, caused by a wrong
   reading of the i/o $3c8 bit 1.
 - Add a proper FDC device.
-- Filetto: Add UM5100 sound chip ,might be connected to the prototyping card;
+- Filetto: Add UM5100 sound chip, might be connected to the prototyping card;
 - buzzer sound has issues in both games
 
 ********************************************************************************************
@@ -73,9 +73,9 @@ class pcxt_state : public driver_device
 public:
 	pcxt_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_pit8253(*this,"pit8253"),
-			m_pic8259_1(*this,"pic8259_1"),
-			m_dma8237_1(*this,"dma8237_1") ,
+			m_pit8253(*this, "pit8253"),
+			m_pic8259_1(*this, "pic8259_1"),
+			m_dma8237_1(*this, "dma8237_1") ,
 		m_maincpu(*this, "maincpu"),
 		m_speaker(*this, "speaker") { }
 
@@ -124,7 +124,6 @@ public:
 	DECLARE_DRIVER_INIT(filetto);
 	virtual void machine_reset();
 	UINT32 screen_update_tetriskr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
-	IRQ_CALLBACK_MEMBER(irq_callback);
 	UINT8 pcxt_speaker_get_spk();
 	void pcxt_speaker_set_spkrdata(UINT8 data);
 	required_device<cpu_device> m_maincpu;
@@ -429,26 +428,6 @@ WRITE8_MEMBER(pcxt_state::sys_reset_w)
 	m_maincpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
-static I8255A_INTERFACE( ppi8255_0_intf )
-{
-	DEVCB_DRIVER_MEMBER(pcxt_state,port_a_r),           /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_DRIVER_MEMBER(pcxt_state,port_b_r),           /* Port B read */
-	DEVCB_DRIVER_MEMBER(pcxt_state,port_b_w),           /* Port B write */
-	DEVCB_DRIVER_MEMBER(pcxt_state,port_c_r),           /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_1_intf )
-{
-	DEVCB_NULL,                         /* Port A read */
-	DEVCB_DRIVER_MEMBER(pcxt_state,wss_1_w),                /* Port A write */
-	DEVCB_NULL,                         /* Port B read */
-	DEVCB_DRIVER_MEMBER(pcxt_state,wss_2_w),                /* Port B write */
-	DEVCB_NULL,                         /* Port C read */
-	DEVCB_DRIVER_MEMBER(pcxt_state,sys_reset_w)         /* Port C write */
-};
-
 
 /*Floppy Disk Controller 765 device*/
 /*Currently we only emulate it at a point that the BIOS will pass the checks*/
@@ -574,25 +553,9 @@ WRITE_LINE_MEMBER(pcxt_state::pc_dack1_w){ set_dma_channel(m_dma8237_1, 1, state
 WRITE_LINE_MEMBER(pcxt_state::pc_dack2_w){ set_dma_channel(m_dma8237_1, 2, state); }
 WRITE_LINE_MEMBER(pcxt_state::pc_dack3_w){ set_dma_channel(m_dma8237_1, 3, state); }
 
-static I8237_INTERFACE( dma8237_1_config )
-{
-	DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pc_dma_hrq_changed),
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(pcxt_state, pc_dma_read_byte),
-	DEVCB_DRIVER_MEMBER(pcxt_state, pc_dma_write_byte),
-	{ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL },
-	{ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL },
-	{ DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pc_dack0_w), DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pc_dack1_w), DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pc_dack2_w), DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pc_dack3_w) }
-};
-
 /******************
 8259 IRQ controller
 ******************/
-
-IRQ_CALLBACK_MEMBER(pcxt_state::irq_callback)
-{
-	return m_pic8259_1->acknowledge();
-}
 
 static ADDRESS_MAP_START( filetto_map, AS_PROGRAM, 8, pcxt_state )
 	AM_RANGE(0x00000, 0x9ffff) AM_RAM //work RAM 640KB
@@ -719,7 +682,6 @@ void pcxt_state::machine_reset()
 {
 	m_bank = -1;
 	m_lastvalue = -1;
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pcxt_state::irq_callback),this));
 
 	m_pc_spkrdata = 0;
 	m_pit_out2 = 0;
@@ -732,27 +694,12 @@ SLOT_INTERFACE_START( filetto_isa8_cards )
 	SLOT_INTERFACE_INTERNAL("tetriskr", ISA8_CGA_TETRISKR)
 SLOT_INTERFACE_END
 
-static const isa8bus_interface filetto_isabus_intf =
-{
-	// interrupts
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir2_w),
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir3_w),
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir4_w),
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir5_w),
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir6_w),
-	DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir7_w),
-
-	// dma request
-	DEVCB_DEVICE_LINE_MEMBER("dma8237_1", am9517a_device, dreq1_w),
-	DEVCB_DEVICE_LINE_MEMBER("dma8237_1", am9517a_device, dreq2_w),
-	DEVCB_DEVICE_LINE_MEMBER("dma8237_1", am9517a_device, dreq3_w)
-};
-
 
 static MACHINE_CONFIG_FRAGMENT(pcxt)
 	MCFG_CPU_ADD("maincpu", I8088, XTAL_14_31818MHz/3)
 	MCFG_CPU_PROGRAM_MAP(filetto_map)
 	MCFG_CPU_IO_MAP(filetto_io)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DEVICE("pic8259_1", pic8259_device, inta_cb)
 
 	MCFG_DEVICE_ADD("pit8253", PIT8253, 0)
 	MCFG_PIT8253_CLK0(XTAL_14_31818MHz/12) /* heartbeat IRQ */
@@ -761,15 +708,40 @@ static MACHINE_CONFIG_FRAGMENT(pcxt)
 	MCFG_PIT8253_CLK2(XTAL_14_31818MHz/12) /* pio port c pin 4, and speaker polling enough */
 	MCFG_PIT8253_OUT2_HANDLER(WRITELINE(pcxt_state, ibm5150_pit8253_out2_changed))
 
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
-	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(pcxt_state, port_a_r))
+	MCFG_I8255_IN_PORTB_CB(READ8(pcxt_state, port_b_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(pcxt_state, port_b_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(pcxt_state, port_c_r))
 
-	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
+	MCFG_DEVICE_ADD("ppi8255_1", I8255A, 0)
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(pcxt_state, wss_1_w))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(pcxt_state, wss_2_w))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(pcxt_state, sys_reset_w))
+
+	MCFG_DEVICE_ADD("dma8237_1", AM9517A, XTAL_14_31818MHz/3)
+	MCFG_I8237_OUT_HREQ_CB(WRITELINE(pcxt_state, pc_dma_hrq_changed))
+	MCFG_I8237_IN_MEMR_CB(READ8(pcxt_state, pc_dma_read_byte))
+	MCFG_I8237_OUT_MEMW_CB(WRITE8(pcxt_state, pc_dma_write_byte))
+	MCFG_I8237_OUT_DACK_0_CB(WRITELINE(pcxt_state, pc_dack0_w))
+	MCFG_I8237_OUT_DACK_1_CB(WRITELINE(pcxt_state, pc_dack1_w))
+	MCFG_I8237_OUT_DACK_2_CB(WRITELINE(pcxt_state, pc_dack2_w))
+	MCFG_I8237_OUT_DACK_3_CB(WRITELINE(pcxt_state, pc_dack3_w))
 
 	MCFG_PIC8259_ADD( "pic8259_1", INPUTLINE("maincpu", 0), VCC, NULL )
 
-	MCFG_ISA8_BUS_ADD("isa", ":maincpu", filetto_isabus_intf)
-
+	MCFG_DEVICE_ADD("isa", ISA8, 0)
+	MCFG_ISA8_CPU(":maincpu")
+	MCFG_ISA_OUT_IRQ2_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir2_w))
+	MCFG_ISA_OUT_IRQ3_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir3_w))
+	MCFG_ISA_OUT_IRQ4_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir4_w))
+	MCFG_ISA_OUT_IRQ5_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir5_w))
+	MCFG_ISA_OUT_IRQ6_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir6_w))
+	MCFG_ISA_OUT_IRQ7_CB(DEVWRITELINE("pic8259_1", pic8259_device, ir7_w))
+	MCFG_ISA_OUT_DRQ1_CB(DEVWRITELINE("dma8237_1", am9517a_device, dreq1_w))
+	MCFG_ISA_OUT_DRQ2_CB(DEVWRITELINE("dma8237_1", am9517a_device, dreq2_w))
+	MCFG_ISA_OUT_DRQ3_CB(DEVWRITELINE("dma8237_1", am9517a_device, dreq3_w))
+	
 	/*Sound Hardware*/
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

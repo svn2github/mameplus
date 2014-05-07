@@ -190,7 +190,7 @@ void mc68hc11_cpu_device::hc11_regs_w(UINT32 address, UINT8 value)
 			m_io->write_byte(MC68HC11_IO_PORTA, value);
 			return;
 		case 0x01:      /* DDRA */
-			//mame_printf_debug("HC11: ddra = %02X\n", value);
+			//osd_printf_debug("HC11: ddra = %02X\n", value);
 			return;
 		case 0x03:      /* PORTC */
 			m_io->write_byte(MC68HC11_IO_PORTC, value);
@@ -202,7 +202,7 @@ void mc68hc11_cpu_device::hc11_regs_w(UINT32 address, UINT8 value)
 			m_io->write_byte(MC68HC11_IO_PORTD, value); //mask & 0x3f?
 			return;
 		case 0x09:      /* DDRD */
-			//mame_printf_debug("HC11: ddrd = %02X\n", value);
+			//osd_printf_debug("HC11: ddrd = %02X\n", value);
 			return;
 		case 0x0a:      /* PORTE */
 			m_io->write_byte(MC68HC11_IO_PORTE, value);
@@ -271,13 +271,13 @@ void mc68hc11_cpu_device::hc11_regs_w(UINT32 address, UINT8 value)
 			m_io->write_byte(MC68HC11_IO_PORTH, value);
 			return;
 		case 0x7d:      /* DDRH */
-			//mame_printf_debug("HC11: ddrh = %02X at %04X\n", value, m_pc);
+			//osd_printf_debug("HC11: ddrh = %02X at %04X\n", value, m_pc);
 			return;
 		case 0x7e:      /* PORTG */
 			m_io->write_byte(MC68HC11_IO_PORTG, value);
 			return;
 		case 0x7f:      /* DDRG */
-			//mame_printf_debug("HC11: ddrg = %02X at %04X\n", value, m_pc);
+			//osd_printf_debug("HC11: ddrg = %02X at %04X\n", value, m_pc);
 			return;
 
 		case 0x88:      /* SPCR2 */
@@ -421,16 +421,7 @@ void mc68hc11_cpu_device::device_start()
 	save_item(NAME(m_pr));
 	save_item(NAME(m_frc_base));
 
-	state_add( HC11_PC, "PC", m_pc).formatstr("%04X");
-	state_add( HC11_SP, "SP", m_sp).formatstr("%04X");
-	state_add( HC11_A,  "A", m_d.d8.a).formatstr("%02X");
-	state_add( HC11_B,  "B", m_d.d8.b).formatstr("%02X");
-	state_add( HC11_IX, "IX", m_ix).formatstr("%04X");
-	state_add( HC11_IY, "IY", m_iy).formatstr("%04X");
-
-	state_add( STATE_GENPC, "GENPC", m_pc).noshow();
-	state_add( STATE_GENFLAGS, "GENFLAGS", m_ccr).formatstr("%8s").noshow();
-
+	m_pc = 0;
 	m_d.d16 = 0;
 	m_ix = 0;
 	m_iy = 0;
@@ -443,6 +434,16 @@ void mc68hc11_cpu_device::device_start()
 	m_reg_position = 0;
 	m_tflg1 = 0;
 	m_tmsk1 = 0;
+
+	state_add( HC11_PC, "PC", m_pc).formatstr("%04X");
+	state_add( HC11_SP, "SP", m_sp).formatstr("%04X");
+	state_add( HC11_A,  "A", m_d.d8.a).formatstr("%02X");
+	state_add( HC11_B,  "B", m_d.d8.b).formatstr("%02X");
+	state_add( HC11_IX, "IX", m_ix).formatstr("%04X");
+	state_add( HC11_IY, "IY", m_iy).formatstr("%04X");
+
+	state_add( STATE_GENPC, "GENPC", m_pc).noshow();
+	state_add( STATE_GENFLAGS, "GENFLAGS", m_ccr).formatstr("%8s").noshow();
 
 	m_icountptr = &m_icount;
 }

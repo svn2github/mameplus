@@ -172,7 +172,7 @@ READ8_MEMBER(gsword_state::gsword_hack_r)
 {
 	UINT8 data = m_cpu2_ram[offset + 4];
 
-	/*if(offset==1)mame_printf_debug("CNT %02X%02X\n",m_cpu2_ram[5],m_cpu2_ram[4]); */
+	/*if(offset==1)osd_printf_debug("CNT %02X%02X\n",m_cpu2_ram[5],m_cpu2_ram[4]); */
 
 	/* speedup timeout cound down */
 	if(m_protect_hack)
@@ -240,7 +240,7 @@ INTERRUPT_GEN_MEMBER(gsword_state::gsword_snd_interrupt)
 
 WRITE8_MEMBER(gsword_state::gsword_nmi_set_w)
 {
-/*  mame_printf_debug("AY write %02X\n",data);*/
+/*  osd_printf_debug("AY write %02X\n",data);*/
 
 	m_protect_hack = (data&0x80) ? 0 : 1;
 #if 0
@@ -620,17 +620,6 @@ static GFXDECODE_START( gsword )
 GFXDECODE_END
 
 
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(gsword_state,gsword_nmi_set_w), /* portA write */
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_START( gsword, gsword_state )
 
 	/* basic machine hardware */
@@ -681,7 +670,7 @@ static MACHINE_CONFIG_START( gsword, gsword_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
 	MCFG_SOUND_ADD("ay2", AY8910, 1500000)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(gsword_state, gsword_nmi_set_w)) /* portA write */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_400kHz) /* verified on pcb */
@@ -730,7 +719,7 @@ static MACHINE_CONFIG_START( josvolly, gsword_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
 	MCFG_SOUND_ADD("ay2", AY8910, 1500000)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(gsword_state, gsword_nmi_set_w)) /* portA write */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
 #if 0

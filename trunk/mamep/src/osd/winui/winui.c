@@ -1192,21 +1192,21 @@ static HICON FormatICOInMemoryToHICON(PBYTE ptrBuffer, UINT nBufferSize)
 
 	IconImage.dwNumBytes = lpIDE->dwBytesInRes;
 
-		/* Seek to beginning of this image */
+	/* Seek to beginning of this image */
 	if ( lpIDE->dwImageOffset > nBufferSize )
-		{
-			return NULL;
-		}
+	{
+		return NULL;
+	}
 
 	nBufferIndex = lpIDE->dwImageOffset;
 
-		/* Read it in */
+	/* Read it in */
 	if ((nBufferIndex + lpIDE->dwBytesInRes) > nBufferSize)
-		{
-			return NULL;
-		}
+	{
+		return NULL;
+	}
 
-		IconImage.lpBits = &ptrBuffer[nBufferIndex];
+	IconImage.lpBits = &ptrBuffer[nBufferIndex];
 	nBufferIndex += lpIDE->dwBytesInRes;
 #if 0  // Not sure we want odd sized icons.
 	hIcon = CreateIconFromResourceEx(IconImage.lpBits, IconImage.dwNumBytes, TRUE, 0x00030000,
@@ -2104,7 +2104,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	srand((unsigned)time(NULL));
 
 	// output errors to message boxes
-	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
+	osd_set_output_channel(OSD_OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
 
 	//mamep: set up initial option system
 	CreateGameOptions(options, OPTIONS_TYPE_GLOBAL);
@@ -2307,8 +2307,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	hTreeView = GetDlgItem(hMain, IDC_TREE);
 	hwndList  = GetDlgItem(hMain, IDC_LIST);
 
-	//g_history_filename = mame_strdup(GetHistoryFileName());
-	//g_mameinfo_filename = mame_strdup(GetMAMEInfoFileName());
+	//g_history_filename = core_strdup(GetHistoryFileName());
+	//g_mameinfo_filename = core_strdup(GetMAMEInfoFileName());
 
 	if (!InitSplitters())
 		return FALSE;

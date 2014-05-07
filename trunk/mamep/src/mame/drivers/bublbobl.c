@@ -701,15 +701,6 @@ WRITE_LINE_MEMBER(bublbobl_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
-};
-
-
-
 /*************************************
  *
  *  Machine driver
@@ -781,7 +772,6 @@ static MACHINE_CONFIG_START( tokio, bublbobl_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, MAIN_XTAL/8)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(bublbobl_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.08)
 	MCFG_SOUND_ROUTE(1, "mono", 0.08)
 	MCFG_SOUND_ROUTE(2, "mono", 0.08)
@@ -864,7 +854,6 @@ static MACHINE_CONFIG_START( bublbobl, bublbobl_state )
 
 	MCFG_SOUND_ADD("ym1", YM2203, MAIN_XTAL/8)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(bublbobl_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
 	MCFG_SOUND_ADD("ym2", YM3526, MAIN_XTAL/8)
@@ -1181,7 +1170,7 @@ ROM_START( bublcave )
 	/* 20000-2ffff empty */
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the second CPU */
-	ROM_LOAD( "a78-08.37",    0x0000, 0x08000, CRC(a9384086) )
+	ROM_LOAD( "bublcave_a78-08.37",    0x0000, 0x08000, CRC(a9384086) )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )	/* 64k for the third CPU */
 	ROM_LOAD( "a78-07.46",    0x0000, 0x08000, CRC(4f9a26e8) SHA1(3105b34b88a7134493c2b3f584729f8b0407a011) )
@@ -1190,11 +1179,11 @@ ROM_START( bublcave )
 	ROM_LOAD( "a78-01.17",    0xf000, 0x1000, CRC(b1bfb53d) SHA1(31b8f31acd3aa394acd80db362774749842e1285) )
 
 	ROM_REGION( 0x80000, "gfx1", ROMREGION_INVERT )
-	ROM_LOAD( "a78-09.12",    0x00000, 0x8000, CRC(b90b7eef) )    /* 1st plane */
+	ROM_LOAD( "bublcave_a78-09.12",    0x00000, 0x8000, CRC(b90b7eef) )    /* 1st plane */
 	ROM_LOAD( "a78-10.13",    0x08000, 0x8000, CRC(4fb22f05) )
 	ROM_LOAD( "a78-11.14",    0x10000, 0x8000, CRC(9773e512) SHA1(33c1687ee575d66bf0e98add45d06da827813765) )
 	ROM_LOAD( "a78-12.15",    0x18000, 0x8000, CRC(e49eb49e) )
-	ROM_LOAD( "a78-13.16",    0x20000, 0x8000, CRC(61919734) )
+	ROM_LOAD( "bublcave_a78-13.16",    0x20000, 0x8000, CRC(61919734) )
 	ROM_LOAD( "a78-14.17",    0x28000, 0x8000, CRC(7e3a13bd) )
 	/* 0x30000-0x3ffff empty */
 	ROM_LOAD( "a78-15.30",    0x40000, 0x8000, CRC(c253c73a) )    /* 2nd plane */
@@ -1405,7 +1394,7 @@ ROM_START( bublredux )
 	ROM_REGION( 0x30000, "maincpu", 0 )
 	ROM_LOAD( "bb3",          0x00000, 0x08000, CRC(b802046d) )
 	/* ROMs banked at 8000-bfff */
-	ROM_LOAD( "bb5",          0x10000, 0x08000, CRC(d29d3444) )
+	ROM_LOAD( "bublredux_bb5",          0x10000, 0x08000, CRC(d29d3444) )
 	ROM_LOAD( "bb4",          0x18000, 0x08000, CRC(3cbb8b41) )
 	/* 20000-2ffff empty */
 

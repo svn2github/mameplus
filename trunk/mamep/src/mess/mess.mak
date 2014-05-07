@@ -35,11 +35,13 @@ include $(SRC)/mess/messcore.mak
 # specify available sound cores; some of these are
 # only for MAME and so aren't included
 #-------------------------------------------------
+
 SOUNDS += VRC6
 
 #-------------------------------------------------
 # specify available bus cores
 #-------------------------------------------------
+
 BUSES += GAMEBOY
 BUSES += GBA
 BUSES += MEGADRIVE
@@ -89,7 +91,6 @@ $(MESSOBJ)/mame.a: \
 	$(MAME_VIDEO)/antic.o       \
 	$(MAME_AUDIO)/snes_snd.o    \
 	$(MAME_MACHINE)/snes.o      \
-	$(MAME_VIDEO)/snes.o        \
 	$(MAME_MACHINE)/megadriv.o  \
 	$(MAME_VIDEO)/neogeo.o      \
 	$(MAME_MACHINE)/neoprot.o   \

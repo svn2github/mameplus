@@ -7,7 +7,7 @@
 #ifndef MB89352_H_
 #define MB89352_H_
 
-#include "machine/scsihle.h"
+#include "legscsi.h"
 
 // SCSI lines readable via PSNS register (reg 5)
 #define MB89352_LINE_REQ 0x80
@@ -48,36 +48,32 @@
 #define SERR_SCSI_PAR   0x80
 
 
-struct mb89352_interface
-{
-	devcb_write_line irq_callback;  /* irq callback */
-	devcb_write_line drq_callback;  /* drq callback */
-};
+#define MCFG_MB89352A_IRQ_CB(_devcb) \
+	devcb = &mb89352_device::set_irq_callback(*device, DEVCB2_##_devcb);
+	
+#define MCFG_MB89352A_DRQ_CB(_devcb) \
+	devcb = &mb89352_device::set_drq_callback(*device, DEVCB2_##_devcb);
 
-#define MCFG_MB89352A_ADD(_tag, _intrf) \
-	MCFG_DEVICE_ADD(_tag, MB89352A, 0) \
-	MCFG_DEVICE_CONFIG(_intrf)
-
-class mb89352_device : public device_t,
-						public mb89352_interface
+class mb89352_device : public legacy_scsi_host_adapter
 {
 public:
 	// construction/destruction
 	mb89352_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 
+	template<class _Object> static devcb2_base &set_irq_callback(device_t &device, _Object object) { return downcast<mb89352_device &>(device).m_irq_cb.set_callback(object); }
+	template<class _Object> static devcb2_base &set_drq_callback(device_t &device, _Object object) { return downcast<mb89352_device &>(device).m_drq_cb.set_callback(object); }
+	
 	// any publically accessible interfaces needed for runtime
 	DECLARE_READ8_MEMBER( mb89352_r );
 	DECLARE_WRITE8_MEMBER( mb89352_w );
 
 	void set_phase(int phase);
-	int get_phase(void);
 
 protected:
 	// device-level overrides (none are required, but these are common)
 	virtual void device_start();
 	virtual void device_reset();
 	virtual void device_stop();
-	virtual void device_config_complete();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
 private:
@@ -87,10 +83,8 @@ private:
 	int get_scsi_cmd_len(UINT8 cbyte);
 	//void set_ints(UINT8 flag);
 
-	devcb_resolved_write_line m_irq_func;
-	devcb_resolved_write_line m_drq_func;
-
-	scsihle_device* m_SCSIdevices[8];
+	devcb2_write_line m_irq_cb;  /* irq callback */
+	devcb2_write_line m_drq_cb;  /* drq callback */
 
 	UINT8 m_phase;  // current SCSI phase
 	UINT8 m_target; // current SCSI target
@@ -112,7 +106,6 @@ private:
 	UINT8 m_command_index;
 	UINT8 m_command[16];
 	UINT32 m_transfer_index;
-	int m_result_length;
 	UINT8 m_buffer[512];
 
 	emu_timer* m_transfer_timer;

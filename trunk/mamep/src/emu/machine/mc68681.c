@@ -63,7 +63,7 @@ MACHINE_CONFIG_END
 //**************************************************************************
 
 mc68681_device::mc68681_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, MC68681, "MC68681", tag, owner, clock, "mc68681", __FILE__),
+	: device_t(mconfig, MC68681, "MC68681 DUART", tag, owner, clock, "mc68681", __FILE__),
 	m_chanA(*this, CHANA_TAG),
 	m_chanB(*this, CHANB_TAG),
 	write_irq(*this),
@@ -75,6 +75,7 @@ mc68681_device::mc68681_device(const machine_config &mconfig, const char *tag, d
 	ip4clk(0),
 	ip5clk(0),
 	ip6clk(0),
+	ACR(0),
 	IP_last_state(0)
 {
 }
@@ -132,6 +133,7 @@ void mc68681_device::device_reset()
 	CTR.d = 0;  /* Counter/Timer Preset Value */
 	m_read_vector = false;
 	// "reset clears internal registers (SRA, SRB, IMR, ISR, OPR, OPCR) puts OP0-7 in the high state, stops the counter/timer, and puts channels a/b in the inactive state"
+	IPCR = 0;
 
 	write_outport(OPR ^ 0xff);
 }
@@ -237,6 +239,31 @@ TIMER_CALLBACK_MEMBER( mc68681_device::duart_timer_callback )
 		{
 			OPR ^= 0x8;
 			write_outport(OPR ^ 0xff);
+		}
+
+		// timer driving any serial channels?
+		if (BIT(ACR, 7) == 1)
+		{
+			UINT8 csr = m_chanA->get_chan_CSR();
+
+			if ((csr & 0xf0) == 0xd0)	// tx is timer driven
+			{
+				m_chanA->tx_clock_w(half_period);
+			}
+			if ((csr & 0x0f) == 0x0d) 	// rx is timer driven
+			{
+				m_chanA->rx_clock_w(half_period);
+			}
+
+			csr = m_chanB->get_chan_CSR(); 
+			if ((csr & 0xf0) == 0xd0)	// tx is timer driven
+			{
+				m_chanB->tx_clock_w(half_period);
+			}
+			if ((csr & 0x0f) == 0x0d) 	// rx is timer driven
+			{
+				m_chanB->rx_clock_w(half_period);
+			}
 		}
 
 		if (!half_period)
@@ -594,7 +621,7 @@ int mc68681_device::calc_baud(int ch, UINT8 data)
 		baud_rate = baud_rate_ACR_1[data & 0x0f];
 	}
 
-	if ( baud_rate == 0 )
+	if ((baud_rate == 0) && ((data & 0xf) != 0xd))
 	{
 		LOG(( "Unsupported transmitter clock: channel %d, clock select = %02x\n", ch, data ));
 	}
@@ -615,11 +642,12 @@ void mc68681_device::set_ISR_bits(int mask)
 // DUART channel class stuff
 
 mc68681_channel::mc68681_channel(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, MC68681_CHANNEL, "DUART 68681 channel", tag, owner, clock, "mc68681_channel", __FILE__),
+	: device_t(mconfig, MC68681_CHANNEL, "MC68681 DUART CHANNEL", tag, owner, clock, "mc68681_channel", __FILE__),
 	device_serial_interface(mconfig, *this),
 	MR1(0),
 	MR2(0),
 	SR(0),
+	rx_enabled(0),
 	rx_fifo_num(0),
 	tx_enabled(0)
 {
@@ -693,7 +721,7 @@ void mc68681_channel::rcv_complete()
 
 void mc68681_channel::tra_complete()
 {
-//  printf("%s ch %d Tx complete\n", tag(), m_ch);
+//	printf("%s ch %d Tx complete\n", tag(), m_ch);
 	tx_ready = 1;
 	SR |= STATUS_TRANSMITTER_READY;
 
@@ -1112,3 +1140,9 @@ void mc68681_channel::ACR_updated()
 {
 	write_chan_reg(1, CSR);
 }
+
+UINT8 mc68681_channel::get_chan_CSR()
+{
+	return CSR;
+}
+

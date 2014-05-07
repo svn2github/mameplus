@@ -71,6 +71,7 @@
 #include "nld_7490.h"
 #include "nld_7493.h"
 #include "nld_74107.h"
+#include "nld_74123.h"
 #include "nld_74153.h"
 #include "nld_74ls629.h"
 #include "nld_9316.h"
@@ -87,8 +88,7 @@
 
 #include "nld_legacy.h"
 
-NETLIST_EXTERN(diode_models);
-NETLIST_EXTERN(bjt_models);
-
+NETLIST_EXTERNAL(diode_models);
+NETLIST_EXTERNAL(bjt_models);
 
 #endif

@@ -59,8 +59,8 @@ static const nes_mmc mmc_list[] =
 	{ 27, UNL_WORLDHERO },  // 27 World Hero board - Unsupported
 	{ 28, BTL_ACTION53 },   // 28 - Multi-discrete PCB designed by Tepples for Action 53
 	// 29 Unused
-	// 30 Unused
-	// 31 Unused
+	// 30 UNROM 512 + Flash, currently unsupported
+	{ 31, BTL_2A03_PURITANS },   // 31 - PCB designed by infinitelives & rainwarrior for 2A03 Puritans Album
 	{ 32, IREM_G101 },
 	{ 33, TAITO_TC0190FMC },
 	{ 34, STD_BXROM },
@@ -745,7 +745,7 @@ void nes_cart_slot_device::call_load_ines()
 		if (prgout)
 		{
 			fwrite(m_cart->get_prg_base(), 1, 0x4000 * m_cart->get_prg_size(), prgout);
-			mame_printf_error("Created PRG chunk\n");
+			osd_printf_error("Created PRG chunk\n");
 		}
 
 		fclose(prgout);
@@ -767,7 +767,7 @@ void nes_cart_slot_device::call_load_ines()
 		if (chrout)
 		{
 			fwrite(m_cart->get_vrom_base(), 1, m_cart->get_vrom_size(), chrout);
-			mame_printf_error("Created CHR chunk\n");
+			osd_printf_error("Created CHR chunk\n");
 		}
 		fclose(chrout);
 	}

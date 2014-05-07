@@ -22,7 +22,7 @@
 
 #define VERBOSE         (0)
 
-#define VPRINTF(x)      do { if (VERBOSE) mame_printf_debug x; } while (0)
+#define VPRINTF(x)      do { if (VERBOSE) osd_printf_debug x; } while (0)
 
 
 
@@ -48,7 +48,7 @@ const attotime sound_manager::STREAMS_UPDATE_ATTOTIME = attotime::from_hz(STREAM
 //  sound_stream - constructor
 //-------------------------------------------------
 
-sound_stream::sound_stream(device_t &device, int inputs, int outputs, int sample_rate, void *param, stream_update_func callback)
+sound_stream::sound_stream(device_t &device, int inputs, int outputs, int sample_rate,  stream_update_delegate callback)
 	: m_device(device),
 		m_next(NULL),
 		m_sample_rate(sample_rate),
@@ -64,17 +64,15 @@ sound_stream::sound_stream(device_t &device, int inputs, int outputs, int sample
 		m_output_sampindex(0),
 		m_output_update_sampindex(0),
 		m_output_base_sampindex(0),
-		m_callback(callback),
-		m_param(param)
+		m_callback(callback)
 {
 	// get the device's sound interface
 	device_sound_interface *sound;
 	if (!device.interface(sound))
 		throw emu_fatalerror("Attempted to create a sound_stream with a non-sound device");
 
-	// this is also the implicit parameter if we are using our internal stub
-	if (m_callback == &sound_stream::device_stream_update_stub)
-		m_param = sound;
+	if(m_callback.isnull())
+		m_callback = stream_update_delegate(FUNC(device_sound_interface::sound_stream_update),(device_sound_interface *)sound);
 
 	// create a unique tag for saving
 	astring state_tag;
@@ -93,6 +91,16 @@ sound_stream::sound_stream(device_t &device, int inputs, int outputs, int sample
 		m_output[outputnum].m_stream = this;
 		m_device.machine().save().save_item("stream", state_tag, outputnum, NAME(m_output[outputnum].m_gain));
 	}
+
+	// Mark synchronous streams as such
+	m_synchronous = m_sample_rate == STREAM_SYNC;
+	if (m_synchronous)
+	{
+		m_sample_rate = 0;
+		m_sync_timer = m_device.machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sound_stream::sync_update), this));
+	}
+	else
+		m_sync_timer = NULL;
 
 	// force an update to the sample rates; this will cause everything to be recomputed
 	// and will generate the initial resample buffers for our inputs
@@ -284,6 +292,15 @@ void sound_stream::update()
 }
 
 
+void sound_stream::sync_update(void *, INT32)
+{
+	update();
+	attotime time = m_device.machine().time();
+	attoseconds_t next_edge = m_attoseconds_per_sample - (time.attoseconds % m_attoseconds_per_sample);
+	m_sync_timer->adjust(attotime(0, next_edge));
+}
+
+
 //-------------------------------------------------
 //  output_since_last_update - return a pointer to
 //  the output buffer and the number of samples
@@ -428,18 +445,6 @@ void sound_stream::apply_sample_rate_changes()
 
 
 //-------------------------------------------------
-//  device_stream_update_stub - stub callback for
-//  passing through to modern devices
-//-------------------------------------------------
-
-STREAM_UPDATE( sound_stream::device_stream_update_stub )
-{
-	device_sound_interface *sound = reinterpret_cast<device_sound_interface *>(param);
-	sound->sound_stream_update(*stream, inputs, outputs, samples);
-}
-
-
-//-------------------------------------------------
 //  recompute_sample_rate_data - recompute sample
 //  rate data, and all streams that are affected
 //  by this stream
@@ -447,6 +452,26 @@ STREAM_UPDATE( sound_stream::device_stream_update_stub )
 
 void sound_stream::recompute_sample_rate_data()
 {
+	if (m_synchronous)
+	{
+		m_sample_rate = 0;
+		// When synchronous, pick the sample rate for the inputs, if any
+		for (int inputnum = 0; inputnum < m_input.count(); inputnum++)
+		{
+			stream_input &input = m_input[inputnum];
+			if (input.m_source != NULL)
+			{
+				if (!m_sample_rate)
+					m_sample_rate = input.m_source->m_stream->m_sample_rate;
+				else if (m_sample_rate != input.m_source->m_stream->m_sample_rate)
+					throw emu_fatalerror("Incompatible sample rates as input of a synchronous stream: %d and %d\n", m_sample_rate, input.m_source->m_stream->m_sample_rate);
+			}
+		}
+		if (!m_sample_rate)
+			m_sample_rate = 1000;
+	}
+
+
 	// recompute the timing parameters
 	attoseconds_t update_attoseconds = m_device.machine().sound().update_attoseconds();
 	m_attoseconds_per_sample = ATTOSECONDS_PER_SECOND / m_sample_rate;
@@ -482,6 +507,14 @@ void sound_stream::recompute_sample_rate_data()
 			input.m_latency_attoseconds = MAX(input.m_latency_attoseconds, latency);
 			assert(input.m_latency_attoseconds < update_attoseconds);
 		}
+	}
+
+	// If synchronous, prime the timer
+	if (m_synchronous)
+	{
+		attotime time = m_device.machine().time();
+		attoseconds_t next_edge = m_attoseconds_per_sample - (time.attoseconds % m_attoseconds_per_sample);
+		m_sync_timer->adjust(attotime(0, next_edge));
 	}
 }
 
@@ -586,7 +619,7 @@ void sound_stream::generate_samples(int samples)
 
 	// run the callback
 	VPRINTF(("  callback(%p, %d)\n", this, samples));
-	(*m_callback)(&m_device, this, m_param, m_input_array, m_output_array, samples);
+	m_callback(*this, m_input_array, m_output_array, samples);
 	VPRINTF(("  callback done\n"));
 }
 
@@ -821,12 +854,9 @@ sound_manager::~sound_manager()
 //  stream_alloc - allocate a new stream
 //-------------------------------------------------
 
-sound_stream *sound_manager::stream_alloc(device_t &device, int inputs, int outputs, int sample_rate, void *param, sound_stream::stream_update_func callback)
+sound_stream *sound_manager::stream_alloc(device_t &device, int inputs, int outputs, int sample_rate, stream_update_delegate callback)
 {
-	if (callback != NULL)
-		return &m_stream_list.append(*global_alloc(sound_stream(device, inputs, outputs, sample_rate, param, callback)));
-	else
-		return &m_stream_list.append(*global_alloc(sound_stream(device, inputs, outputs, sample_rate)));
+	return &m_stream_list.append(*global_alloc(sound_stream(device, inputs, outputs, sample_rate, callback)));
 }
 
 

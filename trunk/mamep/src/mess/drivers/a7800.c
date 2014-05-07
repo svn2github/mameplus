@@ -82,6 +82,9 @@
                                 regarding the potentiometer.
 
     2014/03/25 Mike Saarna  Fixed Riot Timer
+
+    2014/05/06 Mike Saarna/Robert Tuccitto Brought initial Maria cycle counts 
++	        inline from measurements taken with logic analyzer and tests.
 ***************************************************************************/
 
 #include "emu.h"
@@ -1139,7 +1142,7 @@ static MACHINE_CONFIG_START( a7800_ntsc, a7800_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS( 7159090, 456, 0, 320, 263, 27, 27 + 192 + 32 )
+	MCFG_SCREEN_RAW_PARAMS( 7159090, 454, 0, 320, 263, 27, 27 + 192 + 32 )
 	MCFG_SCREEN_UPDATE_DRIVER(a7800_state, screen_update_a7800)
 	MCFG_SCREEN_PALETTE("palette")
 
@@ -1155,7 +1158,10 @@ static MACHINE_CONFIG_START( a7800_ntsc, a7800_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
 	/* devices */
-	MCFG_RIOT6532_ADD("riot", A7800_NTSC_Y1/8, a7800_r6532_interface)
+	MCFG_DEVICE_ADD("riot", RIOT6532, A7800_NTSC_Y1/8)
+	MCFG_RIOT6532_IN_PA_CB(READ8(a7800_state, riot_joystick_r))
+	MCFG_RIOT6532_IN_PB_CB(READ8(a7800_state, riot_console_button_r))
+	MCFG_RIOT6532_OUT_PB_CB(WRITE8(a7800_state, riot_button_pullup_w))
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("bin,a78")
@@ -1178,7 +1184,7 @@ static MACHINE_CONFIG_DERIVED( a7800_pal, a7800_ntsc )
 //  MCFG_TIMER_ADD_SCANLINE("scantimer", a7800_interrupt, "screen", 0, 1)
 
 	MCFG_SCREEN_MODIFY( "screen" )
-		MCFG_SCREEN_RAW_PARAMS( 7093788, 456, 0, 320, 313, 35, 35 + 228 + 32 )
+	MCFG_SCREEN_RAW_PARAMS( 7093788, 454, 0, 320, 313, 35, 35 + 228 + 32 )
 
 	MCFG_PALETTE_MODIFY("palette")
 	MCFG_PALETTE_INIT_OWNER(a7800_state, a7800p )
@@ -1190,7 +1196,10 @@ static MACHINE_CONFIG_DERIVED( a7800_pal, a7800_ntsc )
 
 	/* devices */
 	MCFG_DEVICE_REMOVE("riot")
-	MCFG_RIOT6532_ADD("riot", CLK_PAL, a7800_r6532_interface)
+	MCFG_DEVICE_ADD("riot", RIOT6532, CLK_PAL)
+	MCFG_RIOT6532_IN_PA_CB(READ8(a7800_state, riot_joystick_r))
+	MCFG_RIOT6532_IN_PB_CB(READ8(a7800_state, riot_console_button_r))
+	MCFG_RIOT6532_OUT_PB_CB(WRITE8(a7800_state, riot_button_pullup_w))
 
 	/* software lists */
 	MCFG_DEVICE_REMOVE("cart_list")

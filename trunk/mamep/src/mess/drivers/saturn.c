@@ -559,10 +559,6 @@ void sat_console_state::nvram_init(nvram_device &nvram, void *data, size_t size)
 }
 
 
-static const sh2_cpu_core sh2_conf_master = { 0, NULL };
-static const sh2_cpu_core sh2_conf_slave  = { 1, NULL };
-
-
 MACHINE_START_MEMBER(sat_console_state, saturn)
 {
 	system_time systime;
@@ -655,7 +651,7 @@ MACHINE_START_MEMBER(sat_console_state, saturn)
 
 	m_stv_rtc_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sat_console_state::stv_rtc_increment),this));
 
-	m68k_set_reset_callback(m_audiocpu, &sat_console_state::m68k_reset_callback);
+	m_audiocpu->set_reset_callback(write_line_delegate(FUNC(sat_console_state::m68k_reset_callback),this));
 }
 
 /* Die Hard Trilogy tests RAM address 0x25e7ffe bit 2 with Slave during FRT minit irq, in-development tool for breaking execution of it? */
@@ -700,30 +696,17 @@ MACHINE_RESET_MEMBER(sat_console_state,saturn)
 }
 
 
-struct cdrom_interface saturn_cdrom =
-{
-	"sat_cdrom",
-	NULL
-};
-
-static SCUDSP_INTERFACE( scudsp_config )
-{
-	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scudsp_end_w),
-	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_r),
-	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_w)
-};
-
 static MACHINE_CONFIG_START( saturn, sat_console_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
 	MCFG_CPU_PROGRAM_MAP(saturn_mem)
-	MCFG_CPU_CONFIG(sh2_conf_master)
+	MCFG_SH2_IS_SLAVE(0)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sat_console_state, saturn_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("slave", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
 	MCFG_CPU_PROGRAM_MAP(saturn_mem)
-	MCFG_CPU_CONFIG(sh2_conf_slave)
+	MCFG_SH2_IS_SLAVE(1)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("slave_scantimer", sat_console_state, saturn_slave_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //256 x 44100 Hz = 11.2896 MHz
@@ -732,7 +715,9 @@ static MACHINE_CONFIG_START( saturn, sat_console_state )
 	MCFG_CPU_ADD("scudsp", SCUDSP, MASTER_CLOCK_352/4) // 14 MHz
 	MCFG_CPU_PROGRAM_MAP(scudsp_mem)
 	MCFG_CPU_DATA_MAP(scudsp_data)
-	MCFG_CPU_CONFIG(scudsp_config)
+	MCFG_SCUDSP_OUT_IRQ_CB(WRITELINE(saturn_state, scudsp_end_w))
+	MCFG_SCUDSP_IN_DMA_CB(READ16(saturn_state, scudsp_dma_r))
+	MCFG_SCUDSP_OUT_DMA_CB(WRITE16(saturn_state, scudsp_dma_w))
 
 //  SH-1
 
@@ -782,7 +767,8 @@ SLOT_INTERFACE_END
 
 
 MACHINE_CONFIG_DERIVED( saturnus, saturn )
-	MCFG_CDROM_ADD( "cdrom",saturn_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("sat_cdrom")
 	MCFG_SOFTWARE_LIST_ADD("cd_list","saturn")
 	MCFG_SOFTWARE_LIST_FILTER("cd_list","NTSC-U")
 
@@ -792,7 +778,8 @@ MACHINE_CONFIG_DERIVED( saturnus, saturn )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( saturneu, saturn )
-	MCFG_CDROM_ADD( "cdrom",saturn_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("sat_cdrom")
 	MCFG_SOFTWARE_LIST_ADD("cd_list","saturn")
 	MCFG_SOFTWARE_LIST_FILTER("cd_list","PAL")
 
@@ -802,7 +789,8 @@ MACHINE_CONFIG_DERIVED( saturneu, saturn )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( saturnjp, saturn )
-	MCFG_CDROM_ADD( "cdrom",saturn_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("sat_cdrom")
 	MCFG_SOFTWARE_LIST_ADD("cd_list","saturn")
 	MCFG_SOFTWARE_LIST_FILTER("cd_list","NTSC-J")
 
@@ -818,8 +806,8 @@ void sat_console_state::saturn_init_driver(int rgn)
 	m_vdp2.pal = (rgn == 12) ? 1 : 0;
 
 	// set compatible options
-	sh2drc_set_options(m_maincpu, SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
-	sh2drc_set_options(m_slave, SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
+	m_maincpu->sh2drc_set_options(SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
+	m_slave->sh2drc_set_options(SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
 
 	/* amount of time to boost interleave for on MINIT / SINIT, needed for communication to work */
 	m_minit_boost = 400;

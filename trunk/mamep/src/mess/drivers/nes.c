@@ -640,52 +640,17 @@ static INPUT_PORTS_START( famicom )
 INPUT_PORTS_END
 
 
-static const nesapu_interface nes_apu_interface =
-{
-	"maincpu"
-};
-
-
 void nes_state::ppu_nmi(int *ppu_regs)
 {
 	m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static const ppu2c0x_interface nes_ppu_interface =
-{
-	"maincpu",
-	0,
-	0,
-	PPU_MIRROR_NONE
-};
-
 static const floppy_interface nes_floppy_interface =
 {
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
 	FLOPPY_STANDARD_5_25_DSHD,
 	LEGACY_FLOPPY_OPTIONS_NAME(nes_only),
-	"floppy_5_25",
-	NULL
-};
-
-
-static const nes_cart_interface nes_crt_interface =
-{
-};
-
-
-static const cassette_interface fc_cassette_interface =
-{
-	cassette_default_formats,
-	NULL,
-	(cassette_state)(CASSETTE_STOPPED | CASSETTE_MOTOR_ENABLED | CASSETTE_SPEAKER_ENABLED),
-	"fc_cass",
-	NULL
+	"floppy_5_25"
 };
 
 
@@ -706,20 +671,20 @@ static MACHINE_CONFIG_START( nes, nes_state )
 	MCFG_SCREEN_UPDATE_DRIVER(nes_state, screen_update_nes)
 	MCFG_SCREEN_PALETTE("palette")
 
-
 	MCFG_PALETTE_ADD("palette", 4*16*8)
 	MCFG_PALETTE_INIT_OWNER(nes_state, nes)
 
-	MCFG_PPU2C02_ADD("ppu", nes_ppu_interface)
+	MCFG_PPU2C02_ADD("ppu")
+	MCFG_PPU2C0X_CPU("maincpu")
 	MCFG_PPU2C0X_SET_NMI(nes_state, ppu_nmi)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("nessound", NES_APU, NTSC_CLOCK)
-	MCFG_SOUND_CONFIG(nes_apu_interface)
+	MCFG_NES_APU_CPU("maincpu")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 
-	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL)
+	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list", "nes")
 	MCFG_SOFTWARE_LIST_ADD("ade_list", "nes_ade")         // Camerica/Codemasters Aladdin Deck Enhancer mini-carts
 	MCFG_SOFTWARE_LIST_ADD("ntb_list", "nes_ntbrom")      // Sunsoft Nantettate! Baseball mini-carts
@@ -734,7 +699,8 @@ static MACHINE_CONFIG_DERIVED( nespal, nes )
 	MCFG_CPU_CLOCK(PAL_CLOCK)
 
 	MCFG_DEVICE_REMOVE("ppu")
-	MCFG_PPU2C07_ADD("ppu", nes_ppu_interface)
+	MCFG_PPU2C07_ADD("ppu")
+	MCFG_PPU2C0X_CPU("maincpu")
 	MCFG_PPU2C0X_SET_NMI(nes_state, ppu_nmi)
 
 	/* video hardware */
@@ -746,7 +712,7 @@ static MACHINE_CONFIG_DERIVED( nespal, nes )
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("nessound", NES_APU, PAL_CLOCK)
-	MCFG_SOUND_CONFIG(nes_apu_interface)
+	MCFG_NES_APU_CPU("maincpu")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_CONFIG_END
 
@@ -757,7 +723,8 @@ static MACHINE_CONFIG_DERIVED( dendy, nes )
 	MCFG_CPU_CLOCK( 26601712/15 ) /* 26.601712MHz / 15 == 1.77344746666... MHz */
 
 	MCFG_DEVICE_REMOVE("ppu")
-	MCFG_PPU2C07_ADD("ppu", nes_ppu_interface)
+	MCFG_PPU2C07_ADD("ppu")
+	MCFG_PPU2C0X_CPU("maincpu")
 	MCFG_PPU2C0X_SET_NMI(nes_state, ppu_nmi)
 
 	/* video hardware */
@@ -767,19 +734,22 @@ static MACHINE_CONFIG_DERIVED( dendy, nes )
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("nessound", NES_APU, 26601712/15) /* 26.601712MHz / 15 == 1.77344746666... MHz */
-	MCFG_SOUND_CONFIG(nes_apu_interface)
+	MCFG_NES_APU_CPU("maincpu")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( famicom, nes )
 	MCFG_DEVICE_REMOVE("nes_slot")
-	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL)
+	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_cart, NULL)
 	MCFG_NES_CARTRIDGE_NOT_MANDATORY
 
 	MCFG_LEGACY_FLOPPY_DRIVE_ADD(FLOPPY_0, nes_floppy_interface)
 	MCFG_SOFTWARE_LIST_ADD("flop_list", "famicom_flop")
 
-	MCFG_CASSETTE_ADD( "tape", fc_cassette_interface )
+	MCFG_CASSETTE_ADD( "tape" )
+	MCFG_CASSETTE_DEFAULT_STATE(CASSETTE_STOPPED | CASSETTE_MOTOR_ENABLED | CASSETTE_SPEAKER_ENABLED)
+	MCFG_CASSETTE_INTERFACE("fc_cass")
+	
 	MCFG_SOFTWARE_LIST_ADD("cass_list", "famicom_cass")
 MACHINE_CONFIG_END
 

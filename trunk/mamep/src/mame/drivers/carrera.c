@@ -277,17 +277,6 @@ READ8_MEMBER(carrera_state::unknown_r)
 	return machine().rand();
 }
 
-/* these are set as input, but I have no idea which input port it uses is for the AY */
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(carrera_state,unknown_r),
-	DEVCB_DRIVER_MEMBER(carrera_state,unknown_r),
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 PALETTE_INIT_MEMBER(carrera_state, carrera)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
@@ -315,22 +304,6 @@ PALETTE_INIT_MEMBER(carrera_state, carrera)
 }
 
 
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-
 static MACHINE_CONFIG_START( carrera, carrera_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK / 6)
@@ -347,7 +320,9 @@ static MACHINE_CONFIG_START( carrera, carrera_state )
 	MCFG_SCREEN_UPDATE_DRIVER(carrera_state, screen_update_carrera)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK / 16, mc6845_intf)
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK / 16)
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", carrera)
 	MCFG_PALETTE_ADD("palette", 32)
@@ -357,7 +332,9 @@ static MACHINE_CONFIG_START( carrera, carrera_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, MASTER_CLOCK/12)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	/* these are set as input, but I have no idea which input port it uses is for the AY */
+	MCFG_AY8910_PORT_A_READ_CB(READ8(carrera_state, unknown_r))
+	MCFG_AY8910_PORT_B_READ_CB(READ8(carrera_state, unknown_r))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_CONFIG_END
 

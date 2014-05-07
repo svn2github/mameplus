@@ -795,28 +795,6 @@ READ8_MEMBER(vega_state::randomizer )
 	return (ioport("IN1")->read()&7)|(machine().rand()&(~7));
 }
 
-
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	DEVCB_DRIVER_MEMBER(vega_state, txtram_r), /* Port A read */
-	DEVCB_DRIVER_MEMBER(vega_state, txtram_w),      /* Port A write */
-	DEVCB_INPUT_PORT("IN0"),        /* Port B read */
-	DEVCB_DRIVER_MEMBER(vega_state, ppi_pb_w),      /* Port B write */
-	DEVCB_DRIVER_MEMBER(vega_state, randomizer),
-	DEVCB_DRIVER_MEMBER(vega_state, ppi_pc_w)       /* Port C write */
-};
-
-
-static const ay8910_interface ay8910_inf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(vega_state, ay8910_pa_r),
-	DEVCB_DRIVER_MEMBER(vega_state, ay8910_pb_r),
-	DEVCB_DRIVER_MEMBER(vega_state, ay8910_pa_w),
-	DEVCB_DRIVER_MEMBER(vega_state, ay8910_pb_w)
-};
-
 void vega_state::machine_start()
 {
 }
@@ -830,9 +808,14 @@ static MACHINE_CONFIG_START( vega, vega_state )
 	MCFG_CPU_IO_MAP(vega_io_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", vega_state, irq0_line_hold)
 
+	MCFG_DEVICE_ADD("ppi8255", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(vega_state, txtram_r))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(vega_state, txtram_w))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN0"))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(vega_state, ppi_pb_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(vega_state, randomizer))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(vega_state, ppi_pc_w))
 
-
-	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 	MCFG_DEVICE_ADD( "ins8154", INS8154, 0 )
 	MCFG_INS8154_IN_A_CB(READ8(vega_state, ins8154_pa_r))
 	MCFG_INS8154_OUT_A_CB(WRITE8(vega_state, ins8154_pa_w))
@@ -858,7 +841,10 @@ static MACHINE_CONFIG_START( vega, vega_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ay8910", AY8910, 1500000 )
-	MCFG_SOUND_CONFIG(ay8910_inf)
+	MCFG_AY8910_PORT_A_READ_CB(READ8(vega_state, ay8910_pa_r))
+	MCFG_AY8910_PORT_B_READ_CB(READ8(vega_state, ay8910_pb_r))
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(vega_state, ay8910_pa_w))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(vega_state, ay8910_pb_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 MACHINE_CONFIG_END
@@ -903,4 +889,4 @@ DRIVER_INIT_MEMBER(vega_state, vega)
 	membank("bank1")->configure_entries(0, 2, &ROM[0x1000], 0x800);
 }
 
-GAME( 1982, vega,   0, vega, vega, vega_state, vega, ROT270, "Olympia", "Vega", 0 )
+GAME( 1982, vega,   0, vega, vega, vega_state, vega, ROT270, "Olympia", "Vega", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )

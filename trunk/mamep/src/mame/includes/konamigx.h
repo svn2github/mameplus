@@ -1,6 +1,7 @@
 #include "sound/k056800.h"
 #include "sound/k054539.h"
 #include "cpu/tms57002/tms57002.h"
+#include "machine/adc083x.h"
 #include "video/k054156_k054157_k056832.h"
 #include "video/k053246_k053247_k055673.h"
 #include "video/k055555.h"
@@ -21,6 +22,7 @@ public:
 		m_k055673(*this, "k055673"),
 		m_k055555(*this, "k055555"),
 		m_k056832(*this, "k056832"),
+		m_k054338(*this, "k054338"),
 		m_k053936_0_ctrl(*this,"k053936_0_ctrl",32),
 		m_k053936_0_linectrl(*this,"k053936_0_line",32),
 		m_k053936_0_ctrl_16(*this,"k053936_0_ct16",16),
@@ -29,9 +31,17 @@ public:
 		m_k056800(*this, "k056800"),
 		m_k054539_1(*this,"k054539_1"),
 		m_k054539_2(*this,"k054539_2"),
+		m_an0(*this, "AN0"),
+		m_an1(*this, "AN1"),
+		m_light0_x(*this, "LIGHT0_X"),
+		m_light0_y(*this, "LIGHT0_Y"),	
+		m_light1_x(*this, "LIGHT1_X"),
+		m_light1_y(*this, "LIGHT1_Y"),	
+		m_eepromout(*this, "EEPROMOUT"),
 		m_gfxdecode(*this, "gfxdecode"),
 		m_screen(*this, "screen"),
-		m_palette(*this, "palette")
+		m_palette(*this, "palette"),
+		m_generic_paletteram_32(*this, "paletteram")
 		{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -44,6 +54,7 @@ public:
 	required_device<k055673_device> m_k055673;
 	required_device<k055555_device> m_k055555;
 	required_device<k056832_device> m_k056832;
+	optional_device<k054338_device> m_k054338;
 	optional_shared_ptr<UINT16> m_k053936_0_ctrl;
 	optional_shared_ptr<UINT16> m_k053936_0_linectrl;
 	optional_shared_ptr<UINT16> m_k053936_0_ctrl_16;
@@ -52,9 +63,11 @@ public:
 	optional_device<k056800_device> m_k056800;
 	optional_device<k054539_device> m_k054539_1;
 	optional_device<k054539_device> m_k054539_2;
+	optional_ioport m_an0, m_an1, m_light0_x, m_light0_y, m_light1_x, m_light1_y, m_eepromout;
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
+	required_shared_ptr<UINT32> m_generic_paletteram_32;
 
 	DECLARE_WRITE32_MEMBER(esc_w);
 	DECLARE_WRITE32_MEMBER(eeprom_w);
@@ -119,6 +132,7 @@ public:
 	TIMER_CALLBACK_MEMBER(dmaend_callback);
 	TIMER_CALLBACK_MEMBER(boothack_callback);
 	TIMER_DEVICE_CALLBACK_MEMBER(konamigx_hbinterrupt);
+	ADC083X_INPUT_CB(adc0834_callback);
 
 	void _gxcommoninitnosprites(running_machine &machine);
 	void _gxcommoninit(running_machine &machine);
@@ -145,9 +159,16 @@ public:
 
 	void konamigx_mixer_init(screen_device &screen, int objdma);
 	void konamigx_objdma(void);
+	
+	void fantjour_dma_install();
+
+	void konamigx_mixer_primode(int mode);
 
 	UINT8 m_sound_ctrl;
 	UINT8 m_sound_intck;
+	UINT32 m_fantjour_dma[8];
+	int m_konamigx_current_frame;
+	int m_gx_objdma, m_gx_primode;
 };
 
 
@@ -202,20 +223,3 @@ extern UINT16 konamigx_wrport2;
 #define GXSUB_5BPP      0x05    //  32 colors
 #define GXSUB_8BPP      0x08    // 256 colors
 
-void konamigx_mixer(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect,
-					tilemap_t *sub1, int sub1flags,
-					tilemap_t *sub2, int sub2flags,
-					int mixerflags, bitmap_ind16* extra_bitmap, int rushingheroes_hack);
-
-void konamigx_mixer_init(screen_device &screen, int objdma);
-void konamigx_mixer_primode(int mode);
-
-extern int konamigx_current_frame;
-
-
-/*----------- defined in machine/konamigx.c -----------*/
-
-// K055550/K053990/ESC protection devices handlers
-
-
-void fantjour_dma_install(running_machine &machine);

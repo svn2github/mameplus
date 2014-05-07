@@ -612,7 +612,8 @@ public:
 		m_k001604(*this, "k001604"),
 		m_ata(*this, "ata"),
 		m_screen(*this, "screen"),
-		m_palette(*this, "palette")
+		m_palette(*this, "palette"),
+		m_generic_paletteram_32(*this, "paletteram")
 	{
 	}
 
@@ -624,6 +625,7 @@ public:
 	required_device<ata_interface_device> m_ata;
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
+	required_shared_ptr<UINT32> m_generic_paletteram_32;
 
 	DECLARE_READ64_MEMBER(main_comram_r);
 	DECLARE_WRITE64_MEMBER(main_comram_w);
@@ -1018,11 +1020,6 @@ UINT32 cobra_state::screen_update_cobra(screen_device &screen, bitmap_rgb32 &bit
 	m_renderer->display(&bitmap, cliprect);
 	return 0;
 }
-
-
-
-
-
 
 
 
@@ -3130,14 +3127,6 @@ static powerpc_config gfx_ppc_cfg =
 };
 
 
-static const k001604_interface cobra_k001604_intf =
-{
-	0, 1,   /* gfx index 1 & 2 */
-	0, 1,   /* layer_size, roz_size */
-	0       /* slrasslt hack */
-};
-
-
 WRITE_LINE_MEMBER(cobra_state::ide_interrupt)
 {
 	if (state == CLEAR_LINE)
@@ -3231,7 +3220,13 @@ static MACHINE_CONFIG_START( cobra, cobra_state )
 	MCFG_M48T58_ADD("m48t58")
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K001604_ADD("k001604", cobra_k001604_intf)     // on the LAN board in Racing Jam DX
+	MCFG_DEVICE_ADD("k001604", K001604, 0)     // on the LAN board in Racing Jam DX
+	MCFG_K001604_GFX_INDEX1(0)
+	MCFG_K001604_GFX_INDEX2(1)
+	MCFG_K001604_LAYER_SIZE(0)
+	MCFG_K001604_ROZ_SIZE(1)
+	MCFG_K001604_TXT_OFFSET(0)	// correct?
+	MCFG_K001604_ROZ_OFFSET(0)	// correct?
 	MCFG_K001604_GFXDECODE("gfxdecode")
 	MCFG_K001604_PALETTE("palette")
 

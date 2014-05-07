@@ -34,7 +34,6 @@
 #include "winmain.h"
 #include "window.h"
 #include "input.h"
-#include "debugwin.h"
 #include "video.h"
 #include "strconv.h"
 #include "config.h"
@@ -215,10 +214,6 @@ static const TCHAR *const default_axis_name[] =
 //============================================================
 //  PROTOTYPES
 //============================================================
-
-static void wininput_pause(running_machine &machine);
-static void wininput_resume(running_machine &machine);
-static void wininput_exit(running_machine &machine);
 
 // device list management
 static void device_list_poll_devices(device_info *devlist_head);
@@ -472,22 +467,17 @@ INLINE INT32 normalize_absolute_axis(INT32 raw, INT32 rawmin, INT32 rawmax)
 
 
 //============================================================
-//  wininput_init
+//  input_init
 //============================================================
 
-void wininput_init(running_machine &machine)
+bool windows_osd_interface::input_init()
 {
-	// we need pause and exit callbacks
-	machine.add_notifier(MACHINE_NOTIFY_PAUSE, machine_notify_delegate(FUNC(wininput_pause), &machine));
-	machine.add_notifier(MACHINE_NOTIFY_RESUME, machine_notify_delegate(FUNC(wininput_resume), &machine));
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(wininput_exit), &machine));
-
 	// allocate a lock for input synchronizations, since messages sometimes come from another thread
 	input_lock = osd_lock_alloc();
 	assert_always(input_lock != NULL, "Failed to allocate input_lock");
 
 	// decode the options
-	lightgun_shared_axis_mode = downcast<windows_options &>(machine.options()).dual_lightgun();
+	lightgun_shared_axis_mode = downcast<windows_options &>(machine().options()).dual_lightgun();
 
 #ifdef JOYSTICK_ID
 	{
@@ -503,7 +493,7 @@ void wininput_init(running_machine &machine)
 			int id;
 
 			sprintf(name, "joyid%d", i + 1);
-			id = machine.options().int_value(name);
+			id = machine().options().int_value(name);
 
 			if (used_id[id] == -1)
 			{
@@ -512,7 +502,7 @@ void wininput_init(running_machine &machine)
 			}
 			else
 			{
-				mame_printf_error(_WINDOWS("invalid %s value: joystick #%d is used by player %d\n"), name, id, used_id[id]);
+				osd_printf_error(_WINDOWS("invalid %s value: joystick #%d is used by player %d\n"), name, id, used_id[id]);
 				joyid[i] =  -1;
 			}
 		}
@@ -528,20 +518,21 @@ void wininput_init(running_machine &machine)
 						break;
 				joyid[i] = id;
 
-				mame_printf_info(_WINDOWS("Use joystick #%d for player %d\n"), joyid[i], i);
+				osd_printf_info(_WINDOWS("Use joystick #%d for player %d\n"), joyid[i], i);
 			}
 		}
 	}
 #endif /* JOYSTICK_ID */
 
 	// initialize RawInput and DirectInput (RawInput first so we can fall back)
-	rawinput_init(machine);
-	dinput_init(machine);
-	win32_init(machine);
+	rawinput_init(machine());
+	dinput_init(machine());
+	win32_init(machine());
 
 	// poll once to get the initial states
 	input_enabled = true;
-	wininput_poll(machine);
+	wininput_poll(machine());
+	return true;
 }
 
 
@@ -549,13 +540,13 @@ void wininput_init(running_machine &machine)
 //  wininput_pause
 //============================================================
 
-static void wininput_pause(running_machine &machine)
+void windows_osd_interface::input_pause()
 {
 	// keep track of the paused state
 	input_paused = true;
 }
 
-static void wininput_resume(running_machine &machine)
+void windows_osd_interface::input_resume()
 {
 	// keep track of the paused state
 	input_paused = false;
@@ -566,7 +557,7 @@ static void wininput_resume(running_machine &machine)
 //  wininput_exit
 //============================================================
 
-static void wininput_exit(running_machine &machine)
+void windows_osd_interface::input_exit()
 {
 	// acquire the lock and turn off input (this ensures everyone is done)
 	osd_lock_acquire(input_lock);
@@ -802,6 +793,7 @@ void windows_osd_interface::customize_input_type_list(simple_list<input_type_ent
 				entry->configure_osd("RENDER_SNAP", "Take Rendered Snapshot");
 				entry->defseq(SEQ_TYPE_STANDARD).set(KEYCODE_F12, KEYCODE_LALT, input_seq::not_code, KEYCODE_LSHIFT);
 				break;
+
 			// add a NOT-lalt to our default F12
 			case IPT_UI_SNAPSHOT: // emu/input.c: input_seq(KEYCODE_F12, input_seq::not_code, KEYCODE_LSHIFT)
 				entry->defseq(SEQ_TYPE_STANDARD).set(KEYCODE_F12, input_seq::not_code, KEYCODE_LSHIFT, input_seq::not_code, KEYCODE_LALT);
@@ -812,6 +804,7 @@ void windows_osd_interface::customize_input_type_list(simple_list<input_type_ent
 				entry->configure_osd("RENDER_AVI", "Record Rendered Video");
 				entry->defseq(SEQ_TYPE_STANDARD).set(KEYCODE_F12, KEYCODE_LSHIFT, KEYCODE_LALT);
 				break;
+
 			// add a NOT-lalt to our default shift-F12
 			case IPT_UI_RECORD_MOVIE: // emu/input.c: input_seq(KEYCODE_F12, KEYCODE_LSHIFT)
 				entry->defseq(SEQ_TYPE_STANDARD).set(KEYCODE_F12, KEYCODE_LSHIFT, input_seq::not_code, KEYCODE_LALT);
@@ -1166,7 +1159,7 @@ static void dinput_init(running_machine &machine)
 	}
 #endif
 
-	mame_printf_verbose(_WINDOWS("DirectInput: Using DirectInput %d\n"), dinput_version >> 8);
+	osd_printf_verbose(_WINDOWS("DirectInput: Using DirectInput %d\n"), dinput_version >> 8);
 
 	// we need an exit callback
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(dinput_exit), &machine));
@@ -1208,7 +1201,7 @@ static void dinput_init(running_machine &machine)
 			{
 				if (index == joyid[i])
 				{
-					mame_printf_info(_WINDOWS("Assign joystick %s to player %d\n"), devinfo->name, i);
+					osd_printf_info(_WINDOWS("Assign joystick %s to player %d\n"), devinfo->name, i);
 					assign_joystick_to_player(machine, devinfo);
 					break;
 				}
@@ -1489,7 +1482,7 @@ static BOOL CALLBACK dinput_mouse_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 	result = dinput_set_dword_property(devinfo->dinput.device, DIPROP_AXISMODE, 0, DIPH_DEVICE, DIPROPAXISMODE_REL);
 	if (result != DI_OK && result != DI_PROPNOEFFECT)
 	{
-		mame_printf_error(_WINDOWS("DirectInput: Unable to set relative mode for mouse %d (%s)\n"), generic_device_index(mouse_list, devinfo), devinfo->name);
+		osd_printf_error(_WINDOWS("DirectInput: Unable to set relative mode for mouse %d (%s)\n"), generic_device_index(mouse_list, devinfo), devinfo->name);
 		goto error;
 	}
 
@@ -1584,17 +1577,17 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 	// set absolute mode
 	result = dinput_set_dword_property(devinfo->dinput.device, DIPROP_AXISMODE, 0, DIPH_DEVICE, DIPROPAXISMODE_ABS);
 	if (result != DI_OK && result != DI_PROPNOEFFECT)
-		mame_printf_warning(_WINDOWS("DirectInput: Unable to set absolute mode for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
+		osd_printf_warning(_WINDOWS("DirectInput: Unable to set absolute mode for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
 
 	// turn off deadzone; we do our own calculations
 	result = dinput_set_dword_property(devinfo->dinput.device, DIPROP_DEADZONE, 0, DIPH_DEVICE, 0);
 	if (result != DI_OK && result != DI_PROPNOEFFECT)
-		mame_printf_warning(_WINDOWS("DirectInput: Unable to reset deadzone for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
+		osd_printf_warning(_WINDOWS("DirectInput: Unable to reset deadzone for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
 
 	// turn off saturation; we do our own calculations
 	result = dinput_set_dword_property(devinfo->dinput.device, DIPROP_SATURATION, 0, DIPH_DEVICE, 10000);
 	if (result != DI_OK && result != DI_PROPNOEFFECT)
-		mame_printf_warning(_WINDOWS("DirectInput: Unable to reset saturation for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
+		osd_printf_warning(_WINDOWS("DirectInput: Unable to reset saturation for joystick %d (%s)\n"), generic_device_index(joystick_list, devinfo), devinfo->name);
 
 	// cap the number of axes, POVs, and buttons based on the format
 	devinfo->dinput.caps.dwAxes = MIN(devinfo->dinput.caps.dwAxes, 8);
@@ -1768,7 +1761,7 @@ static void rawinput_init(running_machine &machine)
 	get_rawinput_data = (get_rawinput_data_ptr)GetProcAddress(user32, "GetRawInputData");
 	if (register_rawinput_devices == NULL || get_rawinput_device_list == NULL || get_rawinput_device_info == NULL || get_rawinput_data == NULL)
 		goto error;
-	mame_printf_verbose(_WINDOWS("RawInput: APIs detected\n"));
+	osd_printf_verbose(_WINDOWS("RawInput: APIs detected\n"));
 
 	// get the number of devices, allocate a device list, and fetch it
 	if ((*get_rawinput_device_list)(NULL, &device_count, sizeof(*devlist)) != 0)

@@ -292,12 +292,10 @@ endif
 #-------------------------------------------------
 #
 #@src/emu/video/i8275.h,VIDEOS += I8275
-#@src/emu/video/i8275x.h,VIDEOS += I8275
 #-------------------------------------------------
 
 ifneq ($(filter I8275,$(VIDEOS)),)
-VIDEOOBJS+= $(VIDEOOBJ)/i8275.o         \
-			$(VIDEOOBJ)/i8275x.o
+VIDEOOBJS+= $(VIDEOOBJ)/i8275.o
 endif
 
 #-------------------------------------------------
@@ -443,6 +441,14 @@ endif
 #-------------------------------------------------
 ifneq ($(filter SED1520,$(VIDEOS)),)
 VIDEOOBJS+= $(VIDEOOBJ)/sed1520.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/video/snes_ppu.h,VIDEOS += SNES_PPU
+#-------------------------------------------------
+ifneq ($(filter SNES_PPU,$(VIDEOS)),)
+VIDEOOBJS+= $(VIDEOOBJ)/snes_ppu.o
 endif
 
 #-------------------------------------------------

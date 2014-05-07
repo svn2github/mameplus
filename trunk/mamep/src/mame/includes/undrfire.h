@@ -50,7 +50,6 @@ public:
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<palette_device> m_palette;
 
-	DECLARE_WRITE32_MEMBER(color_ram_w);
 	DECLARE_READ32_MEMBER(undrfire_input_r);
 	DECLARE_WRITE32_MEMBER(undrfire_input_w);
 	DECLARE_READ16_MEMBER(shared_ram_r);

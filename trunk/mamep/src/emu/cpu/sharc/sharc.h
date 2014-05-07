@@ -142,6 +142,7 @@ private:
 	SHARC_LADDR m_laddr;
 	UINT32 m_curlcntr;
 	UINT32 m_lcntr;
+	UINT8 m_extdma_shift;
 
 	/* Data Address Generator (DAG) */
 	SHARC_DAG m_dag1;     // (DM bus)
@@ -314,6 +315,7 @@ private:
 	inline void compute_scalb(int rn, int rx, int ry);
 	inline void compute_fadd(int rn, int rx, int ry);
 	inline void compute_fsub(int rn, int rx, int ry);
+	inline void compute_favg(int rn, int rx, int ry);
 	inline void compute_fneg(int rn, int rx);
 	inline void compute_fcomp(int rx, int ry);
 	inline void compute_fabs_plus(int rn, int rx, int ry);
@@ -339,6 +341,7 @@ private:
 	inline void compute_fmul_fsub(int fm, int fxm, int fym, int fa, int fxa, int fya);
 	inline void compute_fmul_float_scaled(int fm, int fxm, int fym, int fa, int fxa, int fya);
 	inline void compute_fmul_fix_scaled(int fm, int fxm, int fym, int fa, int fxa, int fya);
+	inline void compute_fmul_avg(int fm, int fxm, int fym, int fa, int fxa, int fya);
 	inline void compute_fmul_fmax(int fm, int fxm, int fym, int fa, int fxa, int fya);
 	inline void compute_fmul_fmin(int fm, int fxm, int fym, int fa, int fxa, int fya);
 	inline void compute_fmul_dual_fadd_fsub(int fm, int fxm, int fym, int fa, int fs, int fxa, int fya);

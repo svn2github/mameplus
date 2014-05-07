@@ -1938,7 +1938,7 @@ static INPUT_PORTS_START( wbml )
 	PORT_DIPSETTING(    0x04, "3" )
 	PORT_DIPSETTING(    0x0c, "4" )
 	PORT_DIPSETTING(    0x08, "5" )
-/* 0x00 gives 4 lives */
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) ) // starts with 2 coins inserted
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Bonus_Life ) )   PORT_DIPLOCATION("SWB:5")
 	PORT_DIPSETTING(    0x10, "30000 100000 200000" )
 	PORT_DIPSETTING(    0x00, "50000 150000 250000" )
@@ -1948,7 +1948,7 @@ static INPUT_PORTS_START( wbml )
 	PORT_DIPNAME( 0x40, 0x40, "Test Mode" )         PORT_DIPLOCATION("SWB:7")
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )      PORT_DIPLOCATION("SWB:8")
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )      PORT_DIPLOCATION("SWB:8")
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -2104,35 +2104,6 @@ GFXDECODE_END
  *
  *************************************/
 
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	DEVCB_NULL,                                         /* Port A read */
-	DEVCB_DRIVER_MEMBER(system1_state, soundport_w),    /* Port A write */
-	DEVCB_NULL,                                         /* Port B read */
-	DEVCB_DRIVER_MEMBER(system1_state, videomode_w),    /* Port B write */
-	DEVCB_NULL,                                         /* Port C read */
-	DEVCB_DRIVER_MEMBER(system1_state,sound_control_w)                      /* Port C write */
-};
-
-static Z80PIO_INTERFACE( pio_interface )
-{
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(system1_state, soundport_w),
-	DEVCB_CPU_INPUT_LINE("soundcpu", INPUT_LINE_NMI),
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(system1_state, videomode_w),
-	DEVCB_NULL
-};
-
-
-
-/*************************************
- *
- *  Machine driver
- *
- *************************************/
-
 /* original board with 64kbit ROMs and an 8255 PPI for outputs */
 static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
@@ -2148,8 +2119,10 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-
-	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
+	MCFG_DEVICE_ADD("ppi8255", I8255A, 0)
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(system1_state, soundport_w))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(system1_state, videomode_w))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(system1_state, sound_control_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2160,7 +2133,6 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", system1)
 	MCFG_PALETTE_ADD("palette", 2048)
-
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2189,7 +2161,10 @@ static MACHINE_CONFIG_DERIVED( sys1pio, sys1ppi )
 	MCFG_CPU_IO_MAP(system1_pio_io_map)
 
 	MCFG_DEVICE_REMOVE("ppi8255")
-	MCFG_Z80PIO_ADD("pio", MASTER_CLOCK, pio_interface)
+	MCFG_DEVICE_ADD("pio", Z80PIO, MASTER_CLOCK)
+	MCFG_Z80PIO_OUT_PA_CB(WRITE8(system1_state, soundport_w))
+	MCFG_Z80PIO_OUT_ARDY_CB(INPUTLINE("soundcpu", INPUT_LINE_NMI))
+	MCFG_Z80PIO_OUT_PB_CB(WRITE8(system1_state, videomode_w))
 MACHINE_CONFIG_END
 
 /* reduced visible area for scrolling games */

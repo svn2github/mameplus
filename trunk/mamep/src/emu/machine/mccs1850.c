@@ -302,6 +302,15 @@ mccs1850_device::mccs1850_device(const machine_config &mconfig, const char *tag,
 
 
 //-------------------------------------------------
+//  set_counter - set the counter at startup time
+//-------------------------------------------------
+
+void mccs1850_device::set_counter(UINT32 value)
+{
+	m_counter = value;
+}
+
+//-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
@@ -336,7 +345,10 @@ void mccs1850_device::device_start()
 
 void mccs1850_device::device_reset()
 {
-	m_ram[REGISTER_STATUS] = 0x80 | STATUS_FTU;
+	if(!m_counter)
+		m_ram[REGISTER_STATUS] = 0x80 | STATUS_FTU;
+	else
+		m_ram[REGISTER_STATUS] = 0x80;
 	m_ram[REGISTER_CONTROL] = 0x00;
 }
 
@@ -465,7 +477,7 @@ WRITE_LINE_MEMBER( mccs1850_device::sck_w )
 
 				// increment address counter
 				m_address++;
-				m_address &= 0x7f;
+				m_address |= 0x80;
 			}
 		}
 		else if (!BIT(m_address, 7) && !m_sck && state)
@@ -483,6 +495,7 @@ WRITE_LINE_MEMBER( mccs1850_device::sck_w )
 				m_address++;
 				m_address &= 0x7f;
 				m_shift = read_register(m_address & 0x7f);
+				if (LOG) logerror("MCCS1850 '%s' Data Out %02x\n", tag(), m_shift);
 			}
 		}
 		break;

@@ -448,6 +448,7 @@ BUSOBJS += $(BUSOBJ)/pet/exp.o
 BUSOBJS += $(BUSOBJ)/pet/64k.o
 BUSOBJS += $(BUSOBJ)/pet/superpet.o
 BUSOBJS += $(BUSOBJ)/pet/user.o
+BUSOBJS += $(BUSOBJ)/pet/diag.o
 BUSOBJS += $(BUSOBJ)/pet/petuja.o
 endif
 
@@ -653,6 +654,7 @@ BUSOBJS += $(BUSOBJ)/a2bus/a2estd80col.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2eext80col.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2eramworks3.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2corvus.o
+BUSOBJS += $(BUSOBJ)/a2bus/a2diskiing.o
 endif
 
 #-------------------------------------------------
@@ -692,7 +694,7 @@ BUSOBJS += $(BUSOBJ)/centronics/ctronics.o
 BUSOBJS += $(BUSOBJ)/centronics/comxpl80.o
 BUSOBJS += $(BUSOBJ)/centronics/covox.o
 BUSOBJS += $(BUSOBJ)/centronics/dsjoy.o
-BUSOBJS += $(BUSOBJ)/centronics/image.o
+BUSOBJS += $(BUSOBJ)/centronics/printer.o
 endif
 
 #-------------------------------------------------
@@ -705,6 +707,7 @@ OBJDIRS += $(BUSOBJ)/rs232
 BUSOBJS += $(BUSOBJ)/rs232/keyboard.o
 BUSOBJS += $(BUSOBJ)/rs232/loopback.o
 BUSOBJS += $(BUSOBJ)/rs232/null_modem.o
+BUSOBJS += $(BUSOBJ)/rs232/printer.o
 BUSOBJS += $(BUSOBJ)/rs232/rs232.o
 BUSOBJS += $(BUSOBJ)/rs232/ser_mouse.o
 BUSOBJS += $(BUSOBJ)/rs232/terminal.o
@@ -748,6 +751,7 @@ ifneq ($(filter NES,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/nes
 BUSOBJS += $(BUSOBJ)/nes/nes_slot.o
 BUSOBJS += $(BUSOBJ)/nes/nes_carts.o
+BUSOBJS += $(BUSOBJ)/nes/2a03pur.o
 BUSOBJS += $(BUSOBJ)/nes/act53.o
 BUSOBJS += $(BUSOBJ)/nes/aladdin.o
 BUSOBJS += $(BUSOBJ)/nes/ave.o
@@ -873,6 +877,7 @@ BUSOBJS += $(BUSOBJ)/sms_ctrl/paddle.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/rfu.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/sports.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/sportsjp.o
+BUSOBJS += $(BUSOBJ)/sms_ctrl/multitap.o
 endif
 
 #-------------------------------------------------
@@ -970,6 +975,7 @@ BUSOBJS += $(BUSOBJ)/cpc/cpcexp.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_ssa1.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_rom.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_pds.o
+BUSOBJS += $(BUSOBJ)/cpc/cpc_rs232.o
 BUSOBJS += $(BUSOBJ)/cpc/mface2.o
 endif
 
@@ -1028,10 +1034,15 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/bus/scsi/???.h,BUSES += SCSI
+#@src/emu/bus/scsi/scsi.h,BUSES += SCSI
 #-------------------------------------------------
 ifneq ($(filter SCSI,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/scsi
+BUSOBJS += $(BUSOBJ)/scsi/scsi.o
+BUSOBJS += $(BUSOBJ)/scsi/scsicd.o
+BUSOBJS += $(BUSOBJ)/scsi/scsihd.o
+BUSOBJS += $(BUSOBJ)/scsi/scsihle.o
+BUSOBJS += $(BUSOBJ)/scsi/cdu76s.o
 BUSOBJS += $(BUSOBJ)/scsi/acb4070.o
 BUSOBJS += $(BUSOBJ)/scsi/d9060hd.o
 BUSOBJS += $(BUSOBJ)/scsi/sa1403d.o
@@ -1047,3 +1058,27 @@ OBJDIRS += $(BUSOBJ)/macpds
 BUSOBJS += $(BUSOBJ)/macpds/macpds.o
 BUSOBJS += $(BUSOBJ)/macpds/pds_tpdfpd.o
 endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/oricext/oricext.h,BUSES += ORICEXT
+#-------------------------------------------------
+ifneq ($(filter ORICEXT,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/oricext
+BUSOBJS += $(BUSOBJ)/oricext/oricext.o
+BUSOBJS += $(BUSOBJ)/oricext/jasmin.o
+BUSOBJS += $(BUSOBJ)/oricext/microdisc.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/a1bus/a1bus.h,BUSES += A1BUS
+#-------------------------------------------------
+
+ifneq ($(filter A1BUS,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/a1bus
+BUSOBJS += $(BUSOBJ)/a1bus/a1bus.o
+BUSOBJS += $(BUSOBJ)/a1bus/a1cassette.o
+BUSOBJS += $(BUSOBJ)/a1bus/a1cffa.o
+endif
+

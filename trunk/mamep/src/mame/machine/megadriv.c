@@ -59,7 +59,7 @@ WRITE8_MEMBER(md_base_state::megadriv_z80_z80_bank_w)
 
 READ8_MEMBER(md_base_state::megadriv_68k_YM2612_read)
 {
-	//mame_printf_debug("megadriv_68k_YM2612_read %02x %04x\n",offset,mem_mask);
+	//osd_printf_debug("megadriv_68k_YM2612_read %02x %04x\n",offset,mem_mask);
 	if ((m_genz80.z80_has_bus == 0) && (m_genz80.z80_is_reset == 0))
 	{
 		return m_ymsnd->read(space, offset);
@@ -76,7 +76,7 @@ READ8_MEMBER(md_base_state::megadriv_68k_YM2612_read)
 
 WRITE8_MEMBER(md_base_state::megadriv_68k_YM2612_write)
 {
-	//mame_printf_debug("megadriv_68k_YM2612_write %02x %04x %04x\n",offset,data,mem_mask);
+	//osd_printf_debug("megadriv_68k_YM2612_write %02x %04x %04x\n",offset,data,mem_mask);
 	if ((m_genz80.z80_has_bus == 0) && (m_genz80.z80_is_reset == 0))
 	{
 		m_ymsnd->write(space, offset, data);
@@ -244,7 +244,7 @@ READ8_MEMBER(md_base_state::megadrive_io_read_data_port_6button)
 		}
 	}
 
-//  mame_printf_debug("read io data port stage %d port %d %02x\n",m_io_stage[portnum],portnum,retdata);
+//  osd_printf_debug("read io data port stage %d port %d %02x\n",m_io_stage[portnum],portnum,retdata);
 
 	return retdata | (retdata << 8);
 }
@@ -277,7 +277,7 @@ UINT8 md_base_state::megadrive_io_read_ctrl_port(int portnum)
 {
 	UINT8 retdata;
 	retdata = m_megadrive_io_ctrl_regs[portnum];
-	//mame_printf_debug("read io ctrl port %d %02x\n",portnum,retdata);
+	//osd_printf_debug("read io ctrl port %d %02x\n",portnum,retdata);
 
 	return retdata | (retdata << 8);
 }
@@ -367,7 +367,7 @@ WRITE16_MEMBER(md_base_state::megadrive_io_write_data_port_3button)
 {
 	int portnum = offset;
 	m_megadrive_io_data_regs[portnum] = data;
-	//mame_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
+	//osd_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
 
 }
 
@@ -388,7 +388,7 @@ WRITE16_MEMBER(md_base_state::megadrive_io_write_data_port_6button)
 	}
 
 	m_megadrive_io_data_regs[portnum] = data;
-	//mame_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
+	//osd_printf_debug("Writing IO Data Register #%d data %04x\n",portnum,data);
 
 }
 
@@ -398,7 +398,7 @@ WRITE16_MEMBER(md_base_state::megadrive_io_write_data_port_6button)
 void md_base_state::megadrive_io_write_ctrl_port(int portnum, UINT16 data)
 {
 	m_megadrive_io_ctrl_regs[portnum] = data;
-//  mame_printf_debug("Setting IO Control Register #%d data %04x\n",portnum,data);
+//  osd_printf_debug("Setting IO Control Register #%d data %04x\n",portnum,data);
 }
 
 void md_base_state::megadrive_io_write_tx_port(int portnum, UINT16 data)
@@ -417,13 +417,13 @@ void md_base_state::megadrive_io_write_sctrl_port(int portnum, UINT16 data)
 
 WRITE16_MEMBER(md_base_state::megadriv_68k_io_write )
 {
-//  mame_printf_debug("IO Write #%02x data %04x mem_mask %04x\n",offset,data,mem_mask);
+//  osd_printf_debug("IO Write #%02x data %04x mem_mask %04x\n",offset,data,mem_mask);
 
 
 	switch (offset)
 	{
 		case 0x0:
-			mame_printf_debug("Write to Version Register?!\n");
+			osd_printf_debug("Write to Version Register?!\n");
 			break;
 
 		/* Joypad Port Registers */
@@ -492,7 +492,7 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(md_base_state::megadriv_68k_read_z80_ram )
 {
-	//mame_printf_debug("read z80 ram %04x\n",mem_mask);
+	//osd_printf_debug("read z80 ram %04x\n",mem_mask);
 
 	if ((m_genz80.z80_has_bus == 0) && (m_genz80.z80_is_reset == 0))
 	{
@@ -569,7 +569,7 @@ READ16_MEMBER(md_base_state::megadriv_68k_check_z80_bus )
 		if (m_genz80.z80_has_bus || m_genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
-	//  mame_printf_debug("%06x: 68000 check z80 Bus (word access) %04x %04x\n", space.device().safe_pc(),mem_mask, retvalue);
+	//  osd_printf_debug("%06x: 68000 check z80 Bus (word access) %04x %04x\n", space.device().safe_pc(),mem_mask, retvalue);
 		return retvalue;
 	}
 }
@@ -719,7 +719,7 @@ WRITE8_MEMBER(md_base_state::megadriv_z80_vdp_write )
 			break;
 
 		default:
-			mame_printf_debug("unhandled z80 vdp write %02x %02x\n",offset,data);
+			osd_printf_debug("unhandled z80 vdp write %02x %02x\n",offset,data);
 	}
 
 }
@@ -728,7 +728,7 @@ WRITE8_MEMBER(md_base_state::megadriv_z80_vdp_write )
 
 READ8_MEMBER(md_base_state::megadriv_z80_vdp_read )
 {
-	mame_printf_debug("megadriv_z80_vdp_read %02x\n",offset);
+	osd_printf_debug("megadriv_z80_vdp_read %02x\n",offset);
 	return space.machine().rand();
 }
 
@@ -836,7 +836,7 @@ MACHINE_START_MEMBER(md_base_state,megadriv)
 MACHINE_RESET_MEMBER(md_base_state,megadriv)
 {
 	/* default state of z80 = reset, with bus */
-	mame_printf_debug("Resetting Megadrive / Genesis\n");
+	osd_printf_debug("Resetting Megadrive / Genesis\n");
 
 	if (m_z80snd)
 	{
@@ -927,6 +927,8 @@ MACHINE_CONFIG_END
 MACHINE_CONFIG_FRAGMENT( md_ntsc )
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK_NTSC / 7) /* 7.67 MHz */
 	MCFG_CPU_PROGRAM_MAP(megadriv_map)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(md_base_state,genesis_int_callback)
+
 	/* IRQs are handled via the timers */
 
 	MCFG_CPU_ADD("genesis_snd_z80", Z80, MASTER_CLOCK_NTSC / 15) /* 3.58 MHz */
@@ -974,6 +976,7 @@ MACHINE_CONFIG_END
 MACHINE_CONFIG_FRAGMENT( md_pal )
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK_PAL / 7) /* 7.67 MHz */
 	MCFG_CPU_PROGRAM_MAP(megadriv_map)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(md_base_state,genesis_int_callback)
 	/* IRQs are handled via the timers */
 
 	MCFG_CPU_ADD("genesis_snd_z80", Z80, MASTER_CLOCK_PAL / 15) /* 3.58 MHz */
@@ -1017,9 +1020,9 @@ MACHINE_CONFIG_FRAGMENT( md_pal )
 MACHINE_CONFIG_END
 
 
-static int megadriv_tas_callback(device_t *device)
+WRITE8_MEMBER(md_base_state::megadriv_tas_callback)
 {
-	return 0; // writeback not allowed
+	return; // writeback not allowed
 }
 
 void md_base_state::megadriv_init_common()
@@ -1032,9 +1035,7 @@ void md_base_state::megadriv_init_common()
 		membank("bank1")->set_base(m_genz80.z80_prgram);
 	}
 
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(md_base_state::genesis_int_callback),this));
-
-	m68k_set_tas_callback(m_maincpu, megadriv_tas_callback);
+	m_maincpu->set_tas_write_callback(write8_delegate(FUNC(md_base_state::megadriv_tas_callback),this));
 
 	m_megadrive_io_read_data_port_ptr = read8_delegate(FUNC(md_base_state::megadrive_io_read_data_port_3button),this);
 	m_megadrive_io_write_data_port_ptr = write16_delegate(FUNC(md_base_state::megadrive_io_write_data_port_3button),this);

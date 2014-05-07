@@ -2358,7 +2358,7 @@ Nichibutsu UK
 Nichibutsu?
 
 
-# Dragon Bowl
+# Dragon Bowl (set 1, encrypted program)
 Nics
 
 
@@ -3222,6 +3222,10 @@ VR8 Inc.
 Valadon Automation
 
 
+# Fireball
+Valco
+
+
 # Spectra IV
 Valley
 
@@ -3402,7 +3406,7 @@ Yashica
 Yeno
 
 
-# Spectrum 2000 (Euro)
+# Spectrum 2000 (vertical)
 Yona Tech
 
 

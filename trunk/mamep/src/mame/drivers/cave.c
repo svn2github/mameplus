@@ -518,7 +518,7 @@ static ADDRESS_MAP_START( donpachi_map, AS_PROGRAM, 16, cave_state )
 /**/AM_RANGE(0xa08000, 0xa08fff) AM_RAM AM_SHARE("paletteram.0")      // Palette
 	AM_RANGE(0xb00000, 0xb00003) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)                 // M6295
 	AM_RANGE(0xb00010, 0xb00013) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)                 //
-	AM_RANGE(0xb00020, 0xb0002f) AM_DEVWRITE("nmk112", nmk112_device, okibank_lsb_w)                             //
+	AM_RANGE(0xb00020, 0xb0002f) AM_DEVWRITE8("nmk112", nmk112_device, okibank_w, 0x00ff)                       //
 	AM_RANGE(0xc00000, 0xc00001) AM_READ_PORT("IN0")                                                        // Inputs
 	AM_RANGE(0xc00002, 0xc00003) AM_READ_PORT("IN1")                                                        // Inputs + EEPROM
 	AM_RANGE(0xd00000, 0xd00001) AM_WRITE(cave_eeprom_msb_w)                                    // EEPROM
@@ -1973,13 +1973,6 @@ WRITE_LINE_MEMBER(cave_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
-};
-
 /***************************************************************************
                                 Dangun Feveron
 ***************************************************************************/
@@ -2067,11 +2060,6 @@ MACHINE_CONFIG_END
                                     Donpachi
 ***************************************************************************/
 
-static const nmk112_interface donpachi_nmk112_intf =
-{
-	"oki1", "oki2", 1 << 0  // chip #0 (music) is not paged
-};
-
 static MACHINE_CONFIG_START( donpachi, cave_state )
 
 	/* basic machine hardware */
@@ -2110,7 +2098,10 @@ static MACHINE_CONFIG_START( donpachi, cave_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 
-	MCFG_NMK112_ADD("nmk112", donpachi_nmk112_intf)
+	MCFG_DEVICE_ADD("nmk112", NMK112, 0)
+	MCFG_NMK112_ROM0("oki1")
+	MCFG_NMK112_ROM1("oki2")
+	MCFG_NMK112_DISABLE_PAGEMASK(1 << 0)	// chip #0 (music) is not paged
 MACHINE_CONFIG_END
 
 
@@ -2275,7 +2266,6 @@ static MACHINE_CONFIG_START( hotdogst, cave_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_32MHz/8)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(cave_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  0.20)
@@ -2382,7 +2372,6 @@ static MACHINE_CONFIG_START( mazinger, cave_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_4MHz)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(cave_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  0.20)
@@ -2578,11 +2567,6 @@ MACHINE_CONFIG_END
 
 /*  X1 = 12 MHz, X2 = 28 MHz, X3 = 16 MHz. OKI: / 165 mode A ; / 132 mode B */
 
-static const nmk112_interface pwrinst2_nmk112_intf =
-{
-	"oki1", "oki2", 0
-};
-
 static MACHINE_CONFIG_START( pwrinst2, cave_state )
 
 	/* basic machine hardware */
@@ -2619,7 +2603,6 @@ static MACHINE_CONFIG_START( pwrinst2, cave_state )
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_16MHz / 4)
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(cave_state, irqhandler))
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.40)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.40)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  0.40)
@@ -2637,7 +2620,9 @@ static MACHINE_CONFIG_START( pwrinst2, cave_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.00)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.00)
 
-	MCFG_NMK112_ADD("nmk112", pwrinst2_nmk112_intf)
+	MCFG_DEVICE_ADD("nmk112", NMK112, 0)
+	MCFG_NMK112_ROM0("oki1")
+	MCFG_NMK112_ROM1("oki2")
 MACHINE_CONFIG_END
 
 

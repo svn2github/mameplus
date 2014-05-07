@@ -280,28 +280,6 @@ WRITE8_MEMBER(statriv2_state::ppi_portc_hi_w)
 }
 
 
-
-
-/*************************************
- *
- *  8255 PPI interfaces
- *
- *************************************/
-
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	/* PPI 8255 group A & B set to Mode 0.
-	 Port A, B and lower 4 bits of C set as Input.
-	 High 4 bits of C set as Output */
-	DEVCB_INPUT_PORT("IN0"),            /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("IN1"),            /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("IN2"),            /* Port C read */
-	DEVCB_DRIVER_MEMBER(statriv2_state,ppi_portc_hi_w)      /* Port C write */
-};
-
-
 /*************************************
  *
  *  Address maps
@@ -586,21 +564,6 @@ static GFXDECODE_START( vertical )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  TMS9927 interface
- *
- *************************************/
-
-static const tms9927_interface tms9927_intf =
-{
-	8,
-	NULL
-};
-
-
-
 /*************************************
  *
  *  Machine drivers
@@ -617,8 +580,14 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	/* 1x 8255 */
-	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
+	MCFG_DEVICE_ADD("ppi8255", I8255A, 0)
+	/* PPI 8255 group A & B set to Mode 0.
+     Port A, B and lower 4 bits of C set as Input.
+     High 4 bits of C set as Output */
+	MCFG_I8255_IN_PORTA_CB(IOPORT("IN0"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN1"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("IN2"))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(statriv2_state, ppi_portc_hi_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -626,7 +595,8 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
 	MCFG_SCREEN_UPDATE_DRIVER(statriv2_state, screen_update_statriv2)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/2, tms9927_intf)
+	MCFG_DEVICE_ADD("tms", TMS9927, MASTER_CLOCK/2)
+	MCFG_TMS9927_CHAR_WIDTH(8)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", horizontal)
 	MCFG_PALETTE_ADD("palette", 2*64)
@@ -1129,13 +1099,13 @@ READ8_MEMBER(statriv2_state::laserdisc_io_r)
 	UINT8 result = 0x00;
 	if (offset == 1)
 		result = 0x18;
-	mame_printf_debug("%s:ld read ($%02X) = %02X\n", machine().describe_context(), 0x28 + offset, result);
+	osd_printf_debug("%s:ld read ($%02X) = %02X\n", machine().describe_context(), 0x28 + offset, result);
 	return result;
 }
 
 WRITE8_MEMBER(statriv2_state::laserdisc_io_w)
 {
-	mame_printf_debug("%s:ld write ($%02X) = %02X\n", machine().describe_context(), 0x28 + offset, data);
+	osd_printf_debug("%s:ld write ($%02X) = %02X\n", machine().describe_context(), 0x28 + offset, data);
 }
 
 DRIVER_INIT_MEMBER(statriv2_state,laserdisc)

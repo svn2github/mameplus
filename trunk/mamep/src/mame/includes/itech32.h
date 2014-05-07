@@ -131,10 +131,7 @@ public:
 	DECLARE_WRITE32_MEMBER(itech020_color1_w);
 	DECLARE_WRITE32_MEMBER(itech020_color2_w);
 	DECLARE_WRITE32_MEMBER(itech020_plane_w);
-	DECLARE_WRITE16_MEMBER(timekill_paletteram_w);
 	DECLARE_WRITE16_MEMBER(bloodstm_paletteram_w);
-	DECLARE_WRITE32_MEMBER(drivedge_paletteram_w);
-	DECLARE_WRITE32_MEMBER(itech020_paletteram_w);
 	DECLARE_WRITE16_MEMBER(itech32_video_w);
 	DECLARE_READ16_MEMBER(itech32_video_r);
 	DECLARE_WRITE16_MEMBER(bloodstm_video_w);

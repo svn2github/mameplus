@@ -757,11 +757,11 @@ static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!core_strnicmp (tag, (char *)s, strlen (tag)))
+				if (!core_strnicmp(tag, (char *)s, strlen (tag)))
 				{
 					found = 1;
 				}
-				else if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!core_strnicmp(DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}
@@ -850,9 +850,9 @@ static int load_drivfile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!core_strnicmp (tag, (char *)s, strlen (tag)))
+				if (!core_strnicmp(tag, (char *)s, strlen (tag)))
 					found = 1;
-				else if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!core_strnicmp(DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}

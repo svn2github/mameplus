@@ -699,7 +699,7 @@ static void cfunc_unimplemented_opcode(void *param)
 	{
 		char string[200];
 		rsp_dasm_one(string, rsp->ppc, op);
-		mame_printf_debug("%08X: %s\n", rsp->ppc, string);
+		osd_printf_debug("%08X: %s\n", rsp->ppc, string);
 	}
 
 	fatalerror("RSP: unknown opcode %02X (%08X) at %08X\n", op >> 26, op, rsp->ppc);
@@ -711,7 +711,7 @@ static void unimplemented_opcode(rsp_state *rsp, UINT32 op)
 	{
 		char string[200];
 		rsp_dasm_one(string, rsp->ppc, op);
-		mame_printf_debug("%08X: %s\n", rsp->ppc, string);
+		osd_printf_debug("%08X: %s\n", rsp->ppc, string);
 	}
 
 	fatalerror("RSP: unknown opcode %02X (%08X) at %08X\n", op >> 26, op, rsp->ppc);
@@ -757,7 +757,7 @@ static __m128i vec_shuf[16];
 static __m128i vec_shuf_inverse[16];
 #endif
 
-static void rspcom_init(rsp_state *rsp, legacy_cpu_device *device, device_irq_acknowledge_callback irqcallback)
+static void rspcom_init(rsp_state *rsp, legacy_cpu_device *device, device_irq_acknowledge_delegate irqcallback)
 {
 	int regIdx = 0;
 	int accumIdx;

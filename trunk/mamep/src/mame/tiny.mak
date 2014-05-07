@@ -97,9 +97,11 @@ MACHINES += RIOT6532
 MACHINES += PIT8253
 MACHINES += Z80CTC
 MACHINES += 68681
+MACHINES += BANKDEV
 MACHINES += EEPROMDEV
 MACHINES += SERFLASH
 MACHINES += RTC9701
+
 
 #-------------------------------------------------
 # specify available bus cores

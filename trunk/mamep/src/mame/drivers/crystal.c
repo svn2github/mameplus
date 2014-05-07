@@ -584,8 +584,6 @@ void crystal_state::machine_start()
 {
 	int i;
 
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(crystal_state::icallback),this));
-
 	for (i = 0; i < 4; i++)
 		m_Timer[i] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(crystal_state::Timercb),this), (void*)(FPTR)i);
 
@@ -614,7 +612,6 @@ void crystal_state::machine_reset()
 	memset(m_vidregs, 0, 0x10000);
 	m_FlipCount = 0;
 	m_IntHigh = 0;
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(crystal_state::icallback),this));
 	m_Bank = 0;
 	membank("bank1")->set_base(memregion("user1")->base() + 0);
 	m_FlashCmd = 0xff;
@@ -894,23 +891,12 @@ static INPUT_PORTS_START(officeye)
 INPUT_PORTS_END
 
 
-
-static const vr0_interface vr0_config =
-{
-	0x04800000
-};
-
-static const vr0video_interface vr0video_config =
-{
-	"maincpu"
-};
-
 static MACHINE_CONFIG_START( crystal, crystal_state )
 
 	MCFG_CPU_ADD("maincpu", SE3208, 43000000)
 	MCFG_CPU_PROGRAM_MAP(crystal_mem)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", crystal_state,  crystal_interrupt)
-
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(crystal_state, icallback)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -923,7 +909,8 @@ static MACHINE_CONFIG_START( crystal, crystal_state )
 	MCFG_SCREEN_VBLANK_DRIVER(crystal_state, screen_eof_crystal)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_VIDEO_VRENDER0_ADD("vr0", vr0video_config)
+	MCFG_DEVICE_ADD("vr0", VIDEO_VRENDER0, 0)
+	MCFG_VIDEO_VRENDER0_CPU("maincpu")
 
 	MCFG_PALETTE_ADD_RRRRRGGGGGGBBBBB("palette")
 
@@ -932,7 +919,7 @@ static MACHINE_CONFIG_START( crystal, crystal_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_VRENDER0_ADD("vrender", 0)
-	MCFG_SOUND_CONFIG(vr0_config)
+	MCFG_VR0_REGBASE(0x04800000)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1142,8 +1129,6 @@ DRIVER_INIT_MEMBER(crystal_state, donghaer)
 	Rom[WORD_XOR_LE(0x19C70 / 2)] = 0x900C; // PUSH %R2-%R3
 	Rom[WORD_XOR_LE(0x19C72 / 2)] = 0x9001; // PUSH %R0
 }
-
-
 
 
 GAME( 2001, crysbios,        0, crystal,  crystal, driver_device,         0, ROT0, "BrezzaSoft", "Crystal System BIOS", GAME_IS_BIOS_ROOT )

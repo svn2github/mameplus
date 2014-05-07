@@ -113,7 +113,7 @@ $8000 - $ffff   ROM
 const device_type RENEGADE_ADPCM = &device_creator<renegade_adpcm_device>;
 
 renegade_adpcm_device::renegade_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, RENEGADE_ADPCM, "Renegade Custom ADPCM", tag, owner, clock, "renegade_adpcm", __FILE__),
+	: device_t(mconfig, RENEGADE_ADPCM, "Renegade ADPCM Custom", tag, owner, clock, "renegade_adpcm", __FILE__),
 		device_sound_interface(mconfig, *this),
 		m_stream(NULL),
 		m_current(0),
@@ -141,7 +141,7 @@ void renegade_adpcm_device::device_config_complete()
 void renegade_adpcm_device::device_start()
 {
 	m_playing = 0;
-	m_stream = machine().sound().stream_alloc(*this, 0, 1, clock(), this);
+	m_stream = machine().sound().stream_alloc(*this, 0, 1, clock());
 	m_base = machine().root_device().memregion("adpcm")->base();
 	m_adpcm.reset();
 

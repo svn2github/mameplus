@@ -121,18 +121,13 @@ enum
 	WHIRLWIND_2706,
 	NOCASH_NOCHR,   // homebrew PCB design which uses NTRAM for CHRRAM
 	BTL_ACTION53,   // homebrew PCB for homebrew multicarts
+	BTL_2A03_PURITANS,   // homebrew PCB
 	/* FFE boards, for mappers 6, 8, 17 */
 	FFE3_BOARD, FFE4_BOARD, FFE8_BOARD, TEST_BOARD,
 	/* Unsupported (for place-holder boards, with no working emulation) & no-board (at init) */
 	UNSUPPORTED_BOARD, UNKNOWN_BOARD, NO_BOARD
 };
 
-
-// ======================> nes_cart_interface
-
-struct nes_cart_interface
-{
-};
 
 #define CHRROM 0
 #define CHRRAM 1
@@ -323,7 +318,6 @@ void nes_partialhash(hash_collection &dest, const unsigned char *data, unsigned 
 // ======================> nes_cart_slot_device
 
 class nes_cart_slot_device : public device_t,
-								public nes_cart_interface,
 								public device_image_interface,
 								public device_slot_interface
 {
@@ -400,9 +394,8 @@ extern const device_type NES_CART_SLOT;
  DEVICE CONFIGURATION MACROS
  ***************************************************************************/
 
-#define MCFG_NES_CARTRIDGE_ADD(_tag,_config,_slot_intf,_def_slot) \
+#define MCFG_NES_CARTRIDGE_ADD(_tag, _slot_intf, _def_slot) \
 	MCFG_DEVICE_ADD(_tag, NES_CART_SLOT, 0) \
-	MCFG_DEVICE_CONFIG(_config) \
 	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, false)
 
 #define MCFG_NES_CARTRIDGE_NOT_MANDATORY                                     \

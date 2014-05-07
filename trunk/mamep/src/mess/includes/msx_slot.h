@@ -10,8 +10,6 @@
 
 enum {
 	MSX_LAYOUT_SLOT_ENTRY,
-	MSX_LAYOUT_KANJI_ENTRY,
-	MSX_LAYOUT_RAMIO_SET_BITS_ENTRY,
 	MSX_LAYOUT_LAST
 };
 
@@ -34,30 +32,6 @@ static const msx_slot_layout msx_slot_layout_##msx[] = {
 		extend,                     \
 		size,                       \
 		option                      \
-	},
-
-#define MSX_LAYOUT_KANJI(offset) \
-	{                               \
-		MSX_LAYOUT_KANJI_ENTRY,     \
-		SLOT_EMPTY,                 \
-		0,                          \
-		0,                          \
-		0,                          \
-		0,                          \
-		0,                          \
-		offset                      \
-	},
-
-#define MSX_LAYOUT_RAMIO_SET_BITS(offset) \
-	{                               \
-		MSX_LAYOUT_RAMIO_SET_BITS_ENTRY,        \
-		SLOT_EMPTY,                 \
-		0,                          \
-		0,                          \
-		0,                          \
-		0,                          \
-		0,                          \
-		offset                      \
 	},
 
 #define MSX_LAYOUT_END \
@@ -236,21 +210,6 @@ const msx_slot msx_slot_list[] = {
 	static int slot_##nm##_loadsram (running_machine &machine, slot_state *state)
 #define MSX_SLOT_SAVESRAM(nm)       \
 	static int slot_##nm##_savesram (running_machine &machine, slot_state *state)
-
-struct msx_driver_struct {
-	char name[9];
-	const msx_slot_layout *layout;
-};
-
-extern const msx_driver_struct msx_driver_list[];
-
-#define MSX_DRIVER_LIST     \
-const msx_driver_struct msx_driver_list[] = {
-#define MSX_DRIVER(foo)     \
-		{ #foo, msx_slot_layout_##foo },
-#define MSX_DRIVER_END      \
-		{ "", NULL }        \
-};
 
 
 #endif /* MSX_SLOT_H_ */

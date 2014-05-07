@@ -6,12 +6,14 @@
     Mathis Rosenhauer
     Brad Oliver
     Michael Luong
+    Wilbert Pol
+    Fabio Priulli
+    Enik Land
 
  To do:
 
  - SIO interface for Game Gear (needs netplay, I guess)
  - Gear to Gear Port SMS Controller Adaptor
- - SMS Store Display Unit (kiosk console)
  - Sega Demo Unit II (kiosk expansion device)
  - SMS Disk System (floppy disk drive expansion device) - unreleased
  - Sega Graphic Board (black version) - unreleased
@@ -203,11 +205,12 @@ SMS Store Unit memory map for the second CPU:
 8000      - System Control Register (R/W)
             Reading:
             bit7      - ready (0 = ready, 1 = not ready)
-            bit6-bit5 - unknown
-            bit4-bit3 - timer selection bit switches
-            bit2-bit0 - unknown
+            bit6      - active timer bit switch (0 = selection 2, 1 = selection 1)
+            bit5      - unknown
+            bit4-bit3 - timer selection 2 bit switches (10s-25s)
+            bit2-bit0 - timer selection 1 bit switches (30s-135s)
             Writing:
-            bit7-bit4 - unknown, maybe led of selected game to set?
+            bit7-bit4 - led of selected game to set
             bit3      - unknown, 1 seems to be written all the time
             bit2      - unknown, 1 seems to be written all the time
             bit1      - reset signal for sms cpu, 0 = reset low, 1 = reset high
@@ -259,10 +262,10 @@ static ADDRESS_MAP_START( sms_store_mem, AS_PROGRAM, 8, smssdisp_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM                     /* BIOS */
 	AM_RANGE(0x4000, 0x47ff) AM_RAM                     /* RAM */
 	AM_RANGE(0x6000, 0x7fff) AM_READ(store_cart_peek)
-	AM_RANGE(0x8000, 0x8000) AM_READWRITE(sms_store_control_r, sms_store_control_w) /* Control */
+	AM_RANGE(0x8000, 0x8000) AM_READ_PORT("DSW") AM_WRITE(sms_store_control_w) /* Control */
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(sms_store_cart_select_r, sms_store_cart_select_w) /* cartridge/card slot selector */
-	AM_RANGE(0xd800, 0xd800) AM_READ(sms_store_select1)         /* Game selector port #1 */
-	AM_RANGE(0xdc00, 0xdc00) AM_READ(sms_store_select2)         /* Game selector port #2 */
+	AM_RANGE(0xd800, 0xd800) AM_READ_PORT("GAMESEL1")         /* Game selector port #1 */
+	AM_RANGE(0xdc00, 0xdc00) AM_READ_PORT("GAMESEL2")         /* Game selector port #2 */
 ADDRESS_MAP_END
 
 // I/O ports $3E and $3F do not exist on Mark III
@@ -371,14 +374,61 @@ static INPUT_PORTS_START( sms1 )
 	PORT_INCLUDE( sg1000m3 )
 
 	PORT_START("RESET")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Reset Button")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 ) PORT_NAME("Reset Button")
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( smsj )
 	PORT_INCLUDE( sg1000m3 )
 
 	//PORT_START("RAPID")
-	//PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Rapid Button") /* Not implemented */
+	//PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 ) PORT_NAME("Rapid Button") /* Not implemented */
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( smssdisp )
+	PORT_INCLUDE( sms1 )
+
+	PORT_START("DSW")
+	PORT_DIPNAME( 0x07, 0x07, "Timer 1 length" )
+	PORT_DIPSETTING( 0x00, "135s" )
+	PORT_DIPSETTING( 0x01, "120s" )
+	PORT_DIPSETTING( 0x02, "105s" )
+	PORT_DIPSETTING( 0x03, "90s" )
+	PORT_DIPSETTING( 0x04, "75s" )
+	PORT_DIPSETTING( 0x05, "60s" )
+	PORT_DIPSETTING( 0x06, "45s" )
+	PORT_DIPSETTING( 0x07, "30s" )
+	PORT_DIPNAME( 0x18, 0x18, "Timer 2 length" )
+	PORT_DIPSETTING( 0x00, "25s" )
+	PORT_DIPSETTING( 0x08, "20s" )
+	PORT_DIPSETTING( 0x10, "15s" )
+	PORT_DIPSETTING( 0x18, "10s" )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING( 0x00, DEF_STR( On ) )
+	PORT_DIPSETTING( 0x20, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x40, 0x40, "Select Timer" )
+	PORT_DIPSETTING( 0x00, "Timer 2" )
+	PORT_DIPSETTING( 0x40, "Timer 1" )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )   // READY, must be high
+
+	PORT_START("GAMESEL1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 03") PORT_CODE(KEYCODE_N)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 02") PORT_CODE(KEYCODE_H)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 01") PORT_CODE(KEYCODE_Y)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 00") PORT_CODE(KEYCODE_6)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 07") PORT_CODE(KEYCODE_M)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 06") PORT_CODE(KEYCODE_J)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 05") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 04") PORT_CODE(KEYCODE_7)
+
+	PORT_START("GAMESEL2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 11") PORT_CODE(KEYCODE_COMMA)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 10") PORT_CODE(KEYCODE_K)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 09") PORT_CODE(KEYCODE_I)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 08") PORT_CODE(KEYCODE_8)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 15") PORT_CODE(KEYCODE_STOP)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 14") PORT_CODE(KEYCODE_L)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 13") PORT_CODE(KEYCODE_O)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Game 12") PORT_CODE(KEYCODE_9)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( gg )
@@ -559,42 +609,19 @@ static MACHINE_CONFIG_DERIVED( sms1_ntsc, sms_ntsc_base )
 	MCFG_SMS_EXPANSION_ADD("exp", sms_expansion_devices, NULL)
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_START( sms_sdisp, smssdisp_state )
-	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, XTAL_53_693175MHz/15)
-	MCFG_CPU_PROGRAM_MAP(sms_mem)
-	MCFG_CPU_IO_MAP(sms_io)
+static MACHINE_CONFIG_DERIVED_CLASS( sms_sdisp, sms1_ntsc, smssdisp_state )
 
-	MCFG_QUANTUM_TIME(attotime::from_hz(60))
-
-	MCFG_MACHINE_START_OVERRIDE(sms_state,sms)
-	MCFG_MACHINE_RESET_OVERRIDE(sms_state,mess_sms)
-
-	/* sound hardware */
-	MCFG_SPEAKER_STANDARD_MONO("mono")
-
-	MCFG_SOUND_ADD("segapsg", SEGAPSG, XTAL_53_693175MHz/15)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
-
-	/* video hardware */
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS(XTAL_53_693175MHz/10, \
-		SEGA315_5124_WIDTH , SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH - 2, SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256 + 10, \
-		SEGA315_5124_HEIGHT_NTSC, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_224_TBORDER_HEIGHT, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_224_TBORDER_HEIGHT + 224)
-	MCFG_SCREEN_UPDATE_DRIVER(sms_state, screen_update_sms)
-
-	MCFG_DEVICE_ADD("sms_vdp", SEGA315_5246, 0)
-	MCFG_SEGA315_5246_SET_SCREEN("screen")
-	MCFG_SEGA315_5246_IS_PAL(false)
-	MCFG_SEGA315_5246_INT_CB(WRITELINE(smssdisp_state, sms_store_int_callback))
-	MCFG_SEGA315_5246_PAUSE_CB(WRITELINE(sms_state, sms_pause_callback))
+	MCFG_DEVICE_MODIFY("sms_vdp")
+	MCFG_SEGA315_5124_INT_CB(WRITELINE(smssdisp_state, sms_store_int_callback))
 
 	MCFG_CPU_ADD("control", Z80, XTAL_53_693175MHz/15)
 	MCFG_CPU_PROGRAM_MAP(sms_store_mem)
 	/* Both CPUs seem to communicate with the VDP etc? */
 	MCFG_CPU_IO_MAP(sms_io)
 
-	MCFG_SMS_CARTRIDGE_ADD("slot", sms_cart, NULL) // should be mandatory?
+	MCFG_DEVICE_REMOVE("mycard")
+	MCFG_DEVICE_REMOVE("exp")
+
 	MCFG_SMS_CARTRIDGE_ADD("slot2", sms_cart, NULL)
 	MCFG_SMS_CARTRIDGE_ADD("slot3", sms_cart, NULL)
 	MCFG_SMS_CARTRIDGE_ADD("slot4", sms_cart, NULL)
@@ -627,16 +654,6 @@ static MACHINE_CONFIG_START( sms_sdisp, smssdisp_state )
 	MCFG_SMS_CARD_ADD("slot30", sms_cart, NULL)
 	MCFG_SMS_CARD_ADD("slot31", sms_cart, NULL)
 	MCFG_SMS_CARD_ADD("slot32", sms_cart, NULL)
-
-	MCFG_SOFTWARE_LIST_ADD("cart_list","sms")
-
-	MCFG_SMS_CONTROL_PORT_ADD(CONTROL1_TAG, sms_control_port_devices, "joypad")
-	MCFG_SMS_CONTROL_PORT_TH_INPUT_HANDLER(WRITELINE(sms_state, sms_ctrl1_th_input))
-	MCFG_SMS_CONTROL_PORT_PIXEL_HANDLER(READ32(sms_state, sms_pixel_color))
-
-	MCFG_SMS_CONTROL_PORT_ADD(CONTROL2_TAG, sms_control_port_devices, "joypad")
-	MCFG_SMS_CONTROL_PORT_TH_INPUT_HANDLER(WRITELINE(sms_state, sms_ctrl2_th_input))
-	MCFG_SMS_CONTROL_PORT_PIXEL_HANDLER(READ32(sms_state, sms_pixel_color))
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( sms_pal_base, sms_state )
@@ -988,7 +1005,7 @@ ROM_END
 CONS( 1985, sg1000m3,   sms,        0,      sg1000m3,    sg1000m3, sms_state,      sg1000m3, "Sega",     "SG-1000 Mark III",                 GAME_SUPPORTS_SAVE )
 CONS( 1986, sms1,       sms,        0,      sms1_ntsc,   sms1,     sms_state,      sms1,     "Sega",     "Master System I",                  GAME_SUPPORTS_SAVE )
 CONS( 1986, sms1pal,    sms,        0,      sms1_pal,    sms1,     sms_state,      sms1,     "Sega",     "Master System I (PAL)" ,           GAME_SUPPORTS_SAVE )
-CONS( 1986, smssdisp,   sms,        0,      sms_sdisp,   sms,      smssdisp_state, smssdisp, "Sega",     "Master System Store Display Unit", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+CONS( 1986, smssdisp,   sms,        0,      sms_sdisp,   smssdisp, smssdisp_state, smssdisp, "Sega",     "Master System Store Display Unit", GAME_SUPPORTS_SAVE )
 CONS( 1987, smsj,       sms,        0,      smsj,        smsj,     sms_state,      smsj,     "Sega",     "Master System (Japan)",            GAME_SUPPORTS_SAVE )
 CONS( 1990, sms,        0,          0,      sms2_ntsc,   sms,      sms_state,      sms1,     "Sega",     "Master System II",                 GAME_SUPPORTS_SAVE )
 CONS( 1990, smspal,     sms,        0,      sms2_pal,    sms,      sms_state,      sms1,     "Sega",     "Master System II (PAL)",           GAME_SUPPORTS_SAVE )

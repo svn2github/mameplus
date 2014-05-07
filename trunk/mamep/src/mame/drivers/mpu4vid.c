@@ -297,6 +297,7 @@ public:
 	DECLARE_READ16_MEMBER( characteriser16_r );
 	DECLARE_WRITE16_MEMBER( bwb_characteriser16_w );
 	DECLARE_READ16_MEMBER( bwb_characteriser16_r );
+	DECLARE_WRITE_LINE_MEMBER(mpu_video_reset);
 };
 
 /*************************************
@@ -1251,11 +1252,10 @@ static INPUT_PORTS_START( adders )
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_COIN4) PORT_NAME("100p")//PORT_IMPULSE(5)
 INPUT_PORTS_END
 
-static void video_reset(device_t *device)
+WRITE_LINE_MEMBER(mpu4vid_state::mpu_video_reset)
 {
-	mpu4vid_state *state = device->machine().driver_data<mpu4vid_state>();
-	state->m_ptm->reset();
-	state->m_acia_1->reset();
+	m_ptm->reset();
+	m_acia_1->reset();
 }
 
 /* machine start (called only once) */
@@ -1271,7 +1271,7 @@ MACHINE_START_MEMBER(mpu4vid_state,mpu4_vid)
 	MechMtr_config(machine(),8);
 
 	/* Hook the reset line */
-	m68k_set_reset_callback(m_videocpu, ::video_reset);
+	m_videocpu->set_reset_callback(write_line_delegate(FUNC(mpu4vid_state::mpu_video_reset),this));
 }
 
 MACHINE_RESET_MEMBER(mpu4vid_state,mpu4_vid)
@@ -2060,6 +2060,10 @@ ROM_START( v4vgpok )
 	ROM_LOAD16_BYTE("video-6.bin",  0x040001, 0x010000,  CRC(3287ae4e) SHA1(3b05a036de3ca7ec644bfbf04934e44e631d1e28))
 	ROM_LOAD16_BYTE("video-7.bin",  0x060000, 0x010000,  CRC(231cf163) SHA1(02b28ef0e1661a82d0fba2ecc5474c79651fa9e7))
 	ROM_LOAD16_BYTE("video-8.bin",  0x060001, 0x010000,  CRC(076efdc8) SHA1(bef0a1d8f0e7486ee5dc7407ce5c96854cefa5cf))
+
+	/*characteriser chip*/
+	ROM_REGION( 0x117, "plds", 0 )
+	ROM_LOAD( "ic18-palce16v8h.bin", 0x0000, 0x0117, CRC(f144738a) SHA1(8e563aaff07ad23864e3019737cbdf4490b70d8f) )
 ROM_END
 
 

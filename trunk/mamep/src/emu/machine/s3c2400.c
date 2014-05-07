@@ -42,7 +42,17 @@ const device_type S3C2400 = &device_creator<s3c2400_device>;
 s3c2400_device::s3c2400_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 		: device_t(mconfig, S3C2400, "Samsung S3C2400", tag, owner, clock, "s3c2400", __FILE__),
 		m_palette(*this),
-		m_cpu(*this, ":maincpu")
+		m_cpu(*this, ":maincpu"),
+		m_pin_r_cb(*this),
+		m_pin_w_cb(*this),
+		m_port_r_cb(*this),
+		m_port_w_cb(*this),
+		m_scl_w_cb(*this),
+		m_sda_r_cb(*this),
+		m_sda_w_cb(*this),
+		m_data_r_cb(*this),
+		m_data_w_cb(*this),
+		m_flags(0)
 {
 	memset(&m_memcon, 0, sizeof(m_memcon));
 	memset(&m_usbhost, 0, sizeof(m_usbhost));
@@ -76,20 +86,6 @@ s3c2400_device::~s3c2400_device()
 void s3c2400_device::static_set_palette_tag(device_t &device, const char *tag)
 {
 	downcast<s3c2400_device &>(device).m_palette.set_tag(tag);
-}
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void s3c2400_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const s3c2400_interface *intf = reinterpret_cast<const s3c2400_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<s3c2400_interface *>(this) = *intf;
 }
 
 //-------------------------------------------------

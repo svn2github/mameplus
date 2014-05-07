@@ -1454,16 +1454,6 @@ void SetArtDir(const WCHAR* path)
 	options_set_wstring(global, OPTION_ARTPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 
-const WCHAR* GetMemcardDir(void)
-{
-	return options_get_wstring(global, OPTION_MEMCARD_DIRECTORY);
-}
-
-void SetMemcardDir(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_MEMCARD_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
-}
-
 const WCHAR* GetFontDir(void)
 {
 	return options_get_wstring(global, OPTION_FONTPATH);
@@ -3019,7 +3009,7 @@ void SaveDefaultOptions(void)
 {
 	char buffer[MAX_PATH];
 	GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
-	SaveSettingsFile(global, NULL, buffer);
+//  SaveSettingsFile(global, NULL, buffer);
 }
 
 const char * GetVersionString(void)
@@ -3256,7 +3246,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		// Don't try to save a null global options file,  or it will be erased.
 		//if (NULL == opts)
 			//return;
-		global = opts;
+		//global = opts;
 		filename.cpy(emulator_info::get_configname());
 	} else if (opt_type == OPTIONS_VECTOR)
 	{

@@ -351,32 +351,6 @@ void midway_ssio_device::update_volumes()
 	m_ay1->set_volume(2, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][2]]);
 }
 
-
-//-------------------------------------------------
-//  AY-8910 interfaces
-//-------------------------------------------------
-
-static const ay8910_interface ssio_ay8910_interface_1 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, midway_ssio_device, porta0_w),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, midway_ssio_device, portb0_w)
-};
-
-static const ay8910_interface ssio_ay8910_interface_2 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, midway_ssio_device, porta1_w),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, midway_ssio_device, portb1_w)
-};
-
-
 //-------------------------------------------------
 //  audio CPU map
 //-------------------------------------------------
@@ -410,11 +384,17 @@ static MACHINE_CONFIG_FRAGMENT( midway_ssio )
 	MCFG_DEVICE_PERIODIC_INT_DEVICE(DEVICE_SELF, midway_ssio_device, clock_14024, SSIO_CLOCK/2/16/10)
 
 	MCFG_SOUND_ADD("ay0", AY8910, SSIO_CLOCK/2/4)
-	MCFG_SOUND_CONFIG(ssio_ay8910_interface_1)
+	
+	
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(midway_ssio_device, porta0_w))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(midway_ssio_device, portb0_w))
 	MCFG_MIXER_ROUTE(ALL_OUTPUTS, DEVICE_SELF_OWNER, 0.33, 0)
 
 	MCFG_SOUND_ADD("ay1", AY8910, SSIO_CLOCK/2/4)
-	MCFG_SOUND_CONFIG(ssio_ay8910_interface_2)
+	
+	
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(midway_ssio_device, porta1_w))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(midway_ssio_device, portb1_w))
 	MCFG_MIXER_ROUTE(ALL_OUTPUTS, DEVICE_SELF_OWNER, 0.33, 1)
 MACHINE_CONFIG_END
 
@@ -748,7 +728,7 @@ WRITE8_MEMBER(midway_sounds_good_device::write)
 
 WRITE_LINE_MEMBER(midway_sounds_good_device::reset_write)
 {
-//if (state) mame_printf_debug("SG Reset\n");
+//if (state) osd_printf_debug("SG Reset\n");
 	m_cpu->set_input_line(INPUT_LINE_RESET, state ? ASSERT_LINE : CLEAR_LINE);
 }
 

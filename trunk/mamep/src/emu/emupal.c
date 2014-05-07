@@ -25,6 +25,7 @@ palette_device::palette_device(const machine_config &mconfig, const char *tag, d
 		m_indirect_entries(0),
 		m_enable_shadows(0),
 		m_enable_hilights(0),
+		m_membits_supplied(false),
 		m_endianness_supplied(false),
 		m_raw_to_rgb(raw_to_rgb_converter()),
 		m_palette(NULL),
@@ -50,6 +51,14 @@ void palette_device::static_set_init(device_t &device, palette_init_delegate ini
 void palette_device::static_set_format(device_t &device, raw_to_rgb_converter raw_to_rgb)
 {
 	downcast<palette_device &>(device).m_raw_to_rgb = raw_to_rgb;
+}
+
+
+void palette_device::static_set_membits(device_t &device, int membits)
+{
+	palette_device &palette = downcast<palette_device &>(device);
+	palette.m_membits = membits;
+	palette.m_membits_supplied = true;
 }
 
 
@@ -291,21 +300,27 @@ void palette_device::set_shadow_dRGB32(int mode, int dr, int dg, int db, bool no
 //  potentially modified palette entries
 //-------------------------------------------------
 
-inline void palette_device::update_for_write(offs_t byte_offset, int bytes_modified)
+inline void palette_device::update_for_write(offs_t byte_offset, int bytes_modified, bool indirect)
 {
+	assert((m_indirect_entries != 0) == indirect);
+
 	// determine how many entries were modified
 	int bpe = m_paletteram.bytes_per_entry();
 	assert(bpe != 0);
 	int count = (bytes_modified + bpe - 1) / bpe;
 
-	// for each entry modified, fetch the palette data and set the pen color
+	// for each entry modified, fetch the palette data and set the pen color or indirect color
 	offs_t base = byte_offset / bpe;
 	for (int index = 0; index < count; index++)
 	{
 		UINT32 data = m_paletteram.read(base + index);
 		if (m_paletteram_ext.base() != NULL)
 			data |= m_paletteram_ext.read(base + index) << (8 * bpe);
-		m_palette->entry_set_color(base + index, m_raw_to_rgb(data));
+
+		if (indirect)
+			set_indirect_color(base + index, m_raw_to_rgb(data));
+		else
+			m_palette->entry_set_color(base + index, m_raw_to_rgb(data));
 	}
 }
 
@@ -367,6 +382,30 @@ WRITE16_MEMBER(palette_device::write_ext)
 }
 
 
+//-------------------------------------------------
+//  write_indirect - write a byte to the base
+//  paletteram, updating indirect colors
+//-------------------------------------------------
+
+WRITE8_MEMBER(palette_device::write_indirect)
+{
+	m_paletteram.write8(offset, data);
+	update_for_write(offset, 1, true);
+}
+
+
+//-------------------------------------------------
+//  write_ext - write a byte to the extended
+//  paletteram, updating indirect colors
+//-------------------------------------------------
+
+WRITE8_MEMBER(palette_device::write_indirect_ext)
+{
+	m_paletteram_ext.write8(offset, data);
+	update_for_write(offset, 1, true);
+}
+
+
 
 //**************************************************************************
 //  DEVICE MANAGEMENT
@@ -402,11 +441,21 @@ void palette_device::device_start()
 			m_paletteram_ext.set(*share_ext, bytes_per_entry / 2);
 		}
 
+		// override membits if provided
+		if (m_membits_supplied)
+		{
+			// forcing width only makes sense when narrower than the native bus width
+			assert_always(m_membits < share->width(), "Improper use of MCFG_PALETTE_MEMBITS");
+			m_paletteram.set_membits(m_membits);
+			if (share_ext != NULL)
+				m_paletteram_ext.set_membits(m_membits);
+		}
+		
 		// override endianness if provided
 		if (m_endianness_supplied)
 		{
 			// forcing endianness only makes sense when the RAM is narrower than the palette format and not split
-			assert(share_ext == NULL && share->width() / 8 < bytes_per_entry);
+			assert_always((share_ext == NULL && m_paletteram.membits() / 8 < bytes_per_entry), "Improper use of MCFG_PALETTE_ENDIANNESS");
 			m_paletteram.set_endianness(m_endianness);
 		}
 	}
@@ -531,7 +580,7 @@ void palette_device::allocate_palette()
 		m_shadow_group = numgroups++;
 	if (m_enable_hilights)
 		m_hilight_group = numgroups++;
-	assert_always(m_entries * numgroups <= 65536, "Error: palette has more than 65536 colors.");
+	assert_always(m_entries * numgroups <= 65536, "Palette has more than 65536 colors.");
 
 	// allocate a palette object containing all the colors and groups
 	m_palette = palette_t::alloc(m_entries, numgroups);
@@ -869,6 +918,24 @@ void palette_device::palette_init_RRRRRGGGGGGBBBBB(palette_device &palette)
 }
 
 
+rgb_t raw_to_rgb_converter::BBGGRRII_decoder(UINT32 raw)
+{
+	UINT8 i = raw & 3;
+	UINT8 r = pal4bit(((raw >> 0) & 0x0c) | i);
+	UINT8 g = pal4bit(((raw >> 2) & 0x0c) | i);
+	UINT8 b = pal4bit(((raw >> 4) & 0x0c) | i);
+	return rgb_t(r, g, b);
+}
+
+rgb_t raw_to_rgb_converter::IRRRRRGGGGGBBBBB_decoder(UINT32 raw)
+{
+	UINT8 i = (raw >> 15) & 1;
+	UINT8 r = pal6bit(((raw >> 9) & 0x3e) | i);
+	UINT8 g = pal6bit(((raw >> 4) & 0x3e) | i);
+	UINT8 b = pal6bit(((raw << 1) & 0x3e) | i);
+	return rgb_t(r, g, b);
+}
+
 rgb_t raw_to_rgb_converter::RRRRGGGGBBBBRGBx_decoder(UINT32 raw)
 {
 	UINT8 r = pal5bit(((raw >> 11) & 0x1e) | ((raw >> 3) & 0x01));
@@ -879,8 +946,8 @@ rgb_t raw_to_rgb_converter::RRRRGGGGBBBBRGBx_decoder(UINT32 raw)
 
 rgb_t raw_to_rgb_converter::xRGBRRRRGGGGBBBB_decoder(UINT32 raw)
 {
-	UINT8 r = pal5bit(((raw >> 8) & 0x1e) | ((raw >> 12) & 0x01));
+	UINT8 r = pal5bit(((raw >> 8) & 0x1e) | ((raw >> 14) & 0x01));
 	UINT8 g = pal5bit(((raw >> 4) & 0x1e) | ((raw >> 13) & 0x01));
-	UINT8 b = pal5bit(((raw >> 0) & 0x1e) | ((raw >> 14) & 0x01));
+	UINT8 b = pal5bit(((raw >> 0) & 0x1e) | ((raw >> 12) & 0x01));
 	return rgb_t(r, g, b);
 }

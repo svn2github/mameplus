@@ -60,7 +60,7 @@ static ADDRESS_MAP_START( quizpani_map, AS_PROGRAM, 16, quizpani_state )
 	AM_RANGE(0x100016, 0x100017) AM_WRITENOP /* IRQ enable? */
 	AM_RANGE(0x100018, 0x100019) AM_WRITE(quizpani_tilesbank_w)
 	AM_RANGE(0x104000, 0x104001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x104020, 0x104027) AM_DEVWRITE("nmk112", nmk112_device, okibank_lsb_w)
+	AM_RANGE(0x104020, 0x104027) AM_DEVWRITE8("nmk112", nmk112_device, okibank_w, 0x00ff)
 	AM_RANGE(0x108000, 0x1083ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x108400, 0x1085ff) AM_WRITENOP
 	AM_RANGE(0x10c000, 0x10c007) AM_RAM AM_SHARE("scrollreg")
@@ -187,12 +187,6 @@ static GFXDECODE_START( quizpani )
 GFXDECODE_END
 
 
-static const nmk112_interface quizpani_nmk112_intf =
-{
-	"oki", "oki", 0
-};
-
-
 static MACHINE_CONFIG_START( quizpani, quizpani_state )
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(quizpani_map)
@@ -217,7 +211,8 @@ static MACHINE_CONFIG_START( quizpani, quizpani_state )
 	MCFG_OKIM6295_ADD("oki", 16000000/4, OKIM6295_PIN7_LOW)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_NMK112_ADD("nmk112", quizpani_nmk112_intf)
+	MCFG_DEVICE_ADD("nmk112", NMK112, 0)
+	MCFG_NMK112_ROM0("oki")
 MACHINE_CONFIG_END
 
 ROM_START( quizpani )

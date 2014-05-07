@@ -102,7 +102,6 @@
 #include "sound/k056800.h"
 #include "sound/k054539.h"
 #include "includes/konamigx.h"
-#include "machine/adc083x.h"
 #include "rendlay.h"
 
 #define GX_DEBUG     0
@@ -463,7 +462,7 @@ WRITE32_MEMBER(konamigx_state::eeprom_w)
 		  bit 0: eeprom data
 		*/
 
-		ioport("EEPROMOUT")->write(odata, 0xff);
+		m_eepromout->write(odata, 0xff);
 
 		konamigx_wrport1_0 = odata;
 	}
@@ -708,14 +707,14 @@ TIMER_DEVICE_CALLBACK_MEMBER(konamigx_state::konamigx_hbinterrupt)
 
 /* National Semiconductor ADC0834 4-channel serial ADC emulation */
 
-static double adc0834_callback( device_t *device, UINT8 input )
+ADC083X_INPUT_CB(konamigx_state::adc0834_callback)
 {
 	switch (input)
 	{
 	case ADC083X_CH0:
-		return (double)(5 * device->machine().root_device().ioport("AN0")->read()) / 255.0; // steer
+		return (double)(5 * m_an0->read()) / 255.0; // steer
 	case ADC083X_CH1:
-		return (double)(5 * device->machine().root_device().ioport("AN1")->read()) / 255.0; // gas
+		return (double)(5 * m_an1->read()) / 255.0; // gas
 	case ADC083X_VREF:
 		return 5;
 	}
@@ -725,16 +724,16 @@ static double adc0834_callback( device_t *device, UINT8 input )
 
 READ32_MEMBER(konamigx_state::le2_gun_H_r)
 {
-	int p1x = ioport("LIGHT0_X")->read()*290/0xff+20;
-	int p2x = ioport("LIGHT1_X")->read()*290/0xff+20;
+	int p1x = m_light0_x->read()*290/0xff+20;
+	int p2x = m_light1_x->read()*290/0xff+20;
 
 	return (p1x<<16)|p2x;
 }
 
 READ32_MEMBER(konamigx_state::le2_gun_V_r)
 {
-	int p1y = ioport("LIGHT0_Y")->read()*224/0xff;
-	int p2y = ioport("LIGHT1_Y")->read()*224/0xff;
+	int p1y = m_light0_y->read()*224/0xff;
+	int p2y = m_light1_y->read()*224/0xff;
 
 	// make "off the bottom" reload too
 	if (p1y >= 0xdf) p1y = 0;
@@ -776,7 +775,7 @@ READ32_MEMBER(konamigx_state::type1_roz_r2)
 
 READ32_MEMBER(konamigx_state::type3_sync_r)
 {
-	if(konamigx_current_frame==0)
+	if(m_konamigx_current_frame==0)
 		return -1;  //  return 0xfffffffe | 1;
 	else
 		return 0;// return 0xfffffffe | 0;
@@ -877,7 +876,7 @@ WRITE32_MEMBER(konamigx_state::type4_prot_w)
 		{
 			if (last_prot_op != -1)
 			{
-//              mame_printf_debug("type 4 prot command: %x\n", last_prot_op);
+//              osd_printf_debug("type 4 prot command: %x\n", last_prot_op);
 				/*
 				    known commands:
 				    rng2   rushhero  vsnet  winspike   what
@@ -1009,7 +1008,7 @@ static ADDRESS_MAP_START( gx_base_memmap, AS_PROGRAM, 32, konamigx_state )
 	AM_RANGE(0xd5a000, 0xd5a003) AM_READ_PORT("SYSTEM_DSW")
 	AM_RANGE(0xd5c000, 0xd5c003) AM_READ_PORT("INPUTS")
 	AM_RANGE(0xd5e000, 0xd5e003) AM_READ_PORT("SERVICE")
-	AM_RANGE(0xd80000, 0xd8001f) AM_WRITE_LEGACY(K054338_long_w)
+	AM_RANGE(0xd80000, 0xd8001f) AM_DEVWRITE("k054338", k054338_device, long_w)
 	AM_RANGE(0xda0000, 0xda1fff) AM_DEVREADWRITE("k056832", k056832_device, ram_long_r, ram_long_w)
 	AM_RANGE(0xda2000, 0xda3fff) AM_DEVREADWRITE("k056832", k056832_device, ram_long_r, ram_long_w)
 #if GX_DEBUG
@@ -1076,13 +1075,6 @@ ADDRESS_MAP_END
 
 /**********************************************************************************/
 /* Sound handling */
-
-INTERRUPT_GEN_MEMBER(konamigx_state::tms_sync)
-{
-	// DASP is synced to the LRCLK of one of the K054539s
-	if (m_sound_ctrl & 0x20)
-		m_dasp->sync_w(1);
-}
 
 READ16_MEMBER(konamigx_state::tms57002_data_word_r)
 {
@@ -1617,7 +1609,6 @@ static MACHINE_CONFIG_START( konamigx, konamigx_state )
 
 	MCFG_CPU_ADD("dasp", TMS57002, 24000000/2)
 	MCFG_CPU_DATA_MAP(gxtmsmap)
-	MCFG_CPU_PERIODIC_INT_DRIVER(konamigx_state, tms_sync, 48000)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -1648,6 +1639,11 @@ static MACHINE_CONFIG_START( konamigx, konamigx_state )
 	MCFG_K056832_PALETTE("palette")
 	MCFG_K055555_ADD("k055555")
 
+	MCFG_DEVICE_ADD("k054338", K054338, 0)
+	MCFG_K054338_MIXER("k055555")
+	MCFG_K054338_SET_SCREEN("screen")
+	MCFG_K054338_ALPHAINV(1)
+
 	MCFG_K055673_ADD_NOINTF("k055673")
 	MCFG_K055673_SET_SCREEN("screen")
 	MCFG_K055673_GFXDECODE("gfxdecode")
@@ -1658,16 +1654,23 @@ static MACHINE_CONFIG_START( konamigx, konamigx_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
+	MCFG_DEVICE_MODIFY("dasp")
+	MCFG_SOUND_ROUTE(0, "lspeaker", 0.3)
+	MCFG_SOUND_ROUTE(1, "rspeaker", 0.3)
+
 	MCFG_K056800_ADD("k056800", XTAL_18_432MHz)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("soundcpu", M68K_IRQ_1))
 
 	MCFG_K054539_ADD("k054539_1", XTAL_18_432MHz, k054539_config)
 	MCFG_K054539_TIMER_HANDLER(WRITELINE(konamigx_state, k054539_irq_gen))
-
+	MCFG_SOUND_ROUTE_EX(0, "dasp", 0.5, 0)
+	MCFG_SOUND_ROUTE_EX(1, "dasp", 0.5, 1)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	MCFG_K054539_ADD("k054539_2", XTAL_18_432MHz, k054539_config)
+	MCFG_SOUND_ROUTE_EX(0, "dasp", 0.5, 2)
+	MCFG_SOUND_ROUTE_EX(1, "dasp", 0.5, 3)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1701,7 +1704,7 @@ static MACHINE_CONFIG_DERIVED( opengolf, konamigx )
 	MCFG_CPU_PROGRAM_MAP(gx_type1_map)
 
 	MCFG_DEVICE_ADD("adc0834", ADC0834, 0)
-	MCFG_ADC083X_INPUT_CALLBACK(adc0834_callback)
+	MCFG_ADC083X_INPUT_CB(konamigx_state, adc0834_callback)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( racinfrc, konamigx )
@@ -1715,7 +1718,7 @@ static MACHINE_CONFIG_DERIVED( racinfrc, konamigx )
 	MCFG_CPU_PROGRAM_MAP(gx_type1_map)
 
 	MCFG_DEVICE_ADD("adc0834", ADC0834, 0)
-	MCFG_ADC083X_INPUT_CALLBACK(adc0834_callback)
+	MCFG_ADC083X_INPUT_CB(konamigx_state, adc0834_callback)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( gxtype3, konamigx )
@@ -3673,7 +3676,7 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 					break;
 
 				case 9: // fantjour
-					fantjour_dma_install(machine());
+					fantjour_dma_install();
 					break;
 			}
 		}

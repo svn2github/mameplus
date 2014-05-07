@@ -195,7 +195,7 @@ static UINT32 cx5510_pci_r(device_t *busdevice, device_t *device, int function, 
 {
 	funkball_state *state = busdevice->machine().driver_data<funkball_state>();
 
-	//mame_printf_debug("CX5510: PCI read %d, %02X, %08X\n", function, reg, mem_mask);
+	//osd_printf_debug("CX5510: PCI read %d, %02X, %08X\n", function, reg, mem_mask);
 	switch (reg)
 	{
 		case 0:     return 0x00001078;
@@ -208,7 +208,7 @@ static void cx5510_pci_w(device_t *busdevice, device_t *device, int function, in
 {
 	funkball_state *state = busdevice->machine().driver_data<funkball_state>();
 
-	//mame_printf_debug("CX5510: PCI write %d, %02X, %08X, %08X\n", function, reg, data, mem_mask);
+	//osd_printf_debug("CX5510: PCI write %d, %02X, %08X, %08X\n", function, reg, data, mem_mask);
 	COMBINE_DATA(state->m_cx5510_regs + (reg/4));
 }
 
@@ -234,13 +234,13 @@ WRITE8_MEMBER( funkball_state::serial_w )
 
 UINT8 funkball_state::funkball_config_reg_r()
 {
-	//mame_printf_debug("funkball_config_reg_r %02X\n", funkball_config_reg_sel);
+	//osd_printf_debug("funkball_config_reg_r %02X\n", funkball_config_reg_sel);
 	return m_funkball_config_regs[m_funkball_config_reg_sel];
 }
 
 void funkball_state::funkball_config_reg_w(UINT8 data)
 {
-	//mame_printf_debug("funkball_config_reg_w %02X, %02X\n", funkball_config_reg_sel, data);
+	//osd_printf_debug("funkball_config_reg_w %02X, %02X\n", funkball_config_reg_sel, data);
 	m_funkball_config_regs[m_funkball_config_reg_sel] = data;
 }
 
@@ -341,7 +341,7 @@ READ32_MEMBER(funkball_state::biu_ctrl_r)
 
 WRITE32_MEMBER(funkball_state::biu_ctrl_w)
 {
-	//mame_printf_debug("biu_ctrl_w %08X, %08X, %08X\n", data, offset, mem_mask);
+	//osd_printf_debug("biu_ctrl_w %08X, %08X, %08X\n", data, offset, mem_mask);
 	COMBINE_DATA(m_biu_ctrl_reg + offset);
 
 	if (offset == 0x0c/4)       // BC_XMAP_3 register
@@ -394,7 +394,7 @@ static ADDRESS_MAP_START(funkball_map, AS_PROGRAM, 32, funkball_state)
 //  AM_RANGE(0x08000000, 0x0fffffff) AM_NOP
 	AM_RANGE(0x40008000, 0x400080ff) AM_READWRITE(biu_ctrl_r, biu_ctrl_w)
 	AM_RANGE(0x40010e00, 0x40010eff) AM_RAM AM_SHARE("unk_ram")
-	AM_RANGE(0xff000000, 0xffffdfff) AM_DEVREADWRITE_LEGACY("voodoo_0", voodoo_r, voodoo_w)
+	AM_RANGE(0xff000000, 0xffffdfff) AM_DEVREADWRITE("voodoo_0", voodoo_device, voodoo_r, voodoo_w)
 	AM_RANGE(0xfffe0000, 0xffffffff) AM_ROM AM_REGION("bios", 0)    /* System BIOS */
 ADDRESS_MAP_END
 
@@ -823,8 +823,6 @@ void funkball_state::machine_start()
 {
 	m_bios_ram = auto_alloc_array(machine(), UINT8, 0x20000);
 
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(funkball_state::irq_callback),this));
-
 	/* defaults, otherwise it won't boot */
 	m_unk_ram[0x010/4] = 0x2f8d85ff;
 	m_unk_ram[0x018/4] = 0x000018c5;
@@ -864,6 +862,7 @@ static MACHINE_CONFIG_START( funkball, funkball_state )
 	MCFG_CPU_ADD("maincpu", MEDIAGX, 66666666*3.5) // 66,6 MHz x 3.5
 	MCFG_CPU_PROGRAM_MAP(funkball_map)
 	MCFG_CPU_IO_MAP(funkball_io)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DEVICE("pic8259_1", pic8259_device, inta_cb)
 
 	MCFG_FRAGMENT_ADD( pcat_common )
 

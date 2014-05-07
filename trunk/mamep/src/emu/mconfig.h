@@ -26,21 +26,6 @@
 #define MIN_TAG_LENGTH          1
 #define MAX_TAG_LENGTH          15
 
-#define NVRAM_HANDLER_NAME(name)    nvram_handler_##name
-#define NVRAM_HANDLER(name)         void NVRAM_HANDLER_NAME(name)(running_machine &machine, emu_file *file, int read_or_write)
-#define NVRAM_HANDLER_CALL(name)    NVRAM_HANDLER_NAME(name)(machine, file, read_or_write)
-
-#define MEMCARD_HANDLER_NAME(name)  memcard_handler_##name
-#define MEMCARD_HANDLER(name)       void MEMCARD_HANDLER_NAME(name)(running_machine &machine, emu_file &file, int action)
-#define MEMCARD_HANDLER_CALL(name)  MEMCARD_HANDLER_NAME(name)(machine, file, action)
-
-
-// NULL versions
-#define nvram_handler_0             NULL
-#define memcard_handler_0           NULL
-
-
-
 //**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
@@ -49,14 +34,6 @@
 struct gfx_decode_entry;
 class driver_device;
 class screen_device;
-
-
-
-// various callback functions
-typedef void   (*nvram_handler_func)(running_machine &machine, emu_file *file, int read_or_write);
-typedef void   (*memcard_handler_func)(running_machine &machine, emu_file &file, int action);
-
-
 
 // ======================> machine_config
 
@@ -85,10 +62,6 @@ public:
 	astring                 m_perfect_cpu_quantum;      // tag of CPU to use for "perfect" scheduling
 	INT32                   m_watchdog_vblank_count;    // number of VBLANKs until the watchdog kills us
 	attotime                m_watchdog_time;            // length of time until the watchdog kills us
-
-	// legacy callbacks
-	nvram_handler_func      m_nvram_handler;            // NVRAM save/load callback
-	memcard_handler_func    m_memcard_handler;          // memory card save/load callback
 
 	// other parameters
 	const char *            m_default_layout;           // default layout for this machine

@@ -74,21 +74,6 @@ ADDRESS_MAP_END
 
 
 //-------------------------------------------------
-//  I8255A_INTERFACE( ppi_intf )
-//-------------------------------------------------
-
-static I8255A_INTERFACE( ppi_intf )
-{
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
-//-------------------------------------------------
 //  MACHINE_DRIVER( cmd_hd )
 //-------------------------------------------------
 
@@ -98,12 +83,11 @@ static MACHINE_CONFIG_FRAGMENT( cmd_hd )
 
 	MCFG_DEVICE_ADD(M6522_1_TAG, VIA6522, 2000000)
 	MCFG_DEVICE_ADD(M6522_2_TAG, VIA6522, 2000000)
-	MCFG_I8255A_ADD(I8255A_TAG, ppi_intf)
+	MCFG_DEVICE_ADD(I8255A_TAG, I8255A, 0)
 	//MCFG_RTC72421A_ADD(RTC72421A_TAG)
 
-	MCFG_SCSIBUS_ADD(SCSIBUS_TAG)
-	MCFG_SCSIDEV_ADD(SCSIBUS_TAG ":harddisk0", SCSIHD, SCSI_ID_0)
-	MCFG_SCSICB_ADD(SCSIBUS_TAG ":host")
+	MCFG_DEVICE_ADD(SCSIBUS_TAG, SCSI_PORT, 0)
+	MCFG_SCSIDEV_ADD(SCSIBUS_TAG ":" SCSI_PORT_DEVICE1, "harddisk", SCSIHD, SCSI_ID_0)
 MACHINE_CONFIG_END
 
 
@@ -131,7 +115,7 @@ cmd_hd_device::cmd_hd_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, CMD_HD, "HD", tag, owner, clock, "cmdhd", __FILE__),
 		device_cbm_iec_interface(mconfig, *this),
 		m_maincpu(*this, M6502_TAG),
-		m_scsibus(*this, SCSIBUS_TAG":host")
+		m_scsibus(*this, SCSIBUS_TAG)
 {
 }
 

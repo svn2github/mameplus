@@ -342,9 +342,6 @@ void SetStateDir(const WCHAR *path);
 const WCHAR *GetArtDir(void);
 void SetArtDir(const WCHAR *path);
 
-const WCHAR *GetMemcardDir(void);
-void SetMemcardDir(const WCHAR *path);
-
 const WCHAR *GetFlyerDir(void);
 void SetFlyerDir(const WCHAR *path);
 

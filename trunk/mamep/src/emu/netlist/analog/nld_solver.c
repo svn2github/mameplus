@@ -32,8 +32,9 @@ ATTR_COLD void netlist_matrix_solver_t::setup(netlist_net_t::list_t &nets, NETLI
 
 		(*pn)->m_solver = this;
 
-		for (netlist_core_terminal_t *p = (*pn)->m_list.first(); p != NULL; p = (*pn)->m_list.next(p))
+        for (int i = 0; i < (*pn)->m_core_terms.count(); i++)
 		{
+		    netlist_core_terminal_t *p = (*pn)->m_core_terms[i];
 			NL_VERBOSE_OUT(("%s %s %d\n", p->name().cstr(), (*pn)->name().cstr(), (int) (*pn)->isRailNet()));
 			switch (p->type())
 			{
@@ -89,7 +90,8 @@ ATTR_HOT void netlist_matrix_solver_t::update_inputs()
 	}
 	for (netlist_core_terminal_t * const *p = m_inps.first(); p != NULL; p = m_inps.next(p))
 	{
-		(*p)->net().m_last_Analog = (*p)->net().m_cur_Analog;
+        if ((*p)->net().m_last_Analog != (*p)->net().m_cur_Analog)
+            (*p)->net().m_last_Analog = (*p)->net().m_cur_Analog;
 	}
 
 }
@@ -112,25 +114,34 @@ ATTR_HOT void netlist_matrix_solver_t::update_dynamic()
 
 ATTR_HOT void netlist_matrix_solver_t::schedule()
 {
-	if (!solve())
-	{
-		// NL_VERBOSE_OUT(("update_inputs\n");
-		update_inputs();
-	}
-	else
-	{
-		m_owner->netlist().warning("Matrix solver reschedule .. Consider increasing RESCHED_LOOPS");
-		if (m_owner != NULL)
-			this->m_owner->schedule();
-	}
-	//solve();
-	//    update_inputs();
+    // FIXME: Make this a parameter
+#if 0
+    if (!m_Q_sync.net().is_queued())
+        m_Q_sync.net().push_to_queue(m_params.m_nt_sync_delay);
+#else
+    if (solve())
+        update_inputs();
+#endif
+}
+
+ATTR_COLD void netlist_matrix_solver_t::start()
+{
+    register_output("Q_sync", m_Q_sync);
+    register_input("FB_sync", m_fb_sync);
+    connect(m_fb_sync, m_Q_sync);
 }
 
 ATTR_COLD void netlist_matrix_solver_t::reset()
 {
 	m_last_step = netlist_time::zero;
 }
+
+ATTR_COLD void netlist_matrix_solver_t::update()
+{
+    if (solve())
+        update_inputs();
+}
+
 
 ATTR_HOT void netlist_matrix_solver_t::step(const netlist_time delta)
 {
@@ -141,7 +152,6 @@ ATTR_HOT void netlist_matrix_solver_t::step(const netlist_time delta)
 
 ATTR_HOT bool netlist_matrix_solver_t::solve()
 {
-	int  resched_cnt = 0;
 
 	netlist_time now = owner().netlist().time();
 	netlist_time delta = now - m_last_step;
@@ -158,19 +168,34 @@ ATTR_HOT bool netlist_matrix_solver_t::solve()
 	if (is_dynamic())
 	{
 		int this_resched;
+		int newton_loops = 0;
 		do
 		{
-			update_dynamic();
-			this_resched = solve_non_dynamic();
-			resched_cnt += this_resched;
-		} while (this_resched > 1 && resched_cnt < m_params.m_resched_loops);
+            update_dynamic();
+            while ((this_resched = solve_non_dynamic()) > m_params.m_gs_loops)
+                owner().netlist().warning("Dynamic Solve iterations exceeded .. Consider increasing RESCHED_LOOPS");
+            newton_loops++;
+		} while (this_resched > 1 && newton_loops < m_params.m_nr_loops);
+
+		// reschedule ....
+		if (this_resched > 1 && !m_Q_sync.net().is_queued())
+		{
+#if 1
+            owner().netlist().warning("NEWTON_LOOPS exceeded ... reschedule");
+	        m_Q_sync.net().push_to_queue(m_params.m_nt_sync_delay);
+#else
+            owner().netlist().warning("NEWTON_LOOPS exceeded ... reschedule all");
+	        m_owner->reschedule_all();
+#endif
+	        return false;
+		}
 	}
 	else
 	{
-		resched_cnt = solve_non_dynamic();
-		//printf("resched_cnt %d %d\n", resched_cnt, m_resched_loops);
+		while (solve_non_dynamic() > m_params.m_gs_loops)
+            owner().netlist().warning("Non-Dynamic Solve iterations exceeded .. Consider increasing RESCHED_LOOPS");
 	}
-	return (resched_cnt >= m_params.m_resched_loops);
+	return true;
 }
 
 // ----------------------------------------------------------------------------------------
@@ -249,33 +274,33 @@ ATTR_HOT void netlist_matrix_solver_direct_t<m_N, _storage_N>::build_LE(
 	for (int i = 0; i < m_term_num; i++)
 	{
 		terms_t &t = m_terms[i];
-		m_RHS[t.net_this] += t.term->m_Idr;
-		m_A[t.net_this][t.net_this] += t.term->m_gt;
+		RHS[t.net_this] += t.term->m_Idr;
+		A[t.net_this][t.net_this] += t.term->m_gt;
 		if (t.net_other >= 0)
 		{
 			//m_A[t.net_other][t.net_other] += t.term->m_otherterm->m_gt;
-			m_A[t.net_this][t.net_other] += -t.term->m_go;
+			A[t.net_this][t.net_other] += -t.term->m_go;
 			//m_A[t.net_other][t.net_this] += -t.term->m_otherterm->m_go;
 		}
 		else
-			m_RHS[t.net_this] += t.term->m_go * t.term->m_otherterm->net().Q_Analog();
+			RHS[t.net_this] += t.term->m_go * t.term->m_otherterm->net().Q_Analog();
 	}
 #else
 	for (int i = 0; i < m_rail_start; i++)
 	{
 		terms_t &t = m_terms[i];
 		//printf("A %d %d %s %f %f\n",t.net_this, t.net_other, t.term->name().cstr(), t.term->m_gt, t.term->m_go);
+
 		RHS[t.net_this] += t.term->m_Idr;
 		A[t.net_this][t.net_this] += t.term->m_gt;
-
 		A[t.net_this][t.net_other] += -t.term->m_go;
 	}
 	for (int i = m_rail_start; i < m_term_num; i++)
 	{
 		terms_t &t = m_terms[i];
+
 		RHS[t.net_this] += t.term->m_Idr;
 		A[t.net_this][t.net_this] += t.term->m_gt;
-
 		RHS[t.net_this] += t.term->m_go * t.term->m_otherterm->net().Q_Analog();
 	}
 #endif
@@ -300,17 +325,24 @@ ATTR_HOT void netlist_matrix_solver_direct_t<m_N, _storage_N>::gauss_LE(
 	for (int i = 0; i < N(); i++) {
 #if 0
 		/* Find the row with the largest first value */
-		maxrow = i;
-		for (j=i+1;j<n;j++) {
-			if (ABS(a[i][j]) > ABS(a[i][maxrow]))
+		int maxrow = i;
+		for (int j = i + 1; j < N(); j++)
+		{
+			if (fabs(A[j][i]) > fabs(A[maxrow][i]))
 				maxrow = j;
 		}
 
-		/* Swap the maxrow and ith row */
-		for (k=i;k<n+1;k++) {
-			tmp = a[k][i];
-			a[k][i] = a[k][maxrow];
-			a[k][maxrow] = tmp;
+		if (maxrow != i)
+		{
+            /* Swap the maxrow and ith row */
+            for (int k = i; k < N(); k++) {
+                const double tmp = A[i][k];
+                A[i][k] = A[maxrow][k];
+                A[maxrow][k] = tmp;
+            }
+            const double tmpR = RHS[i];
+            RHS[i] = RHS[maxrow];
+            RHS[maxrow] = tmpR;
 		}
 #endif
 		/* Singular matrix? */
@@ -321,15 +353,14 @@ ATTR_HOT void netlist_matrix_solver_direct_t<m_N, _storage_N>::gauss_LE(
 		/* Eliminate column i from row j */
 		for (int j = i + 1; j < N(); j++)
 		{
-			double f1 = A[j][i] * f;
-
-			if (f1 != 0.0)
+			if (A[j][i] != 0.0)
 			{
-				for (int k = i; k < N(); k++)
-				{
+	            const double f1 = A[j][i] * f;
+
+	            for (int k = i; k < N(); k++)
 					A[j][k] -= A[i][k] * f1;
-				}
-				RHS[j] -= RHS[i] * f1;
+
+	            RHS[j] -= RHS[i] * f1;
 			}
 		}
 	}
@@ -423,34 +454,15 @@ ATTR_HOT int netlist_matrix_solver_direct_t<m_N, _storage_N>::solve_non_dynamic(
 
 ATTR_HOT int netlist_matrix_solver_direct1_t::solve_non_dynamic()
 {
-#if 1
 
-	double gtot_t = 0.0;
-	double RHS_t = 0.0;
-
-	netlist_net_t *net = m_nets[0];
-	const netlist_net_t::terminal_list_t &rails = net->m_rails;
-	int rail_count = rails.count();
-
-	for (int i = 0; i < rail_count; i++)
-	{
-		gtot_t += rails[i]->m_gt;
-		RHS_t += rails[i]->m_Idr;
-		RHS_t += rails[i]->m_go * rails[i]->m_otherterm->net().Q_Analog();
-	}
-
-	double iIdr = RHS_t;
-	double new_val = iIdr / gtot_t;
-
-#else
-	netlist_net_t *net = m_nets[0];
+    netlist_net_t *net = m_nets[0];
 	double m_A[1][1] = { {0.0} };
 	double m_RHS[1] = { 0.0 };
 	build_LE(m_A, m_RHS);
 	//NL_VERBOSE_OUT(("%f %f\n", new_val, m_RHS[0] / m_A[0][0]);
 
 	double new_val =  m_RHS[0] / m_A[0][0];
-#endif
+
 	double e = (new_val - net->m_cur_Analog);
 	double cerr = e * e;
 
@@ -477,8 +489,6 @@ ATTR_HOT int netlist_matrix_solver_direct2_t::solve_non_dynamic()
 	double RHS[2] = { 0.0 };
 
 	build_LE(A, RHS);
-
-	//NL_VERBOSE_OUT(("%f %f\n", new_val, m_RHS[0] / m_A[0][0]);
 
 	const double a = A[0][0];
 	const double b = A[0][1];
@@ -522,13 +532,13 @@ ATTR_HOT int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::solve_non_dy
 	double one_m_w[_storage_N];
 	double RHS[_storage_N];
 
-	for (int k = 0; k < N(); k++)
+	for (int k = 0; k < this->N(); k++)
 	{
 		double gtot_t = 0.0;
 		double gabs_t = 0.0;
 		double RHS_t = 0.0;
 
-		netlist_net_t *net = m_nets[k];
+		netlist_net_t *net = this->m_nets[k];
 		const netlist_net_t::terminal_list_t &terms = net->m_terms;
 		const netlist_net_t::terminal_list_t &rails = net->m_rails;
 		const int term_count = terms.count();
@@ -549,7 +559,7 @@ ATTR_HOT int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::solve_non_dy
 			RHS_t += terms[i]->m_Idr;
 		}
 
-		gabs_t *= m_params.m_convergence_factor;
+		gabs_t *= this->m_params.m_convergence_factor;
 		if (gabs_t > gtot_t)
 		{
 			// Actually 1.0 / g_tot  * g_tot / (gtot_t + gabs_t)
@@ -559,20 +569,21 @@ ATTR_HOT int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::solve_non_dy
 		else
 		{
 			w[k] = 1.0 / gtot_t;
-			one_m_w[k] = 0.0;
+			one_m_w[k] = 1.0 - 1.0;
 		}
 
 		RHS[k] = RHS_t;
 	}
+    for (int k = 0; k < this->N(); k++)
+        this->m_nets[k]->m_new_Analog = this->m_nets[k]->m_cur_Analog;
 
-	//NL_VERBOSE_OUT(("%f %d\n", w, m_nets.count());
 	do {
 		resched = false;
 		double cerr = 0.0;
 
-		for (int k = 0; k < N(); k++)
+		for (int k = 0; k < this->N(); k++)
 		{
-			netlist_net_t *net = m_nets[k];
+			netlist_net_t *net = this->m_nets[k];
 			const netlist_net_t::terminal_list_t &terms = net->m_terms;
 			const int term_count = terms.count();
 
@@ -580,27 +591,32 @@ ATTR_HOT int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::solve_non_dy
 
 			for (int i = 0; i < term_count; i++)
 			{
-				iIdr += terms[i]->m_go * terms[i]->m_otherterm->net().Q_Analog();
+                iIdr += terms[i]->m_go * terms[i]->m_otherterm->net().m_new_Analog;
 			}
 
 			//double new_val = (net->m_cur_Analog * gabs[k] + iIdr) / (gtot[k]);
-			double new_val = net->m_cur_Analog * one_m_w[k] + iIdr * w[k];
+			double new_val = net->m_new_Analog * one_m_w[k] + iIdr * w[k];
 
-			double e = (new_val - net->m_cur_Analog);
+			double e = (new_val - net->m_new_Analog);
 			cerr += e * e;
 
-			net->m_cur_Analog = net->m_new_Analog = new_val;
+			net->m_new_Analog = new_val;
 		}
-		if (resched || cerr / m_nets.count() > m_params.m_accuracy * m_params.m_accuracy)
+		if (cerr > this->m_params.m_accuracy * this->m_params.m_accuracy)
 		{
 			resched = true;
-			//last_resched_net = net;
 		}
 		resched_cnt++;
-	} while (resched && (resched_cnt < m_params.m_resched_loops / 3 ));
+	} while (resched && (resched_cnt < this->m_params.m_gs_loops));
 
 	if (resched)
-		return m_fallback.solve_non_dynamic();
+	{
+	    //this->netlist().warning("Falling back to direct solver .. Consider increasing RESCHED_LOOPS");
+	    return netlist_matrix_solver_direct_t<m_N, _storage_N>::solve_non_dynamic();
+	}
+
+    for (int k = 0; k < this->N(); k++)
+        this->m_nets[k]->m_cur_Analog = this->m_nets[k]->m_new_Analog;
 
 	return resched_cnt;
 }
@@ -625,14 +641,15 @@ ATTR_COLD static bool already_processed(net_groups_t groups, int &cur_group, net
 
 ATTR_COLD static void process_net(net_groups_t groups, int &cur_group, netlist_net_t *net)
 {
-	if (net->m_list.is_empty())
+	if (net->m_core_terms.is_empty())
 		return;
 	/* add the net */
 	SOLVER_VERBOSE_OUT(("add %d - %s\n", cur_group, net->name().cstr()));
 	groups[cur_group].add(net);
-	for (netlist_core_terminal_t *p = net->m_list.first(); p != NULL; p = net->m_list.next(p))
+	for (int i = 0; i < net->m_core_terms.count(); i++)
 	{
-		SOLVER_VERBOSE_OUT(("terminal %s\n", p->name().cstr()));
+	    netlist_core_terminal_t *p = net->m_core_terms[i];
+	    SOLVER_VERBOSE_OUT(("terminal %s\n", p->name().cstr()));
 		if (p->isType(netlist_terminal_t::TERMINAL))
 		{
 			SOLVER_VERBOSE_OUT(("isterminal\n"));
@@ -647,37 +664,29 @@ ATTR_COLD static void process_net(net_groups_t groups, int &cur_group, netlist_n
 
 NETLIB_START(solver)
 {
-	register_output("Q_sync", m_Q_sync);
 	register_output("Q_step", m_Q_step);
-	//register_input("FB", m_feedback);
 
-	register_param("SYNC_DELAY", m_sync_delay, NLTIME_FROM_NS(5).as_double());
-	m_nt_sync_delay = m_sync_delay.Value();
+    register_param("SYNC_DELAY", m_sync_delay, NLTIME_FROM_NS(10).as_double());
 
 	register_param("FREQ", m_freq, 48000.0);
 	m_inc = netlist_time::from_hz(m_freq.Value());
 
 	register_param("ACCURACY", m_accuracy, 1e-7);
 	register_param("CONVERG", m_convergence, 0.3);
-	register_param("RESCHED_LOOPS", m_resched_loops, 35);
+	register_param("GS_LOOPS", m_gs_loops, 7);      // Gauss-Seidel loops
+    register_param("NR_LOOPS", m_nr_loops, 25);      // Newton-Raphson loops
 	register_param("PARALLEL", m_parallel, 0);
 	register_param("GMIN", m_gmin, NETLIST_GMIN_DEFAULT);
 
 	// internal staff
 
-	register_input("FB_sync", m_fb_sync);
 	register_input("FB_step", m_fb_step);
-
-	connect(m_fb_sync, m_Q_sync);
 	connect(m_fb_step, m_Q_step);
-
-	save(NAME(m_last_step));
 
 }
 
 NETLIB_RESET(solver)
 {
-	m_last_step = netlist_time::zero;
 	for (int i = 0; i < m_mat_solvers.count(); i++)
 		m_mat_solvers[i]->reset();
 }
@@ -702,17 +711,7 @@ NETLIB_NAME(solver)::~NETLIB_NAME(solver)()
 
 NETLIB_UPDATE(solver)
 {
-	netlist_time now = netlist().time();
-	netlist_time delta = now - m_last_step;
-	bool do_full = false;
-	bool global_resched = false;
-	bool this_resched[100];
 	int t_cnt = m_mat_solvers.count();
-
-	if (delta < m_inc)
-		do_full = true; // we have been called between updates
-
-	m_last_step = now;
 
 #if HAS_OPENMP && USE_OPENMP
 	if (m_parallel.Value())
@@ -735,36 +734,25 @@ NETLIB_UPDATE(solver)
 				this_resched[i] = m_mat_solvers[i]->solve();
 		}
 #else
-	for (int i = 0; i < t_cnt; i++)
-	{
-		if (do_full || (m_mat_solvers[i]->is_timestep()))
-			this_resched[i] = m_mat_solvers[i]->solve();
-	}
+    for (int i = 0; i < t_cnt; i++)
+    {
+        if (m_mat_solvers[i]->is_timestep())
+            if (m_mat_solvers[i]->solve())
+                m_mat_solvers[i]->update_inputs();
+    }
 #endif
 
-	for (int i = 0; i < t_cnt; i++)
-	{
-		if (do_full || m_mat_solvers[i]->is_timestep())
-		{
-			global_resched = global_resched || this_resched[i];
-			if (!this_resched[i])
-				m_mat_solvers[i]->update_inputs();
-		}
-	}
-
-	if (global_resched)
-	{
-		netlist().warning("Gobal reschedule .. Consider increasing RESCHED_LOOPS");
-		schedule();
-	}
-	else
-	{
-		/* step circuit */
-		if (!m_Q_step.net().is_queued())
-			m_Q_step.net().push_to_queue(m_inc);
-	}
-
+    /* step circuit */
+    if (!m_Q_step.net().is_queued())
+        m_Q_step.net().push_to_queue(m_inc);
 }
+
+ATTR_COLD void NETLIB_NAME(solver)::reschedule_all()
+{
+    for (int i = 0; i < m_mat_solvers.count(); i++)
+        m_mat_solvers[i]->m_Q_sync.net().push_to_queue(m_mat_solvers[i]->m_params.m_nt_sync_delay);
+}
+
 
 ATTR_COLD void NETLIB_NAME(solver)::post_start()
 {
@@ -843,19 +831,28 @@ ATTR_COLD void NETLIB_NAME(solver)::post_start()
 
 		ms->m_params.m_accuracy = m_accuracy.Value();
 		ms->m_params.m_convergence_factor = m_convergence.Value();
-		ms->m_params.m_resched_loops = m_resched_loops.Value();
-		ms->setup(groups[i], *this);
+		ms->m_params.m_gs_loops = m_gs_loops.Value();
+        ms->m_params.m_nr_loops = m_nr_loops.Value();
+		ms->m_params.m_nt_sync_delay = m_sync_delay.Value();
+
+        ms->setup(groups[i], *this);
+
+        register_sub(*ms, pstring::sprintf("Solver %d",m_mat_solvers.count()));
+
 		m_mat_solvers.add(ms);
-		SOLVER_VERBOSE_OUT(("%d ==> %d nets %s\n", i, groups[i].count(), (*groups[i].first())->m_head->name().cstr()));
-		SOLVER_VERBOSE_OUT(("       has %s elements\n", ms->is_dynamic() ? "dynamic" : "no dynamic"));
-		SOLVER_VERBOSE_OUT(("       has %s elements\n", ms->is_timestep() ? "timestep" : "no timestep"));
+
+        netlist().log("Solver %s", ms->name().cstr());
+        netlist().log("       # %d ==> %d nets %s", i, groups[i].count(), (*(*groups[i].first())->m_core_terms.first())->name().cstr());
+		netlist().log("       has %s elements", ms->is_dynamic() ? "dynamic" : "no dynamic");
+		netlist().log("       has %s elements", ms->is_timestep() ? "timestep" : "no timestep");
 		for (int j=0; j<groups[i].count(); j++)
 		{
-			SOLVER_VERBOSE_OUT(("Net %d: %s\n", j, groups[i][j]->name().cstr()));
+		    netlist().log("Net %d: %s", j, groups[i][j]->name().cstr());
 			netlist_net_t *n = groups[i][j];
-			for (netlist_core_terminal_t *p = n->m_list.first(); p != NULL; p = n->m_list.next(p))
+			for (int k = 0; k < n->m_core_terms.count(); k++)
 			{
-				SOLVER_VERBOSE_OUT(("   %s\n", p->name().cstr()));
+			    const netlist_core_terminal_t *p = n->m_core_terms[k];
+			    netlist().log("   %s", p->name().cstr());
 			}
 		}
 	}

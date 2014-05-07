@@ -23,23 +23,35 @@ mos6551_device::mos6551_device(const machine_config &mconfig, const char *tag, d
 	m_rxc_handler(*this),
 	m_rts_handler(*this),
 	m_dtr_handler(*this),
+	m_control(0),
+	m_status(0),
+	m_tdr(0),
+	m_irq_state(0),
 	m_irq(0),
 	m_txd(0),
 	m_rxc(0),
 	m_rts(0),
 	m_dtr(0),
 	m_xtal(0),
+	m_divide(0),
 	m_cts(1),
 	m_dsr(1),
 	m_dcd(1),
 	m_rxd(1),
-	m_tx_output(OUTPUT_MARK)
+	m_rx_state(STATE_START),
+	m_rx_clock(0),
+	m_rx_counter(0),
+	m_rx_internal_clock(0),
+	m_tx_state(STATE_START),
+	m_tx_output(OUTPUT_MARK),
+	m_tx_clock(0),
+	m_tx_counter(0)
 {
 }
 
 const int mos6551_device::internal_divider[] =
 {
-	0, 2304, 1536, 1048, 856, 768, 384, 192, 96, 64, 48, 32, 24, 16, 12, 6
+	1, 2304, 1536, 1048, 856, 768, 384, 192, 96, 64, 48, 32, 24, 16, 12, 6
 };
 
 const int mos6551_device::transmitter_controls[4][3] =
@@ -86,6 +98,7 @@ void mos6551_device::device_start()
 	save_item(NAME(m_dtr));
 
 	save_item(NAME(m_xtal));
+	save_item(NAME(m_divide));
 	save_item(NAME(m_cts));
 	save_item(NAME(m_dsr));
 	save_item(NAME(m_dcd));
@@ -225,6 +238,40 @@ void mos6551_device::update_irq()
 	}
 }
 
+void mos6551_device::update_divider()
+{
+	// bits 0-3
+	double scale = internal_divider[(m_control >> 0) & 0xf];
+
+	// The 6551 allows an external clock (hooked up to xtal1 with xtal2 floating) with the internal clock generator,
+	// it is unknown whether it allows a xtal (hooked up to xtal1 & xtal2) to be used as an external clock. It is
+	// allowed here for performance reasons.
+	if (m_xtal != 0)
+	{
+		m_tx_internal_clock = true;
+
+		m_divide = 16;
+
+		if (!m_dtr || m_rx_state != STATE_START)
+		{
+			scale = (double) 1 / scale;
+		}
+		else
+		{
+			scale = 0;
+		}
+	}
+	else
+	{
+		m_tx_internal_clock = false;
+
+		m_divide = scale * 16;
+		scale = 0;
+	}
+
+	m_internal_clock->set_clock_scale(scale);
+}
+
 UINT8 mos6551_device::read_rdr()
 {
 	m_status &= ~(SR_PARITY_ERROR | SR_FRAMING_ERROR | SR_OVERRUN | SR_RDRF);
@@ -277,19 +324,7 @@ void mos6551_device::write_control(UINT8 data)
 {
 	m_control = data;
 
-	// bits 0-3
-	double scale = internal_divider[(m_control >> 0) & 0xf];
-	if (scale != 0)
-	{
-		m_tx_internal_clock = true;
-		scale = (double) 1 / scale;
-	}
-	else
-	{
-		m_tx_internal_clock = false;
-	}
-
-	m_internal_clock->set_clock_scale(scale);
+	update_divider();
 
 	// bit 4
 	m_rx_internal_clock = (m_control >> 4) & 1;
@@ -339,10 +374,15 @@ void mos6551_device::write_command(UINT8 data)
 		m_tx_output = OUTPUT_MARK;
 		output_txd(1);
 	}
+
+	update_divider();
 }
 
 READ8_MEMBER( mos6551_device::read )
 {
+	if (space.debugger_access())
+		return 0xff;
+
 	switch (offset & 0x03)
 	{
 	case 0:
@@ -407,6 +447,7 @@ void mos6551_device::set_xtal(UINT32 xtal)
 	if (started())
 	{
 		m_internal_clock->set_unscaled_clock(m_xtal);
+		update_divider();
 	}
 }
 
@@ -612,6 +653,11 @@ WRITE_LINE_MEMBER(mos6551_device::receiver_clock)
 					}
 
 					m_rx_state = STATE_START;
+
+					if (m_dtr)
+					{
+						update_divider();
+					}
 				}
 				break;
 			}

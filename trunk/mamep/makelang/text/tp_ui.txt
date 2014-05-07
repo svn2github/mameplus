@@ -1,4 +1,4 @@
-# osd/winui/layout.c: 210 osd/winui/winui.c: 3660
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3657
 %d games
 
 
@@ -198,11 +198,11 @@
 &Picture Area\tAlt+P
 
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3820, 7288
 &Play
 
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7242
+# osd/winui/layout.c: 208 osd/winui/winui.c: 3870, 7239
 &Play %s
 
 
@@ -286,7 +286,7 @@
 &Working
 
 
-# osd/winui/winui.c: 6664
+# osd/winui/winui.c: 6661
 '%s' is not a valid savestate file for game '%s'.
 
 
@@ -362,7 +362,7 @@ All
 All Games
 
 
-# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
+# osd/winui/winui.c: 6316, 6319, 6322, 6325, 6328, 6332, 6337, 6341, 6344, 6347, 6350, 6353, 6357
 All files (*.*)
 
 
@@ -486,7 +486,7 @@ BIOS options\nCustom options used by all games in the %s
 Backdrops
 
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 139
 Background Images
 
 
@@ -614,7 +614,7 @@ CPU
 Cabinet
 
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 130
 Cabinets
 
 
@@ -686,7 +686,7 @@ Colors aren't 100% accurate
 Colors:
 
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 140
 Comment Files
 
 
@@ -738,7 +738,7 @@ Control &Panel
 Control Panel
 
 
-# osd/winui/layout.c: 134
+# osd/winui/layout.c: 133
 Control Panels
 
 
@@ -750,7 +750,7 @@ Control Type
 Control Type:
 
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 136
 Controller Files
 
 
@@ -774,15 +774,15 @@ Copyright (C) 1997-2011 The MAME Team
 Correct:
 
 
-# osd/winui/winui.c: 4797
+# osd/winui/winui.c: 4794
 Could not create '%s'
 
 
-# osd/winui/winui.c: 6565
+# osd/winui/winui.c: 6562
 Could not open '%s' as a valid input file.
 
 
-# osd/winui/winui.c: 6677
+# osd/winui/winui.c: 6674
 Could not open '%s' as a valid savestate file.
 
 
@@ -790,7 +790,7 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 
 
-# osd/winui/layout.c: 143
+# osd/winui/layout.c: 142
 Crosshair Files
 
 
@@ -810,7 +810,7 @@ Cursor text (floating)
 Cursor text (selected)
 
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4647, 4675
 Custom
 
 
@@ -1122,7 +1122,7 @@ Error
 Error finding custom file name to save
 
 
-# osd/winui/winui.c: 7740
+# osd/winui/winui.c: 7737
 Error searching for custom folder
 
 
@@ -1138,7 +1138,7 @@ Error while saving custom file %s
 Exit the application
 
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 143
 External Folder List
 
 
@@ -1182,7 +1182,7 @@ Flip screen upside-down
 Flyer
 
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 129
 Flyers
 
 
@@ -1190,7 +1190,7 @@ Flyers
 Fold&er List\tAlt+D
 
 
-# osd/winui/layout.c: 142
+# osd/winui/layout.c: 141
 Font Files
 
 
@@ -1254,7 +1254,7 @@ Game protection isn't fully emulated
 Game requires external artwork files
 
 
-# osd/winui/winui.c: 3456
+# osd/winui/winui.c: 3453
 Game search %d%% complete
 
 
@@ -1306,7 +1306,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 137
 Hard Drive Difference
 
 
@@ -1322,7 +1322,7 @@ Help
 Hide &mouse cursor (requires restart)
 
 
-# osd/winui/layout.c: 149
+# osd/winui/layout.c: 148
 High Scores
 
 
@@ -1334,7 +1334,7 @@ History
 Homebrew
 
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5681
 Horizontal
 
 
@@ -1350,11 +1350,11 @@ How cheats work
 INTERFACE OPTIONS
 
 
-# osd/winui/layout.c: 146
+# osd/winui/layout.c: 145
 IPS Files
 
 
-# osd/winui/layout.c: 139
+# osd/winui/layout.c: 138
 Icons
 
 
@@ -1362,7 +1362,7 @@ Icons
 Image Enhancement
 
 
-# osd/winui/winui.c: 5395
+# osd/winui/winui.c: 5392
 Image Files (*.png)
 
 
@@ -1402,15 +1402,15 @@ Ini Files
 Input Files (*.inp)
 
 
-# osd/winui/winui.c: 6589
+# osd/winui/winui.c: 6586
 Input file format version mismatch
 
 
-# osd/winui/winui.c: 6584
+# osd/winui/winui.c: 6581
 Input file invalid or in an older, unsupported format
 
 
-# osd/winui/winui.c: 6578
+# osd/winui/winui.c: 6575
 Input file is corrupt or invalid (missing header)
 
 
@@ -1426,7 +1426,7 @@ Interface Options
 Internal
 
 
-# osd/winui/winui.c: 3513, 3537
+# osd/winui/winui.c: 3510, 3534
 Invalid Button Index
 
 
@@ -1498,7 +1498,7 @@ Keyboard
 L&arge Icons
 
 
-# osd/winui/layout.c: 154
+# osd/winui/layout.c: 153
 Language Files
 
 
@@ -1534,7 +1534,7 @@ Localize GUI and MAME core.
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 
 
-# osd/winui/winui.c: 6319
+# osd/winui/winui.c: 6316
 MAME input files (*.inp,*.zip)
 
 
@@ -1542,7 +1542,7 @@ MAME input files (*.inp,*.zip)
 MAME release notes
 
 
-# osd/winui/winui.c: 6322
+# osd/winui/winui.c: 6319
 MAME savestate files (*.sta)
 
 
@@ -1594,16 +1594,12 @@ Manufacturer
 Marquee
 
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 131
 Marquees
 
 
 # osd/winui/layout.c: 96
 Mechanical
-
-
-# osd/winui/layout.c: 129
-Memory Card
 
 
 # osd/winui/mameui.rc: 877
@@ -1614,7 +1610,7 @@ Miscellaneous
 Missing Sound
 
 
-# osd/winui/winui.c: 3518
+# osd/winui/winui.c: 3515
 Modify 'The'
 
 
@@ -1646,7 +1642,7 @@ NAVIGATION JOYSTICK CODES
 NAVIGATION KEY CODES
 
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 135
 NVRAM
 
 
@@ -1654,7 +1650,7 @@ NVRAM
 New game changes
 
 
-# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5699, 5733
+# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5696, 5730
 No
 
 
@@ -1670,7 +1666,7 @@ No Dump
 No PCB Info available for this game.
 
 
-# osd/winui/winui.c: 3850
+# osd/winui/winui.c: 3847
 No Selection
 
 
@@ -1758,11 +1754,11 @@ PCB
 PCB Info
 
 
-# osd/winui/layout.c: 152
+# osd/winui/layout.c: 151
 PCB Info Files
 
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 134
 PCBs
 
 
@@ -1878,19 +1874,19 @@ Positional device
 Pr&operties
 
 
-# osd/winui/winui.c: 3884, 7256
+# osd/winui/winui.c: 3881, 7253
 Propert&ies for %s
 
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3827, 7298
 Propert&ies for Driver
 
 
-# osd/winui/winui.c: 3896, 7270
+# osd/winui/winui.c: 3893, 7267
 Properties &for %s BIOS
 
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3834, 3899, 7273, 7311
 Properties &for BIOS
 
 
@@ -1926,11 +1922,11 @@ ROMs missing
 Randomly select a game.
 
 
-# osd/winui/layout.c: 82 osd/winui/winui.c: 5724
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 
 
-# osd/winui/winui.c: 3593
+# osd/winui/winui.c: 3590
 Ready
 
 
@@ -2082,7 +2078,7 @@ Scale screen
 Screen
 
 
-# osd/winui/winui.c: 3415
+# osd/winui/winui.c: 3412
 Screen flip support is missing
 
 
@@ -2186,7 +2182,7 @@ Select Story tab
 Select Title tab
 
 
-# osd/winui/winui.c: 5404
+# osd/winui/winui.c: 5401
 Select a Background Image
 
 
@@ -2566,7 +2562,7 @@ Throttle
 Title
 
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 132
 Titles
 
 
@@ -2730,7 +2726,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 
 
-# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5722
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5719
 Vector
 
 
@@ -2750,7 +2746,7 @@ Vector options\nCustom options used by all games in the Vector
 Version 9
 
 
-# osd/winui/layout.c: 81 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5681
 Vertical
 
 
@@ -2802,7 +2798,7 @@ Wrong Colors
 Year
 
 
-# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5697, 5731
+# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5694, 5728
 Yes
 
 
@@ -2878,43 +2874,43 @@ by S&amples
 by T&rackball
 
 
-# osd/winui/winui.c: 6350
+# osd/winui/winui.c: 6347
 cheats (*.dat)
 
 
-# osd/winui/winui.c: 6340
+# osd/winui/winui.c: 6337
 gamelists (*.lst)
 
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6350
 history (*.dat)
 
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6353
 mameinfo (*.dat)
 
 
-# osd/winui/winui.c: 6344
+# osd/winui/winui.c: 6341
 maps (*.map,*.txt)
 
 
-# osd/winui/winui.c: 6347
+# osd/winui/winui.c: 6344
 scripts (*.txt,*.dat)
 
 
-# osd/winui/winui.c: 6325
+# osd/winui/winui.c: 6322
 sounds (*.wav)
 
 
-# osd/winui/winui.c: 6360
+# osd/winui/winui.c: 6357
 story (*.dat)
 
 
-# osd/winui/winui.c: 6331
+# osd/winui/winui.c: 6328
 videos (*.avi)
 
 
-# osd/winui/winui.c: 6328
+# osd/winui/winui.c: 6325
 videos (*.mng)
 
 

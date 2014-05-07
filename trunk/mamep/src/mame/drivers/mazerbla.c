@@ -1346,27 +1346,6 @@ INPUT_PORTS_END
  *
  *************************************/
 
-/* only Great Guns */
-static const ay8910_interface ay8912_interface_1 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(mazerbla_state,soundcommand_r),
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-static const ay8910_interface ay8912_interface_2 =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(mazerbla_state,gg_led_ctrl_w)
-};
-
 IRQ_CALLBACK_MEMBER(mazerbla_state::irq_callback)
 {
 	/* all data lines are tied to +5V via 10K resistors */
@@ -1462,14 +1441,7 @@ void mazerbla_state::machine_reset()
 	}
 
 	memset(m_lookup_ram, 0, ARRAY_LENGTH(m_lookup_ram));
-
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(mazerbla_state::irq_callback),this));
 }
-
-static const mb_vcu_interface vcu_interface =
-{
-	"sub2"
-};
 
 static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
 
@@ -1477,6 +1449,7 @@ static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK)  /* 4 MHz, no NMI, IM2 - vectors at 0xf8, 0xfa, 0xfc */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_map)
 	MCFG_CPU_IO_MAP(mazerbla_io_map)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(mazerbla_state,irq_callback)
 
 	MCFG_CPU_ADD("sub", Z80, MASTER_CLOCK)  /* 4 MHz, NMI, IM1 INT */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_cpu2_map)
@@ -1493,7 +1466,9 @@ static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", mazerbla_state,  irq0_line_hold)
 
 	/* synchronization forced on the fly */
-	MCFG_MB_VCU_ADD("vcu",SOUND_CLOCK/4,vcu_interface,"palette")
+	MCFG_DEVICE_ADD("vcu", MB_VCU, SOUND_CLOCK/4)
+	MCFG_MB_VCU_CPU("sub2")
+	MCFG_MB_VCU_PALETTE("palette")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1516,6 +1491,7 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK)  /* 4 MHz, no NMI, IM2 - vectors at 0xf8, 0xfa, 0xfc */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_map)
 	MCFG_CPU_IO_MAP(greatgun_io_map)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(mazerbla_state,irq_callback)
 
 	MCFG_CPU_ADD("sub", Z80, SOUND_CLOCK / 4)   /* 3.579500 MHz, NMI - caused by sound command write, periodic INT */
 	MCFG_CPU_PROGRAM_MAP(greatgun_sound_map)
@@ -1530,7 +1506,9 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
     */
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", mazerbla_state,  irq0_line_hold)
 
-	MCFG_MB_VCU_ADD("vcu",SOUND_CLOCK/4,vcu_interface,"palette")
+	MCFG_DEVICE_ADD("vcu", MB_VCU, SOUND_CLOCK/4)
+	MCFG_MB_VCU_CPU("sub2")
+	MCFG_MB_VCU_PALETTE("palette")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1548,11 +1526,11 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ay1", AY8910, SOUND_CLOCK / 8)
-	MCFG_SOUND_CONFIG(ay8912_interface_1)
+	MCFG_AY8910_PORT_B_READ_CB(READ8(mazerbla_state, soundcommand_r))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
 	MCFG_SOUND_ADD("ay2", AY8910, SOUND_CLOCK / 8)
-	MCFG_SOUND_CONFIG(ay8912_interface_2)
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(mazerbla_state, gg_led_ctrl_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

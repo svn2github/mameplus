@@ -223,57 +223,47 @@ ADDRESS_MAP_END
 //**************************************************************************
 
 //-------------------------------------------------
-//  mc6845_interface crtc_intf
+//  mc6845
 //-------------------------------------------------
 
-void grip_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param)
+MC6845_UPDATE_ROW( grip_device::crtc_update_row )
 {
-	int column, bit;
-
-	for (column = 0; column < x_count; column++)
+	for (int column = 0; column < x_count; column++)
 	{
 		UINT16 address = (m_page << 12) | (((ma + column) & 0xfff) << 3) | (ra & 0x07);
 		UINT8 data = m_video_ram[address];
-
-		for (bit = 0; bit < 8; bit++)
+		
+		for (int bit = 0; bit < 8; bit++)
 		{
 			int x = (column * 8) + bit;
 			int color = (m_flash ? 0 : BIT(data, bit)) && de;
-
+			
 			bitmap.pix32(vbp + y, hbp + x) = m_palette->pen(color);
 		}
 	}
 }
-
-static MC6845_UPDATE_ROW( grip_update_row )
-{
-	grip_device *grip = downcast<grip_device *>(device->owner());
-
-	grip->crtc_update_row(device,bitmap,cliprect,ma,ra,y,x_count,cursor_x,de,hbp,vbp,param);
-}
 /*
-static MC6845_UPDATE_ROW( grip5_update_row )
+MC6845_UPDATE_ROW( grip_device::grip5_update_row )
 {
-    grip5_state *state = device->machine().driver_data<grip5_state>();
-    const rgb_t *palette = state->m_palette->palette()->entry_list_raw();
+    const rgb_t *palette = m_palette->palette()->entry_list_raw();
     int column, bit;
 
     for (column = 0; column < x_count; column++)
     {
-        UINT16 address = (state->m_dpage << 12) | (((ma + column) & 0xfff) << 3) | (ra & 0x07);
-        UINT8 data = state->m_video_ram[address];
+        UINT16 address = (m_dpage << 12) | (((ma + column) & 0xfff) << 3) | (ra & 0x07);
+        UINT8 data = m_video_ram[address];
 
         for (bit = 0; bit < 8; bit++)
         {
             int x = (column * 8) + bit;
-            int color = state->m_flash ? 0 : BIT(data, bit);
+            int color = m_flash ? 0 : BIT(data, bit);
 
             bitmap.pix32(y, x) = palette[color];
         }
     }
 }
 
-static MC6845_ON_UPDATE_ADDR_CHANGED( grip5_update_addr_changed )
+MC6845_ON_UPDATE_ADDR_CHANGED( grip_device::grip5_addr_changed )
 {
 }
 */
@@ -286,41 +276,9 @@ static const speaker_interface speaker_intf =
 	speaker_levels
 };
 
-static MC6845_INTERFACE( crtc_intf )
-{
-	true,
-	0,0,0,0,
-	8,
-	NULL,
-	grip_update_row,
-	NULL,
-	DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i1_w),
-	DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i2_w),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	NULL
-};
-/*
-
-static MC6845_INTERFACE( grip5_crtc_intf )
-{
-    false,
-    0,0,0,0,
-    8,
-    NULL,
-    grip5_update_row,
-    NULL,
-    DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i1_w),
-    DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i2_w),
-    DEVCB_NULL,
-    DEVCB_NULL,
-    grip5_update_addr_changed
-};
-*/
-
 
 //-------------------------------------------------
-//  I8255A_INTERFACE( ppi_intf )
+//  I8255A interface
 //-------------------------------------------------
 
 READ8_MEMBER( grip_device::ppi_pa_r )
@@ -415,17 +373,6 @@ WRITE8_MEMBER( grip_device::ppi_pc_w )
 	m_ppi_pc = (!BIT(data, 7) << 7) | (!BIT(data, 5) << 6) | (m_ppi->pa_r() & 0x3f);
 }
 
-static I8255A_INTERFACE( ppi_intf )
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, ppi_pa_r),  // Port A read
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, ppi_pa_w),  // Port A write
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, ppi_pb_r),  // Port B read
-	DEVCB_NULL,                                                     // Port B write
-	DEVCB_NULL,                                                     // Port C read
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, ppi_pc_w)   // Port C write
-};
-
-
 //-------------------------------------------------
 //  Z80STI_INTERFACE( sti_intf )
 //-------------------------------------------------
@@ -479,21 +426,6 @@ WRITE_LINE_MEMBER( grip_device::speaker_w )
 	m_speaker->level_w(level);
 }
 
-static Z80STI_INTERFACE( sti_intf )
-{
-	0,                                                      // serial receive clock
-	0,                                                      // serial transmit clock
-	DEVCB_CPU_INPUT_LINE(Z80_TAG, INPUT_LINE_IRQ0),         // interrupt
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, sti_gpio_r),    // GPIO read
-	DEVCB_NULL,                                             // GPIO write
-	DEVCB_NULL,                                             // serial output
-	DEVCB_NULL,                                             // timer A output
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, grip_device, speaker_w),    // timer B output
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF, z80sti_device, tc_w),                                // timer C output
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF, z80sti_device, rc_w)                                 // timer D output
-};
-
-
 //-------------------------------------------------
 //  z80_daisy_config grip_daisy_chain
 //-------------------------------------------------
@@ -520,13 +452,6 @@ WRITE8_MEMBER( grip_device::kb_w )
 		m_ppi->pc2_w(1);
 	}
 }
-
-static ASCII_KEYBOARD_INTERFACE( kb_intf )
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, grip_device, kb_w)
-};
-
-
 
 //**************************************************************************
 //  MACHINE CONFIGURATION
@@ -560,18 +485,36 @@ static MACHINE_CONFIG_FRAGMENT( grip )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
 	// devices
-	MCFG_MC6845_ADD(MC6845_TAG, MC6845, SCREEN_TAG, XTAL_16MHz/4, crtc_intf)
-//  MCFG_MC6845_ADD(HD6345_TAG, HD6345, SCREEN_TAG, XTAL_16MHz/4, grip5_crtc_intf)
-	MCFG_I8255A_ADD(I8255A_TAG, ppi_intf)
-	MCFG_Z80STI_ADD(Z80STI_TAG, XTAL_16MHz/4, sti_intf)
+	MCFG_MC6845_ADD(MC6845_TAG, MC6845, SCREEN_TAG, XTAL_16MHz/4)
+	MCFG_MC6845_SHOW_BORDER_AREA(true)
+	MCFG_MC6845_CHAR_WIDTH(8)
+	MCFG_MC6845_UPDATE_ROW_CB(grip_device, crtc_update_row)
+	MCFG_MC6845_OUT_DE_CB(DEVWRITELINE(Z80STI_TAG, z80sti_device, i1_w))
+	MCFG_MC6845_OUT_CUR_CB(DEVWRITELINE(Z80STI_TAG, z80sti_device, i1_w))
 
-	MCFG_CENTRONICS_ADD(CENTRONICS_TAG, centronics_printers, "image")
+//  MCFG_MC6845_ADD(HD6345_TAG, HD6345, SCREEN_TAG, XTAL_16MHz/4)
+
+	MCFG_DEVICE_ADD(I8255A_TAG, I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(grip_device, ppi_pa_r))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(grip_device, ppi_pa_w))
+	MCFG_I8255_IN_PORTB_CB(READ8(grip_device, ppi_pb_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(grip_device, ppi_pc_w))
+
+	MCFG_DEVICE_ADD(Z80STI_TAG, Z80STI, XTAL_16MHz/4)
+	MCFG_Z80STI_OUT_INT_CB(INPUTLINE(Z80_TAG, INPUT_LINE_IRQ0))
+	MCFG_Z80STI_IN_GPIO_CB(READ8(grip_device, sti_gpio_r))
+	MCFG_Z80STI_OUT_TBO_CB(WRITELINE(grip_device, speaker_w))
+	MCFG_Z80STI_OUT_TCO_CB(DEVWRITELINE(Z80STI_TAG, z80sti_device, tc_w))
+	MCFG_Z80STI_OUT_TDO_CB(DEVWRITELINE(Z80STI_TAG, z80sti_device, tc_w))
+
+	MCFG_CENTRONICS_ADD(CENTRONICS_TAG, centronics_printers, "printer")
 	MCFG_CENTRONICS_BUSY_HANDLER(WRITELINE(grip_device, write_centronics_busy))
 	MCFG_CENTRONICS_FAULT_HANDLER(WRITELINE(grip_device, write_centronics_fault))
 
 	MCFG_CENTRONICS_OUTPUT_LATCH_ADD("cent_data_out", CENTRONICS_TAG)
 
-	MCFG_ASCII_KEYBOARD_ADD("keyboard", kb_intf)
+	MCFG_DEVICE_ADD("keyboard", GENERIC_KEYBOARD, 0)
+	MCFG_GENERIC_KEYBOARD_CB(WRITE8(grip_device, kb_w))
 MACHINE_CONFIG_END
 
 
@@ -584,7 +527,6 @@ machine_config_constructor grip_device::device_mconfig_additions() const
 {
 	return MACHINE_CONFIG_NAME( grip );
 }
-
 
 
 //**************************************************************************

@@ -94,7 +94,7 @@ ADDRESS_MAP_END
 
 
 //-------------------------------------------------
-//  I8255A_INTERFACE( ppi0_intf )
+//  I8255A 0 Interface
 //-------------------------------------------------
 
 READ8_MEMBER( softbox_device::ppi0_pa_r )
@@ -107,19 +107,8 @@ WRITE8_MEMBER( softbox_device::ppi0_pb_w )
 	m_bus->dio_w(this, data ^ 0xff);
 }
 
-static I8255A_INTERFACE( ppi0_intf )
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi0_pa_r),
-	DEVCB_NULL, // Port A write
-	DEVCB_NULL, // Port B read
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi0_pb_w),
-	DEVCB_INPUT_PORT("SW1"), // Port C read
-	DEVCB_NULL  // Port C write
-};
-
-
 //-------------------------------------------------
-//  I8255A_INTERFACE( ppi1_intf )
+//  I8255A 1 Interface
 //-------------------------------------------------
 
 READ8_MEMBER( softbox_device::ppi1_pa_r )
@@ -228,24 +217,13 @@ WRITE8_MEMBER( softbox_device::ppi1_pc_w )
 	output_set_led_value(LED_READY, !BIT(data, 2));
 }
 
-static I8255A_INTERFACE( ppi1_intf )
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi1_pa_r),
-	DEVCB_NULL, // Port A write
-	DEVCB_NULL, // Port B read
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi1_pb_w),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi1_pc_r),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, softbox_device, ppi1_pc_w)
-};
-
-
 static DEVICE_INPUT_DEFAULTS_START( terminal )
-	DEVICE_INPUT_DEFAULTS( "TERM_TXBAUD", 0xff, 0x06 ) // 9600
-	DEVICE_INPUT_DEFAULTS( "TERM_RXBAUD", 0xff, 0x06 ) // 9600
-	DEVICE_INPUT_DEFAULTS( "TERM_STARTBITS", 0xff, 0x01 ) // 1
-	DEVICE_INPUT_DEFAULTS( "TERM_DATABITS", 0xff, 0x02 ) // 7
-	DEVICE_INPUT_DEFAULTS( "TERM_PARITY", 0xff, 0x02 ) // E
-	DEVICE_INPUT_DEFAULTS( "TERM_STOPBITS", 0xff, 0x01 ) // 1
+	DEVICE_INPUT_DEFAULTS( "RS232_TXBAUD", 0xff, RS232_BAUD_9600 )
+	DEVICE_INPUT_DEFAULTS( "RS232_RXBAUD", 0xff, RS232_BAUD_9600 )
+	DEVICE_INPUT_DEFAULTS( "RS232_STARTBITS", 0xff, RS232_STARTBITS_1 )
+	DEVICE_INPUT_DEFAULTS( "RS232_DATABITS", 0xff, RS232_DATABITS_7 )
+	DEVICE_INPUT_DEFAULTS( "RS232_PARITY", 0xff, RS232_PARITY_EVEN )
+	DEVICE_INPUT_DEFAULTS( "RS232_STOPBITS", 0xff, RS232_STOPBITS_1 )
 DEVICE_INPUT_DEFAULTS_END
 
 
@@ -268,21 +246,32 @@ static MACHINE_CONFIG_FRAGMENT( softbox )
 	MCFG_RS232_PORT_ADD(RS232_TAG, default_rs232_devices, NULL)
 	MCFG_RS232_RXD_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_rxd))
 	MCFG_RS232_DSR_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_dsr))
-	MCFG_DEVICE_CARD_DEVICE_INPUT_DEFAULTS("serial_terminal", terminal)
+	MCFG_DEVICE_CARD_DEVICE_INPUT_DEFAULTS("terminal", terminal)
 
-	MCFG_I8255A_ADD(I8255_0_TAG, ppi0_intf)
-	MCFG_I8255A_ADD(I8255_1_TAG, ppi1_intf)
+	MCFG_DEVICE_ADD(I8255_0_TAG, I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(softbox_device, ppi0_pa_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(softbox_device, ppi0_pb_w))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("SW1"))
+
+	MCFG_DEVICE_ADD(I8255_1_TAG, I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(softbox_device, ppi1_pa_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(softbox_device, ppi1_pb_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(softbox_device, ppi1_pc_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(softbox_device, ppi1_pc_w))
 
 	MCFG_DEVICE_ADD(COM8116_TAG, COM8116, XTAL_5_0688MHz)
 	MCFG_COM8116_FR_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_rxc))
 	MCFG_COM8116_FT_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_txc))
 
 	MCFG_DEVICE_ADD(CORVUS_HDC_TAG, CORVUS_HDC, 0)
-	MCFG_HARDDISK_CONFIG_ADD("harddisk1", corvus_hdc_t::hd_intf)
-	MCFG_HARDDISK_CONFIG_ADD("harddisk2", corvus_hdc_t::hd_intf)
-	MCFG_HARDDISK_CONFIG_ADD("harddisk3", corvus_hdc_t::hd_intf)
-	MCFG_HARDDISK_CONFIG_ADD("harddisk4", corvus_hdc_t::hd_intf)
-
+	MCFG_HARDDISK_ADD("harddisk1")
+	MCFG_HARDDISK_INTERFACE("corvus_hdd")
+	MCFG_HARDDISK_ADD("harddisk2")
+	MCFG_HARDDISK_INTERFACE("corvus_hdd")
+	MCFG_HARDDISK_ADD("harddisk3")
+	MCFG_HARDDISK_INTERFACE("corvus_hdd")
+	MCFG_HARDDISK_ADD("harddisk4")
+	MCFG_HARDDISK_INTERFACE("corvus_hdd")
 	//MCFG_IMI7000_BUS_ADD("imi5000h", NULL, NULL, NULL)
 MACHINE_CONFIG_END
 

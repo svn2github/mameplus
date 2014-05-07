@@ -46,6 +46,7 @@ UTILOBJS = \
 	$(LIBOBJ)/util/corestr.o \
 	$(LIBOBJ)/util/coreutil.o \
 	$(LIBOBJ)/util/cstrpool.o \
+	$(LIBOBJ)/util/delegate.o \
 	$(LIBOBJ)/util/flac.o \
 	$(LIBOBJ)/util/harddisk.o \
 	$(LIBOBJ)/util/hashing.o \
@@ -141,6 +142,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/ep64_dsk.o    \
 	$(LIBOBJ)/formats/esq8_dsk.o    \
 	$(LIBOBJ)/formats/esq16_dsk.o   \
+	$(LIBOBJ)/formats/fc100_cas.o   \
 	$(LIBOBJ)/formats/fdi_dsk.o     \
 	$(LIBOBJ)/formats/fm7_cas.o     \
 	$(LIBOBJ)/formats/fmsx_cas.o    \

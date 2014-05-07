@@ -25,8 +25,6 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 	: m_minimum_quantum(attotime::zero),
 		m_watchdog_vblank_count(0),
 		m_watchdog_time(attotime::zero),
-		m_nvram_handler(NULL),
-		m_memcard_handler(NULL),
 		m_default_layout(NULL),
 		m_gamedrv(gamedrv),
 		m_options(options)
@@ -51,7 +49,7 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 			const device_slot_option *option = slot->option(selval);
 
 			if (option && (isdefault || option->selectable()))
-						{
+			{
 				device_t *new_dev = device_add(&owner, option->name(), option->devtype(), option->clock());
 
 				const char *default_bios = option->default_bios();
@@ -165,7 +163,7 @@ device_t *machine_config::device_replace(device_t *owner, const char *tag, devic
 	device_t *device = owner->subdevice(tag);
 	if (device == NULL)
 	{
-		mame_printf_warning(_("Warning: attempting to replace non-existent device '%s'\n"), tag);
+		osd_printf_warning(_("Warning: attempting to replace non-existent device '%s'\n"), tag);
 		return device_add(owner, tag, type, clock);
 	}
 
@@ -186,7 +184,7 @@ device_t *machine_config::device_remove(device_t *owner, const char *tag)
 	device_t *device = owner->subdevice(tag);
 	if (device == NULL)
 	{
-		mame_printf_warning(_("Warning: attempting to remove non-existent device '%s'\n"), tag);
+		osd_printf_warning(_("Warning: attempting to remove non-existent device '%s'\n"), tag);
 		return NULL;
 	}
 

@@ -49,7 +49,7 @@ const device_type ADSP21062 = &device_creator<adsp21062_device>;
 
 // This is just used to stop the debugger from complaining about executing from I/O space
 static ADDRESS_MAP_START( internal_pgm, AS_PROGRAM, 64, adsp21062_device )
-	AM_RANGE(0x20000, 0x7ffff) AM_RAM
+	AM_RANGE(0x20000, 0x7ffff) AM_RAM AM_SHARE("x")
 ADDRESS_MAP_END
 
 
@@ -144,6 +144,31 @@ void adsp21062_device::sharc_iop_w(UINT32 address, UINT32 data)
 	{
 		case 0x00: break;       // System configuration
 		case 0x02: break;       // External Memory Wait State Configuration
+		case 0x04: // External port DMA buffer 0
+		/* TODO: Last Bronx uses this to init the program, int_index however is 0? */
+		{
+			external_dma_write(m_extdma_shift,data);
+			m_extdma_shift++;
+			if(m_extdma_shift == 3)
+				m_extdma_shift = 0;
+
+			#if 0
+			UINT64 r = pm_read48(m_dma[6].int_index);
+
+			r &= ~((UINT64)(0xffff) << (m_extdma_shift*16));
+			r |= ((UINT64)data & 0xffff) << (m_extdma_shift*16);
+
+			pm_write48(m_dma[6].int_index, r);
+
+			m_extdma_shift++;
+			if (m_extdma_shift == 3)
+			{
+				m_extdma_shift = 0;
+				m_dma[6].int_index ++;
+			}
+			#endif
+		}
+		break;
 
 		case 0x08: break;       // Message Register 0
 		case 0x09: break;       // Message Register 1
@@ -153,6 +178,9 @@ void adsp21062_device::sharc_iop_w(UINT32 address, UINT32 data)
 		case 0x0d: break;       // Message Register 5
 		case 0x0e: break;       // Message Register 6
 		case 0x0f: break;       // Message Register 7
+
+		case 0x14: // reserved??? written by Last Bronx
+		case 0x17: break;
 
 		// DMA 6
 		case 0x1c:
@@ -246,24 +274,29 @@ void adsp21062_device::external_iop_write(UINT32 address, UINT32 data)
 	}
 	else
 	{
-		mame_printf_debug("SHARC IOP write %08X, %08X\n", address, data);
+		osd_printf_debug("SHARC IOP write %08X, %08X\n", address, data);
 		sharc_iop_w(address, data);
 	}
 }
 
 void adsp21062_device::external_dma_write(UINT32 address, UINT64 data)
 {
+	/*
+	All addresses in the 17-bit index registers are offset by 0x0002 0000, the
+	first internal RAM location, before they are used by the DMA controller.
+	*/
+
 	switch ((m_dma[6].control >> 6) & 0x3)
 	{
 		case 2:         // 16/48 packing
 		{
 			int shift = address % 3;
-			UINT64 r = pm_read48(m_dma[6].int_index);
+			UINT64 r = pm_read48((m_dma[6].int_index & 0x1ffff) | 0x20000);
 
 			r &= ~((UINT64)(0xffff) << (shift*16));
 			r |= (data & 0xffff) << (shift*16);
 
-			pm_write48(m_dma[6].int_index, r);
+			pm_write48((m_dma[6].int_index & 0x1ffff) | 0x20000, r);
 
 			if (shift == 2)
 			{
@@ -629,13 +662,20 @@ void adsp21062_device::device_reset()
 		}
 
 		case BOOT_MODE_HOST:
+		{
+			m_dma[6].int_index      = 0x20000;
+			m_dma[6].int_modifier   = 1;
+			m_dma[6].int_count      = 0x100;
+			m_dma[6].control        = 0xa1;
 			break;
+		}
 
 		default:
 			fatalerror("SHARC: Unimplemented boot mode %d\n", m_boot_mode);
 	}
 
 	m_pc = 0x20004;
+	m_extdma_shift = 0;
 	m_daddr = m_pc + 1;
 	m_faddr = m_daddr + 1;
 	m_nfaddr = m_faddr+1;

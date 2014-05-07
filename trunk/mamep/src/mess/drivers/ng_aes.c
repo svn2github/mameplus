@@ -57,7 +57,6 @@
 #include "imagedev/chd_cd.h"
 #include "sound/cdda.h"
 #include "machine/megacdcd.h"
-#include "mcfglgcy.h"
 
 
 extern const char layout_neogeo[];
@@ -194,6 +193,7 @@ public:
 
 	IRQ_CALLBACK_MEMBER(neocd_int_callback);
 
+	UINT8 *m_meminternal_data;
 protected:
 	required_ioport m_io_in2;
 	required_ioport m_io_in0;
@@ -229,7 +229,7 @@ protected:
 /* The NeoCD has an 8kB internal memory card, instead of memcard slots like the MVS and AES */
 READ16_MEMBER(ng_aes_state::neocd_memcard_r)
 {
-	return m_memcard_data[offset] | 0xff00;
+	return m_meminternal_data[offset] | 0xff00;
 }
 
 
@@ -237,7 +237,7 @@ WRITE16_MEMBER(ng_aes_state::neocd_memcard_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		m_memcard_data[offset] = data;
+		m_meminternal_data[offset] = data;
 	}
 }
 
@@ -1021,10 +1021,6 @@ MACHINE_START_MEMBER(ng_aes_state,neogeo)
 {
 	m_type = NEOGEO_AES;
 	common_machine_start();
-
-	/* initialize the memcard data structure */
-	m_memcard_data = auto_alloc_array_clear(machine(), UINT8, MEMCARD_SIZE);
-	save_pointer(NAME(m_memcard_data), 0x800);
 }
 
 MACHINE_START_MEMBER(ng_aes_state,neocd)
@@ -1038,12 +1034,9 @@ MACHINE_START_MEMBER(ng_aes_state,neocd)
 
 	/* initialize the memcard data structure */
 	/* NeoCD doesn't have memcard slots, rather, it has a larger internal memory which works the same */
-	m_memcard_data = auto_alloc_array_clear(machine(), UINT8, 0x2000);
-	machine().device<nvram_device>("saveram")->set_base(m_memcard_data, 0x2000);
-	save_pointer(NAME(m_memcard_data), 0x2000);
-
-	// for custom vectors
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(ng_aes_state::neocd_int_callback),this));
+	m_meminternal_data = auto_alloc_array_clear(machine(), UINT8, 0x2000);
+	machine().device<nvram_device>("saveram")->set_base(m_meminternal_data, 0x2000);
+	save_pointer(NAME(m_meminternal_data), 0x2000);
 
 	m_bank_vectors->set_entry(0); // default to the BIOS vectors
 
@@ -1376,7 +1369,7 @@ static MACHINE_CONFIG_DERIVED_CLASS( aes, neogeo_base, ng_aes_state )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(aes_main_map)
 
-	MCFG_MEMCARD_HANDLER(neogeo)
+	MCFG_NEOGEO_MEMCARD_ADD("memcard")
 
 	MCFG_MACHINE_START_OVERRIDE(ng_aes_state, neogeo)
 	MCFG_MACHINE_RESET_OVERRIDE(ng_aes_state, neogeo)
@@ -1468,17 +1461,11 @@ UINT32 ng_aes_state::screen_update_neocd(screen_device &screen, bitmap_rgb32 &bi
 }
 
 
-struct cdrom_interface neocd_cdrom =
-{
-	"neocd_cdrom",
-	NULL
-};
-
-
 static MACHINE_CONFIG_DERIVED_CLASS( neocd, neogeo_base, ng_aes_state )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(neocd_main_map)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(ng_aes_state,neocd_int_callback)
 
 	MCFG_CPU_MODIFY("audiocpu")
 	MCFG_CPU_PROGRAM_MAP(neocd_audio_map)
@@ -1499,7 +1486,8 @@ static MACHINE_CONFIG_DERIVED_CLASS( neocd, neogeo_base, ng_aes_state )
 	MCFG_MACHINE_START_OVERRIDE(ng_aes_state,neocd)
 	MCFG_MACHINE_RESET_OVERRIDE(ng_aes_state,neocd)
 
-	MCFG_CDROM_ADD( "cdrom",neocd_cdrom )
+	MCFG_CDROM_ADD( "cdrom" )
+	MCFG_CDROM_INTERFACE("neocd_cdrom")
 	MCFG_SOFTWARE_LIST_ADD("cd_list","neocd")
 MACHINE_CONFIG_END
 

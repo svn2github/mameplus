@@ -84,7 +84,7 @@ void driver_switch::assign_drivers(emu_options &opts)
 						}
 
 					if (!drivers_table[i].name)
-						mame_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
+						osd_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
 				}
 				osd_free(s);
  				p = strtok(NULL, ",");

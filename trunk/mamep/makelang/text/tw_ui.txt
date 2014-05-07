@@ -1,4 +1,4 @@
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3660
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3657
 %d games
 %d 個遊戲
 
@@ -198,11 +198,11 @@ MAME 版本資訊(&M)
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3820, 7288
 &Play
 執行(&P)
 
-# osd/winui/layout.c: 208 osd/winui/winui.c: 3873, 7242
+# osd/winui/layout.c: 208 osd/winui/winui.c: 3870, 7239
 &Play %s
 執行 %s(&P)
 
@@ -286,7 +286,7 @@ MAME 版本資訊(&M)
 &Working
 可以執行(&W)
 
-# osd/winui/winui.c: 6664
+# osd/winui/winui.c: 6661
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是遊戲 '%s' 的有效儲存狀態檔。
 
@@ -362,7 +362,7 @@ All
 All Games
 全部遊戲
 
-# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
+# osd/winui/winui.c: 6316, 6319, 6322, 6325, 6328, 6332, 6337, 6341, 6344, 6347, 6350, 6353, 6357
 All files (*.*)
 所有檔案 (*.*)
 
@@ -774,15 +774,15 @@ Copyright (C) 1997-2011 The MAME Team
 Correct:
 正確:
 
-# osd/winui/winui.c: 4797
+# osd/winui/winui.c: 4794
 Could not create '%s'
 無法建立 '%s'
 
-# osd/winui/winui.c: 6565
+# osd/winui/winui.c: 6562
 Could not open '%s' as a valid input file.
 無法開啟 '%s' 為有效的輸入檔。
 
-# osd/winui/winui.c: 6677
+# osd/winui/winui.c: 6674
 Could not open '%s' as a valid savestate file.
 無法開啟 '%s' 為有效的儲存狀態檔。
 
@@ -810,7 +810,7 @@ Cursor text (floating)
 Cursor text (selected)
 游標文字 (選定)
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4647, 4675
 Custom
 自訂
 
@@ -1122,7 +1122,7 @@ Error
 Error finding custom file name to save
 尋找自訂檔名儲存時發生錯誤
 
-# osd/winui/winui.c: 7740
+# osd/winui/winui.c: 7737
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
@@ -1254,7 +1254,7 @@ Game protection isn't fully emulated
 Game requires external artwork files
 遊戲需要外部裝飾圖檔案
 
-# osd/winui/winui.c: 3456
+# osd/winui/winui.c: 3453
 Game search %d%% complete
 完成 %d%% 遊戲搜尋
 
@@ -1334,7 +1334,7 @@ History
 Homebrew
 自製遊戲
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5681
 Horizontal
 水平
 
@@ -1362,7 +1362,7 @@ Icons
 Image Enhancement
 影像增強
 
-# osd/winui/winui.c: 5395
+# osd/winui/winui.c: 5392
 Image Files (*.png)
 圖像檔 (*.png)
 
@@ -1402,15 +1402,15 @@ INI 檔案
 Input Files (*.inp)
 輸入檔 (*.inp)
 
-# osd/winui/winui.c: 6589
+# osd/winui/winui.c: 6586
 Input file format version mismatch
 輸入檔格式版本不符合
 
-# osd/winui/winui.c: 6584
+# osd/winui/winui.c: 6581
 Input file invalid or in an older, unsupported format
 無效的輸入檔或是舊版未支援的格式
 
-# osd/winui/winui.c: 6578
+# osd/winui/winui.c: 6575
 Input file is corrupt or invalid (missing header)
 輸入檔損壞或無效 (缺少檔頭)
 
@@ -1426,7 +1426,7 @@ Interface Options
 Internal
 內定像素長寬
 
-# osd/winui/winui.c: 3513, 3537
+# osd/winui/winui.c: 3510, 3534
 Invalid Button Index
 無效的按鍵索引
 
@@ -1534,7 +1534,7 @@ Localize GUI and MAME core.
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 MAME 於自我正確性檢查時失敗。GUI 仍可正常運作，但模擬部分將無法執行。
 
-# osd/winui/winui.c: 6319
+# osd/winui/winui.c: 6316
 MAME input files (*.inp,*.zip)
 MAME 輸入檔 (*.inp,*.zip)
 
@@ -1542,7 +1542,7 @@ MAME 輸入檔 (*.inp,*.zip)
 MAME release notes
 MAME 版本資訊
 
-# osd/winui/winui.c: 6322
+# osd/winui/winui.c: 6319
 MAME savestate files (*.sta)
 MAME 儲存狀態檔 (*.sta)
 
@@ -1610,7 +1610,7 @@ Miscellaneous
 Missing Sound
 缺少聲音
 
-# osd/winui/winui.c: 3518
+# osd/winui/winui.c: 3515
 Modify 'The'
 修正 The 位置
 
@@ -1650,7 +1650,7 @@ NVRAM
 New game changes
 遊戲的新增異動
 
-# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5699, 5733
+# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5696, 5730
 No
 否
 
@@ -1666,7 +1666,7 @@ No Dump
 No PCB Info available for this game.
 這個遊戲沒有可供查看的電路板資訊。
 
-# osd/winui/winui.c: 3850
+# osd/winui/winui.c: 3847
 No Selection
 未選取遊戲
 
@@ -1874,19 +1874,19 @@ Positional device
 Pr&operties
 內容(&O)
 
-# osd/winui/winui.c: 3884, 7256
+# osd/winui/winui.c: 3881, 7253
 Propert&ies for %s
 %s 內容(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3827, 7298
 Propert&ies for Driver
 驅動內容(&I)
 
-# osd/winui/winui.c: 3896, 7270
+# osd/winui/winui.c: 3893, 7267
 Properties &for %s BIOS
 %s BIOS 內容(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3834, 3899, 7273, 7311
 Properties &for BIOS
 BIOS 內容(&F)
 
@@ -1922,11 +1922,11 @@ ROM 檔遺失
 Randomly select a game.
 隨機選取一個遊戲。
 
-# osd/winui/layout.c: 82 osd/winui/winui.c: 5724
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 點陣
 
-# osd/winui/winui.c: 3593
+# osd/winui/winui.c: 3590
 Ready
 準備完畢
 
@@ -2078,7 +2078,7 @@ Scale screen
 Screen
 畫面
 
-# osd/winui/winui.c: 3415
+# osd/winui/winui.c: 3412
 Screen flip support is missing
 尚未支援畫面翻轉
 
@@ -2182,7 +2182,7 @@ Select Story tab
 Select Title tab
 選取標題圖索引標籤
 
-# osd/winui/winui.c: 5404
+# osd/winui/winui.c: 5401
 Select a Background Image
 選取一個背景圖像
 
@@ -2726,7 +2726,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 使用者介面設定值\n\n
 
-# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5722
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5719
 Vector
 向量
 
@@ -2746,7 +2746,7 @@ Vector options\nCustom options used by all games in the Vector
 Version 9
 版本 9
 
-# osd/winui/layout.c: 81 osd/winui/winui.c: 5684
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5681
 Vertical
 垂直
 
@@ -2798,7 +2798,7 @@ Wrong Colors
 Year
 年份
 
-# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5697, 5731
+# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5694, 5728
 Yes
 是
 
@@ -2874,43 +2874,43 @@ by S&amples
 by T&rackball
 依軌跡球(&R)
 
-# osd/winui/winui.c: 6350
+# osd/winui/winui.c: 6347
 cheats (*.dat)
 作弊碼檔案 (*.dat)
 
-# osd/winui/winui.c: 6340
+# osd/winui/winui.c: 6337
 gamelists (*.lst)
 遊戲清單檔 (*.lst)
 
+# osd/winui/winui.c: 6350
+history (*.dat)
+history (*.dat)
+
 # osd/winui/winui.c: 6353
-history (*.dat)
-history (*.dat)
-
-# osd/winui/winui.c: 6356
 mameinfo (*.dat)
 mameinfo (*.dat)
 
-# osd/winui/winui.c: 6344
+# osd/winui/winui.c: 6341
 maps (*.map,*.txt)
 對應檔 (*.map,*.txt)
 
-# osd/winui/winui.c: 6347
+# osd/winui/winui.c: 6344
 scripts (*.txt,*.dat)
 指令檔 (*.txt,*.dat)
 
-# osd/winui/winui.c: 6325
+# osd/winui/winui.c: 6322
 sounds (*.wav)
 聲音檔 (*.wav)
 
-# osd/winui/winui.c: 6360
+# osd/winui/winui.c: 6357
 story (*.dat)
 故事檔 (*.dat)
 
-# osd/winui/winui.c: 6331
+# osd/winui/winui.c: 6328
 videos (*.avi)
 視訊檔 (*.avi)
 
-# osd/winui/winui.c: 6328
+# osd/winui/winui.c: 6325
 videos (*.mng)
 視訊檔 (*.mng)
 

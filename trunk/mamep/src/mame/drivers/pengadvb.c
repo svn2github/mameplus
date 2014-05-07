@@ -148,16 +148,6 @@ WRITE8_MEMBER(pengadvb_state::pengadvb_psg_port_b_w)
 	// leftover from msx ver?
 }
 
-static const ay8910_interface pengadvb_ay8910_interface =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("IN0"),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(pengadvb_state,pengadvb_psg_port_b_w)
-};
-
 /**************************************************************************/
 
 // I8255
@@ -197,16 +187,6 @@ WRITE8_MEMBER(pengadvb_state::pengadvb_ppi_port_c_w)
 	m_kb_matrix_row = data & 0x0f;
 }
 
-static I8255A_INTERFACE(pengadvb_ppi8255_interface)
-{
-	DEVCB_DRIVER_MEMBER(pengadvb_state,pengadvb_ppi_port_a_r),
-	DEVCB_DRIVER_MEMBER(pengadvb_state,pengadvb_ppi_port_a_w),
-	DEVCB_DRIVER_MEMBER(pengadvb_state,pengadvb_ppi_port_b_r),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(pengadvb_state,pengadvb_ppi_port_c_w)
-};
-
 /**************************************************************************/
 
 // TMS9928
@@ -214,13 +194,6 @@ WRITE_LINE_MEMBER(pengadvb_state::vdp_interrupt)
 {
 	m_maincpu->set_input_line(0, (state ? ASSERT_LINE : CLEAR_LINE));
 }
-
-static TMS9928A_INTERFACE(pengadvb_tms9128_interface)
-{
-	0x4000,
-	DEVCB_DRIVER_LINE_MEMBER(pengadvb_state,vdp_interrupt)
-};
-
 
 /***************************************************************************
 
@@ -264,17 +237,24 @@ static MACHINE_CONFIG_START( pengadvb, pengadvb_state )
 	MCFG_ADDRESS_MAP_BANK_ADDRBUS_WIDTH(18)
 	MCFG_ADDRESS_MAP_BANK_STRIDE(0x10000)
 
-	MCFG_I8255_ADD("ppi8255", pengadvb_ppi8255_interface)
+	MCFG_DEVICE_ADD("ppi8255", I8255, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(pengadvb_state, pengadvb_ppi_port_a_r))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(pengadvb_state, pengadvb_ppi_port_a_w))
+	MCFG_I8255_IN_PORTB_CB(READ8(pengadvb_state, pengadvb_ppi_port_b_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(pengadvb_state, pengadvb_ppi_port_c_w))
 
 	/* video hardware */
-	MCFG_TMS9928A_ADD("tms9128", TMS9128, pengadvb_tms9128_interface)
+	MCFG_DEVICE_ADD("tms9128", TMS9128, XTAL_10_738635MHz / 2)
+	MCFG_TMS9928A_VRAM_SIZE(0x4000)
+	MCFG_TMS9928A_OUT_INT_LINE_CB(WRITELINE(pengadvb_state, vdp_interrupt))
 	MCFG_TMS9928A_SCREEN_ADD_NTSC( "screen" )
 	MCFG_SCREEN_UPDATE_DEVICE("tms9128", tms9128_device, screen_update)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8910, XTAL_10_738635MHz/6)
-	MCFG_SOUND_CONFIG(pengadvb_ay8910_interface)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("IN0"))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(pengadvb_state, pengadvb_psg_port_b_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 

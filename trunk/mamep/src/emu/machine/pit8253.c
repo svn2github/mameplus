@@ -56,9 +56,12 @@ pit8253_device::pit8253_device(const machine_config &mconfig, const char *tag, d
 	m_out1_handler(*this),
 	m_out2_handler(*this)
 {
-	m_timers[0].gate = 1;
-	m_timers[1].gate = 1;
-	m_timers[2].gate = 1;
+	for(int i = 0; i < ARRAY_LENGTH(m_timers); ++i)
+	{
+		m_timers[i].gate = 1;
+		m_timers[i].phase = 0;
+		m_timers[i].clock = 0;
+	}
 }
 
 pit8253_device::pit8253_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source) :
@@ -70,9 +73,12 @@ pit8253_device::pit8253_device(const machine_config &mconfig, device_type type, 
 	m_out1_handler(*this),
 	m_out2_handler(*this)
 {
-	m_timers[0].gate = 1;
-	m_timers[1].gate = 1;
-	m_timers[2].gate = 1;
+	for(int i = 0; i < ARRAY_LENGTH(m_timers); ++i)
+	{
+		m_timers[i].gate = 1;
+		m_timers[i].phase = 0;
+		m_timers[i].clock = 0;
+	}
 }
 
 

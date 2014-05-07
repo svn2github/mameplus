@@ -526,7 +526,16 @@ public:
 	DECLARE_READ8_MEMBER( amigacd_tpi6525_portc_r );
 	DECLARE_WRITE8_MEMBER( amigacd_tpi6525_portb_w );
 	DECLARE_WRITE_LINE_MEMBER( amigacd_tpi6525_irq );
+	
+	DECLARE_WRITE_LINE_MEMBER(amiga_m68k_reset);
+	
+	IRQ_CALLBACK_MEMBER(amiga_ar1_irqack);
+	DECLARE_WRITE16_MEMBER( amiga_ar1_chipmem_w );
+	DECLARE_WRITE16_MEMBER( amiga_ar23_chipmem_w );
 
+	DECLARE_READ16_MEMBER( amiga_dmac_r );
+	DECLARE_WRITE16_MEMBER( amiga_dmac_w );
+	
 	int m_centronics_busy;
 	int m_centronics_perror;
 	int m_centronics_select;

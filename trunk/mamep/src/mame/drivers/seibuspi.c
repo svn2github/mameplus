@@ -1796,8 +1796,6 @@ void seibuspi_state::init_rise11()
 
 void seibuspi_state::machine_start()
 {
-	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(seibuspi_state::spi_irq_callback),this));
-
 	// use this to determine the region code when adding a new SPI cartridge clone set
 	logerror("Game region code: %02X\n", memregion("maincpu")->base()[0x1ffffc]);
 
@@ -1824,6 +1822,7 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	MCFG_CPU_ADD("maincpu", I386, XTAL_50MHz/2) // AMD or Intel 386DX, 25MHz
 	MCFG_CPU_PROGRAM_MAP(spi_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state, spi_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(seibuspi_state,spi_irq_callback)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_28_63636MHz/4) // Z84C0008PEC, 7.159MHz
 	MCFG_CPU_PROGRAM_MAP(spi_soundmap)
@@ -1935,6 +1934,7 @@ static MACHINE_CONFIG_START( sys386i, seibuspi_state )
 	MCFG_CPU_ADD("maincpu", I386, XTAL_40MHz) // AMD 386DX, 40MHz
 	MCFG_CPU_PROGRAM_MAP(sys386i_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state, spi_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(seibuspi_state,spi_irq_callback)
 
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
@@ -1985,6 +1985,7 @@ static MACHINE_CONFIG_START( sys386f, seibuspi_state )
 	MCFG_CPU_ADD("maincpu", I386, XTAL_50MHz/2) // Intel i386DX, 25MHz
 	MCFG_CPU_PROGRAM_MAP(sys386f_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state, spi_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(seibuspi_state,spi_irq_callback)
 
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
@@ -2107,7 +2108,7 @@ READ32_MEMBER(seibuspi_state::viprp1_speedup_r)
 	/* viprp1ot */
 	if (space.device().safe_pc()==0x02026bd) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",space.device().safe_pc());
+//  osd_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_mainram[0x001e2e0/4];
 }
@@ -2116,7 +2117,7 @@ READ32_MEMBER(seibuspi_state::viprp1o_speedup_r)
 {
 	/* viperp1o */
 	if (space.device().safe_pc()==0x0201f99) space.device().execute().spin_until_interrupt(); // idle
-//  mame_printf_debug("%08x\n",space.device().safe_pc());
+//  osd_printf_debug("%08x\n",space.device().safe_pc());
 	return m_mainram[0x001d49c/4];
 }
 
@@ -2124,7 +2125,7 @@ READ32_MEMBER(seibuspi_state::viprp1o_speedup_r)
 // causes input problems?
 READ32_MEMBER(seibuspi_state::ejanhs_speedup_r)
 {
-// mame_printf_debug("%08x\n",space.device().safe_pc());
+// osd_printf_debug("%08x\n",space.device().safe_pc());
 	if (space.device().safe_pc()==0x03032c7) space.device().execute().spin_until_interrupt(); // idle
 	return m_mainram[0x002d224/4];
 }
@@ -2147,7 +2148,7 @@ READ32_MEMBER(seibuspi_state::rdft_speedup_r)
 	/* rdftu */
 	if (space.device().safe_pc()==0x0203f3a) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",space.device().safe_pc());
+//  osd_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_mainram[0x00298d0/4];
 }
@@ -2166,7 +2167,7 @@ READ32_MEMBER(seibuspi_state::rf2_speedup_r)
 	/* rdft2a */
 	if (space.device().safe_pc()==0x0204366) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",space.device().safe_pc());
+//  osd_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_mainram[0x0282ac/4];
 }
@@ -2189,7 +2190,7 @@ READ32_MEMBER(seibuspi_state::rfjet_speedup_r)
 	/* rfjetj */
 	if (space.device().safe_pc()==0x0205f2e) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",space.device().safe_pc());
+//  osd_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_mainram[0x002894c/4];
 }

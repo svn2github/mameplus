@@ -1451,72 +1451,6 @@ WRITE_LINE_MEMBER(lucky74_state::lucky74_adpcm_int)
 	return;
 }
 
-
-/*************************************
-*     PPI 82C255 (x2) Interfaces     *
-*************************************/
-
-/* Each 82C255 behaves like 2x 8255 (in mode 0).
-   Since MAME doesn't support it yet, I replaced both 82C255
-   with 4x 8255...
-*/
-
-static I8255A_INTERFACE( ppi8255_0_intf )
-{
-	DEVCB_INPUT_PORT("IN0"),            /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("IN1"),            /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_NULL,                         /* Port C read */
-	DEVCB_NULL                          /* Port C write: 0x00 after reset, 0xff during game, and 0xfd when tap F2 for percentage and run count */
-};
-
-static I8255A_INTERFACE( ppi8255_1_intf )
-{
-	DEVCB_INPUT_PORT("IN2"),            /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_NULL,                         /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("IN4"),            /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_2_intf )
-{
-	DEVCB_INPUT_PORT("DSW1"),           /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("DSW2"),           /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("DSW3"),           /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_3_intf )
-{
-	DEVCB_INPUT_PORT("DSW4"),           /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_NULL,                         /* Port B read */
-	DEVCB_DRIVER_MEMBER(lucky74_state,lamps_a_w),           /* Port B write */
-	DEVCB_NULL,                         /* Port C read */
-	DEVCB_DRIVER_MEMBER(lucky74_state,lamps_b_w)            /* Port C write */
-};
-
-
-/*****************************
-*      Sound Interfaces      *
-*****************************/
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("IN3"),
-	DEVCB_NULL, /* a sort of status byte */
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(lucky74_state,ym2149_portb_w)
-};
-
-
 /*************************
 *    Machine Drivers     *
 *************************/
@@ -1531,11 +1465,26 @@ static MACHINE_CONFIG_START( lucky74, lucky74_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	/* 2x 82c255 (4x 8255) */
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
-	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
-	MCFG_I8255A_ADD( "ppi8255_2", ppi8255_2_intf )
-	MCFG_I8255A_ADD( "ppi8255_3", ppi8255_3_intf )
+	// Each 82C255 behaves like 2x 8255 (in mode 0). Since MAME doesn't support it yet, I replaced 
+	// both 82C255 with 4x 8255...
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("IN0"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN1"))
+	// Port C write: 0x00 after reset, 0xff during game, and 0xfd when tap F2 for percentage and run count
+
+	MCFG_DEVICE_ADD("ppi8255_1", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("IN2"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("IN4"))
+
+	MCFG_DEVICE_ADD("ppi8255_2", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("DSW1"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("DSW2"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("DSW3"))
+
+	MCFG_DEVICE_ADD("ppi8255_3", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("DSW4"))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(lucky74_state, lamps_a_w))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(lucky74_state, lamps_b_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1564,7 +1513,9 @@ static MACHINE_CONFIG_START( lucky74, lucky74_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, C_06B49P_CLKOUT_04) /* 1.5 MHz. */
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("IN3"))
+	/* port b read is a sort of status byte */
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(lucky74_state, ym2149_portb_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.00)         /* not routed to audio hardware */
 
 	MCFG_SOUND_ADD("msm", MSM5205, C_06B49P_CLKOUT_06)  /* 375 kHz. */

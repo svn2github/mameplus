@@ -642,8 +642,8 @@ void segaxbd_state::machine_reset()
 {
 	m_segaic16vid->segaic16_tilemap_reset(*m_screen);
 
-	// hook the RESET line, which resets CPU #1
-	m68k_set_reset_callback(m_maincpu, &segaxbd_state::m68k_reset_callback);
+	// hook the RESET line, which resets CPU #1	
+	m_maincpu->set_reset_callback(write_line_delegate(FUNC(segaxbd_state::m68k_reset_callback),this));
 
 	// start timers to track interrupts
 	m_scanline_timer->adjust(m_screen->time_until_pos(1), 1);
@@ -858,11 +858,10 @@ void segaxbd_state::update_main_irqs()
 //  main 68000 is reset
 //-------------------------------------------------
 
-void segaxbd_state::m68k_reset_callback(device_t *device)
+WRITE_LINE_MEMBER(segaxbd_state::m68k_reset_callback)
 {
-	segaxbd_state *state = device->machine().driver_data<segaxbd_state>();
-	state->m_subcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
-	device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
+	m_subcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 
@@ -1503,17 +1502,6 @@ INPUT_PORTS_END
 
 
 //**************************************************************************
-//  SOUND DEFINITIONS
-//**************************************************************************
-
-static const sega_pcm_interface segapcm_interface =
-{
-	BANK_512
-};
-
-
-
-//**************************************************************************
 //  GRAPHICS DEFINITIONS
 //**************************************************************************
 
@@ -1578,7 +1566,7 @@ static MACHINE_CONFIG_START( xboard, segaxbd_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.43)
 
 	MCFG_SEGAPCM_ADD("pcm", SOUND_CLOCK/4)
-	MCFG_SOUND_CONFIG(segapcm_interface)
+	MCFG_SEGAPCM_BANK(BANK_512)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1625,7 +1613,7 @@ static MACHINE_CONFIG_DERIVED( smgp_fd1094, xboard_fd1094 )
 	MCFG_SPEAKER_STANDARD_STEREO("rearleft", "rearright")
 
 	MCFG_SEGAPCM_ADD("pcm2", SOUND_CLOCK/4)
-	MCFG_SOUND_CONFIG(segapcm_interface)
+	MCFG_SEGAPCM_BANK(BANK_512)
 	MCFG_SOUND_ROUTE(0, "rearleft", 1.0)
 	MCFG_SOUND_ROUTE(1, "rearright", 1.0)
 MACHINE_CONFIG_END

@@ -113,7 +113,7 @@ static char giant_string_buffer[65536] = { 0 };
 //  running_machine - constructor
 //-------------------------------------------------
 
-running_machine::running_machine(const machine_config &_config, osd_interface &osd, bool exit_to_game_select)
+running_machine::running_machine(const machine_config &_config, osd_interface &osd)
 	: firstcpu(NULL),
 		primary_screen(NULL),
 		debug_flags(0),
@@ -128,8 +128,6 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 		m_paused(false),
 		m_hard_reset_pending(false),
 		m_exit_pending(false),
-		m_exit_to_game_select(exit_to_game_select),
-		m_new_driver_pending(NULL),
 		m_soft_reset_timer(NULL),
 		m_rand_seed(0x9d14abd7),
 		m_ui_active(_config.options().ui_active()),
@@ -314,9 +312,6 @@ void running_machine::start()
 	//MKCHAMP - INITIALIZING THE HISCORE ENGINE
  	hiscore_init(*this);
 #endif /* USE_HISCORE */
-
-	// disallow save state registrations starting here
-	m_save.allow_registration(false);
 }
 
 
@@ -366,6 +361,12 @@ int running_machine::run(bool firstrun)
 
 		// load the configuration settings and NVRAM
 		bool settingsloaded = config_load_settings(*this);
+
+		// disallow save state registrations starting here.
+		// Don't do it earlier, config load can create network
+		// devices with timers.
+		m_save.allow_registration(false);
+
 		nvram_load();
 		sound().ui_mute(false);
 
@@ -412,33 +413,33 @@ int running_machine::run(bool firstrun)
 		nvram_save();
 		// mamep: dont save settings during playback
 		if (!ioport().has_playback_file())
-		config_save_settings(*this);
+			config_save_settings(*this);
 	}
 	catch (emu_fatalerror &fatal)
 	{
-		mame_printf_error("FATALERROR: %s\n", fatal.string());
+		osd_printf_error("FATALERROR: %s\n", fatal.string());
 		error = MAMERR_FATALERROR;
 		if (fatal.exitcode() != 0)
 			error = fatal.exitcode();
 	}
 	catch (emu_exception &)
 	{
-		mame_printf_error("Caught unhandled emulator exception\n");
+		osd_printf_error("Caught unhandled emulator exception\n");
 		error = MAMERR_FATALERROR;
 	}
 	catch (binding_type_exception &btex)
 	{
-		mame_printf_error("Error performing a late bind of type %s to %s\n", btex.m_actual_type.name(), btex.m_target_type.name());
+		osd_printf_error("Error performing a late bind of type %s to %s\n", btex.m_actual_type.name(), btex.m_target_type.name());
 		error = MAMERR_FATALERROR;
 	}
 	catch (std::exception &ex)
 	{
-		mame_printf_error("Caught unhandled %s exception: %s\n", typeid(ex).name(), ex.what());
+		osd_printf_error("Caught unhandled %s exception: %s\n", typeid(ex).name(), ex.what());
 		error = MAMERR_FATALERROR;
 	}
 	catch (...)
 	{
-		mame_printf_error("Caught unhandled exception\n");
+		osd_printf_error("Caught unhandled exception\n");
 		error = MAMERR_FATALERROR;
 	}
 
@@ -462,16 +463,7 @@ int running_machine::run(bool firstrun)
 
 void running_machine::schedule_exit()
 {
-	// if we are in-game but we started with the select game menu, return to that instead
-	if (m_exit_to_game_select && options().system_name()[0] != 0)
-	{
-		options().set_system_name("");
-		ui_menu_select_game::force_game_select(*this, &render().ui_container());
-	}
-
-	// otherwise, exit for real
-	else
-		m_exit_pending = true;
+	m_exit_pending = true;
 
 	// if we're executing, abort out immediately
 	m_scheduler.eat_all_cycles();
@@ -507,21 +499,6 @@ void running_machine::schedule_soft_reset()
 
 	// we can't be paused since the timer needs to fire
 	resume();
-
-	// if we're executing, abort out immediately
-	m_scheduler.eat_all_cycles();
-}
-
-
-//-------------------------------------------------
-//  schedule_new_driver - schedule a new game to
-//  be loaded
-//-------------------------------------------------
-
-void running_machine::schedule_new_driver(const game_driver &driver)
-{
-	m_hard_reset_pending = true;
-	m_new_driver_pending = &driver;
 
 	// if we're executing, abort out immediately
 	m_scheduler.eat_all_cycles();
@@ -794,23 +771,6 @@ void running_machine::add_logerror_callback(logerror_callback callback)
 {
 	assert_always(m_current_phase == MACHINE_PHASE_INIT, "Can only call add_logerror_callback at init time!");
 	m_logerror_list.append(*global_alloc(logerror_callback_item(callback)));
-}
-
-
-//-------------------------------------------------
-//  logerror - printf-style error logging
-//-------------------------------------------------
-
-void CLIB_DECL running_machine::logerror(const char *format, ...)
-{
-	// process only if there is a target
-	if (m_logerror_list.first() != NULL)
-	{
-		va_list arg;
-		va_start(arg, format);
-		vlogerror(format, arg);
-		va_end(arg);
-	}
 }
 
 
@@ -1109,7 +1069,7 @@ void running_machine::start_all_devices()
 						device->set_machine(*this);
 
 					// now start the device
-					mame_printf_verbose("Starting %s '%s'\n", device->name(), device->tag());
+					osd_printf_verbose("Starting %s '%s'\n", device->name(), device->tag());
 					device->start();
 				}
 
@@ -1117,7 +1077,7 @@ void running_machine::start_all_devices()
 				catch (device_missing_dependencies &)
 				{
 					// if we're the end, fail
-					mame_printf_verbose("  (missing dependencies; rescheduling)\n");
+					osd_printf_verbose("  (missing dependencies; rescheduling)\n");
 					failed_starts++;
 				}
 			}
@@ -1240,21 +1200,6 @@ astring &running_machine::nvram_filename(astring &result, device_t &device)
 
 void running_machine::nvram_load()
 {
-	if (config().m_nvram_handler != NULL)
-	{
-		astring filename;
-		emu_file file(options().nvram_directory(), OPEN_FLAG_READ);
-		if (file.open(nvram_filename(filename, root_device()), ".nv") == FILERR_NONE)
-		{
-			(*config().m_nvram_handler)(*this, &file, FALSE);
-			file.close();
-		}
-		else
-		{
-			(*config().m_nvram_handler)(*this, NULL, FALSE);
-		}
-	}
-
 	nvram_interface_iterator iter(root_device());
 	for (device_nvram_interface *nvram = iter.first(); nvram != NULL; nvram = iter.next())
 	{
@@ -1280,17 +1225,6 @@ void running_machine::nvram_save()
 	// mamep: dont save nvram during playback
 	if (ioport().has_playback_file())
 		return;
-
-	if (config().m_nvram_handler != NULL)
-	{
-		astring filename;
-		emu_file file(options().nvram_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-		if (file.open(nvram_filename(filename, root_device()), ".nv") == FILERR_NONE)
-		{
-			(*config().m_nvram_handler)(*this, &file, TRUE);
-			file.close();
-		}
-	}
 
 	nvram_interface_iterator iter(root_device());
 	for (device_nvram_interface *nvram = iter.first(); nvram != NULL; nvram = iter.next())

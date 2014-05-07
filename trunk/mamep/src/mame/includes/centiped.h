@@ -14,6 +14,7 @@ public:
 		m_rambase(*this, "rambase"),
 		m_videoram(*this, "videoram"),
 		m_spriteram(*this, "spriteram"),
+		m_paletteram(*this, "paletteram"),
 		m_bullsdrt_tiles_bankram(*this, "bullsdrt_bank"),
 		m_maincpu(*this, "maincpu"),
 		m_eeprom(*this, "eeprom"),
@@ -24,6 +25,7 @@ public:
 	optional_shared_ptr<UINT8> m_rambase;
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_spriteram;
+	optional_shared_ptr<UINT8> m_paletteram;
 	optional_shared_ptr<UINT8> m_bullsdrt_tiles_bankram;
 
 	UINT8 m_oldpos[4];

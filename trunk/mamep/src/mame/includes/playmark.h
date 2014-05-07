@@ -27,7 +27,6 @@ public:
 	optional_shared_ptr<UINT16> m_videoram3;
 	required_shared_ptr<UINT16> m_spriteram;
 	optional_shared_ptr<UINT16> m_rowscroll;
-//      UINT16 *     m_paletteram;    // currently this uses generic palette handling
 
 	/* video-related */
 	tilemap_t   *m_tx_tilemap;
@@ -73,7 +72,6 @@ public:
 	DECLARE_WRITE16_MEMBER(hrdtimes_txvideoram_w);
 	DECLARE_WRITE16_MEMBER(hrdtimes_fgvideoram_w);
 	DECLARE_WRITE16_MEMBER(hrdtimes_bgvideoram_w);
-	DECLARE_WRITE16_MEMBER(bigtwin_paletteram_w);
 	DECLARE_WRITE16_MEMBER(bigtwin_scroll_w);
 	DECLARE_WRITE16_MEMBER(wbeachvl_scroll_w);
 	DECLARE_WRITE16_MEMBER(excelsr_scroll_w);

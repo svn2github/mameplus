@@ -8,16 +8,6 @@
 
 #define SND_CLOCK 3072000   /* 3.072 MHz */
 
-const ay8910_interface cclimber_ay8910_interface =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, cclimber_audio_device, sample_select_w),
-	DEVCB_NULL
-};
-
 static INT16 *samplebuf;    /* buffer to decode samples at run time */
 
 static SAMPLES_START( cclimber_sh_start )
@@ -37,7 +27,7 @@ const samples_interface cclimber_samples_interface =
 
 MACHINE_CONFIG_FRAGMENT( cclimber_audio )
 	MCFG_SOUND_ADD("aysnd", AY8910, SND_CLOCK/2)
-	MCFG_SOUND_CONFIG(cclimber_ay8910_interface)
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(cclimber_audio_device, sample_select_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, ":mono", 0.50)
 
 	MCFG_SAMPLES_ADD("samples", cclimber_samples_interface)
@@ -60,7 +50,7 @@ const device_type CCLIMBER_AUDIO = &device_creator<cclimber_audio_device>;
 //-------------------------------------------------
 
 cclimber_audio_device::cclimber_audio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, CCLIMBER_AUDIO, "cclimber Sound Board", tag, owner, clock, "cclimber_audio", __FILE__),
+	: device_t(mconfig, CCLIMBER_AUDIO, "Crazy Climber Sound Board", tag, owner, clock, "cclimber_audio", __FILE__),
 	m_sample_num(0),
 	m_sample_freq(0),
 	m_sample_volume(0),

@@ -586,6 +586,9 @@ void adsp21062_device::SHIFT_OPERATION_IMM(int shiftop, int data, int rn, int rx
 			break;
 		}
 
+		case 0x11: /* TODO */
+			break;
+
 		case 0x12:      /* FEXT Rx BY <bit6>:<len6> (Sign Extended) */
 		{
 			UINT32 ext = (REG(rx) & MAKE_EXTRACT_MASK(bit, len)) >> bit;
@@ -761,6 +764,12 @@ void adsp21062_device::COMPUTE(UINT32 opcode)
 				break;
 			}
 
+			case 0x1c: /* TODO! fmul_avg */
+			{
+				compute_fmul_avg(fm, fxm, fym, fa, fxa, fya);
+				break;
+			}
+
 			case 0x1e:      /* Fm = Fxm * Fym,   Fa = MAX(Fxa, Fya) */
 			{
 				compute_fmul_fmax(fm, fxm, fym, fa, fxa, fya);
@@ -814,6 +823,7 @@ void adsp21062_device::COMPUTE(UINT32 opcode)
 					case 0x62:      compute_max(rn, rx, ry); break;
 					case 0x81:      compute_fadd(rn, rx, ry); break;
 					case 0x82:      compute_fsub(rn, rx, ry); break;
+					case 0x89:		compute_favg(rn, rx, ry); break;
 					case 0x8a:      compute_fcomp(rx, ry); break;
 					case 0x91:      compute_fabs_plus(rn, rx, ry); break;
 					case 0xa1:      compute_fpass(rn, rx); break;
@@ -2750,6 +2760,6 @@ void adsp21062_device::sharcop_unimplemented()
 	extern CPU_DISASSEMBLE(sharc);
 	char dasm[1000];
 	CPU_DISASSEMBLE_NAME(sharc)(NULL, dasm, m_pc, NULL, NULL, 0);
-	mame_printf_debug("SHARC: %08X: %s\n", m_pc, dasm);
+	osd_printf_debug("SHARC: %08X: %s\n", m_pc, dasm);
 	fatalerror("SHARC: Unimplemented opcode %04X%08X at %08X\n", (UINT16)(m_opcode >> 32), (UINT32)(m_opcode), m_pc);
 }

@@ -78,7 +78,6 @@ public:
 	required_shared_ptr<UINT16> m_spriteram;
 	DECLARE_READ16_MEMBER(cyclwarr_cpu_bb_r);
 	DECLARE_WRITE16_MEMBER(cyclwarr_cpu_bb_w);
-	DECLARE_READ16_MEMBER(cyclwarr_palette_r);
 	DECLARE_READ16_MEMBER(cyclwarr_sprite_r);
 	DECLARE_WRITE16_MEMBER(cyclwarr_sprite_w);
 	DECLARE_WRITE16_MEMBER(bigfight_a20000_w);
@@ -111,8 +110,6 @@ public:
 	DECLARE_WRITE8_MEMBER(apache3_road_x_w);
 	DECLARE_READ16_MEMBER(roundup5_vram_r);
 	DECLARE_WRITE16_MEMBER(roundup5_vram_w);
-	DECLARE_WRITE16_MEMBER(roundup5_palette_w);
-	DECLARE_WRITE16_MEMBER(apache3_palette_w);
 	DECLARE_WRITE16_MEMBER(roundup5_text_w);
 	DECLARE_READ16_MEMBER(cyclwarr_videoram0_r);
 	DECLARE_READ16_MEMBER(cyclwarr_videoram1_r);
@@ -137,6 +134,7 @@ public:
 	INTERRUPT_GEN_MEMBER(roundup5_interrupt);
 	DECLARE_READ8_MEMBER(tatsumi_hack_ym2151_r);
 	DECLARE_READ8_MEMBER(tatsumi_hack_oki_r);
+	DECLARE_WRITE_LINE_MEMBER(apache3_68000_reset);
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<m68000_base_device> m_subcpu;

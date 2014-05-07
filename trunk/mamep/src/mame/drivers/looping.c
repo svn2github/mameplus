@@ -447,7 +447,7 @@ WRITE8_MEMBER(looping_state::speech_enable_w)
 WRITE8_MEMBER(looping_state::ballon_enable_w)
 {
 	if (m_last != data)
-		mame_printf_debug("ballon_enable_w = %d\n", data);
+		osd_printf_debug("ballon_enable_w = %d\n", data);
 	m_last = data;
 }
 
@@ -459,11 +459,11 @@ WRITE8_MEMBER(looping_state::ballon_enable_w)
  *
  *************************************/
 
-WRITE8_MEMBER(looping_state::out_0_w){ mame_printf_debug("out0 = %02X\n", data); }
-WRITE8_MEMBER(looping_state::out_2_w){ mame_printf_debug("out2 = %02X\n", data); }
+WRITE8_MEMBER(looping_state::out_0_w){ osd_printf_debug("out0 = %02X\n", data); }
+WRITE8_MEMBER(looping_state::out_2_w){ osd_printf_debug("out2 = %02X\n", data); }
 
-READ8_MEMBER(looping_state::adc_r){ mame_printf_debug("%04X:ADC read\n", space.device().safe_pc()); return 0xff; }
-WRITE8_MEMBER(looping_state::adc_w){ mame_printf_debug("%04X:ADC write = %02X\n", space.device().safe_pc(), data); }
+READ8_MEMBER(looping_state::adc_r){ osd_printf_debug("%04X:ADC read\n", space.device().safe_pc()); return 0xff; }
+WRITE8_MEMBER(looping_state::adc_w){ osd_printf_debug("%04X:ADC write = %02X\n", space.device().safe_pc(), data); }
 
 WRITE8_MEMBER(looping_state::plr2_w)
 {
@@ -617,23 +617,6 @@ static GFXDECODE_START( looping )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  Sound interfaces
- *
- *************************************/
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 /*************************************
  *
  *  Machine drivers
@@ -670,7 +653,7 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, SOUND_CLOCK/4)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(READ8(driver_device, soundlatch_byte_r))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 
 	MCFG_SOUND_ADD("tms", TMS5220, TMS_CLOCK)

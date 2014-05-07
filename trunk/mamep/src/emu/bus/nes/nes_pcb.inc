@@ -302,6 +302,7 @@ static const nes_pcb pcb_list[] =
 	{ "unl_cfight",       UNL_CITYFIGHT },
 	{ "nocash_nochr",     NOCASH_NOCHR },
 	{ "nes_action53",     BTL_ACTION53 },
+	{ "nes_2a03pur",      BTL_2A03_PURITANS },
 	{ "ffe3",             FFE3_BOARD },
 	{ "ffe4",             FFE4_BOARD },
 	{ "ffe8",             FFE8_BOARD },
@@ -506,7 +507,7 @@ void nes_cart_slot_device::call_load_pcb()
 		m_cart->set_vrc_lines(nes_cart_get_line(get_feature("vrc2-pin3")),
 						nes_cart_get_line(get_feature("vrc2-pin4")),
 						(nes_cart_get_line(get_feature("vrc2-pin21")) != 10) ? 1 : 0);
-//      mame_printf_error("VRC-2, pin3: A%d, pin4: A%d, pin21: %d\n", nes_cart_get_line(get_feature("vrc2-pin3")), nes_cart_get_line(get_feature("vrc2-pin4")),
+//      osd_printf_error("VRC-2, pin3: A%d, pin4: A%d, pin21: %d\n", nes_cart_get_line(get_feature("vrc2-pin3")), nes_cart_get_line(get_feature("vrc2-pin4")),
 //                              nes_cart_get_line(get_feature("vrc2-pin21")));
 	}
 
@@ -515,7 +516,7 @@ void nes_cart_slot_device::call_load_pcb()
 		m_cart->set_vrc_lines(nes_cart_get_line(get_feature("vrc4-pin3")),
 						nes_cart_get_line(get_feature("vrc4-pin4")),
 						0);
-//      mame_printf_error("VRC-4, pin3: A%d, pin4: A%d\n", nes_cart_get_line(get_feature("vrc4-pin3"), nes_cart_get_line(get_feature("vrc4-pin4"));
+//      osd_printf_error("VRC-4, pin3: A%d, pin4: A%d\n", nes_cart_get_line(get_feature("vrc4-pin3"), nes_cart_get_line(get_feature("vrc4-pin4"));
 	}
 
 	if (m_pcb_id == KONAMI_VRC6)
@@ -523,7 +524,7 @@ void nes_cart_slot_device::call_load_pcb()
 		m_cart->set_vrc_lines(nes_cart_get_line(get_feature("vrc6-pin9")),
 						nes_cart_get_line(get_feature("vrc6-pin10")),
 						0);
-//      mame_printf_error("VRC-6, pin9: A%d, pin10: A%d\n", nes_cart_get_line(get_feature("vrc6-pin9"), nes_cart_get_line(get_feature("vrc6-pin10"));
+//      osd_printf_error("VRC-6, pin9: A%d, pin10: A%d\n", nes_cart_get_line(get_feature("vrc6-pin9"), nes_cart_get_line(get_feature("vrc6-pin10"));
 	}
 
 	if (m_pcb_id == STD_HKROM || m_pcb_id == TAITO_X1_017)
@@ -578,7 +579,20 @@ void nes_cart_slot_device::call_load_pcb()
 	{
 		UINT32 tot_size = battery_size + mapper_sram_size;
 		dynamic_buffer temp_nvram(tot_size);
-		battery_load(temp_nvram, tot_size, 0x00);
+
+		// some games relies on specific battery patterns to work
+		// (e.g. Silva Saga does not work with SRAM fully initialized to 0x00)
+		// and we use the info from xml here to prepare a default NVRAM
+		dynamic_buffer default_nvram(tot_size);
+		if (battery_size)
+			memcpy(default_nvram, get_software_region("bwram"), battery_size);
+		if (mapper_sram_size)
+			memset(default_nvram + battery_size, 0, mapper_sram_size);
+
+		// load battery (using default if no battery exists)
+		battery_load(temp_nvram, tot_size, default_nvram);
+
+		// copy battery into PCB arrays
 		if (battery_size)
 		{
 			m_cart->battery_alloc(battery_size);

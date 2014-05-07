@@ -238,23 +238,10 @@ WRITE16_MEMBER(jpmsys5_state::jpm_upd7759_w)
 		}
 		case 1:
 		{
-			//Reset 0x04, data 0x02, clock 0x01
-			if(data & 0x04)
-			{
-				int alpha_data = (data & 0x02)?0:1;
-				if (m_alpha_clock != (data & 0x01))
-				{
-					if (!m_alpha_clock)//falling edge
-					{
-						m_vfd->shift_data(alpha_data);
-					}
-				}
-				m_alpha_clock = (data & 0x01);
-			}
-			else
-			{
-				m_vfd->reset();
-			}
+			//Reset 0x04, data 0x02, clock 
+			m_vfd->por(data & 0x04);
+			m_vfd->data(data & 0x02);
+			m_vfd->sclk(data & 0x01);
 			break;
 		}
 		case 2:
@@ -646,7 +633,7 @@ static MACHINE_CONFIG_START( jpmsys5v, jpmsys5_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_ROC10937_ADD("vfd",0,RIGHT_TO_LEFT)//for debug ports
+	MCFG_S16LF01_ADD("vfd",0)//for debug ports
 
 	MCFG_MACHINE_START_OVERRIDE(jpmsys5_state,jpmsys5v)
 	MCFG_MACHINE_RESET_OVERRIDE(jpmsys5_state,jpmsys5v)
@@ -864,7 +851,7 @@ MACHINE_CONFIG_START( jpmsys5_ym, jpmsys5_state )
 	MCFG_CLOCK_SIGNAL_HANDLER(WRITELINE(jpmsys5_state, write_acia_clock))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_ROC10937_ADD("vfd",0,RIGHT_TO_LEFT)
+	MCFG_S16LF01_ADD("vfd",0)
 
 	MCFG_MACHINE_START_OVERRIDE(jpmsys5_state,jpmsys5)
 	MCFG_MACHINE_RESET_OVERRIDE(jpmsys5_state,jpmsys5)
@@ -911,7 +898,7 @@ MACHINE_CONFIG_START( jpmsys5, jpmsys5_state )
 	MCFG_CLOCK_SIGNAL_HANDLER(WRITELINE(jpmsys5_state, write_acia_clock))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_ROC10937_ADD("vfd",0,RIGHT_TO_LEFT)
+	MCFG_S16LF01_ADD("vfd",0)
 
 	MCFG_MACHINE_START_OVERRIDE(jpmsys5_state,jpmsys5)
 	MCFG_MACHINE_RESET_OVERRIDE(jpmsys5_state,jpmsys5)

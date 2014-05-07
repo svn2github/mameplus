@@ -2565,61 +2565,6 @@ WRITE_LINE_MEMBER(calomega_state::write_acia_clock)
 }
 
 /*************************************************
-*                Sound Interfaces                *
-*************************************************/
-
-static const ay8910_interface sys903_ay8912_intf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("SW3"),                /* from schematics */
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-static const ay8910_interface sys905_ay8912_intf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-static const ay8910_interface sys906_ay8912_intf =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("SW2"),    /* From PCB pic. Value is stored at $0539 */
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(calomega_state,ay_aout_w),
-	DEVCB_DRIVER_MEMBER(calomega_state,ay_bout_w)
-};
-
-
-/*************************************************
-*                CRTC Interface                  *
-*************************************************/
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-
-/*************************************************
 *                Machine Drivers                 *
 *************************************************/
 
@@ -2653,12 +2598,14 @@ static MACHINE_CONFIG_START( sys903, calomega_state )
 	MCFG_PALETTE_ADD("palette", 1024)
 	MCFG_PALETTE_INIT_OWNER(calomega_state, calomega)
 
-	MCFG_MC6845_ADD("crtc", MC6845, "screen", CPU_CLOCK, mc6845_intf) /* 6845 @ CPU clock */
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", CPU_CLOCK) /* 6845 @ CPU clock */
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("ay8912", AY8912, SND_CLOCK) /* confirmed */
-	MCFG_SOUND_CONFIG(sys903_ay8912_intf)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("SW3"))                /* from schematics */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 
 	/* acia */
@@ -2679,7 +2626,7 @@ static MACHINE_CONFIG_DERIVED( s903mod, sys903 )
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("ay8912")
-	MCFG_SOUND_CONFIG(sys905_ay8912_intf)
+	MCFG_AY8910_PORT_A_READ_CB(NULL)
 
 	MCFG_DEVICE_REMOVE("acia6850_0")
 
@@ -2703,7 +2650,7 @@ static MACHINE_CONFIG_DERIVED( sys905, sys903 )
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("ay8912")
-	MCFG_SOUND_CONFIG(sys905_ay8912_intf)
+	MCFG_AY8910_PORT_A_READ_CB(NULL)
 
 	MCFG_DEVICE_REMOVE("acia6850_0")
 
@@ -2735,7 +2682,9 @@ static MACHINE_CONFIG_DERIVED( sys906, sys903 )
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("ay8912")
-	MCFG_SOUND_CONFIG(sys906_ay8912_intf)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("SW2"))    /* From PCB pic. Value is stored at $0539 */
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(calomega_state, ay_aout_w))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(calomega_state, ay_bout_w))
 
 	MCFG_DEVICE_REMOVE("acia6850_0")
 

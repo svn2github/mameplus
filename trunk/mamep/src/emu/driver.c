@@ -34,19 +34,12 @@ ADDRESS_MAP_END
 driver_device::driver_device(const machine_config &mconfig, device_type type, const char *tag)
 	: device_t(mconfig, type, "Driver Device", tag, NULL, 0, "", __FILE__),
 		device_memory_interface(mconfig, *this),
-		m_generic_paletteram_8(*this, "paletteram"),
-		m_generic_paletteram2_8(*this, "paletteram2"),
-		m_generic_paletteram_16(*this, "paletteram"),
-		m_generic_paletteram2_16(*this, "paletteram2"),
-		m_generic_paletteram_32(*this, "paletteram"),
-		m_generic_paletteram2_32(*this, "paletteram2"),
 		m_space_config("generic", ENDIANNESS_LITTLE, 8, 32, 0, NULL, *ADDRESS_MAP_NAME(generic)),
 		m_system(NULL),
 		m_latch_clear_value(0),
 		m_flip_screen_x(0),
 		m_flip_screen_y(0)
 {
-	memset(m_legacy_callbacks, 0, sizeof(m_legacy_callbacks));
 	memset(m_latched_value, 0, sizeof(m_latched_value));
 	memset(m_latch_read, 0, sizeof(m_latch_read));
 }
@@ -90,11 +83,6 @@ void driver_device::static_set_game(device_t &device, const game_driver &game)
 //  static_set_callback - set the a callback in
 //  the device configuration
 //-------------------------------------------------
-
-void driver_device::static_set_callback(device_t &device, callback_type type, legacy_callback_func callback)
-{
-	downcast<driver_device &>(device).m_legacy_callbacks[type] = callback;
-}
 
 void driver_device::static_set_callback(device_t &device, callback_type type, driver_callback_delegate callback)
 {
@@ -211,11 +199,6 @@ ioport_constructor driver_device::device_input_ports() const
 
 void driver_device::device_start()
 {
-	// bind our legacy callbacks
-	for (int index = 0; index < ARRAY_LENGTH(m_legacy_callbacks); index++)
-		if (m_legacy_callbacks[index] != NULL)
-			m_callbacks[index] = driver_callback_delegate(m_legacy_callbacks[index], "legacy_callback", &machine());
-
 	// reschedule ourselves to be last
 	device_iterator iter(*this);
 	for (device_t *test = iter.first(); test != NULL; test = iter.next())

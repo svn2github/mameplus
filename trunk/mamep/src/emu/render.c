@@ -733,7 +733,7 @@ const rgb_t *render_container::bcg_lookup_table(int texformat, palette_t *palett
 			{
 				assert(palette == m_screen->palette()->palette());
 				m_palclient.reset(global_alloc(palette_client(*palette)));
-				m_bcglookup.resize(palette->num_colors() * palette->num_groups());
+				m_bcglookup.resize(palette->max_index());
 				recompute_lookups();
 			}
 			assert (palette == &m_palclient->palette());
@@ -825,7 +825,7 @@ void render_container::recompute_lookups()
 	{
 		palette_t &palette = m_palclient->palette();
 		const rgb_t *adjusted_palette = palette.entry_list_adjusted();
-		int colors = palette.num_colors() * palette.num_groups();
+		int colors = palette.max_index();
 
 		for (int i = 0; i < colors; i++)
 		{
@@ -1265,22 +1265,10 @@ void render_target::compute_minimum_size(INT32 &minwidth, INT32 &minheight)
 		for (layout_view::item *curitem = m_curview->first_item(layer); curitem != NULL; curitem = curitem->next())
 			if (curitem->screen() != NULL)
 			{
+				// use a hard-coded default visible area for vector screens
 				screen_device *screen = curitem->screen();
-
-				// get visible area
-				rectangle visarea = (screen->screen_type() == SCREEN_TYPE_VECTOR)
-					? rectangle(0, 639, 0, 479) // use a hard-coded default visible area for vector screens
-					: screen->visible_area();
-
-				// is our visible area too small?  if so, we need to bump up the size
-				float minimum_width = m_manager.machine().options().minimum_width();
-				float minimum_height = m_manager.machine().options().minimum_height();
-				INT32 factor = (INT32) ceil(MAX(minimum_width / visarea.width(), minimum_height / visarea.height()));
-				factor = MAX(factor, 1);
-				visarea.min_x *= factor;
-				visarea.min_y *= factor;
-				visarea.max_x *= factor;
-				visarea.max_y *= factor;
+				const rectangle vectorvis(0, 639, 0, 479);
+				const rectangle &visarea = (screen->screen_type() == SCREEN_TYPE_VECTOR) ? vectorvis : screen->visible_area();
 
 				// apply target orientation to the bounds
 				render_bounds bounds = curitem->bounds();
@@ -1655,9 +1643,9 @@ bool render_target::load_layout_file(const char *dirname, const char *filename)
 	if (rootnode == NULL)
 	{
 		if (filename[0] != '<')
-			mame_printf_warning("Improperly formatted XML file '%s', ignoring\n", filename);
+			osd_printf_warning("Improperly formatted XML file '%s', ignoring\n", filename);
 		else
-			mame_printf_warning("Improperly formatted XML string, ignoring\n");
+			osd_printf_warning("Improperly formatted XML string, ignoring\n");
 		return false;
 	}
 
@@ -1670,9 +1658,9 @@ bool render_target::load_layout_file(const char *dirname, const char *filename)
 	catch (emu_fatalerror &err)
 	{
 		if (filename[0] != '<')
-			mame_printf_warning("Error in XML file '%s': %s\n", filename, err.string());
+			osd_printf_warning("Error in XML file '%s': %s\n", filename, err.string());
 		else
-			mame_printf_warning("Error in XML string: %s\n", err.string());
+			osd_printf_warning("Error in XML string: %s\n", err.string());
 		result = false;
 	}
 

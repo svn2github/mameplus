@@ -5,6 +5,7 @@
 ****************************************************************************/
 
 #include "machine/intelfsh.h"
+#include "cpu/sh2/sh2.h"
 
 class cps3_state : public driver_device
 {
@@ -106,8 +107,8 @@ public:
 	DECLARE_DRIVER_INIT(jojoba);
 	DECLARE_DRIVER_INIT(sfiii2);
 	DECLARE_DRIVER_INIT(cps3boot);
+	SH2_DMA_KLUDGE_CB(dma_callback);
 	DECLARE_DRIVER_INIT(nocd);
-
 	virtual void machine_reset();
 	virtual void video_start();
 	UINT32 screen_update_cps3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
@@ -130,11 +131,11 @@ public:
 	void cps3_process_character_dma(UINT32 address);
 	void copy_from_nvram();
 	inline void cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp, const rectangle &clip, gfx_element *gfx,
-		unsigned int code,unsigned int color, int flipx, int flipy, int sx, int sy,
-		int transparency,int transparent_color,
-		int scalex, int scaley,bitmap_ind8 *pri_buffer,UINT32 pri_mask);
+									unsigned int code, unsigned int color, int flipx, int flipy, int sx, int sy,
+									int transparency, int transparent_color,
+									int scalex, int scaley, bitmap_ind8 *pri_buffer, UINT32 pri_mask);
 
-	required_device<cpu_device> m_maincpu;
+	required_device<sh2_device> m_maincpu;
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<palette_device> m_palette;
 	int m_use_fastboot;

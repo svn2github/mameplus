@@ -86,7 +86,11 @@ legacy_mos6526_device::legacy_mos6526_device(const machine_config &mconfig, devi
 		m_write_pa(*this),
 		m_read_pb(*this),
 		m_write_pb(*this),
-		m_tod_clock(0)
+		m_tod_clock(0),
+		m_flag(0),
+		m_cnt(0),
+		m_shift(0),
+		m_serial(0)
 {
 }
 
@@ -97,7 +101,7 @@ legacy_mos6526r2_device::legacy_mos6526r2_device(const machine_config &mconfig, 
 	: legacy_mos6526_device(mconfig, LEGACY_MOS6526R2, "LEGACY_MOS6526R2", tag, owner, clock, "legacy_mos6526r2", __FILE__) { }
 
 legacy_mos8520_device::legacy_mos8520_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: legacy_mos6526_device(mconfig, LEGACY_MOS8520, "LEGACY_MOS8520", tag, owner, clock, "legacy_mos8520", __FILE__) { }
+	: legacy_mos6526_device(mconfig, LEGACY_MOS8520, "8520 CIA", tag, owner, clock, "legacy_mos8520", __FILE__) { }
 
 legacy_mos5710_device::legacy_mos5710_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: legacy_mos6526_device(mconfig, LEGACY_MOS5710, "LEGACY_MOS5710", tag, owner, clock, "legacy_mos5710", __FILE__) { }
@@ -925,19 +929,3 @@ UINT16 legacy_mos6526_device::cia_timer::get_count()
 ***************************************************************************/
 
 void cia_set_port_mask_value(device_t *device, int port, int data) { downcast<legacy_mos6526_device *>(device)->set_port_mask_value(port, data); }
-
-READ8_DEVICE_HANDLER( mos6526_r ) { return downcast<legacy_mos6526_device *>(device)->reg_r(offset); }
-WRITE8_DEVICE_HANDLER( mos6526_w ) { downcast<legacy_mos6526_device *>(device)->reg_w(offset, data); }
-
-READ8_DEVICE_HANDLER( mos6526_pa_r ) { return downcast<legacy_mos6526_device *>(device)->pa_r(offset); }
-READ8_DEVICE_HANDLER( mos6526_pb_r ) { return downcast<legacy_mos6526_device *>(device)->pb_r(offset); }
-
-READ_LINE_DEVICE_HANDLER( mos6526_irq_r ) { return downcast<legacy_mos6526_device *>(device)->irq_r(); }
-
-WRITE_LINE_DEVICE_HANDLER( mos6526_tod_w ) { downcast<legacy_mos6526_device *>(device)->tod_w(state); }
-
-READ_LINE_DEVICE_HANDLER( mos6526_cnt_r ) { return downcast<legacy_mos6526_device *>(device)->cnt_r(); }
-WRITE_LINE_DEVICE_HANDLER( mos6526_cnt_w ) { downcast<legacy_mos6526_device *>(device)->cnt_w(state); }
-
-READ_LINE_DEVICE_HANDLER( mos6526_sp_r ) { return downcast<legacy_mos6526_device *>(device)->sp_r(); }
-WRITE_LINE_DEVICE_HANDLER( mos6526_sp_w ) { downcast<legacy_mos6526_device *>(device)->sp_w(state); }

@@ -516,17 +516,6 @@ static GFXDECODE_START( airbustr )
 	GFXDECODE_ENTRY( "gfx2", 0, sprite_gfxlayout, 512, 16 ) // sprites
 GFXDECODE_END
 
-/* Sound Interfaces */
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"),       // DSW-1 connected to port A
-	DEVCB_INPUT_PORT("DSW2"),       // DSW-2 connected to port B
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 /* Interrupt Generators */
 
@@ -589,12 +578,6 @@ void airbustr_state::machine_reset()
 
 /* Machine Driver */
 
-static const kaneko_pandora_interface airbustr_pandora_config =
-{
-	1,  /* gfx_region */
-	0, 0    /* x_offs, y_offs */
-};
-
 static MACHINE_CONFIG_START( airbustr, airbustr_state )
 
 	/* basic machine hardware */
@@ -631,7 +614,8 @@ static MACHINE_CONFIG_START( airbustr, airbustr_state )
 	MCFG_PALETTE_ADD("palette", 768)
 	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
-	MCFG_KANEKO_PANDORA_ADD("pandora", airbustr_pandora_config)
+	MCFG_DEVICE_ADD("pandora", KANEKO_PANDORA, 0)
+	MCFG_KANEKO_PANDORA_GFX_REGION(1)
 	MCFG_KANEKO_PANDORA_GFXDECODE("gfxdecode")
 	MCFG_KANEKO_PANDORA_PALETTE("palette")
 
@@ -639,7 +623,8 @@ static MACHINE_CONFIG_START( airbustr, airbustr_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 3000000)
-	MCFG_YM2203_AY8910_INTF(&ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))       // DSW-1 connected to port A
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW2"))       // DSW-2 connected to port B
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 0.25)
 	MCFG_SOUND_ROUTE(2, "mono", 0.25)

@@ -32,7 +32,7 @@ we actually have 18 segments, including the semicolon portions.
 */
 
 static const UINT16 roc10937charset[]=
-{            // FEDC BA98 7654 3210
+{           // FEDC BA98 7654 3210
 	0x507F, // 0101 0000 0111 1111 @.
 	0x44CF, // 0100 0100 1100 1111 A.
 	0x153F, // 0001 0101 0011 1111 B.
@@ -95,11 +95,12 @@ static const UINT16 roc10937charset[]=
 			//                     -.
 	0x2001, // 0010 0000 0000 0001 -
 			//                     /.
-	0x2430, // 0010 0100 0011 0000 <.
+	0x2230, // 0010 0010 0011 0000 <.
 	0x4430, // 0100 0100 0011 0000 =.
 	0x8830, // 1000 1000 0011 0000 >.
 	0x1407, // 0001 0100 0000 0111 ?.
 };
+
 
 ///////////////////////////////////////////////////////////////////////////
 static const int roc10937poslut[]=
@@ -128,7 +129,6 @@ rocvfd_t::rocvfd_t(const machine_config &mconfig, device_type type, const char *
 	device_t(mconfig, type, name, tag, owner, clock, shortname, source)
 {
 	m_port_val=0;
-	m_reversed=0;
 }
 
 
@@ -138,16 +138,9 @@ void rocvfd_t::static_set_value(device_t &device, int val)
 	roc.m_port_val = val;
 }
 
-void rocvfd_t::static_set_zero(device_t &device, bool reversed)
-{
-	rocvfd_t &roc = downcast<rocvfd_t &>(device);
-	roc.m_reversed = reversed;
-}
-
 void rocvfd_t::device_start()
 {
 	save_item(NAME(m_port_val));
-	save_item(NAME(m_reversed));
 	save_item(NAME(m_cursor_pos));
 	save_item(NAME(m_window_size));
 	save_item(NAME(m_shift_count));
@@ -157,6 +150,8 @@ void rocvfd_t::device_start()
 	save_item(NAME(m_outputs));
 	save_item(NAME(m_brightness));
 	save_item(NAME(m_count));
+	save_item(NAME(m_sclk));
+	save_item(NAME(m_data));
 	save_item(NAME(m_duty));
 	save_item(NAME(m_disp));
 
@@ -175,6 +170,8 @@ void rocvfd_t::device_reset()
 	m_count=0;
 	m_duty=31;
 	m_disp = 0;
+	m_sclk = 0;
+	m_data = 0;
 
 	memset(m_chars, 0, sizeof(m_chars));
 	memset(m_outputs, 0, sizeof(m_outputs));
@@ -190,41 +187,60 @@ UINT32 rocvfd_t::set_display(UINT32 segin)
 ///////////////////////////////////////////////////////////////////////////
 void rocvfd_t::device_post_load()
 {
-	for (int i =0; i<16; i++)
-	{
-		output_set_indexed_value("vfd", (m_port_val*16) + i, m_outputs[i]);
-	}
+	update_display();
 }
 
 void rocvfd_t::update_display()
 {
 	for (int i =0; i<16; i++)
 	{
-		if (m_reversed)
-		{
-			m_outputs[i] = set_display(m_chars[15-i]);
-		}
-		else
-		{
-			m_outputs[i] = set_display(m_chars[i]);
-		}
+		m_outputs[i] = set_display(m_chars[i]);
 		output_set_indexed_value("vfd", (m_port_val*16) + i, m_outputs[i]);
 	}
 }
 
-void rocvfd_t::shift_data(int data)
+WRITE_LINE_MEMBER( rocvfd_t::sclk ) 
+{ 
+	shift_clock(state); 
+}
+
+WRITE_LINE_MEMBER( rocvfd_t::data ) 
+{ 
+	m_data = state;
+}
+
+WRITE_LINE_MEMBER( rocvfd_t::por ) 
 {
-	m_shift_data <<= 1;
-
-	if ( !data ) m_shift_data |= 1;
-
-	if ( ++m_shift_count >= 8 )
+	//If line goes low, reset mode is engaged, until such a time as it goes high again.
+	if (!state)
 	{
-		write_char(m_shift_data);
-		m_shift_count = 0;
-		m_shift_data  = 0;
+		reset();
 	}
-	update_display();
+}
+
+
+void rocvfd_t::shift_clock(int state)
+{
+	if (m_sclk != state)
+	{
+		//Clock data on FALLING edge
+		if (!m_sclk)
+		{
+			m_shift_data <<= 1;
+
+			if ( m_data ) m_shift_data |= 1;
+
+			if ( ++m_shift_count >= 8 )
+			{
+				write_char(m_shift_data);
+				m_shift_count = 0;
+				m_shift_data  = 0;
+			}
+			update_display();
+
+		}
+	}
+	m_sclk = state;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -232,7 +248,6 @@ roc10937_t::roc10937_t(const machine_config &mconfig, const char *tag, device_t 
 	: rocvfd_t(mconfig, ROC10937, "Rockwell 10937 VFD controller and compatible", tag, owner, clock, "roc10937", __FILE__)
 {
 	m_port_val=0;
-	m_reversed=0;
 }
 
 const device_type MSC1937 = &device_creator<msc1937_t>;
@@ -241,7 +256,6 @@ msc1937_t::msc1937_t(const machine_config &mconfig, const char *tag, device_t *o
 	: rocvfd_t(mconfig, MSC1937, "OKI MSC1937 VFD controller", tag, owner, clock, "msc1937", __FILE__)
 {
 	m_port_val=0;
-	m_reversed=0;
 }
 
 void rocvfd_t::write_char(int data)
@@ -301,7 +315,6 @@ roc10957_t::roc10957_t(const machine_config &mconfig, const char *tag, device_t 
 	: rocvfd_t(mconfig, ROC10957, "Rockwell 10957 VFD controller and compatible", tag, owner, clock, "roc10957", __FILE__)
 {
 	m_port_val=0;
-	m_reversed=0;
 }
 
 void roc10957_t::write_char(int data)
@@ -362,4 +375,12 @@ void roc10957_t::write_char(int data)
 		break;
 		}
 	}
+}
+
+const device_type S16LF01 = &device_creator<s16lf01_t>;
+
+s16lf01_t::s16lf01_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: rocvfd_t(mconfig, S16LF01, "Samsung 16LF01 Series VFD controller and compatible", tag, owner, clock, "s16lf01", __FILE__)
+{
+	m_port_val=0;
 }

@@ -30,7 +30,7 @@ const device_type KANEKO_VU002_SPRITE = &device_creator<kaneko_vu002_sprite_devi
 const device_type KANEKO_KC002_SPRITE = &device_creator<kaneko_kc002_sprite_device>;
 
 kaneko16_sprite_device::kaneko16_sprite_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock, device_type type)
-	: device_t(mconfig, type, "kaneko16_sprite_device", tag, owner, clock, "kaneko16_sprite", __FILE__),
+	: device_t(mconfig, type, "Kaneko 16-bit Sprites", tag, owner, clock, "kaneko16_sprite", __FILE__),
 		device_video_interface(mconfig, *this),
 		m_gfxdecode(*this)
 {
@@ -136,7 +136,8 @@ Offset:         Format:                     Value:
                     f--- ---- ---- ----     Multisprite: Use Latched Code + 1
                     -e-- ---- ---- ----     Multisprite: Use Latched Color (And Flip?)
                     --d- ---- ---- ----     Multisprite: Use Latched X,Y As Offsets
-                    ---c ba-- ---- ----
+                    ---c b--- ---- ----     Index Of XY Offset
+                    ---- -a-- ---- ----
                     ---- --9- ---- ----     High Priority (vs FG Tiles Of High Priority)
                     ---- ---8 ---- ----     High Priority (vs BG Tiles Of High Priority)
                     ---- ---- 7654 32--     Color
@@ -148,7 +149,8 @@ Offset:         Format:                     Value:
                     f--- ---- ---- ----     Multisprite: Use Latched Code + 1
                     -e-- ---- ---- ----     Multisprite: Use Latched Color (And Flip?)
                     --d- ---- ---- ----     Multisprite: Use Latched X,Y As Offsets
-                    ---c ba-- ---- ----
+                    ---c b--- ---- ----     Index Of XY Offset
+                    ---- -a-- ---- ----
                     ---- --9- ---- ----     X Flip
                     ---- ---8 ---- ----     Y Flip
                     ---- ---- 7--- ----     High Priority (vs FG Tiles Of High Priority)

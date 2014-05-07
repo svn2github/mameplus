@@ -58,10 +58,8 @@ saturn_bram32mb_device::saturn_bram32mb_device(const machine_config &mconfig, co
 
 void saturn_bram_device::device_start()
 {
-	// TODO: only allocate the real amount of RAM
-	m_ext_bram = auto_alloc_array_clear(machine(), UINT8, 0x400000);
-	m_ext_bram_size = 0x400000;
-	save_pointer(NAME(m_ext_bram), 0x400000);
+	m_ext_bram.resize(m_size);
+	save_item(NAME(m_ext_bram));
 }
 
 void saturn_bram_device::device_reset()
@@ -72,7 +70,7 @@ void saturn_bram_device::nvram_default()
 {
 	static const UINT8 init[16] =
 	{ 'B', 'a', 'c', 'k', 'U', 'p', 'R', 'a', 'm', ' ', 'F', 'o', 'r', 'm', 'a', 't' };
-	memset(m_ext_bram, 0, m_ext_bram_size);
+	memset(m_ext_bram, 0, m_ext_bram.bytes());
 
 	for (int i = 0; i < 32; i++)
 	{
@@ -94,7 +92,7 @@ READ32_MEMBER(saturn_bram_device::read_ext_bram)
 		return (m_ext_bram[offset * 2] << 16) | m_ext_bram[offset * 2 + 1];
 	else
 	{
-		mame_printf_error("Battery RAM read beyond its boundary! offs: %X\n", offset);
+		osd_printf_error("Battery RAM read beyond its boundary! offs: %X\n", offset);
 		return 0xffffffff;
 	}
 }
@@ -109,5 +107,5 @@ WRITE32_MEMBER(saturn_bram_device::write_ext_bram)
 			m_ext_bram[offset * 2 + 1] = (data & 0x000000ff) >> 0;
 	}
 	else
-		mame_printf_error("Battery RAM write beyond its boundary! offs: %X data: %X\n", offset, data);
+		osd_printf_error("Battery RAM write beyond its boundary! offs: %X data: %X\n", offset, data);
 }

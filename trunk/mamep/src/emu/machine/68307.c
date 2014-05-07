@@ -2,27 +2,70 @@
 
 #include "68307.h"
 
+/* 68307 SERIAL Module */
+/* all ports on this are 8-bit? */
+
+/* this is a 68681 'compatible' chip but with only a single channel implemented
+  (writes to the other channel have no effects)
+
+  for now at least we piggyback on the existing 68307 emulation rather than having
+  a custom verson here, that may change later if subtle differences exist.
+
+*/
+READ8_MEMBER( m68307cpu_device::m68307_internal_serial_r )
+{
+	m68307cpu_device *m68k = this;
+	
+	if (offset&1) return m_duart->read(*m68k->program, offset>>1);
+	return 0x0000;
+}
+
+WRITE8_MEMBER(m68307cpu_device::m68307_internal_serial_w)
+{
+	m68307cpu_device *m68k = this;
+
+	if (offset & 1) m_duart->write(*m68k->program, offset >> 1, data);
+}
+
+
+
 static ADDRESS_MAP_START( m68307_internal_map, AS_PROGRAM, 16, m68307cpu_device )
 	AM_RANGE(0x000000f0, 0x000000ff) AM_READWRITE(m68307_internal_base_r, m68307_internal_base_w)
 ADDRESS_MAP_END
 
 
+
+static MACHINE_CONFIG_FRAGMENT( 68307fragment )
+	MCFG_MC68681_ADD("internal68681", 16000000/4) // ?? Mhz - should be specified in inline config
+	MCFG_MC68681_IRQ_CALLBACK(WRITELINE(m68307cpu_device, m68307_duart_irq_handler))
+	MCFG_MC68681_A_TX_CALLBACK(WRITELINE(m68307cpu_device, m68307_duart_txa))
+	MCFG_MC68681_B_TX_CALLBACK(WRITELINE(m68307cpu_device, m68307_duart_txb))
+	MCFG_MC68681_INPORT_CALLBACK(READ8(m68307cpu_device, m68307_duart_input_r))
+	MCFG_MC68681_OUTPORT_CALLBACK(WRITE8(m68307cpu_device, m68307_duart_output_w))
+MACHINE_CONFIG_END
+
+machine_config_constructor m68307cpu_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( 68307fragment );
+}
+
+
 m68307cpu_device::m68307cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: m68000_device(mconfig, "MC68307", tag, owner, clock, M68307, 16,24, ADDRESS_MAP_NAME(m68307_internal_map), "mc68307", __FILE__)
+	: m68000_device(mconfig, "MC68307", tag, owner, clock, M68307, 16,24, ADDRESS_MAP_NAME(m68307_internal_map), "mc68307", __FILE__),
+	write_irq(*this),
+	write_a_tx(*this),
+	write_b_tx(*this),
+	read_inport(*this),
+	write_outport(*this),
+	m_duart(*this, "internal68681")
 {
 	m68307SIM = 0;
 	m68307MBUS = 0;
-	m68307SERIAL = 0;
 	m68307TIMER = 0;
 	m68307_base = 0;
 	m68307_scrhigh = 0;
 	m68307_scrlow = 0;
 	m68307_currentcs = 0;
-
-	m_m68307_porta_r = 0;
-	m_m68307_porta_w = 0;
-	m_m68307_portb_r = 0;
-	m_m68307_portb_w = 0;
 }
 
 
@@ -36,7 +79,6 @@ void m68307cpu_device::device_reset()
 
 	if (m68307SIM) m68307SIM->reset();
 	if (m68307MBUS) m68307MBUS->reset();
-	if (m68307SERIAL) m68307SERIAL->reset();
 	if (m68307TIMER) m68307TIMER->reset();
 
 	m68307_base = 0xbfff;
@@ -129,73 +171,77 @@ void m68307cpu_device::init16_m68307(address_space &space)
 
 
 
-void m68307_set_port_callbacks(m68307cpu_device *device, m68307_porta_read_callback porta_r, m68307_porta_write_callback porta_w, m68307_portb_read_callback portb_r, m68307_portb_write_callback portb_w)
+void m68307cpu_device::set_port_callbacks(m68307_porta_read_delegate porta_r, m68307_porta_write_delegate porta_w, m68307_portb_read_delegate portb_r, m68307_portb_write_delegate portb_w)
 {
-	device->m_m68307_porta_r = porta_r;
-	device->m_m68307_porta_w = porta_w;
-	device->m_m68307_portb_r = portb_r;
-	device->m_m68307_portb_w = portb_w;
-}
-
-void m68307_set_duart68681(m68307cpu_device* cpudev, mc68681_device *duart68681)
-{
-	if (cpudev->m68307SERIAL)
-		cpudev->m68307SERIAL->m68307ser_set_duart68681(duart68681);
+	m_m68307_porta_r = porta_r;
+	m_m68307_porta_w = porta_w;
+	m_m68307_portb_r = portb_r;
+	m_m68307_portb_w = portb_w;
 }
 
 
 
 
-UINT16 m68307_get_cs(m68307cpu_device *device, offs_t address)
-{
-	device->m68307_currentcs = m68307_calc_cs(device, address);
 
-	return device->m68307_currentcs;
+UINT16 m68307cpu_device::get_cs(offs_t address)
+{
+	m68307_currentcs = m68307_calc_cs(this, address);
+
+	return m68307_currentcs;
 }
 
 
 /* 68307 specifics - MOVE */
 
-void m68307_set_interrupt(device_t *device, int level, int vector)
+void m68307cpu_device::set_interrupt(int level, int vector)
 {
-	device->execute().set_input_line_and_vector(level, HOLD_LINE, vector);
+	set_input_line_and_vector(level, HOLD_LINE, vector);
 }
 
-void m68307_timer0_interrupt(m68307cpu_device *cpudev)
+void m68307cpu_device::timer0_interrupt()
 {
-	int prioritylevel = (cpudev->m68307SIM->m_picr & 0x7000)>>12;
-	int vector        = (cpudev->m68307SIM->m_pivr & 0x00f0) | 0xa;
-	m68307_set_interrupt(cpudev, prioritylevel, vector);
+	int prioritylevel = (m68307SIM->m_picr & 0x7000)>>12;
+	int vector        = (m68307SIM->m_pivr & 0x00f0) | 0xa;
+	set_interrupt(prioritylevel, vector);
 }
 
-void m68307_timer1_interrupt(m68307cpu_device *cpudev)
+void m68307cpu_device::timer1_interrupt()
 {
-	int prioritylevel = (cpudev->m68307SIM->m_picr & 0x0700)>>8;
-	int vector        = (cpudev->m68307SIM->m_pivr & 0x00f0) | 0xb;
-	m68307_set_interrupt(cpudev, prioritylevel, vector);
+	int prioritylevel = (m68307SIM->m_picr & 0x0700)>>8;
+	int vector        = (m68307SIM->m_pivr & 0x00f0) | 0xb;
+	set_interrupt(prioritylevel, vector);
 }
 
-void m68307_serial_interrupt(m68307cpu_device *cpudev, int vector)
+
+void m68307cpu_device::serial_interrupt(int vector)
 {
-	int prioritylevel = (cpudev->m68307SIM->m_picr & 0x0070)>>4;
-	m68307_set_interrupt(cpudev, prioritylevel, vector);
+	int prioritylevel = (m68307SIM->m_picr & 0x0070)>>4;
+	set_interrupt(prioritylevel, vector);
 }
 
-void m68307_mbus_interrupt(m68307cpu_device *cpudev)
+WRITE_LINE_MEMBER(m68307cpu_device::m68307_duart_irq_handler)
 {
-	int prioritylevel = (cpudev->m68307SIM->m_picr & 0x0007)>>0;
-	int vector        = (cpudev->m68307SIM->m_pivr & 0x00f0) | 0xd;
-	m68307_set_interrupt(cpudev, prioritylevel, vector);
+	if (state == ASSERT_LINE)
+	{
+		serial_interrupt(m_duart->get_irq_vector());
+	}
 }
 
-void m68307_licr2_interrupt(m68307cpu_device *cpudev)
+void m68307cpu_device::mbus_interrupt()
 {
-	int prioritylevel = (cpudev->m68307SIM->m_licr2 & 0x0007)>>0;
-	int vector        = (cpudev->m68307SIM->m_pivr & 0x00f0) | 0x9;
-	cpudev->m68307SIM->m_licr2 |= 0x8;
+	int prioritylevel = (m68307SIM->m_picr & 0x0007)>>0;
+	int vector        = (m68307SIM->m_pivr & 0x00f0) | 0xd;
+	set_interrupt(prioritylevel, vector);
+}
+
+void m68307cpu_device::licr2_interrupt()
+{
+	int prioritylevel = (m68307SIM->m_licr2 & 0x0007)>>0;
+	int vector        = (m68307SIM->m_pivr & 0x00f0) | 0x9;
+	m68307SIM->m_licr2 |= 0x8;
 
 
-	m68307_set_interrupt(cpudev, prioritylevel, vector);
+	set_interrupt(prioritylevel, vector);
 }
 
 void m68307cpu_device::device_start()
@@ -210,14 +256,12 @@ void m68307cpu_device::device_start()
 
 	m68307SIM    = new m68307_sim();
 	m68307MBUS   = new m68307_mbus();
-	m68307SERIAL = new m68307_serial();
 	m68307TIMER  = new m68307_timer();
 
 	m68307TIMER->init(this);
 
 	m68307SIM->reset();
 	m68307MBUS->reset();
-	m68307SERIAL->reset();
 	m68307TIMER->reset();
 
 	internal = &this->space(AS_PROGRAM);
@@ -225,7 +269,13 @@ void m68307cpu_device::device_start()
 	m68307_scrhigh = 0x0007;
 	m68307_scrlow = 0xf010;
 
-	m68307_set_port_callbacks(this, 0,0,0,0);
+	write_irq.resolve_safe();
+	write_a_tx.resolve_safe();
+	write_b_tx.resolve_safe();
+	read_inport.resolve();
+	write_outport.resolve_safe();
+
+	set_port_callbacks(m68307_porta_read_delegate(),m68307_porta_write_delegate(),m68307_portb_read_delegate(),m68307_portb_write_delegate());
 }
 
 

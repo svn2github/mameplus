@@ -821,7 +821,9 @@ static INPUT_PORTS_START( trailblz )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( supnudg2 )    /* need to find the button 'B' to be playable */
-	PORT_START("PIA0.A")
+        PORT_INCLUDE ( trailblz )
+
+	PORT_MODIFY("PIA0.A")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )  PORT_NAME("1 Pound (5 credits)")    // coin x 5
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )  PORT_NAME("50 Pence (2.5 credits)") // coin x 2.5
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN3 )  PORT_NAME("20 Pence (1 credit)")    // coin x 1
@@ -831,7 +833,7 @@ static INPUT_PORTS_START( supnudg2 )    /* need to find the button 'B' to be pla
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER )  PORT_CODE(KEYCODE_D)  PORT_NAME("PIA0.A_0x40")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER )  PORT_CODE(KEYCODE_F)  PORT_NAME("PIA0.A_0x80")
 
-	PORT_START("PIA1.A")
+	PORT_MODIFY("PIA1.A")
 	PORT_DIPNAME( 0x01, 0x01, "PIA1.A" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -857,7 +859,7 @@ static INPUT_PORTS_START( supnudg2 )    /* need to find the button 'B' to be pla
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START("PIA2.A")
+	PORT_MODIFY("PIA2.A")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 )  PORT_CODE(KEYCODE_N)  PORT_NAME("Pass")
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )  PORT_CODE(KEYCODE_Z)  PORT_NAME("Button A")
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 )  PORT_CODE(KEYCODE_C)  PORT_NAME("Button C")
@@ -867,7 +869,7 @@ static INPUT_PORTS_START( supnudg2 )    /* need to find the button 'B' to be pla
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE )  PORT_CODE(KEYCODE_9)  PORT_NAME("Refill")             PORT_TOGGLE
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER )    PORT_CODE(KEYCODE_Q)  PORT_NAME("Remote Credits x5")
 
-	PORT_START("DSW1")
+	PORT_MODIFY("DSW1")
 	PORT_DIPNAME( 0x01, 0x01, "4" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1435,33 +1437,6 @@ UINT32 coinmstr_state::screen_update_coinmstr(screen_device &screen, bitmap_ind1
 }
 
 
-
-static const ay8910_interface ay8912_interface =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW1"),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-static MC6845_INTERFACE( h46505_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
-
 static MACHINE_CONFIG_START( coinmstr, coinmstr_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK) // 7 MHz.
 	MCFG_CPU_PROGRAM_MAP(coinmstr_map)
@@ -1491,13 +1466,15 @@ static MACHINE_CONFIG_START( coinmstr, coinmstr_state )
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", coinmstr)
 	MCFG_PALETTE_ADD("palette", 46*32*4)
 
-	MCFG_MC6845_ADD("crtc", H46505, "screen", 14000000 / 16, h46505_intf)
+	MCFG_MC6845_ADD("crtc", H46505, "screen", 14000000 / 16)
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, SND_CLOCK)
-	MCFG_SOUND_CONFIG(ay8912_interface)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW1"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 

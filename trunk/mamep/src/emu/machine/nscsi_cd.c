@@ -12,6 +12,11 @@ void nscsi_cdrom_device::device_start()
 {
 	nscsi_full_device::device_start();
 	bytes_per_sector = 2048;
+	save_item(NAME(block));
+	save_item(NAME(lba));
+	save_item(NAME(cur_lba));
+	save_item(NAME(blocks));
+	save_item(NAME(bytes_per_sector));
 }
 
 void nscsi_cdrom_device::device_reset()
@@ -23,10 +28,9 @@ void nscsi_cdrom_device::device_reset()
 	cur_lba = -1;
 }
 
-cdrom_interface nscsi_cdrom_device::cd_intf = { "cdrom", NULL };
-
 static MACHINE_CONFIG_FRAGMENT(scsi_cdrom)
-	MCFG_CDROM_ADD("image", nscsi_cdrom_device::cd_intf)
+	MCFG_CDROM_ADD("image")
+	MCFG_CDROM_INTERFACE("cdrom")
 MACHINE_CONFIG_END
 
 machine_config_constructor nscsi_cdrom_device::device_mconfig_additions() const

@@ -99,7 +99,7 @@ v99x8_device::v99x8_device(const machine_config &mconfig, device_type type, cons
 }
 
 v9938_device::v9938_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-: v99x8_device(mconfig, V9938, "V9938", "v9938", tag, owner, clock)
+: v99x8_device(mconfig, V9938, "V9938 VDP", "v9938", tag, owner, clock)
 {
 	m_model = MODEL_V9938;
 }
@@ -2213,7 +2213,7 @@ void v99x8_device::interrupt_start_vblank()
 	#if 0
 	if (machine.input().code_pressed (KEYCODE_D) )
 	{
-		for (i=0;i<24;i++) mame_printf_debug ("R#%d = %02x\n", i, m_cont_reg[i]);
+		for (i=0;i<24;i++) osd_printf_debug ("R#%d = %02x\n", i, m_cont_reg[i]);
 	}
 	#endif
 

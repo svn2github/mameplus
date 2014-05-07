@@ -478,7 +478,7 @@ static ADDRESS_MAP_START( cuebrick_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
 	AM_RANGE(0x040000, 0x043fff) AM_RAM /* main RAM */
 	AM_RANGE(0x060000, 0x063fff) AM_RAM /* main RAM */
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(tmnt_paletteram_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x080000, 0x080fff) AM_DEVREADWRITE8("palette", palette_device, read, write, 0x00ff) AM_SHARE("palette")
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READ_PORT("COINS") AM_WRITE(tmnt_0a0000_w)
 	AM_RANGE(0x0a0002, 0x0a0003) AM_READ_PORT("P1")
 	AM_RANGE(0x0a0004, 0x0a0005) AM_READ_PORT("P2")
@@ -498,7 +498,7 @@ static ADDRESS_MAP_START( mia_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x043fff) AM_RAM /* main RAM */
 	AM_RANGE(0x060000, 0x063fff) AM_RAM /* main RAM */
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(tmnt_paletteram_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x080000, 0x080fff) AM_DEVREADWRITE8("palette", palette_device, read, write, 0x00ff) AM_SHARE("palette")
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READ_PORT("COINS") AM_WRITE(tmnt_0a0000_w)
 	AM_RANGE(0x0a0002, 0x0a0003) AM_READ_PORT("P1")
 	AM_RANGE(0x0a0004, 0x0a0005) AM_READ_PORT("P2")
@@ -519,7 +519,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( tmnt_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x05ffff) AM_ROM
 	AM_RANGE(0x060000, 0x063fff) AM_RAM /* main RAM */
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(tmnt_paletteram_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x080000, 0x080fff) AM_DEVREADWRITE8("palette", palette_device, read, write, 0x00ff) AM_SHARE("palette")
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READ_PORT("COINS") AM_WRITE(tmnt_0a0000_w)
 	AM_RANGE(0x0a0002, 0x0a0003) AM_READ_PORT("P1")
 	AM_RANGE(0x0a0004, 0x0a0005) AM_READ_PORT("P2")
@@ -2085,19 +2085,6 @@ static const k051960_interface thndrx2_k051960_intf =
 	thndrx2_sprite_callback
 };
 
-
-/* 053936 interfaces */
-static const k053936_interface glfgreat_k053936_interface =
-{
-	1, 85, 0        /* wrap, xoff, yoff */
-};
-
-static const k053936_interface prmrsocr_k053936_interface =
-{
-	0, 85, 1        /* wrap, xoff, yoff */
-};
-
-
 MACHINE_START_MEMBER(tmnt_state,common)
 {
 	save_item(NAME(m_toggle));
@@ -2139,6 +2126,7 @@ static MACHINE_CONFIG_START( cuebrick, tmnt_state )
 
 	MCFG_PALETTE_ADD("palette", 1024)
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
+	MCFG_PALETTE_MEMBITS(8)
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
@@ -2188,6 +2176,7 @@ static MACHINE_CONFIG_START( mia, tmnt_state )
 
 	MCFG_PALETTE_ADD("palette", 1024)
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
+	MCFG_PALETTE_MEMBITS(8)
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
@@ -2248,6 +2237,7 @@ static MACHINE_CONFIG_START( tmnt, tmnt_state )
 
 	MCFG_PALETTE_ADD("palette", 1024)
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
+	MCFG_PALETTE_MEMBITS(8)
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
@@ -2496,7 +2486,11 @@ static MACHINE_CONFIG_START( glfgreat, tmnt_state )
 	MCFG_K053245_ADD("k053245", glfgreat_k05324x_intf)
 	MCFG_K053245_GFXDECODE("gfxdecode")
 	MCFG_K053245_PALETTE("palette")
-	MCFG_K053936_ADD("k053936", glfgreat_k053936_interface)
+
+	MCFG_DEVICE_ADD("k053936", K053936, 0)
+	MCFG_K053936_WRAP(1)
+	MCFG_K053936_OFFSETS(85, 0)
+
 	MCFG_K053251_ADD("k053251")
 
 	/* sound hardware */
@@ -2562,7 +2556,10 @@ static MACHINE_CONFIG_START( prmrsocr, tmnt_state )
 	MCFG_K053245_ADD("k053245", prmrsocr_k05324x_intf)
 	MCFG_K053245_GFXDECODE("gfxdecode")
 	MCFG_K053245_PALETTE("palette")
-	MCFG_K053936_ADD("k053936", prmrsocr_k053936_interface)
+
+	MCFG_DEVICE_ADD("k053936", K053936, 0)
+	MCFG_K053936_OFFSETS(85, 1)
+
 	MCFG_K053251_ADD("k053251")
 
 	/* sound hardware */

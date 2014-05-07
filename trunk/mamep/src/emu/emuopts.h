@@ -31,6 +31,7 @@ enum
 	OPTION_PRIORITY_MAME_INI,
 	OPTION_PRIORITY_DEBUG_INI,
 	OPTION_PRIORITY_ORIENTATION_INI,
+	OPTION_PRIORITY_SYSTYPE_INI,
 	OPTION_PRIORITY_VECTOR_INI,
 	OPTION_PRIORITY_SOURCE_INI,
 	OPTION_PRIORITY_GPARENT_INI,
@@ -68,7 +69,6 @@ enum
 // core directory options
 #define OPTION_CFG_DIRECTORY        "cfg_directory"
 #define OPTION_NVRAM_DIRECTORY      "nvram_directory"
-#define OPTION_MEMCARD_DIRECTORY    "memcard_directory"
 #define OPTION_INPUT_DIRECTORY      "input_directory"
 #define OPTION_STATE_DIRECTORY      "state_directory"
 #define OPTION_SNAPSHOT_DIRECTORY   "snapshot_directory"
@@ -135,8 +135,6 @@ enum
 #ifdef USE_SCALE_EFFECTS
 #define OPTION_SCALE_EFFECT         "scale_effect"
 #endif /* USE_SCALE_EFFECTS */
-#define OPTION_MINIMUM_WIDTH        "minimum_width"
-#define OPTION_MINIMUM_HEIGHT       "minimum_height"
 
 // core vector options
 #define OPTION_ANTIALIAS            "antialias"
@@ -284,7 +282,6 @@ public:
 	// core directory options
 	const char *cfg_directory() const { return value(OPTION_CFG_DIRECTORY); }
 	const char *nvram_directory() const { return value(OPTION_NVRAM_DIRECTORY); }
-	const char *memcard_directory() const { return value(OPTION_MEMCARD_DIRECTORY); }
 	const char *input_directory() const { return value(OPTION_INPUT_DIRECTORY); }
 	const char *state_directory() const { return value(OPTION_STATE_DIRECTORY); }
 	const char *snapshot_directory() const { return value(OPTION_SNAPSHOT_DIRECTORY); }
@@ -337,8 +334,6 @@ public:
 	float gamma() const { return float_value(OPTION_GAMMA); }
 	float pause_brightness() const { return float_value(OPTION_PAUSE_BRIGHTNESS); }
 	const char *effect() const { return value(OPTION_EFFECT); }
-	int minimum_width() const { return int_value(OPTION_MINIMUM_WIDTH); }
-	int minimum_height() const { return int_value(OPTION_MINIMUM_HEIGHT); }
 
 	// core vector options
 	bool antialias() const { return bool_value(OPTION_ANTIALIAS); }

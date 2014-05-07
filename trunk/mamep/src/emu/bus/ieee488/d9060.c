@@ -32,8 +32,6 @@
 
 #include "d9060.h"
 #include "bus/scsi/d9060hd.h"
-#include "machine/scsibus.h"
-#include "machine/scsicb.h"
 
 
 
@@ -143,7 +141,7 @@ ADDRESS_MAP_END
 
 
 //-------------------------------------------------
-//  riot6532_interface riot0_intf
+//  riot6532 0
 //-------------------------------------------------
 
 READ8_MEMBER( base_d9060_device::dio_r )
@@ -188,18 +186,8 @@ WRITE8_MEMBER( base_d9060_device::dio_w )
 }
 
 
-static const riot6532_interface riot0_intf =
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, dio_r),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, dio_w),
-	DEVCB_NULL
-};
-
-
 //-------------------------------------------------
-//  riot6532_interface riot1_intf
+//  riot6532 1
 //-------------------------------------------------
 
 READ8_MEMBER( base_d9060_device::riot1_pa_r )
@@ -326,45 +314,6 @@ WRITE8_MEMBER( base_d9060_device::riot1_pb_w )
 	output_set_led_value(LED_ERROR, !BIT(data, 5));
 }
 
-static const riot6532_interface riot1_intf =
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, riot1_pa_r),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, riot1_pb_r),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, riot1_pa_w),
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, base_d9060_device, riot1_pb_w),
-	DEVCB_CPU_INPUT_LINE(M6502_DOS_TAG, INPUT_LINE_IRQ0)
-};
-
-
-READ8_MEMBER( base_d9060_device::via_pb_r )
-{
-	/*
-
-	    bit     description
-
-	    PB0
-	    PB1
-	    PB2     C/D
-	    PB3     BUSY
-	    PB4     J14 (1=9060, 0=9090)
-	    PB5     J13
-	    PB6     I/O
-	    PB7     MSG
-
-	*/
-
-	UINT8 data = 0;
-
-	data |= m_sasibus->scsi_cd_r() << 2;
-	data |= m_sasibus->scsi_bsy_r() << 3;
-	data |= m_sasibus->scsi_io_r() << 6;
-	data |= m_sasibus->scsi_msg_r() << 7;
-
-	// drive type
-	data |= (m_variant == TYPE_9060) << 4;
-
-	return data;
-}
 
 WRITE8_MEMBER( base_d9060_device::via_pb_w )
 {
@@ -374,22 +323,22 @@ WRITE8_MEMBER( base_d9060_device::via_pb_w )
 
 	    PB0     SEL
 	    PB1     RST
-	    PB2
-	    PB3
-	    PB4
-	    PB5
-	    PB6
-	    PB7
+	    PB2     C/D
+	    PB3     BUSY
+	    PB4     J14 (1=9060, 0=9090)
+	    PB5     J13
+	    PB6     I/O
+	    PB7     MSG
 
 	*/
 
-	m_sasibus->scsi_sel_w(BIT(data, 0));
-	m_sasibus->scsi_rst_w(BIT(data, 1));
+	m_sasibus->write_sel(BIT(data, 0));
+	m_sasibus->write_rst(BIT(data, 1));
 }
 
 WRITE_LINE_MEMBER( base_d9060_device::ack_w )
 {
-	m_sasibus->scsi_ack_w(!state);
+	m_sasibus->write_ack(!state);
 }
 
 WRITE_LINE_MEMBER( base_d9060_device::enable_w )
@@ -398,11 +347,11 @@ WRITE_LINE_MEMBER( base_d9060_device::enable_w )
 
 	if( !m_enable )
 	{
-		m_sasibus->scsi_data_w( m_data );
+		m_sasi_data_out->write( m_data );
 	}
 	else
 	{
-		m_sasibus->scsi_data_w( 0 );
+		m_sasi_data_out->write( 0 );
 	}
 }
 
@@ -412,13 +361,8 @@ WRITE8_MEMBER( base_d9060_device::scsi_data_w )
 
 	if( !m_enable )
 	{
-		m_sasibus->scsi_data_w( m_data );
+		m_sasi_data_out->write( m_data );
 	}
-}
-
-WRITE_LINE_MEMBER( base_d9060_device::req_w )
-{
-	m_via->write_ca1(state);
 }
 
 
@@ -431,26 +375,46 @@ static MACHINE_CONFIG_FRAGMENT( d9060 )
 	MCFG_CPU_ADD(M6502_DOS_TAG, M6502, XTAL_4MHz/4)
 	MCFG_CPU_PROGRAM_MAP(d9060_main_mem)
 
-	MCFG_RIOT6532_ADD(M6532_0_TAG, XTAL_4MHz/4, riot0_intf)
-	MCFG_RIOT6532_ADD(M6532_1_TAG, XTAL_4MHz/4, riot1_intf)
+	MCFG_DEVICE_ADD(M6532_0_TAG, RIOT6532, XTAL_4MHz/4)
+	MCFG_RIOT6532_IN_PA_CB(READ8(base_d9060_device, dio_r))
+	MCFG_RIOT6532_OUT_PB_CB(WRITE8(base_d9060_device, dio_w))
+
+	MCFG_DEVICE_ADD(M6532_1_TAG, RIOT6532, XTAL_4MHz/4)
+	MCFG_RIOT6532_IN_PA_CB(READ8(base_d9060_device, riot1_pa_r))
+	MCFG_RIOT6532_OUT_PA_CB(WRITE8(base_d9060_device, riot1_pa_w))
+	MCFG_RIOT6532_IN_PB_CB(READ8(base_d9060_device, riot1_pb_r))
+	MCFG_RIOT6532_OUT_PB_CB(WRITE8(base_d9060_device, riot1_pb_w))
+	MCFG_RIOT6532_IRQ_CB(INPUTLINE(M6502_DOS_TAG, INPUT_LINE_IRQ0))
 
 	// controller
 	MCFG_CPU_ADD(M6502_HDC_TAG, M6502, XTAL_4MHz/4)
 	MCFG_CPU_PROGRAM_MAP(d9060_hdc_mem)
 
 	MCFG_DEVICE_ADD(M6522_TAG, VIA6522, XTAL_4MHz/4)
-	MCFG_VIA6522_READPA_HANDLER(DEVREAD8(SASIBUS_TAG ":host", scsicb_device, scsi_data_r))
-	MCFG_VIA6522_READPB_HANDLER(READ8(base_d9060_device, via_pb_r))
 	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(base_d9060_device, scsi_data_w))
 	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(base_d9060_device, via_pb_w))
 	MCFG_VIA6522_CA2_HANDLER(WRITELINE(base_d9060_device, ack_w))
 	MCFG_VIA6522_CB2_HANDLER(WRITELINE(base_d9060_device, enable_w))
 	MCFG_VIA6522_IRQ_HANDLER(DEVWRITELINE(M6502_HDC_TAG, m6502_device, irq_line))
 
-	MCFG_SCSIBUS_ADD(SASIBUS_TAG)
-	MCFG_SCSIDEV_ADD(SASIBUS_TAG ":harddisk0", D9060HD, SCSI_ID_0)
-	MCFG_SCSICB_ADD(SASIBUS_TAG ":host")
-	MCFG_SCSICB_REQ_HANDLER(DEVWRITELINE(DEVICE_SELF_OWNER, base_d9060_device, req_w))
+	MCFG_DEVICE_ADD(SASIBUS_TAG, SCSI_PORT, 0)
+	MCFG_SCSI_REQ_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_ca1))
+	MCFG_SCSI_CD_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pb2))
+	MCFG_SCSI_BSY_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pb3))
+	MCFG_SCSI_IO_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pb6))
+	MCFG_SCSI_MSG_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pb7))
+	MCFG_SCSI_DATA0_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa0))
+	MCFG_SCSI_DATA1_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa1))
+	MCFG_SCSI_DATA2_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa2))
+	MCFG_SCSI_DATA3_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa3))
+	MCFG_SCSI_DATA4_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa4))
+	MCFG_SCSI_DATA5_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa5))
+	MCFG_SCSI_DATA6_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa6))
+	MCFG_SCSI_DATA7_HANDLER(DEVWRITELINE(M6522_TAG, via6522_device, write_pa7))
+
+	MCFG_SCSI_OUTPUT_LATCH_ADD("sasi_data_out", SASIBUS_TAG)
+
+	MCFG_SCSIDEV_ADD(SASIBUS_TAG ":" SCSI_PORT_DEVICE1, "harddisk", D9060HD, SCSI_ID_0)
 MACHINE_CONFIG_END
 
 
@@ -530,7 +494,8 @@ base_d9060_device::base_d9060_device(const machine_config &mconfig, device_type 
 		m_riot0(*this, M6532_0_TAG),
 		m_riot1(*this, M6532_1_TAG),
 		m_via(*this, M6522_TAG),
-		m_sasibus(*this, SASIBUS_TAG ":host"),
+		m_sasibus(*this, SASIBUS_TAG),
+		m_sasi_data_out(*this, "sasi_data_out"),
 		m_address(*this, "ADDRESS"),
 		m_rfdo(1),
 		m_daco(1),
@@ -568,6 +533,9 @@ void base_d9060_device::device_start()
 	save_item(NAME(m_daco));
 	save_item(NAME(m_atna));
 	save_item(NAME(m_enable));
+
+	m_via->write_pb4(!(m_variant == TYPE_9090)); // J14 (6 HEADS)
+	m_via->write_pb5(!(m_variant == TYPE_9060)); // J13 (4 HEADS)
 }
 
 

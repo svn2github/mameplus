@@ -149,11 +149,14 @@ via6522_device::via6522_device(const machine_config &mconfig, const char *tag, d
 		m_in_a(0xff),
 		m_in_ca1(0),
 		m_in_ca2(0),
+		m_out_ca2(0),
 		m_in_b(0),
 		m_in_cb1(0),
 		m_in_cb2(0),
 		m_pcr(0),
-		m_acr(0)
+		m_acr(0),
+		m_ier(0),
+		m_ifr(0)
 {
 }
 
@@ -842,6 +845,11 @@ void via6522_device::write_pa(int line, int state)
 		m_in_a &= ~(1 << line);
 }
 
+WRITE8_MEMBER( via6522_device::write_pa )
+{
+	m_in_a = data;
+}
+
 /*-------------------------------------------------
     ca1_w - interface setting VIA port CA1 input
 -------------------------------------------------*/
@@ -900,6 +908,11 @@ void via6522_device::write_pb(int line, int state)
 		m_in_b |= (1 << line);
 	else
 		m_in_b &= ~(1 << line);
+}
+
+WRITE8_MEMBER( via6522_device::write_pb )
+{
+	m_in_b = data;
 }
 
 /*-------------------------------------------------

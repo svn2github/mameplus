@@ -199,15 +199,6 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/machine/8257dma.h,MACHINES += I8257
-#-------------------------------------------------
-
-ifneq ($(filter I8257,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/8257dma.o
-endif
-
-#-------------------------------------------------
-#
 #@src/emu/machine/8530scc.h,MACHINES += 8530SCC
 #-------------------------------------------------
 
@@ -368,15 +359,6 @@ endif
 
 ifneq ($(filter CDP1871,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/cdp1871.o
-endif
-
-#-------------------------------------------------
-#
-#@src/emu/machine/cdu76s.h,MACHINES += CDU76S
-#-------------------------------------------------
-
-ifneq ($(filter CDU76S,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/cdu76s.o
 endif
 
 #-------------------------------------------------
@@ -598,6 +580,16 @@ endif
 ifneq ($(filter I8251,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/i8251.o
 endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/i8257.h,MACHINES += I8257
+#-------------------------------------------------
+
+ifneq ($(filter I8257,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/i8257.o
+endif
+
 
 #-------------------------------------------------
 #
@@ -981,7 +973,6 @@ ifneq ($(filter M68307,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/68307.o
 MACHINEOBJS += $(MACHINEOBJ)/68307sim.o
 MACHINEOBJS += $(MACHINEOBJ)/68307bus.o
-MACHINEOBJS += $(MACHINEOBJ)/68307ser.o
 MACHINEOBJS += $(MACHINEOBJ)/68307tmu.o
 endif
 
@@ -1370,26 +1361,6 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/machine/scsibus.h,MACHINES += SCSI
-#@src/emu/machine/scsicb.h,MACHINES += SCSI
-#@src/emu/machine/scsicd.h,MACHINES += SCSI
-#@src/emu/machine/scsidev.h,MACHINES += SCSI
-#@src/emu/machine/scsihd.h,MACHINES += SCSI
-#@src/emu/machine/scsihle.h,MACHINES += SCSI
-#-------------------------------------------------
-
-ifneq ($(filter SCSI,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/scsibus.o
-MACHINEOBJS += $(MACHINEOBJ)/scsicb.o
-MACHINEOBJS += $(MACHINEOBJ)/scsicd.o
-MACHINEOBJS += $(MACHINEOBJ)/scsidev.o
-MACHINEOBJS += $(MACHINEOBJ)/scsihd.o
-MACHINEOBJS += $(MACHINEOBJ)/scsihle.o
-MACHINES += T10
-endif
-
-#-------------------------------------------------
-#
 #@src/emu/machine/seibu_cop.h,MACHINES += SEIBU_COP
 #-------------------------------------------------
 
@@ -1435,13 +1406,17 @@ endif
 
 #-------------------------------------------------
 #
+#
 #-------------------------------------------------
+
+ifneq ($(filter SCSI,$(BUSES)),)
+MACHINES += T10
+endif
 
 ifneq ($(filter T10,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/t10mmc.o
 MACHINEOBJS += $(MACHINEOBJ)/t10sbc.o
 MACHINEOBJS += $(MACHINEOBJ)/t10spc.o
-MACHINES += T10
 endif
 
 #-------------------------------------------------
@@ -1845,5 +1820,21 @@ endif
 #-------------------------------------------------
 ifneq ($(filter CORVUSHD,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/corvushd.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/wozfdc.h,MACHINES += WOZFDC
+#-------------------------------------------------
+ifneq ($(filter WOZFDC,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/wozfdc.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/diablo_hd.h,MACHINES += DIABLO_HD
+#-------------------------------------------------
+ifneq ($(filter DIABLO_HD,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/diablo_hd.o
 endif
 

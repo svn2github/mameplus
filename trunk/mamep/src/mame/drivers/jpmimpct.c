@@ -283,7 +283,7 @@ WRITE16_MEMBER(jpmimpct_state::duart_1_w)
 		}
 		case 0x3:
 		{
-			//mame_printf_debug("%c", data);
+			//osd_printf_debug("%c", data);
 			break;
 		}
 		case 0x4:
@@ -314,7 +314,7 @@ WRITE16_MEMBER(jpmimpct_state::duart_1_w)
 		}
 		case 0xb:
 		{
-			//mame_printf_debug("%c",data);
+			//osd_printf_debug("%c",data);
 			break;
 		}
 		case 0xc:
@@ -957,33 +957,10 @@ WRITE8_MEMBER(jpmimpct_state::payen_a_w)
 WRITE8_MEMBER(jpmimpct_state::display_c_w)
 {
 	//Reset 0x04, data 0x02, clock 0x01
-	if(data & 0x04)
-	{
-		int alpha_data = (data & 0x02)?0:1;
-		if (m_alpha_clock != (data & 0x01))
-		{
-			if (!m_alpha_clock)//falling edge
-			{
-				m_vfd->shift_data(alpha_data);
-			}
-		}
-		m_alpha_clock = (data & 0x01);
-	}
-	else
-	{
-		m_vfd->reset();
-	}
+	m_vfd->por(data & 0x04);
+	m_vfd->data(data & 0x02);
+	m_vfd->sclk(data & 0x01);
 }
-
-static I8255_INTERFACE (ppi8255_intf)
-{
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(jpmimpct_state,payen_a_w),
-	DEVCB_DRIVER_MEMBER(jpmimpct_state,hopper_b_r),
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(jpmimpct_state,hopper_c_r),
-	DEVCB_DRIVER_MEMBER(jpmimpct_state,display_c_w)
-};
 
 MACHINE_START_MEMBER(jpmimpct_state,impctawp)
 {
@@ -1350,13 +1327,18 @@ MACHINE_CONFIG_START( impctawp, jpmimpct_state )
 	MCFG_CPU_PROGRAM_MAP(awp68k_program_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
-	MCFG_ROC10937_ADD("vfd",0,RIGHT_TO_LEFT)
+	MCFG_S16LF01_ADD("vfd",0)
 
 	MCFG_MACHINE_START_OVERRIDE(jpmimpct_state,impctawp)
 	MCFG_MACHINE_RESET_OVERRIDE(jpmimpct_state,impctawp)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_I8255_ADD( "ppi8255", ppi8255_intf )
+	MCFG_DEVICE_ADD("ppi8255", I8255, 0)
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(jpmimpct_state, payen_a_w))
+	MCFG_I8255_IN_PORTB_CB(READ8(jpmimpct_state, hopper_b_r))
+	MCFG_I8255_IN_PORTC_CB(READ8(jpmimpct_state, hopper_c_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(jpmimpct_state, display_c_w))
+
 	MCFG_TIMER_DRIVER_ADD("duart_1_timer", jpmimpct_state, duart_1_timer_event)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

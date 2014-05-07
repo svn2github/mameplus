@@ -116,7 +116,7 @@ void *malloc_file_line(size_t size, const char *file, int line, bool array, bool
 		memset(result, 0, size);
 	else
 	{
-#if !__has_feature(memory_sanitizer) && defined(INITIALIZE_ALLOCATED_MEMORY)
+#if !__has_feature(memory_sanitizer) && defined(INITIALIZE_ALLOCATED_MEMORY) && !defined(MAME_DEBUG_FAST)
 		memset(result, 0xdd, size);
 #endif
 	}
@@ -154,8 +154,10 @@ void free_file_line(void *memory, const char *file, int line, bool array)
 	}
 	if (array && !entry->m_array)
 	{
+#ifndef __INTEL_COMPILER // todo: fix this properly, it appears some optimization the compiler applies breaks our logic here
 		fprintf(stderr, "Error: attempt to free single object %p with global_free_array in %s(%d)!\n", memory, file, line);
 		osd_break_into_debugger("Error: attempt to free single object with global_free_array");
+#endif
 	}
 
 #ifdef OVERWRITE_FREED_MEMORY

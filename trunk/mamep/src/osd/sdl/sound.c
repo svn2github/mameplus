@@ -73,7 +73,6 @@ static int          sdl_init(running_machine &machine);
 static void         sdl_kill(running_machine &machine);
 static int          sdl_create_buffers(void);
 static void         sdl_destroy_buffers(void);
-static void         sdl_cleanup_audio(running_machine &machine);
 static void         SDLCALL sdl_callback(void *userdata, Uint8 *stream, int len);
 
 
@@ -81,23 +80,27 @@ static void         SDLCALL sdl_callback(void *userdata, Uint8 *stream, int len)
 //============================================================
 //  osd_start_audio_stream
 //============================================================
-void sdlaudio_init(running_machine &machine)
+bool sdl_osd_interface::sound_init()
 {
 	if (LOG_SOUND)
 		sound_log = fopen(SDLMAME_SOUND_LOG, "w");
 
 	// skip if sound disabled
-	if (machine.sample_rate() != 0)
+	if (machine().sample_rate() != 0)
 	{
-		// attempt to initialize SDL
-		if (sdl_init(machine))
-			return;
+		if (initialized_audio)
+		{
+			sound_exit();
+		}
 
-		machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(sdl_cleanup_audio), &machine));
+		// attempt to initialize SDL
+		if (sdl_init(machine()))
+			return false;
+
 		// set the startup volume
-		machine.osd().set_mastervolume(attenuation);
+		machine().osd().set_mastervolume(attenuation);
 	}
-	return;
+	return true;
 }
 
 
@@ -106,19 +109,19 @@ void sdlaudio_init(running_machine &machine)
 //  osd_stop_audio_stream
 //============================================================
 
-static void sdl_cleanup_audio(running_machine &machine)
+void sdl_osd_interface::sound_exit()
 {
 	// if nothing to do, don't do it
-	if (machine.sample_rate() == 0)
+	if (machine().sample_rate() == 0)
 		return;
 
 	// kill the buffers and dsound
-	sdl_kill(machine);
+	sdl_kill(machine());
 	sdl_destroy_buffers();
 
 	// print out over/underflow stats
 	if (buffer_overflows || buffer_underflows)
-		mame_printf_verbose("Sound buffer: overflows=%d underflows=%d\n", buffer_overflows, buffer_underflows);
+		osd_printf_verbose("Sound buffer: overflows=%d underflows=%d\n", buffer_overflows, buffer_underflows);
 
 	if (LOG_SOUND)
 	{
@@ -426,18 +429,13 @@ static int sdl_init(running_machine &machine)
 	SDL_AudioSpec   aspec, obtained;
 	char audio_driver[16] = "";
 
-	if (initialized_audio)
-	{
-		sdl_cleanup_audio(machine);
-	}
-
-	mame_printf_verbose("Audio: Start initialization\n");
+	osd_printf_verbose("Audio: Start initialization\n");
 #if (SDLMAME_SDL2)
 	strncpy(audio_driver, SDL_GetCurrentAudioDriver(), sizeof(audio_driver));
 #else
 	SDL_AudioDriverName(audio_driver, sizeof(audio_driver));
 #endif
-	mame_printf_verbose("Audio: Driver is %s\n", audio_driver);
+	osd_printf_verbose("Audio: Driver is %s\n", audio_driver);
 
 	initialized_audio = 0;
 
@@ -459,7 +457,7 @@ static int sdl_init(running_machine &machine)
 	initialized_audio = 1;
 	snd_enabled = 1;
 
-	mame_printf_verbose("Audio: frequency: %d, channels: %d, samples: %d\n",
+	osd_printf_verbose("Audio: frequency: %d, channels: %d, samples: %d\n",
 						obtained.freq, obtained.channels, obtained.samples);
 
 	sdl_xfer_samples = obtained.samples;
@@ -486,13 +484,13 @@ static int sdl_init(running_machine &machine)
 	if (sdl_create_buffers())
 		goto cant_create_buffers;
 
-	mame_printf_verbose("Audio: End initialization\n");
+	osd_printf_verbose("Audio: End initialization\n");
 	return 0;
 
 	// error handling
 cant_create_buffers:
 cant_start_audio:
-	mame_printf_verbose("Audio: Initialization failed. SDL error: %s\n", SDL_GetError());
+	osd_printf_verbose("Audio: Initialization failed. SDL error: %s\n", SDL_GetError());
 
 	return 0;
 }
@@ -507,7 +505,7 @@ static void sdl_kill(running_machine &machine)
 {
 	if (initialized_audio)
 	{
-		mame_printf_verbose("sdl_kill: closing audio\n");
+		osd_printf_verbose("sdl_kill: closing audio\n");
 
 		SDL_CloseAudio();
 	}
@@ -521,7 +519,7 @@ static void sdl_kill(running_machine &machine)
 
 static int sdl_create_buffers(void)
 {
-	mame_printf_verbose("sdl_create_buffers: creating stream buffer of %u bytes\n", stream_buffer_size);
+	osd_printf_verbose("sdl_create_buffers: creating stream buffer of %u bytes\n", stream_buffer_size);
 
 	stream_buffer = global_alloc_array_clear(INT8, stream_buffer_size);
 	stream_playpos = 0;

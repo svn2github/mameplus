@@ -282,6 +282,14 @@ Note: Roms for Tempest Analog Vector-Generator PCB Assembly A037383-03 or A03738
 #include "sound/pokey.h"
 
 
+#define MASTER_CLOCK (XTAL_12_096MHz)
+#define CLOCK_3KHZ   ((double)MASTER_CLOCK / 4096)
+
+#define TEMPEST_KNOB_P1_TAG "KNOBP1"
+#define TEMPEST_KNOB_P2_TAG "KNOBP2"
+#define TEMPEST_BUTTONS_P1_TAG  "BUTTONSP1"
+#define TEMPEST_BUTTONS_P2_TAG  "BUTTONSP2"
+
 class tempest_state : public driver_device
 {
 public:
@@ -289,13 +297,29 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_mathbox(*this, "mathbox"),
-		m_avg(*this, "avg") { }
+		m_avg(*this, "avg"),
+		m_rom(*this, "maincpu"),
+		m_knob_p1(*this, TEMPEST_KNOB_P1_TAG),
+        m_knob_p2(*this, TEMPEST_KNOB_P2_TAG),
+        m_buttons_p1(*this, TEMPEST_BUTTONS_P1_TAG),
+        m_buttons_p2(*this, TEMPEST_BUTTONS_P2_TAG),
+        m_in1(*this, "IN1/DSW0"),
+        m_in2(*this, "IN2")
+    { }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<mathbox_device> m_mathbox;
 	required_device<avg_tempest_device> m_avg;
+	required_memory_region m_rom;
 
-	UINT8 m_player_select;
+	required_ioport m_knob_p1;
+    required_ioport m_knob_p2;
+    required_ioport m_buttons_p1;
+    required_ioport m_buttons_p2;
+    required_ioport m_in1;
+    required_ioport m_in2;
+
+    UINT8 m_player_select;
 	DECLARE_WRITE8_MEMBER(wdclr_w);
 	DECLARE_WRITE8_MEMBER(tempest_led_w);
 	DECLARE_WRITE8_MEMBER(tempest_coin_w);
@@ -304,18 +328,11 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(clock_r);
 	DECLARE_READ8_MEMBER(input_port_1_bit_r);
 	DECLARE_READ8_MEMBER(input_port_2_bit_r);
-	virtual void machine_start();
+
+    DECLARE_READ8_MEMBER(rom_ae1f_r);
+
+    virtual void machine_start();
 };
-
-
-#define MASTER_CLOCK (XTAL_12_096MHz)
-#define CLOCK_3KHZ   ((double)MASTER_CLOCK / 4096)
-
-#define TEMPEST_KNOB_P1_TAG ("KNOBP1")
-#define TEMPEST_KNOB_P2_TAG ("KNOBP2")
-#define TEMPEST_BUTTONS_P1_TAG  ("BUTTONSP1")
-#define TEMPEST_BUTTONS_P2_TAG  ("BUTTONSP2")
-
 
 
 void tempest_state::machine_start()
@@ -343,12 +360,12 @@ WRITE8_MEMBER(tempest_state::wdclr_w)
 
 CUSTOM_INPUT_MEMBER(tempest_state::tempest_knob_r)
 {
-	return ioport((m_player_select == 0) ? TEMPEST_KNOB_P1_TAG : TEMPEST_KNOB_P2_TAG)->read();
+	return (m_player_select == 0) ? m_knob_p1->read() : m_knob_p2->read();
 }
 
 CUSTOM_INPUT_MEMBER(tempest_state::tempest_buttons_r)
 {
-	return ioport((m_player_select == 0) ? TEMPEST_BUTTONS_P1_TAG : TEMPEST_BUTTONS_P2_TAG)->read();
+    return (m_player_select == 0) ? m_buttons_p1->read() : m_buttons_p2->read();
 }
 
 
@@ -361,13 +378,13 @@ CUSTOM_INPUT_MEMBER(tempest_state::clock_r)
 
 READ8_MEMBER(tempest_state::input_port_1_bit_r)
 {
-	return (ioport("IN1/DSW0")->read() & (1 << offset)) ? 0 : 228;
+	return (m_in1->read() & (1 << offset)) ? 0 : 228;
 }
 
 
 READ8_MEMBER(tempest_state::input_port_2_bit_r)
 {
-	return (ioport("IN2")->read() & (1 << offset)) ? 0 : 228;
+	return (m_in2->read() & (1 << offset)) ? 0 : 228;
 }
 
 
@@ -404,6 +421,18 @@ WRITE8_MEMBER(tempest_state::tempest_coin_w)
  *
  *************************************/
 
+READ8_MEMBER(tempest_state::rom_ae1f_r)
+{
+	// This is needed to ensure that the routine starting at ae1c passes checks and does not corrupt data;
+	// MCFG_QUANTUM_PERFECT_CPU("maincpu") would be very taxing on this driver.
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
+	machine().scheduler().abort_timeslice();
+
+    const UINT8 *rom = m_rom->base();
+    return rom[0xae1f];
+}
+
+
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tempest_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x0800, 0x080f) AM_WRITEONLY AM_SHARE("colorram")
@@ -425,7 +454,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tempest_state )
 	AM_RANGE(0x60c0, 0x60cf) AM_DEVREADWRITE("pokey1", pokey_device, read, write)
 	AM_RANGE(0x60d0, 0x60df) AM_DEVREADWRITE("pokey2", pokey_device, read, write)
 	AM_RANGE(0x60e0, 0x60e0) AM_WRITE(tempest_led_w)
-	AM_RANGE(0x9000, 0xdfff) AM_ROM
+    AM_RANGE(0xae1f, 0xae1f) AM_READ(rom_ae1f_r)
+    AM_RANGE(0x9000, 0xdfff) AM_ROM
 	AM_RANGE(0xf000, 0xffff) AM_ROM /* for the reset / interrupt vectors */
 ADDRESS_MAP_END
 
@@ -595,9 +625,6 @@ static MACHINE_CONFIG_START( tempest, tempest_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-
-	/* needed to ensure routine at ae1c passes checks and does not corrupt data */
-	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
 	MCFG_CPU_PERIODIC_INT_DRIVER(tempest_state, irq0_line_assert, CLOCK_3KHZ / 12)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_hz(CLOCK_3KHZ / 256))

@@ -49,7 +49,7 @@
 const device_type PHOENIX = &device_creator<phoenix_sound_device>;
 
 phoenix_sound_device::phoenix_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, PHOENIX, "Phoenix Custom", tag, owner, clock, "phoenix_sound", __FILE__),
+	: device_t(mconfig, PHOENIX, "Phoenix Audio Custom", tag, owner, clock, "phoenix_sound", __FILE__),
 		device_sound_interface(mconfig, *this)
 {
 }
@@ -98,7 +98,7 @@ void phoenix_sound_device::device_start()
 		m_poly18[i] = bits;
 	}
 
-	m_channel = machine().sound().stream_alloc(*this, 0, 1, machine().sample_rate(), this);
+	m_channel = machine().sound().stream_alloc(*this, 0, 1, machine().sample_rate());
 
 	save_item(NAME(m_sound_latch_a));
 	save_item(NAME(m_c24_state.counter));

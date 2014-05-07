@@ -17,6 +17,7 @@
 #include "machine/mcf5206e.h"
 #include "bfm_sc5.lh"
 #include "video/awpvid.h"
+#include "bfm_sc45_helper.h"
 
 
 
@@ -173,7 +174,7 @@ WRITE8_MEMBER( bfm_sc5_state::sc5_10202F0_w )
 	switch (offset)
 	{
 		case 0x0:
-			bfm_sc45_write_serial_vfd(machine(), (data &0x4)?1:0, (data &0x1)?1:0, (data&0x2) ? 0:1);
+			bfm_sc45_write_serial_vfd((data &0x4)?1:0, (data &0x1)?1:0, (data&0x2) ? 0:1);
 			if (data&0xf8) printf("%s: sc5_10202F0_w %d - %02x\n", machine().describe_context(), offset, data);
 			break;
 		case 0x1:

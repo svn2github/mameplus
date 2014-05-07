@@ -139,12 +139,14 @@ class gal3_state : public namcos2_shared_state
 public:
 	gal3_state(const machine_config &mconfig, device_type type, const char *tag)
 		: namcos2_shared_state(mconfig, type, tag) ,
-		m_rso_shared_ram(*this, "rso_shared_ram"){ }
+		m_rso_shared_ram(*this, "rso_shared_ram"),
+		m_generic_paletteram_16(*this, "paletteram") { }
 
 	UINT32 *m_mpSharedRAM0;
 	//UINT32 *m_mpSharedRAM1;
 	UINT16 m_namcos21_video_enable;
 	required_shared_ptr<UINT16> m_rso_shared_ram;
+	optional_shared_ptr<UINT16> m_generic_paletteram_16;
 	UINT32 m_led_mst;
 	UINT32 m_led_slv;
 	DECLARE_READ32_MEMBER(led_mst_r);
@@ -173,6 +175,11 @@ VIDEO_START_MEMBER(gal3_state,gal3)
 		namcos2_shared_state::c355_obj_code2tile_delegate() );
 
 }
+
+/* FIXME: this code has simply been copypasted from namcos21.c
+   (which has subsequently been rewritten to use generic MAME
+   palette handling) with a 32-bit CPU it's rather unlikely
+   that the palette RAM is actually laid out this way */
 
 void gal3_state::update_palette(  )
 {
@@ -582,11 +589,6 @@ static GFXDECODE_START( namcos21 )
 	GFXDECODE_ENTRY( "obj_board1", 0x000000, tile_layout,  0x000, 0x20 )
 GFXDECODE_END
 
-static const c140_interface C140_interface =
-{
-	C140_TYPE_SYSTEM21
-};
-
 static MACHINE_CONFIG_START( gal3, gal3_state )
 	MCFG_CPU_ADD("maincpu", M68020, 49152000/2)
 	MCFG_CPU_PROGRAM_MAP(cpu_mst_map)
@@ -638,12 +640,12 @@ static MACHINE_CONFIG_START( gal3, gal3_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_C140_ADD("c140_16g", 8000000/374)
-	MCFG_SOUND_CONFIG(C140_interface)   //to be verified
+	MCFG_C140_BANK_TYPE(C140_TYPE_SYSTEM21)    //to be verified
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
 	MCFG_C140_ADD("c140_16a", 8000000/374)
-	MCFG_SOUND_CONFIG(C140_interface)
+	MCFG_C140_BANK_TYPE(C140_TYPE_SYSTEM21)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 MACHINE_CONFIG_END

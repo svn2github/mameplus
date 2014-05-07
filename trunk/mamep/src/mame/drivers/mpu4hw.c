@@ -645,8 +645,7 @@ WRITE8_MEMBER(mpu4_state::pia_ic3_portb_w)
 WRITE_LINE_MEMBER(mpu4_state::pia_ic3_ca2_w)
 {
 	LOG_IC3(("%s: IC3 PIA Write CA2 (alpha data), %02X\n", machine().describe_context(),state));
-
-	m_alpha_data_line = state;
+	m_vfd->data(state);
 }
 
 
@@ -654,10 +653,7 @@ WRITE_LINE_MEMBER(mpu4_state::pia_ic3_cb2_w)
 {
 	LOG_IC3(("%s: IC3 PIA Write CB (alpha reset), %02X\n",machine().describe_context(),state));
 // DM Data pin A
-	if ( !state )
-	{
-		m_vfd->reset();
-	}
+	m_vfd->por(state);
 }
 
 
@@ -1346,14 +1342,8 @@ WRITE_LINE_MEMBER(mpu4_state::pia_ic8_cb2_w)
 	LOG_IC8(("%s: IC8 PIA write CB2 (alpha clock) %02X\n", machine().describe_context(), state & 0xFF));
 
 	// DM Data pin B
-	if (m_alpha_clock != state)
-	{
-		if (!m_alpha_clock)//falling edge
-		{
-			m_vfd->shift_data(m_alpha_data_line?0:1);
-		}
-	}
-	m_alpha_clock = state;
+	
+	m_vfd->sclk(!state);
 }
 
 // universal sampled sound program card PCB 683077
@@ -2620,20 +2610,11 @@ static ADDRESS_MAP_START( mpu4_memmap, AS_PROGRAM, 8, mpu4_state )
 	AM_RANGE(0x1000, 0xffff) AM_ROMBANK("bank1")    /* 64k  paged ROM (4 pages)  */
 ADDRESS_MAP_END
 
-const ay8910_interface ay8910_config =
-{
-	AY8910_SINGLE_OUTPUT,
-	{820,0,0},
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 MACHINE_CONFIG_FRAGMENT( mpu4_common )
 	MCFG_TIMER_DRIVER_ADD_PERIODIC("50hz", mpu4_state, gen_50hz, attotime::from_hz(100))
 
-	MCFG_MSC1937_ADD("vfd",0,LEFT_TO_RIGHT)
+	MCFG_MSC1937_ADD("vfd",0)
 	/* 6840 PTM */
 	MCFG_PTM6840_ADD("ptm_ic2", ptm_ic2_intf)
 
@@ -2722,8 +2703,9 @@ MACHINE_CONFIG_END
 
 
 MACHINE_CONFIG_DERIVED( mod2    , mpu4base )
-	MCFG_SOUND_ADD("ay8913",AY8913, MPU4_MASTER_CLOCK/4)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ADD("ay8913", AY8913, MPU4_MASTER_CLOCK/4)
+	MCFG_AY8910_OUTPUT_TYPE(AY8910_SINGLE_OUTPUT)
+	MCFG_AY8910_RES_LOADS(820, 0, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 

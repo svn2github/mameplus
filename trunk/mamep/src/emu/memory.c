@@ -324,24 +324,6 @@ protected:
 class handler_entry_read : public handler_entry
 {
 public:
-	// combination of unions to hold legacy objects and callbacks
-	struct legacy_info
-	{
-		union
-		{
-			address_space * space;
-			device_t *              device;
-		} object;
-
-		union
-		{
-			read8_space_func        space8;
-			read16_space_func       space16;
-			read32_space_func       space32;
-			read64_space_func       space64;
-		} handler;
-	};
-
 	struct access_handler
 	{
 		// Constructors mean you can't union them
@@ -355,7 +337,6 @@ public:
 	handler_entry_read(UINT8 width, endianness_t endianness, UINT8 **rambaseptr)
 		: handler_entry(width, endianness, rambaseptr)
 	{
-		memset(&m_legacy_info, 0, sizeof(m_legacy_info));
 	}
 
 	virtual void copy(handler_entry *entry);
@@ -365,16 +346,10 @@ public:
 	virtual const char *subunit_name(int entry) const;
 
 	// configure delegate callbacks
-	void set_delegate(read8_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(read16_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(read32_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(read64_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-
-	// configure legacy address space functions
-	void set_legacy_func(address_space &space, read8_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, read16_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, read32_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, read64_space_func func, const char *name, UINT64 mask = 0);
+	void set_delegate(read8_delegate delegate, UINT64 mask = 0);
+	void set_delegate(read16_delegate delegate, UINT64 mask = 0);
+	void set_delegate(read32_delegate delegate, UINT64 mask = 0);
+	void set_delegate(read64_delegate delegate, UINT64 mask = 0);
 
 	// configure I/O port access
 	void set_ioport(ioport_port &ioport);
@@ -391,12 +366,6 @@ private:
 	UINT32 read_stub_32(address_space &space, offs_t offset, UINT32 mask);
 	UINT64 read_stub_64(address_space &space, offs_t offset, UINT64 mask);
 
-	// stubs for calling legacy read handlers
-	UINT8 read_stub_legacy(address_space &space, offs_t offset, UINT8 mask);
-	UINT16 read_stub_legacy(address_space &space, offs_t offset, UINT16 mask);
-	UINT32 read_stub_legacy(address_space &space, offs_t offset, UINT32 mask);
-	UINT64 read_stub_legacy(address_space &space, offs_t offset, UINT64 mask);
-
 	// stubs for reading I/O ports
 	template<typename _UintType>
 	_UintType read_stub_ioport(address_space &space, offs_t offset, _UintType mask) { return m_ioport->read(); }
@@ -408,10 +377,6 @@ private:
 	access_handler              m_read;
 	access_handler              m_subread[8];
 	ioport_port *   m_ioport;
-
-	bool m_sub_is_legacy[8];
-	legacy_info m_legacy_info;
-	legacy_info m_sublegacy_info[8];
 };
 
 
@@ -421,24 +386,6 @@ private:
 class handler_entry_write : public handler_entry
 {
 public:
-	// combination of unions to hold legacy objects and callbacks
-	struct legacy_info
-	{
-		union
-		{
-			address_space * space;
-			device_t *              device;
-		} object;
-
-		union
-		{
-			write8_space_func       space8;
-			write16_space_func      space16;
-			write32_space_func      space32;
-			write64_space_func      space64;
-		} handler;
-	};
-
 	struct access_handler
 	{
 		// Constructors mean you can't union them
@@ -452,7 +399,6 @@ public:
 	handler_entry_write(UINT8 width, endianness_t endianness, UINT8 **rambaseptr)
 		: handler_entry(width, endianness, rambaseptr)
 	{
-		memset(&m_legacy_info, 0, sizeof(m_legacy_info));
 	}
 
 	virtual void copy(handler_entry *entry);
@@ -462,16 +408,10 @@ public:
 	virtual const char *subunit_name(int entry) const;
 
 	// configure delegate callbacks
-	void set_delegate(write8_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(write16_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(write32_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-	void set_delegate(write64_delegate delegate, UINT64 mask = 0, const legacy_info *info = 0);
-
-	// configure legacy address space functions
-	void set_legacy_func(address_space &space, write8_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, write16_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, write32_space_func func, const char *name, UINT64 mask = 0);
-	void set_legacy_func(address_space &space, write64_space_func func, const char *name, UINT64 mask = 0);
+	void set_delegate(write8_delegate delegate, UINT64 mask = 0);
+	void set_delegate(write16_delegate delegate, UINT64 mask = 0);
+	void set_delegate(write32_delegate delegate, UINT64 mask = 0);
+	void set_delegate(write64_delegate delegate, UINT64 mask = 0);
 
 	// configure I/O port access
 	void set_ioport(ioport_port &ioport);
@@ -488,12 +428,6 @@ private:
 	void write_stub_32(address_space &space, offs_t offset, UINT32 data, UINT32 mask);
 	void write_stub_64(address_space &space, offs_t offset, UINT64 data, UINT64 mask);
 
-	// stubs for calling legacy write handlers
-	void write_stub_legacy(address_space &space, offs_t offset, UINT8 data, UINT8 mask);
-	void write_stub_legacy(address_space &space, offs_t offset, UINT16 data, UINT16 mask);
-	void write_stub_legacy(address_space &space, offs_t offset, UINT32 data, UINT32 mask);
-	void write_stub_legacy(address_space &space, offs_t offset, UINT64 data, UINT64 mask);
-
 	// stubs for writing I/O ports
 	template<typename _UintType>
 	void write_stub_ioport(address_space &space, offs_t offset, _UintType data, _UintType mask) { m_ioport->write(data, mask); }
@@ -505,10 +439,6 @@ private:
 	access_handler              m_write;
 	access_handler              m_subwrite[8];
 	ioport_port *   m_ioport;
-
-	bool m_sub_is_legacy[8];
-	legacy_info m_legacy_info;
-	legacy_info m_sublegacy_info[8];
 };
 
 // ======================> handler_entry_setoffset
@@ -556,12 +486,6 @@ public:
 			(*i)->set_delegate(delegate, mask);
 	}
 
-	// forward legacy address space functions configuration
-	template<typename _func> void set_legacy_func(address_space &space, _func func, const char *name) const {
-		for (typename std::list<_HandlerEntry *>::const_iterator i = handlers.begin(); i != handlers.end(); i++)
-			(*i)->set_legacy_func(space, func, name, mask);
-	}
-
 	// forward I/O port access configuration
 	void set_ioport(ioport_port &ioport) const {
 		for (typename std::list<_HandlerEntry *>::const_iterator i = handlers.begin(); i != handlers.end(); i++)
@@ -607,6 +531,17 @@ public:
 		UINT32 entry = m_live_lookup[level1_index_large(byteaddress)];
 		if (entry >= SUBTABLE_BASE)
 			entry = m_live_lookup[level2_index_large(entry, byteaddress)];
+		return entry;
+	}
+
+	UINT32 lookup_live_nowp(offs_t byteaddress) const { return m_large ? lookup_live_large_nowp(byteaddress) : lookup_live_small_nowp(byteaddress); }
+	UINT32 lookup_live_small_nowp(offs_t byteaddress) const { return m_table[byteaddress]; }
+
+	UINT32 lookup_live_large_nowp(offs_t byteaddress) const
+	{
+		UINT32 entry = m_table[level1_index_large(byteaddress)];
+		if (entry >= SUBTABLE_BASE)
+			entry = m_table[level2_index_large(entry, byteaddress)];
 		return entry;
 	}
 
@@ -734,16 +669,18 @@ private:
 	template<typename _UintType>
 	_UintType unmap_r(address_space &space, offs_t offset, _UintType mask)
 	{
-		device_execute_interface *intf;
-		bool is_octal = false;
-		if (m_space.device().interface(intf))
-			is_octal = intf->is_octal();
-
 		if (m_space.log_unmap() && !m_space.debugger_access())
+		{
+			device_execute_interface *intf;
+			bool is_octal = false;
+			if (m_space.device().interface(intf))
+				is_octal = intf->is_octal();
+
 			logerror("%s: unmapped %s memory read from %s & %s\n",
 						m_space.machine().describe_context(), m_space.name(),
 						core_i64_format(m_space.byte_to_address(offset * sizeof(_UintType)), m_space.addrchars(),is_octal),
 						core_i64_format(mask, 2 * sizeof(_UintType),is_octal));
+		}
 		return m_space.unmap();
 	}
 
@@ -805,17 +742,19 @@ private:
 	template<typename _UintType>
 	void unmap_w(address_space &space, offs_t offset, _UintType data, _UintType mask)
 	{
-		device_execute_interface *intf;
-		bool is_octal = false;
-		if (m_space.device().interface(intf))
-			is_octal = intf->is_octal();
-
 		if (m_space.log_unmap() && !m_space.debugger_access())
+		{
+			device_execute_interface *intf;
+			bool is_octal = false;
+			if (m_space.device().interface(intf))
+				is_octal = intf->is_octal();
+
 			logerror("%s: unmapped %s memory write to %s = %s & %s\n",
 					m_space.machine().describe_context(), m_space.name(),
 					core_i64_format(m_space.byte_to_address(offset * sizeof(_UintType)), m_space.addrchars(),is_octal),
 					core_i64_format(data, 2 * sizeof(_UintType),is_octal),
 					core_i64_format(mask, 2 * sizeof(_UintType),is_octal));
+		}
 	}
 
 	template<typename _UintType>
@@ -1608,6 +1547,13 @@ void memory_manager::initialize()
 	for (address_space *space = m_spacelist.first(); space != NULL; space = space->next())
 		space->locate_memory();
 
+	// disable logging of unmapped access when no one receives it
+	for (address_space *space = m_spacelist.first(); space != NULL; space = space->next())
+	{
+		if (!machine().options().log() && !(machine().debug_flags & DEBUG_FLAG_ENABLED))
+			space->set_log_unmap(false);
+	}
+
 	// register a callback to reset banks when reloading state
 	machine().save().register_postload(save_prepost_delegate(FUNC(memory_manager::bank_reattach), this));
 
@@ -1654,7 +1600,7 @@ void memory_manager::dump(FILE *file)
 
 memory_region *memory_manager::region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian)
 {
-mame_printf_verbose("Region '%s' created\n", name);
+osd_printf_verbose("Region '%s' created\n", name);
 	// make sure we don't have a region of the same name; also find the end of the list
 	memory_region *info = m_regionlist.find(name);
 	if (info != NULL)
@@ -1886,11 +1832,11 @@ void address_space::prepare_map()
 		adjust_addresses(entry->m_bytestart, entry->m_byteend, entry->m_bytemask, entry->m_bytemirror);
 
 		// if we have a share entry, add it to our map
-		if (entry->m_share != NULL)
+		if (entry->m_sharetag != NULL)
 		{
 			// if we can't find it, add it to our map
 			astring fulltag;
-			if (manager().m_sharelist.find(device().siblingtag(fulltag, entry->m_share).cstr()) == NULL)
+			if (manager().m_sharelist.find(entry->m_sharebase->subtag(fulltag, entry->m_sharetag).cstr()) == NULL)
 			{
 				VPRINTF(("Creating share '%s' of length 0x%X\n", fulltag.cstr(), entry->m_byteend + 1 - entry->m_bytestart));
 				memory_share *share = global_alloc(memory_share(m_map->m_databits, entry->m_byteend + 1 - entry->m_bytestart, endianness()));
@@ -1910,7 +1856,7 @@ void address_space::prepare_map()
 		}
 
 		// validate adjusted addresses against implicit regions
-		if (entry->m_region != NULL && entry->m_share == NULL)
+		if (entry->m_region != NULL && entry->m_sharetag == NULL)
 		{
 			// determine full tag
 			astring fulltag;
@@ -2028,25 +1974,6 @@ void address_space::populate_map_entry(const address_map_entry &entry, read_or_w
 					case 16:    install_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, write16_delegate(entry.m_wproto16, *entry.m_write.m_devbase), data.m_mask); break;
 					case 32:    install_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, write32_delegate(entry.m_wproto32, *entry.m_write.m_devbase), data.m_mask); break;
 					case 64:    install_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, write64_delegate(entry.m_wproto64, *entry.m_write.m_devbase), data.m_mask); break;
-				}
-			break;
-
-		case AMH_LEGACY_SPACE_HANDLER:
-			if (readorwrite == ROW_READ)
-				switch (data.m_bits)
-				{
-					case 8:     install_legacy_read_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_rspace8, data.m_name, data.m_mask);   break;
-					case 16:    install_legacy_read_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_rspace16, data.m_name, data.m_mask);  break;
-					case 32:    install_legacy_read_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_rspace32, data.m_name, data.m_mask);  break;
-					case 64:    install_legacy_read_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_rspace64, data.m_name, data.m_mask);  break;
-				}
-			else
-				switch (data.m_bits)
-				{
-					case 8:     install_legacy_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_wspace8, data.m_name, data.m_mask);  break;
-					case 16:    install_legacy_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_wspace16, data.m_name, data.m_mask); break;
-					case 32:    install_legacy_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_wspace32, data.m_name, data.m_mask); break;
-					case 64:    install_legacy_write_handler(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, entry.m_wspace64, data.m_name, data.m_mask); break;
 				}
 			break;
 
@@ -2224,18 +2151,18 @@ address_map_entry *address_space::block_assign_intersecting(offs_t bytestart, of
 	for (address_map_entry *entry = m_map->m_entrylist.first(); entry != NULL; entry = entry->next())
 	{
 		// if we haven't assigned this block yet, see if we have a mapped shared pointer for it
-		if (entry->m_memory == NULL && entry->m_share != NULL)
+		if (entry->m_memory == NULL && entry->m_sharetag != NULL)
 		{
 			astring fulltag;
-			memory_share *share = manager().m_sharelist.find(device().siblingtag(fulltag, entry->m_share).cstr());
+			memory_share *share = manager().m_sharelist.find(entry->m_sharebase->subtag(fulltag, entry->m_sharetag).cstr());
 			if (share != NULL && share->ptr() != NULL)
 			{
 				entry->m_memory = share->ptr();
-				VPRINTF(("memory range %08X-%08X -> shared_ptr '%s' [%p]\n", entry->m_addrstart, entry->m_addrend, entry->m_share, entry->m_memory));
+				VPRINTF(("memory range %08X-%08X -> shared_ptr '%s' [%p]\n", entry->m_addrstart, entry->m_addrend, entry->m_sharetag, entry->m_memory));
 			}
 			else
 			{
-				VPRINTF(("memory range %08X-%08X -> shared_ptr '%s' but not found\n", entry->m_addrstart, entry->m_addrend, entry->m_share));
+				VPRINTF(("memory range %08X-%08X -> shared_ptr '%s' but not found\n", entry->m_addrstart, entry->m_addrend, entry->m_sharetag));
 			}
 		}
 
@@ -2247,14 +2174,14 @@ address_map_entry *address_space::block_assign_intersecting(offs_t bytestart, of
 		}
 
 		// if we're the first match on a shared pointer, assign it now
-		if (entry->m_memory != NULL && entry->m_share != NULL)
+		if (entry->m_memory != NULL && entry->m_sharetag != NULL)
 		{
 			astring fulltag;
-			memory_share *share = manager().m_sharelist.find(device().siblingtag(fulltag, entry->m_share).cstr());
+			memory_share *share = manager().m_sharelist.find(entry->m_sharebase->subtag(fulltag, entry->m_sharetag).cstr());
 			if (share != NULL && share->ptr() == NULL)
 			{
 				share->set_ptr(entry->m_memory);
-				VPRINTF(("setting shared_ptr '%s' = %p\n", entry->m_share, entry->m_memory));
+				VPRINTF(("setting shared_ptr '%s' = %p\n", entry->m_sharetag, entry->m_memory));
 			}
 		}
 
@@ -2538,43 +2465,6 @@ UINT8 *address_space::install_readwrite_handler(offs_t addrstart, offs_t addrend
 
 
 //-------------------------------------------------
-//  install_legacy_handler - install 8-bit read/
-//  write legacy address space handlers for the
-//  space
-//-------------------------------------------------
-
-UINT8 *address_space::install_legacy_read_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_space_func rhandler, const char *rname, UINT64 unitmask)
-{
-	VPRINTF(("address_space::install_legacy_read_handler(%s-%s mask=%s mirror=%s, %s, %s) [read8]\n",
-				core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars),
-				core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars),
-				rname, core_i64_hex_format(unitmask, data_width() / 4)));
-
-	read().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, rhandler, rname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT8 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT8 *address_space::install_legacy_write_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write8_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	VPRINTF(("address_space::install_legacy_write_handler(%s-%s mask=%s mirror=%s, %s, %s) [write8]\n",
-				core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars),
-				core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars),
-				wname, core_i64_hex_format(unitmask, data_width() / 4)));
-
-	write().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, whandler, wname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT8 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT8 *address_space::install_legacy_readwrite_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_space_func rhandler, const char *rname, write8_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	install_legacy_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, rname, unitmask);
-	return install_legacy_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, wname, unitmask);
-}
-
-
-//-------------------------------------------------
 //  install_handler - install 16-bit read/write
 //  delegate handlers for the space
 //-------------------------------------------------
@@ -2597,33 +2487,6 @@ UINT16 *address_space::install_readwrite_handler(offs_t addrstart, offs_t addren
 {
 	install_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, unitmask);
 	return install_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, unitmask);
-}
-
-
-//-------------------------------------------------
-//  install_legacy_handler - install 16-bit read/
-//  write legacy address space handlers for the
-//  space
-//-------------------------------------------------
-
-UINT16 *address_space::install_legacy_read_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read16_space_func rhandler, const char *rname, UINT64 unitmask)
-{
-	read().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, rhandler, rname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT16 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT16 *address_space::install_legacy_write_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write16_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	write().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, whandler, wname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT16 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT16 *address_space::install_legacy_readwrite_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read16_space_func rhandler, const char *rname, write16_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	install_legacy_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, rname, unitmask);
-	return install_legacy_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, wname, unitmask);
 }
 
 
@@ -2654,33 +2517,6 @@ UINT32 *address_space::install_readwrite_handler(offs_t addrstart, offs_t addren
 
 
 //-------------------------------------------------
-//  install_legacy_handler - install 32-bit read/
-//  write legacy address space handlers for the
-//  space
-//-------------------------------------------------
-
-UINT32 *address_space::install_legacy_read_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read32_space_func rhandler, const char *rname, UINT64 unitmask)
-{
-	read().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, rhandler, rname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT32 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT32 *address_space::install_legacy_write_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write32_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	write().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, whandler, wname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT32 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT32 *address_space::install_legacy_readwrite_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read32_space_func rhandler, const char *rname, write32_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	install_legacy_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, rname, unitmask);
-	return install_legacy_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, wname, unitmask);
-}
-
-
-//-------------------------------------------------
 //  install_handler64 - install 64-bit read/write
 //  delegate handlers for the space
 //-------------------------------------------------
@@ -2703,33 +2539,6 @@ UINT64 *address_space::install_readwrite_handler(offs_t addrstart, offs_t addren
 {
 	install_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, unitmask);
 	return install_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, unitmask);
-}
-
-
-//-------------------------------------------------
-//  install_legacy_handler - install 64-bit read/
-//  write legacy address space handlers for the
-//  space
-//-------------------------------------------------
-
-UINT64 *address_space::install_legacy_read_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read64_space_func rhandler, const char *rname, UINT64 unitmask)
-{
-	read().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, rhandler, rname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT64 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT64 *address_space::install_legacy_write_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write64_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	write().handler_map_range(addrstart, addrend, addrmask, addrmirror, unitmask).set_legacy_func(*this, whandler, wname);
-	generate_memdump(machine());
-	return reinterpret_cast<UINT64 *>(find_backing_memory(addrstart, addrend));
-}
-
-UINT64 *address_space::install_legacy_readwrite_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read64_space_func rhandler, const char *rname, write64_space_func whandler, const char *wname, UINT64 unitmask)
-{
-	install_legacy_read_handler(addrstart, addrend, addrmask, addrmirror, rhandler, rname, unitmask);
-	return install_legacy_write_handler(addrstart, addrend, addrmask, addrmirror, whandler, wname, unitmask);
 }
 
 
@@ -2801,10 +2610,10 @@ void *address_space::find_backing_memory(offs_t addrstart, offs_t addrend)
 bool address_space::needs_backing_store(const address_map_entry *entry)
 {
 	// if we are sharing, and we don't have a pointer yet, create one
-	if (entry->m_share != NULL)
+	if (entry->m_sharetag != NULL)
 	{
 		astring fulltag;
-		memory_share *share = manager().m_sharelist.find(device().siblingtag(fulltag, entry->m_share).cstr());
+		memory_share *share = manager().m_sharelist.find(entry->m_sharebase->subtag(fulltag, entry->m_sharetag).cstr());
 		if (share != NULL && share->ptr() == NULL)
 			return true;
 	}
@@ -3970,7 +3779,7 @@ direct_read_data::direct_range *direct_read_data::find_range(offs_t byteaddress,
 {
 	// determine which entry
 	byteaddress &= m_space.m_bytemask;
-	entry = m_space.read().lookup_live(byteaddress);
+	entry = m_space.read().lookup_live_nowp(byteaddress);
 
 	// scan our table
 	for (direct_range *range = m_rangelist[entry].first(); range != NULL; range = range->next())
@@ -4227,7 +4036,7 @@ void memory_bank::set_base_decrypted(void *base)
 {
 	// NULL is not an option
 	if (base == NULL)
-		throw emu_fatalerror("memory_bank::set_base called NULL base");
+		throw emu_fatalerror("memory_bank::set_base_decrypted called NULL base");
 
 	// set the base and invalidate any referencing spaces
 	*m_basedptr = reinterpret_cast<UINT8 *>(base);
@@ -4601,8 +4410,6 @@ void handler_entry_read::copy(handler_entry *entry)
 				break;
 		}
 	}
-	memcpy(m_sub_is_legacy, rentry->m_sub_is_legacy, m_subunits*sizeof(bool));
-	memcpy(m_sublegacy_info, rentry->m_sublegacy_info, m_subunits*sizeof(legacy_info));
 }
 
 //-------------------------------------------------
@@ -4650,8 +4457,6 @@ void handler_entry_read::remove_subunit(int entry)
 	if (moving)
 	{
 		memmove(m_subread+entry,        m_subread+entry+1,        moving*sizeof(m_subread[0]));
-		memmove(m_sub_is_legacy+entry,  m_sub_is_legacy+entry+1,  moving*sizeof(m_sub_is_legacy[0]));
-		memmove(m_sublegacy_info+entry, m_sublegacy_info+entry+1, moving*sizeof(m_sublegacy_info[0]));
 	}
 	m_subunits--;
 }
@@ -4662,7 +4467,7 @@ void handler_entry_read::remove_subunit(int entry)
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask)
 {
 	// error if no object
 	if (!delegate.has_object())
@@ -4676,18 +4481,10 @@ void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask, cons
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 8, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subread[i].r8 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subread[i].r8 = delegate;
+		}
 		if (m_datawidth == 16)
 			set_delegate(read16_delegate(&handler_entry_read::read_stub_16, delegate.name(), this));
 		else if (m_datawidth == 32)
@@ -4698,8 +4495,6 @@ void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask, cons
 	else
 	{
 		m_read.r8 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -4709,7 +4504,7 @@ void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask, cons
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_read::set_delegate(read16_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_read::set_delegate(read16_delegate delegate, UINT64 mask)
 {
 	// error if no object
 	if (!delegate.has_object())
@@ -4723,18 +4518,10 @@ void handler_entry_read::set_delegate(read16_delegate delegate, UINT64 mask, con
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 16, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subread[i].r16 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subread[i].r16 = delegate;
+		}
 		if (m_datawidth == 32)
 			set_delegate(read32_delegate(&handler_entry_read::read_stub_32, delegate.name(), this));
 		else if (m_datawidth == 64)
@@ -4743,8 +4530,6 @@ void handler_entry_read::set_delegate(read16_delegate delegate, UINT64 mask, con
 	else
 	{
 		m_read.r16 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -4754,7 +4539,7 @@ void handler_entry_read::set_delegate(read16_delegate delegate, UINT64 mask, con
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_read::set_delegate(read32_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_read::set_delegate(read32_delegate delegate, UINT64 mask)
 {
 	// error if no object
 	if (!delegate.has_object())
@@ -4768,26 +4553,16 @@ void handler_entry_read::set_delegate(read32_delegate delegate, UINT64 mask, con
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 32, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subread[i].r32 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subread[i].r32 = delegate;
+		}
 		if (m_datawidth == 64)
 			set_delegate(read64_delegate(&handler_entry_read::read_stub_64, delegate.name(), this));
 	}
 	else
 	{
 		m_read.r32 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -4796,7 +4571,7 @@ void handler_entry_read::set_delegate(read32_delegate delegate, UINT64 mask, con
 //  set_delegate - set a 64-bit delegate
 //-------------------------------------------------
 
-void handler_entry_read::set_delegate(read64_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_read::set_delegate(read64_delegate delegate, UINT64 mask)
 {
 	// error if no object
 	if (!delegate.has_object())
@@ -4805,46 +4580,6 @@ void handler_entry_read::set_delegate(read64_delegate delegate, UINT64 mask, con
 	// make sure this is a valid size
 	assert(m_datawidth >= 64);
 	m_read.r64 = delegate;
-	if (info)
-		m_legacy_info = *info;
-}
-
-
-//-------------------------------------------------
-//  set_legacy_func - configure a legacy address
-//  space stub of the appropriate size
-//-------------------------------------------------
-
-void handler_entry_read::set_legacy_func(address_space &space, read8_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space8 = func;
-	info.object.space = &space;
-	set_delegate(read8_delegate(&handler_entry_read::read_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_read::set_legacy_func(address_space &space, read16_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space16 = func;
-	info.object.space = &space;
-	set_delegate(read16_delegate(&handler_entry_read::read_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_read::set_legacy_func(address_space &space, read32_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space32 = func;
-	info.object.space = &space;
-	set_delegate(read32_delegate(&handler_entry_read::read_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_read::set_legacy_func(address_space &space, read64_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space64 = func;
-	info.object.space = &space;
-	set_delegate(read64_delegate(&handler_entry_read::read_stub_legacy, name, this), mask, &info);
 }
 
 
@@ -4883,10 +4618,7 @@ UINT16 handler_entry_read::read_stub_16(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT8 val;
-			if (m_sub_is_legacy[index])
-				val = m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, submask);
-			else
-				val = m_subread[index].r8(space, aoffset, submask);
+			val = m_subread[index].r8(space, aoffset, submask);
 			result |= val << si.m_shift;
 		}
 	}
@@ -4910,29 +4642,14 @@ UINT32 handler_entry_read::read_stub_32(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT16 val = 0;
-			if (m_sub_is_legacy[index])
+			switch (si.m_size)
 			{
-				switch (si.m_size)
-				{
-				case 8:
-					val = m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, submask);
-					break;
-				case 16:
-					val = m_sublegacy_info[index].handler.space16(*m_sublegacy_info[index].object.space, aoffset, submask);
-					break;
-				}
-			}
-			else
-			{
-				switch (si.m_size)
-				{
-				case 8:
-					val = m_subread[index].r8(space, aoffset, submask);
-					break;
-				case 16:
-					val = m_subread[index].r16(space, aoffset, submask);
-					break;
-				}
+			case 8:
+				val = m_subread[index].r8(space, aoffset, submask);
+				break;
+			case 16:
+				val = m_subread[index].r16(space, aoffset, submask);
+				break;
 			}
 			result |= val << si.m_shift;
 		}
@@ -4957,68 +4674,23 @@ UINT64 handler_entry_read::read_stub_64(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT32 val = 0;
-			if (m_sub_is_legacy[index])
+			switch (si.m_size)
 			{
-				switch (si.m_size)
-				{
-				case 8:
-					val = m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, submask);
-					break;
-				case 16:
-					val = m_sublegacy_info[index].handler.space16(*m_sublegacy_info[index].object.space, aoffset, submask);
-					break;
-				case 32:
-					val = m_sublegacy_info[index].handler.space32(*m_sublegacy_info[index].object.space, aoffset, submask);
-					break;
-				}
-			}
-			else
-			{
-				switch (si.m_size)
-				{
-				case 8:
-					val = m_subread[index].r8(space, aoffset, submask);
-					break;
-				case 16:
-					val = m_subread[index].r16(space, aoffset, submask);
-					break;
-				case 32:
-					val = m_subread[index].r32(space, aoffset, submask);
-					break;
-				}
+			case 8:
+				val = m_subread[index].r8(space, aoffset, submask);
+				break;
+			case 16:
+				val = m_subread[index].r16(space, aoffset, submask);
+				break;
+			case 32:
+				val = m_subread[index].r32(space, aoffset, submask);
+				break;
 			}
 			result |=  UINT64(val) << si.m_shift;
 		}
 	}
 	return result;
 }
-
-
-//-------------------------------------------------
-//  read_stub_legacy - perform a read using legacy
-//  handler callbacks
-//-------------------------------------------------
-
-UINT8 handler_entry_read::read_stub_legacy(address_space &space, offs_t offset, UINT8 mask)
-{
-	return m_legacy_info.handler.space8(*m_legacy_info.object.space, offset, mask);
-}
-
-UINT16 handler_entry_read::read_stub_legacy(address_space &space, offs_t offset, UINT16 mask)
-{
-	return m_legacy_info.handler.space16(*m_legacy_info.object.space, offset, mask);
-}
-
-UINT32 handler_entry_read::read_stub_legacy(address_space &space, offs_t offset, UINT32 mask)
-{
-	return m_legacy_info.handler.space32(*m_legacy_info.object.space, offset, mask);
-}
-
-UINT64 handler_entry_read::read_stub_legacy(address_space &space, offs_t offset, UINT64 mask)
-{
-	return m_legacy_info.handler.space64(*m_legacy_info.object.space, offset, mask);
-}
-
 
 
 //**************************************************************************
@@ -5051,8 +4723,6 @@ void handler_entry_write::copy(handler_entry *entry)
 				break;
 		}
 	}
-	memcpy(m_sub_is_legacy, wentry->m_sub_is_legacy, m_subunits*sizeof(bool));
-	memcpy(m_sublegacy_info, wentry->m_sublegacy_info, m_subunits*sizeof(legacy_info));
 }
 
 //-------------------------------------------------
@@ -5101,8 +4771,6 @@ void handler_entry_write::remove_subunit(int entry)
 	if (moving)
 	{
 		memmove(m_subwrite+entry,       m_subwrite+entry+1,       moving*sizeof(m_subwrite[0]));
-		memmove(m_sub_is_legacy+entry,  m_sub_is_legacy+entry+1,  moving*sizeof(m_sub_is_legacy[0]));
-		memmove(m_sublegacy_info+entry, m_sublegacy_info+entry+1, moving*sizeof(m_sublegacy_info[0]));
 	}
 	m_subunits--;
 }
@@ -5113,7 +4781,7 @@ void handler_entry_write::remove_subunit(int entry)
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_write::set_delegate(write8_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_write::set_delegate(write8_delegate delegate, UINT64 mask)
 {
 	assert(m_datawidth >= 8);
 
@@ -5122,18 +4790,10 @@ void handler_entry_write::set_delegate(write8_delegate delegate, UINT64 mask, co
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 8, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subwrite[i].w8 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subwrite[i].w8 = delegate;
+		}
 		if (m_datawidth == 16)
 			set_delegate(write16_delegate(&handler_entry_write::write_stub_16, delegate.name(), this));
 		else if (m_datawidth == 32)
@@ -5144,8 +4804,6 @@ void handler_entry_write::set_delegate(write8_delegate delegate, UINT64 mask, co
 	else
 	{
 		m_write.w8 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -5155,7 +4813,7 @@ void handler_entry_write::set_delegate(write8_delegate delegate, UINT64 mask, co
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_write::set_delegate(write16_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_write::set_delegate(write16_delegate delegate, UINT64 mask)
 {
 	assert(m_datawidth >= 16);
 
@@ -5164,18 +4822,10 @@ void handler_entry_write::set_delegate(write16_delegate delegate, UINT64 mask, c
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 16, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subwrite[i].w16 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subwrite[i].w16 = delegate;
+		}
 		if (m_datawidth == 32)
 			set_delegate(write32_delegate(&handler_entry_write::write_stub_32, delegate.name(), this));
 		else if (m_datawidth == 64)
@@ -5184,8 +4834,6 @@ void handler_entry_write::set_delegate(write16_delegate delegate, UINT64 mask, c
 	else
 	{
 		m_write.w16 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -5195,7 +4843,7 @@ void handler_entry_write::set_delegate(write16_delegate delegate, UINT64 mask, c
 //  configure a stub if necessary
 //-------------------------------------------------
 
-void handler_entry_write::set_delegate(write32_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_write::set_delegate(write32_delegate delegate, UINT64 mask)
 {
 	assert(m_datawidth >= 32);
 
@@ -5204,26 +4852,16 @@ void handler_entry_write::set_delegate(write32_delegate delegate, UINT64 mask, c
 	{
 		int start_slot, end_slot;
 		configure_subunits(mask, 32, start_slot, end_slot);
-		if (info)
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_sublegacy_info[i] = *info;
-				m_sub_is_legacy[i] = true;
-			}
-		else
-			for (int i=start_slot; i != end_slot; i++)
-			{
-				m_subwrite[i].w32 = delegate;
-				m_sub_is_legacy[i] = false;
-			}
+		for (int i=start_slot; i != end_slot; i++)
+		{
+			m_subwrite[i].w32 = delegate;
+		}
 		if (m_datawidth == 64)
 			set_delegate(write64_delegate(&handler_entry_write::write_stub_64, delegate.name(), this));
 	}
 	else
 	{
 		m_write.w32 = delegate;
-		if (info)
-			m_legacy_info = *info;
 	}
 }
 
@@ -5232,50 +4870,10 @@ void handler_entry_write::set_delegate(write32_delegate delegate, UINT64 mask, c
 //  set_delegate - set a 64-bit delegate
 //-------------------------------------------------
 
-void handler_entry_write::set_delegate(write64_delegate delegate, UINT64 mask, const legacy_info *info)
+void handler_entry_write::set_delegate(write64_delegate delegate, UINT64 mask)
 {
 	assert(m_datawidth >= 64);
 	m_write.w64 = delegate;
-	if (info)
-		m_legacy_info = *info;
-}
-
-
-//-------------------------------------------------
-//  set_legacy_func - configure a legacy address
-//  space stub of the appropriate size
-//-------------------------------------------------
-
-void handler_entry_write::set_legacy_func(address_space &space, write8_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space8 = func;
-	info.object.space = &space;
-	set_delegate(write8_delegate(&handler_entry_write::write_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_write::set_legacy_func(address_space &space, write16_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space16 = func;
-	info.object.space = &space;
-	set_delegate(write16_delegate(&handler_entry_write::write_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_write::set_legacy_func(address_space &space, write32_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space32 = func;
-	info.object.space = &space;
-	set_delegate(write32_delegate(&handler_entry_write::write_stub_legacy, name, this), mask, &info);
-}
-
-void handler_entry_write::set_legacy_func(address_space &space, write64_space_func func, const char *name, UINT64 mask)
-{
-	legacy_info info;
-	info.handler.space64 = func;
-	info.object.space = &space;
-	set_delegate(write64_delegate(&handler_entry_write::write_stub_legacy, name, this), mask, &info);
 }
 
 
@@ -5313,10 +4911,7 @@ void handler_entry_write::write_stub_16(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT8 adata = data >> si.m_shift;
-			if (m_sub_is_legacy[index])
-				m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-			else
-				m_subwrite[index].w8(space, aoffset, adata, submask);
+			m_subwrite[index].w8(space, aoffset, adata, submask);
 		}
 	}
 }
@@ -5337,29 +4932,14 @@ void handler_entry_write::write_stub_32(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT16 adata = data >> si.m_shift;
-			if (m_sub_is_legacy[index])
+			switch (si.m_size)
 			{
-				switch (si.m_size)
-				{
-				case 8:
-					m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-					break;
-				case 16:
-					m_sublegacy_info[index].handler.space16(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-					break;
-				}
-			}
-			else
-			{
-				switch (si.m_size)
-				{
-				case 8:
-					m_subwrite[index].w8(space, aoffset, adata, submask);
-					break;
-				case 16:
-					m_subwrite[index].w16(space, aoffset, adata, submask);
-					break;
-				}
+			case 8:
+				m_subwrite[index].w8(space, aoffset, adata, submask);
+				break;
+			case 16:
+				m_subwrite[index].w16(space, aoffset, adata, submask);
+				break;
 			}
 		}
 	}
@@ -5381,62 +4961,19 @@ void handler_entry_write::write_stub_64(address_space &space, offs_t offset, UIN
 		{
 			offs_t aoffset = offset * si.m_multiplier + si.m_offset;
 			UINT32 adata = data >> si.m_shift;
-			if (m_sub_is_legacy[index])
+			switch (si.m_size)
 			{
-				switch (si.m_size)
-				{
-				case 8:
-					m_sublegacy_info[index].handler.space8(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-					break;
-				case 16:
-					m_sublegacy_info[index].handler.space16(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-					break;
-				case 32:
-					m_sublegacy_info[index].handler.space32(*m_sublegacy_info[index].object.space, aoffset, adata, submask);
-					break;
-				}
-			}
-			else
-			{
-				switch (si.m_size)
-				{
-				case 8:
-					m_subwrite[index].w8(space, aoffset, adata, submask);
-					break;
-				case 16:
-					m_subwrite[index].w16(space, aoffset, adata, submask);
-					break;
-				case 32:
-					m_subwrite[index].w32(space, aoffset, adata, submask);
-					break;
-				}
+			case 8:
+				m_subwrite[index].w8(space, aoffset, adata, submask);
+				break;
+			case 16:
+				m_subwrite[index].w16(space, aoffset, adata, submask);
+				break;
+			case 32:
+				m_subwrite[index].w32(space, aoffset, adata, submask);
+				break;
 			}
 		}
 	}
 }
 
-
-//-------------------------------------------------
-//  write_stub_legacy - perform a write using
-//  legacy handler callbacks
-//-------------------------------------------------
-
-void handler_entry_write::write_stub_legacy(address_space &space, offs_t offset, UINT8 data, UINT8 mask)
-{
-	m_legacy_info.handler.space8(*m_legacy_info.object.space, offset, data, mask);
-}
-
-void handler_entry_write::write_stub_legacy(address_space &space, offs_t offset, UINT16 data, UINT16 mask)
-{
-	m_legacy_info.handler.space16(*m_legacy_info.object.space, offset, data, mask);
-}
-
-void handler_entry_write::write_stub_legacy(address_space &space, offs_t offset, UINT32 data, UINT32 mask)
-{
-	m_legacy_info.handler.space32(*m_legacy_info.object.space, offset, data, mask);
-}
-
-void handler_entry_write::write_stub_legacy(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
-{
-	m_legacy_info.handler.space64(*m_legacy_info.object.space, offset, data, mask);
-}

@@ -406,29 +406,20 @@ WRITE8_MEMBER(cvs_state::cvs_tms5110_pdc_w)
 }
 
 
-static int speech_rom_read_bit( device_t *device )
+READ_LINE_MEMBER(cvs_state::speech_rom_read_bit)
 {
-	cvs_state *state = device->machine().driver_data<cvs_state>();
-	UINT8 *ROM = state->memregion("speechdata")->base();
 	int bit;
+	UINT8 *ROM = memregion("speechdata")->base();
 
 	/* before reading the bit, clamp the address to the region length */
-	state->m_speech_rom_bit_address = state->m_speech_rom_bit_address & ((state->memregion("speechdata")->bytes() * 8) - 1);
-	bit = (ROM[state->m_speech_rom_bit_address >> 3] >> (state->m_speech_rom_bit_address & 0x07)) & 0x01;
+	m_speech_rom_bit_address &= ((memregion("speechdata")->bytes() * 8) - 1);
+	bit = BIT(ROM[m_speech_rom_bit_address >> 3], m_speech_rom_bit_address & 0x07);
 
 	/* prepare for next bit */
-	state->m_speech_rom_bit_address = state->m_speech_rom_bit_address + 1;
+	m_speech_rom_bit_address++;
 
 	return bit;
 }
-
-
-static const tms5110_interface tms5100_interface =
-{
-	speech_rom_read_bit, /* M0 callback function. Called whenever chip requests a single bit of data */
-	NULL
-};
-
 
 
 /*************************************
@@ -945,25 +936,6 @@ GFXDECODE_END
  *
  *************************************/
 
-static const s2636_interface s2636_0_config =
-{
-	0x100,
-	CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET
-};
-
-static const s2636_interface s2636_1_config =
-{
-	0x100,
-	CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET
-};
-
-static const s2636_interface s2636_2_config =
-{
-	0x100,
-	CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET
-};
-
-
 MACHINE_START_MEMBER(cvs_state,cvs)
 {
 	/* allocate memory */
@@ -1041,9 +1013,17 @@ static MACHINE_CONFIG_START( cvs, cvs_state )
 	MCFG_SCREEN_UPDATE_DRIVER(cvs_state, screen_update_cvs)
 	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_S2636_ADD("s2636_0", s2636_0_config)
-	MCFG_S2636_ADD("s2636_1", s2636_1_config)
-	MCFG_S2636_ADD("s2636_2", s2636_2_config)
+	MCFG_DEVICE_ADD("s2636_0", S2636, 0)
+	MCFG_S2636_WORKRAM_SIZE(0x100)
+	MCFG_S2636_OFFSETS(CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET)
+
+	MCFG_DEVICE_ADD("s2636_1", S2636, 0)
+	MCFG_S2636_WORKRAM_SIZE(0x100)
+	MCFG_S2636_OFFSETS(CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET)
+
+	MCFG_DEVICE_ADD("s2636_2", S2636, 0)
+	MCFG_S2636_WORKRAM_SIZE(0x100)
+	MCFG_S2636_OFFSETS(CVS_S2636_Y_OFFSET, CVS_S2636_X_OFFSET)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1061,7 +1041,7 @@ static MACHINE_CONFIG_START( cvs, cvs_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MCFG_SOUND_ADD("tms", TMS5100, XTAL_640kHz)
-	MCFG_SOUND_CONFIG(tms5100_interface)
+	MCFG_TMS5110_DATA_CB(READLINE(cvs_state, speech_rom_read_bit))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

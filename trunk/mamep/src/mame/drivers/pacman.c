@@ -3298,20 +3298,6 @@ static GFXDECODE_START( crush4 )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  Sound interfaces
- *
- *************************************/
-
-static const namco_interface namco_config =
-{
-	3,          /* number of voices */
-	0           /* stereo */
-};
-
-
 /*************************************
  *
  *  Machine drivers
@@ -3344,7 +3330,7 @@ static MACHINE_CONFIG_START( pacman, pacman_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("namco", NAMCO, MASTER_CLOCK/6/32)
-	MCFG_SOUND_CONFIG(namco_config)
+	MCFG_NAMCO_AUDIO_VOICES(3)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -3570,16 +3556,6 @@ static MACHINE_CONFIG_DERIVED( crush4, mschamp )
 	MCFG_GFXDECODE_MODIFY("gfxdecode", crush4)
 MACHINE_CONFIG_END
 
-static const ay8910_interface crushs_ay8910_interface =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_DERIVED( crushs, pacman )
 
 	/* basic machine hardware */
@@ -3589,7 +3565,6 @@ static MACHINE_CONFIG_DERIVED( crushs, pacman )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ay8912", AY8912, 1789750)
-	MCFG_SOUND_CONFIG(crushs_ay8910_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 

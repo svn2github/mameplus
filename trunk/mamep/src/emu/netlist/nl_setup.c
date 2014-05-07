@@ -393,7 +393,7 @@ nld_base_d_to_a_proxy *netlist_setup_t::get_d_a_proxy(netlist_output_t &out)
 	{
 		// create a new one ...
 		proxy = new nld_d_to_a_proxy(out);
-		pstring x = pstring::sprintf("proxy_da_%d", m_proxy_cnt);
+		pstring x = pstring::sprintf("proxy_da_%s_%d", out.name().cstr(), m_proxy_cnt);
 		m_proxy_cnt++;
 
 		register_dev(proxy, x);
@@ -402,15 +402,13 @@ nld_base_d_to_a_proxy *netlist_setup_t::get_d_a_proxy(netlist_output_t &out)
 #if 1
 		/* connect all existing terminals to new net */
 
-		netlist_core_terminal_t *p = out.net().m_list.first();
-		while (p != NULL)
+		for (int i = 0; i < out.net().m_core_terms.count(); i++)
 		{
-			netlist_core_terminal_t *np = out.net().m_list.next(p);
+	        netlist_core_terminal_t *p = out.net().m_core_terms[i];
 			p->clear_net(); // de-link from all nets ...
 			connect(proxy->out(), *p);
-			p = np;
 		}
-		out.net().m_list.clear(); // clear the list
+		out.net().m_core_terms.clear(); // clear the list
 		out.net().m_num_cons = 0;
 #endif
 		out.net().register_con(proxy->m_I);
@@ -425,7 +423,7 @@ void netlist_setup_t::connect_input_output(netlist_input_t &in, netlist_output_t
 	if (out.isFamily(netlist_terminal_t::ANALOG) && in.isFamily(netlist_terminal_t::LOGIC))
 	{
 		nld_a_to_d_proxy *proxy = new nld_a_to_d_proxy(in);
-		pstring x = pstring::sprintf("proxy_ad_%d", m_proxy_cnt);
+		pstring x = pstring::sprintf("proxy_ad_%s_%d", in.name().cstr(), m_proxy_cnt);
 		m_proxy_cnt++;
 
 		register_dev(proxy, x);
@@ -458,7 +456,7 @@ void netlist_setup_t::connect_terminal_input(netlist_terminal_t &term, netlist_i
 	{
 		NL_VERBOSE_OUT(("connect_terminal_input: connecting proxy\n"));
 		nld_a_to_d_proxy *proxy = new nld_a_to_d_proxy(inp);
-		pstring x = pstring::sprintf("proxy_da_%d", m_proxy_cnt);
+		pstring x = pstring::sprintf("proxy_ad_%s_%d", inp.name().cstr(), m_proxy_cnt);
 		m_proxy_cnt++;
 
 		register_dev(proxy, x);
@@ -620,14 +618,18 @@ void netlist_setup_t::resolve_inputs()
 
 	for (netlist_net_t *const *pn = netlist().m_nets.first(); pn != NULL; pn = netlist().m_nets.next(pn))
 	{
-		if ((*pn)->m_list.is_empty())
+		if ((*pn)->m_core_terms.is_empty())
 		{
 			todelete.add(*pn);
 		}
 		else
 		{
+#if 0
 			for (netlist_core_terminal_t *p = (*pn)->m_list.first(); p != NULL; p = (*pn)->m_list.next(p))
 				(*pn)->m_registered.add(p);
+#else
+			(*pn)->rebuild_list();
+#endif
 		}
 	}
 

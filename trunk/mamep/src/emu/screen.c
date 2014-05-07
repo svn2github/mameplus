@@ -136,7 +136,7 @@ void screen_device::free_scale_bitmap()
 
 void screen_device::convert_palette_to_32(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase)
 {
-	const rgb_t *pal = palette()->palette()->entry_list_adjusted() + palettebase;
+	const rgb_t *palette =  m_palette->palette()->entry_list_adjusted() + palettebase;
 	int x, y;
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
@@ -145,13 +145,13 @@ void screen_device::convert_palette_to_32(const bitmap_t &src, bitmap_t &dst, co
 		UINT16 *src16 = &src.pixt<UINT16>(y, visarea.min_x);
 
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			*dst32++ = pal[*src16++];
+			*dst32++ = palette[*src16++];
 	}
 }
 
 void screen_device::convert_palette_to_15(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase)
 {
-	const rgb_t *pal = palette()->palette()->entry_list_adjusted() + palettebase;
+	const rgb_t *palette =  m_palette->palette()->entry_list_adjusted() + palettebase;
 	int x, y;
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
@@ -160,7 +160,7 @@ void screen_device::convert_palette_to_15(const bitmap_t &src, bitmap_t &dst, co
 		UINT16 *src16 = &src.pixt<UINT16>(y, visarea.min_x);
 
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			*dst16++ = pal[*src16++].as_rgb15();;
+			*dst16++ = (palette[*src16++]).as_rgb15();
 	}
 }
 
@@ -301,6 +301,7 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 	m_unique_id = m_id_counter;
 	m_id_counter++;
 	memset(m_texture, 0, sizeof(m_texture));
+
 #ifdef USE_SCALE_EFFECTS
 	memset(m_scale_bitmap, 0, sizeof(m_scale_bitmap));
 	memset(m_work_bitmap, 0, sizeof(m_work_bitmap));
@@ -471,28 +472,28 @@ void screen_device::device_validity_check(validity_checker &valid) const
 {
 	// sanity check dimensions
 	if (m_width <= 0 || m_height <= 0)
-		mame_printf_error(_("Invalid display dimensions\n"));
+		osd_printf_error(_("Invalid display dimensions\n"));
 
 	// sanity check display area
 	if (m_type != SCREEN_TYPE_VECTOR)
 	{
 		if (m_visarea.empty() || m_visarea.max_x >= m_width || m_visarea.max_y >= m_height)
-			mame_printf_error(_("Invalid display area\n"));
+			osd_printf_error(_("Invalid display area\n"));
 
 		// sanity check screen formats
 		if (m_screen_update_ind16.isnull() && m_screen_update_rgb32.isnull())
-			mame_printf_error(_("Missing SCREEN_UPDATE function\n"));
+			osd_printf_error(_("Missing SCREEN_UPDATE function\n"));
 	}
 
 	// check for zero frame rate
 	if (m_refresh == 0)
-		mame_printf_error(_("Invalid (zero) refresh rate\n"));
+		osd_printf_error(_("Invalid (zero) refresh rate\n"));
 
 	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
 	if (m_palette == NULL && texformat == TEXFORMAT_PALETTE16)
-		mame_printf_error("Screen does not have palette defined\n");
+		osd_printf_error("Screen does not have palette defined\n");
 	if (m_palette != NULL && texformat == TEXFORMAT_RGB32)
-		mame_printf_warning("Screen does not need palette defined\n");
+		osd_printf_warning("Screen does not need palette defined\n");
 }
 
 
@@ -781,7 +782,7 @@ void screen_device::realloc_screen_bitmaps()
 
 void screen_device::realloc_scale_bitmaps()
 {
-	mame_printf_verbose("realloc_scale_bitmaps()\n");
+	osd_printf_verbose("realloc_scale_bitmaps()\n");
 
 	if (m_type == SCREEN_TYPE_VECTOR)
 		return;
@@ -844,7 +845,7 @@ void screen_device::realloc_scale_bitmaps()
 				m_work_bitmap[1][bank] = auto_bitmap_rgb32_alloc(machine(), curwidth * scale_xsize, curheight * scale_ysize);
 			}
 
-			mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
+			osd_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
 								curwidth * scale_xsize, 
 								curheight * scale_ysize,
 								scale_depth,
@@ -1189,7 +1190,7 @@ bool screen_device::update_quads()
 					texture_set_scale_bitmap(m_visarea, 0);
 				else
 #endif /* USE_SCALE_EFFECTS */
-				m_texture[m_curbitmap]->set_bitmap(m_bitmap[m_curbitmap], m_visarea, m_bitmap[m_curbitmap].texformat());
+					m_texture[m_curbitmap]->set_bitmap(m_bitmap[m_curbitmap], m_visarea, m_bitmap[m_curbitmap].texformat());
 				m_curtexture = m_curbitmap;
 				m_curbitmap = 1 - m_curbitmap;
 			}
@@ -1371,5 +1372,5 @@ void screen_device::load_effect_overlay(const char *filename)
 	if (m_screen_overlay_bitmap.valid())
 		m_container->set_overlay(&m_screen_overlay_bitmap);
 	else
-		mame_printf_warning(_("Unable to load effect PNG file '%s'\n"), fullname.cstr());
+		osd_printf_warning(_("Unable to load effect PNG file '%s'\n"), fullname.cstr());
 }

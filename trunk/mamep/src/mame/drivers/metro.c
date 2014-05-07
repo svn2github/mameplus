@@ -1784,7 +1784,7 @@ WRITE16_MEMBER(metro_state::puzzlet_irq_enable_w)
 		*m_irq_enable = data ^ 0xffff;
 }
 
-	/* FIXME: algorithm not yet understood. */
+/* FIXME: algorithm not yet understood. */
 WRITE16_MEMBER(metro_state::vram_0_clr_w)
 {
 	static int i;
@@ -3623,8 +3623,6 @@ MACHINE_START_MEMBER(metro_state,metro)
 
 MACHINE_RESET_MEMBER(metro_state,metro)
 {
-	if (m_irq_line == -1)
-		m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(metro_state::metro_irq_callback),this));
 }
 
 
@@ -4065,6 +4063,7 @@ static MACHINE_CONFIG_START( dokyusei, metro_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(dokyusei_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", metro_state,  metro_vblank_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(metro_state,metro_irq_callback)
 
 	MCFG_MACHINE_START_OVERRIDE(metro_state,metro)
 	MCFG_MACHINE_RESET_OVERRIDE(metro_state,metro)
@@ -4101,6 +4100,7 @@ static MACHINE_CONFIG_START( dokyusp, metro_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(dokyusp_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", metro_state,  metro_vblank_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(metro_state,metro_irq_callback)
 
 	MCFG_MACHINE_START_OVERRIDE(metro_state,metro)
 	MCFG_MACHINE_RESET_OVERRIDE(metro_state,metro)
@@ -4139,6 +4139,7 @@ static MACHINE_CONFIG_START( gakusai, metro_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000) /* 26.6660MHz/2?, OSCs listed are 26.6660MHz & 3.579545MHz */
 	MCFG_CPU_PROGRAM_MAP(gakusai_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", metro_state,  metro_vblank_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(metro_state,metro_irq_callback)
 
 	MCFG_MACHINE_START_OVERRIDE(metro_state,metro)
 	MCFG_MACHINE_RESET_OVERRIDE(metro_state,metro)
@@ -4177,6 +4178,7 @@ static MACHINE_CONFIG_START( gakusai2, metro_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000) /* 26.6660MHz/2?, OSCs listed are 26.6660MHz & 3.579545MHz */
 	MCFG_CPU_PROGRAM_MAP(gakusai2_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", metro_state,  metro_vblank_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(metro_state,metro_irq_callback)
 
 	MCFG_MACHINE_START_OVERRIDE(metro_state,metro)
 	MCFG_MACHINE_RESET_OVERRIDE(metro_state,metro)
@@ -4431,6 +4433,7 @@ static MACHINE_CONFIG_START( mouja, metro_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(mouja_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", metro_state,  metro_vblank_interrupt)
+	MCFG_CPU_IRQ_ACKNOWLEDGE_DRIVER(metro_state,metro_irq_callback)
 
 	MCFG_MACHINE_START_OVERRIDE(metro_state,metro)
 	MCFG_MACHINE_RESET_OVERRIDE(metro_state,metro)
@@ -4501,11 +4504,6 @@ static MACHINE_CONFIG_START( vmetal, metro_state )
 MACHINE_CONFIG_END
 
 
-static const k053936_interface blzntrnd_k053936_intf =
-{
-	0, -69, -21
-};
-
 static MACHINE_CONFIG_START( blzntrnd, metro_state )
 
 	/* basic machine hardware */
@@ -4535,7 +4533,8 @@ static MACHINE_CONFIG_START( blzntrnd, metro_state )
 	MCFG_PALETTE_ADD("palette", 0x1000)
 	MCFG_PALETTE_FORMAT(GGGGGRRRRRBBBBBx)
 
-	MCFG_K053936_ADD("k053936", blzntrnd_k053936_intf)
+	MCFG_DEVICE_ADD("k053936", K053936, 0)
+	MCFG_K053936_OFFSETS(-69, -21)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -4549,11 +4548,6 @@ static MACHINE_CONFIG_START( blzntrnd, metro_state )
 MACHINE_CONFIG_END
 
 /* like blzntrnd but new vidstart / gfxdecode for the different bg tilemap */
-
-static const k053936_interface gstrik2_k053936_intf =
-{
-	0, -69, -19
-};
 
 static MACHINE_CONFIG_START( gstrik2, metro_state )
 
@@ -4584,7 +4578,8 @@ static MACHINE_CONFIG_START( gstrik2, metro_state )
 	MCFG_PALETTE_ADD("palette", 0x1000)
 	MCFG_PALETTE_FORMAT(GGGGGRRRRRBBBBBx)
 
-	MCFG_K053936_ADD("k053936", gstrik2_k053936_intf)
+	MCFG_DEVICE_ADD("k053936", K053936, 0)
+	MCFG_K053936_OFFSETS(-69, -19)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

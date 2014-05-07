@@ -157,23 +157,6 @@ WRITE_LINE_MEMBER(paranoia_state::paranoia_i8155_timer_out)
 	//logerror("Timer out %d\n", state);
 }
 
-static I8155_INTERFACE(i8155_intf)
-{
-	// all ports set to output
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(paranoia_state,paranoia_i8155_a_w),
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(paranoia_state,paranoia_i8155_b_w),
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(paranoia_state,paranoia_i8155_c_w),
-	DEVCB_DRIVER_LINE_MEMBER(paranoia_state,paranoia_i8155_timer_out)
-};
-
-static const c6280_interface c6280_config =
-{
-	"maincpu"
-};
-
 static MACHINE_CONFIG_START( paranoia, paranoia_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", H6280, PCE_MAIN_CLOCK/3)
@@ -189,7 +172,11 @@ static MACHINE_CONFIG_START( paranoia, paranoia_state )
 	MCFG_CPU_PROGRAM_MAP(paranoia_z80_map)
 	MCFG_CPU_IO_MAP(paranoia_z80_io_map)
 
-	MCFG_I8155_ADD("i8155", 1000000 /*?*/, i8155_intf)
+	MCFG_DEVICE_ADD("i8155", I8155, 1000000 /*?*/)
+	MCFG_I8155_OUT_PORTA_CB(WRITE8(paranoia_state, paranoia_i8155_a_w))
+	MCFG_I8155_OUT_PORTB_CB(WRITE8(paranoia_state, paranoia_i8155_b_w))
+	MCFG_I8155_OUT_PORTC_CB(WRITE8(paranoia_state, paranoia_i8155_c_w))
+	MCFG_I8155_OUT_TIMEROUT_CB(WRITELINE(paranoia_state, paranoia_i8155_timer_out))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -208,7 +195,7 @@ static MACHINE_CONFIG_START( paranoia, paranoia_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
 	MCFG_SOUND_ADD("c6280", C6280, PCE_MAIN_CLOCK/6)
-	MCFG_SOUND_CONFIG(c6280_config)
+	MCFG_C6280_CPU("maincpu")
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.00)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 

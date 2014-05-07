@@ -290,34 +290,6 @@ const UINT32 MASTER_CLOCK = XTAL_40MHz;
 const UINT32 SOUND_CLOCK = XTAL_16MHz;
 const UINT32 MASTER_CLOCK_25MHz = XTAL_25_1748MHz;
 
-
-
-//**************************************************************************
-//  PPI INTERFACES
-//**************************************************************************
-
-static I8255_INTERFACE(outrun_ppi_intf)
-{
-	DEVCB_DRIVER_MEMBER(segaorun_state, bankmotor_limit_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_w),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portb_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, bankmotor_control_w),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portc_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, video_control_w)
-};
-
-static I8255_INTERFACE(shangon_ppi_intf)
-{
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_w),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portb_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portb_w),
-	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portc_r),
-	DEVCB_DRIVER_MEMBER(segaorun_state, video_control_w)
-};
-
-
-
 //**************************************************************************
 //  PPI READ/WRITE CALLBACKS
 //**************************************************************************
@@ -396,9 +368,9 @@ READ8_MEMBER( segaorun_state::bankmotor_limit_r )
 	//  D5: left limit
 	//  D4: center
 	//  D3: right limit
-	// other bits: ?
+	//  other bits: ?
 	UINT8 pos = m_bankmotor_pos >> 8 & 0xff;
-	
+
 	// these values may need to be tweaked when hooking up real motors to MAME
 	const int left_limit = 0x20;
 	const int center = 0x80;
@@ -411,7 +383,7 @@ READ8_MEMBER( segaorun_state::bankmotor_limit_r )
 		ret ^= 0x10;
 	else if (pos >= right_limit - tolerance)
 		ret ^= 0x08;
-	
+
 	return ret;
 }
 
@@ -599,7 +571,7 @@ void segaorun_state::machine_reset()
 	m_segaic16vid->segaic16_tilemap_reset(*m_screen);
 
 	// hook the RESET line, which resets CPU #1
-	m68k_set_reset_callback(m_maincpu, m68k_reset_callback);
+	m_maincpu->set_reset_callback(write_line_delegate(FUNC(segaorun_state::m68k_reset_callback),this));
 
 	// start timers to track interrupts
 	m_scanline_timer->adjust(m_screen->time_until_pos(223), 223);
@@ -837,9 +809,9 @@ WRITE16_MEMBER( segaorun_state::shangon_custom_io_w )
 		case 0x0000/2:
 			if (ACCESSING_BITS_0_7)
 			{
-			// Output port:
-			//  D7-D6: (ADC1-0)
-			//  D5: Screen display
+				// Output port:
+				//  D7-D6: (ADC1-0)
+				//  D5: Screen display
 				//  D3: Vibration motor
 				//  D2: Start lamp
 				//  other bits: ?
@@ -903,10 +875,9 @@ void segaorun_state::update_main_irqs()
 //  main 68000 is reset
 //-------------------------------------------------
 
-void segaorun_state::m68k_reset_callback(device_t *device)
+WRITE_LINE_MEMBER(segaorun_state::m68k_reset_callback)
 {
-	segaorun_state *state = device->machine().driver_data<segaorun_state>();
-	state->m_subcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 
@@ -1160,17 +1131,6 @@ INPUT_PORTS_END
 
 
 //**************************************************************************
-//  SOUND DEFINITIONS
-//**************************************************************************
-
-static const sega_pcm_interface segapcm_interface =
-{
-	BANK_512
-};
-
-
-
-//**************************************************************************
 //  GRAPHICS DEFINITIONS
 //**************************************************************************
 
@@ -1199,7 +1159,14 @@ static MACHINE_CONFIG_START( outrun_base, segaorun_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_I8255_ADD( "i8255", outrun_ppi_intf )
+	MCFG_DEVICE_ADD("i8255", I8255, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(segaorun_state, bankmotor_limit_r))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(segaorun_state, unknown_porta_w))
+	MCFG_I8255_IN_PORTB_CB(READ8(segaorun_state, unknown_portb_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(segaorun_state, bankmotor_control_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(segaorun_state, unknown_portc_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(segaorun_state, video_control_w))
+
 	MCFG_SEGA_315_5195_MAPPER_ADD("mapper", "maincpu", segaorun_state, memory_mapper, mapper_sound_r, mapper_sound_w)
 
 	// video hardware
@@ -1223,7 +1190,7 @@ static MACHINE_CONFIG_START( outrun_base, segaorun_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.43)
 
 	MCFG_SEGAPCM_ADD("pcm", SOUND_CLOCK/4)
-	MCFG_SOUND_CONFIG(segapcm_interface)
+	MCFG_SEGAPCM_BANK(BANK_512)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1268,7 +1235,13 @@ static MACHINE_CONFIG_DERIVED( shangon, outrun_base )
 
 	// basic machine hardware
 	MCFG_DEVICE_REMOVE("i8255")
-	MCFG_I8255_ADD( "i8255", shangon_ppi_intf )
+	MCFG_DEVICE_ADD("i8255", I8255, 0)
+	MCFG_I8255_IN_PORTA_CB(READ8(segaorun_state, unknown_porta_r))
+	MCFG_I8255_OUT_PORTA_CB(WRITE8(segaorun_state, unknown_porta_w))
+	MCFG_I8255_IN_PORTB_CB(READ8(segaorun_state, unknown_portb_r))
+	MCFG_I8255_OUT_PORTB_CB(WRITE8(segaorun_state, unknown_portb_w))
+	MCFG_I8255_IN_PORTC_CB(READ8(segaorun_state, unknown_portc_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(segaorun_state, video_control_w))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -2532,7 +2505,7 @@ GAMEL(1986, outrundx,  outrun,  outrun,          outrundx, segaorun_state,outrun
 GAMEL(1986, outrundxj, outrun,  outrun_fd1089a,  outrundx, segaorun_state,outrun,  ROT0,   "Sega",    "Out Run (Japan, deluxe sitdown, FD1089A 317-0019)", 0,       layout_outrun ) // No Japanese text, different course order
 GAMEL(1986, outrundxa, outrun,  outrundx,        outrundx, segaorun_state,outrun,  ROT0,   "Sega",    "Out Run (deluxe sitdown earlier version)", 0,                layout_outrun )
 GAMEL(1986, outrunb,   outrun,  outrun,          outrun,   segaorun_state,outrunb, ROT0,   "bootleg", "Out Run (bootleg)", 0,                                       layout_outrun )
-GAMEL(2012, outrunen,  outrun,  outrun,          outrun,   segaorun_state,outrun,  ROT0,   "hack",    "Out Run Enhanced Edition", 0,                                layout_outrun ) // Upright/Sitdown determined by dipswitch settingsGAME( 1987, shangon,   0,       shangon,         shangon,  segaorun_state,shangon, ROT0,   "Sega",    "Super Hang-On (sitdown/upright, unprotected)", 0 )
+GAMEL(2012, outrunen,  outrun,  outrun,          outrun,   segaorun_state,outrun,  ROT0,   "hack", "Out Run Enhanced Edition (Ver 1.0.3)", 0,                       layout_outrun ) // Upright/Sitdown determined by dipswitch settings
 GAME( 1987, shangon,   0,       shangon,         shangon,  segaorun_state,shangon, ROT0,   "Sega",    "Super Hang-On (sitdown/upright, unprotected)", 0 )
 GAME( 1987, shangon3,  shangon, shangon_fd1089b, shangon,  segaorun_state,shangon, ROT0,   "Sega",    "Super Hang-On (sitdown/upright, FD1089B 317-0034)", 0 )
 GAME( 1987, shangon2,  shangon, shangon_fd1089b, shangon,  segaorun_state,shangon, ROT0,   "Sega",    "Super Hang-On (mini ride-on, Rev A, FD1089B 317-0034)", 0 )

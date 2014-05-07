@@ -126,7 +126,6 @@ extern const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Cheats"),                GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
 	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
 	{ TEXT("Artwork"),               GetArtDir,           SetArtDir,           FALSE, 0 },
-	{ TEXT("Memory Card"),           GetMemcardDir,       SetMemcardDir,       FALSE, 0 },
 	{ TEXT("Flyers"),                GetFlyerDir,         SetFlyerDir,         TRUE,  0 },
 	{ TEXT("Cabinets"),              GetCabinetDir,       SetCabinetDir,       TRUE,  0 },
 	{ TEXT("Marquees"),              GetMarqueeDir,       SetMarqueeDir,       TRUE,  0 },

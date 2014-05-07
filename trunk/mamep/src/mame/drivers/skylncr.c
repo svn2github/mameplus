@@ -113,7 +113,9 @@ public:
 		m_reelscroll4(*this, "reelscroll4"),
 		m_maincpu(*this, "maincpu"),
 		m_gfxdecode(*this, "gfxdecode"),
-		m_palette(*this, "palette")  { }
+		m_palette(*this, "palette"),
+		m_generic_paletteram_8(*this, "paletteram"),
+		m_generic_paletteram2_8(*this, "paletteram2") { }
 
 	tilemap_t *m_tmap;
 	required_shared_ptr<UINT8> m_videoram;
@@ -169,6 +171,8 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<palette_device> m_palette;
+	optional_shared_ptr<UINT8> m_generic_paletteram_8;
+	optional_shared_ptr<UINT8> m_generic_paletteram2_8;	
 };
 
 
@@ -321,6 +325,8 @@ WRITE8_MEMBER(skylncr_state::reeltileshigh_4_w)
 	m_reel_4_tilemap->mark_tile_dirty(offset);
 }
 
+// FIXME: this is a VGA-style RAMDAC, so use one
+// instead of this custom implementation
 
 WRITE8_MEMBER(skylncr_state::skylncr_paletteram_w)
 {
@@ -605,7 +611,7 @@ GFXDECODE_END
 static GFXDECODE_START( sstar97 )
 	GFXDECODE_ENTRY( "gfx1", 0, layout8x8x8_alt,    0, 2 )
 	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_alt,   0, 2 )
-	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_alt,   0x100, 2 )
+	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_alt,   0x100, 1 )
 GFXDECODE_END
 
 
@@ -896,46 +902,6 @@ static INPUT_PORTS_START( sstar97 )
 INPUT_PORTS_END
 
 
-/**************************************
-*       PPI 8255 (x2) Interface       *
-**************************************/
-
-static I8255A_INTERFACE( ppi8255_0_intf )
-{
-	DEVCB_INPUT_PORT("IN1"),            /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("IN2"),            /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("DSW1"),           /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
-static I8255A_INTERFACE( ppi8255_1_intf )
-{
-	DEVCB_INPUT_PORT("DSW2"),           /* Port A read */
-	DEVCB_NULL,                         /* Port A write */
-	DEVCB_INPUT_PORT("IN3"),            /* Port B read */
-	DEVCB_NULL,                         /* Port B write */
-	DEVCB_INPUT_PORT("IN4"),            /* Port C read */
-	DEVCB_NULL                          /* Port C write */
-};
-
-
-/**********************************
-*       AY-3-8910 Interface       *
-**********************************/
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DSW3"),
-	DEVCB_INPUT_PORT("DSW4"),
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
 // It runs in IM 0, thus needs an opcode on the data bus
 INTERRUPT_GEN_MEMBER(skylncr_state::skylncr_vblank_interrupt)
 {
@@ -958,8 +924,15 @@ static MACHINE_CONFIG_START( skylncr, skylncr_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* 1x M5M82C255, or 2x PPI8255 */
-	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
-	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
+	MCFG_DEVICE_ADD("ppi8255_0", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("IN1"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN2"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("DSW1"))
+
+	MCFG_DEVICE_ADD("ppi8255_1", I8255A, 0)
+	MCFG_I8255_IN_PORTA_CB(IOPORT("DSW2"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("IN3"))
+	MCFG_I8255_IN_PORTC_CB(IOPORT("IN4"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -976,7 +949,8 @@ static MACHINE_CONFIG_START( skylncr, skylncr_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8910, MASTER_CLOCK/8)
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DSW3"))
+	MCFG_AY8910_PORT_B_READ_CB(IOPORT("DSW4"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -1133,12 +1107,8 @@ ROM_END
   1x HM6116LP-4
   5x HM6116L-120
 
-  One extra ROM (u48) is blank.
-  Sure is the one that store the palette at offset $C000,
-  among the missing graphics.
-
-  Also graphics ROMs are half the standard size and
-  they lack of at least 4 extra big girl pictures.
+  Unfortunately, one extra ROM (u48) is blank.
+  Seems to be the one that store the palette at offset $C000.
 
   BP 170 to see the palette registers...
 
@@ -1148,17 +1118,17 @@ ROM_START( sstar97 )
 	ROM_LOAD( "27256.u15",    0x0000, 0x8000, CRC(a5da4f92) SHA1(82ac70bd379649f130db017aa226d0247db0f3cd) )
 	ROM_LOAD( "unknown.u48",  0x8000, 0x8000, BAD_DUMP CRC(9f4c02e3) SHA1(05975184130ea7dd3bb5d32eff77b585bd53e6b5) )   // palette borrowed from other game
 
-	ROM_REGION( 0x40000, "gfx1", 0 )    // All ROMs are 28-pins mask ROMs dumped as 27512. Should be dumped as Fujitsu MB831000 or TC531000 (mask ROM).
-	ROM_LOAD16_BYTE( "bor_dun_4.u23", 0x00000, 0x10000, BAD_DUMP CRC(82c9db19) SHA1(3611fb59bb7c962c7fabe7a29fa72b632fa69bed) )
-	ROM_LOAD16_BYTE( "bor_dun_2.u25", 0x00001, 0x10000, BAD_DUMP CRC(42ee9b7a) SHA1(b39f677f58072ea7dcd7f49208be1a7b70bdc5e5) )
-	ROM_LOAD16_BYTE( "bor_dun_3.u24", 0x20000, 0x10000, BAD_DUMP CRC(6d70879b) SHA1(83cbe67cda95e5f3d95065015f6b1b2044b88989) )
-	ROM_LOAD16_BYTE( "bor_dun_1.u26", 0x20001, 0x10000, BAD_DUMP CRC(1b8b84ac) SHA1(b914bad0b1fb58cf581d1227e8127c6afb906fb7) )
+	ROM_REGION( 0x80000, "gfx1", 0 )    // All ROMs are 28-pins mask ROMs dumped as Fujitsu MB831000 or TC531000 (mask ROM).
+	ROM_LOAD16_BYTE( "bor_dun_4.u23", 0x00000, 0x20000, CRC(d0d0ead1) SHA1(00bfe691cb9020c5d7e21d80a1e059ea2155aad8) )
+	ROM_LOAD16_BYTE( "bor_dun_2.u25", 0x00001, 0x20000, CRC(2b0f07b5) SHA1(9bcde623e53697c4b68d2f083f6254596aee64eb) )
+	ROM_LOAD16_BYTE( "bor_dun_3.u24", 0x40000, 0x20000, CRC(3c7da3f1) SHA1(8098b33a779fb697984b97f2d7edb9874e6e19d9) )
+	ROM_LOAD16_BYTE( "bor_dun_1.u26", 0x40001, 0x20000, CRC(36efdca6) SHA1(e614fbba77e5c7a1e7a1d2970b4f945ee0468196) )
 
-	ROM_REGION( 0x40000, "gfx2", 0 )    // All ROMs are 28-pins mask ROMs dumped as 27512. Should be dumped as Fujitsu MB831000 or TC531000 (mask ROM).
-	ROM_LOAD16_BYTE( "bor_dun_8.u19", 0x00000, 0x10000, BAD_DUMP CRC(daf651a7) SHA1(d4e472aa90aa2b52c997b2f2272007b139e3cbc2) )
-	ROM_LOAD16_BYTE( "bor_dun_6.u21", 0x00001, 0x10000, BAD_DUMP CRC(1d88bc70) SHA1(49246d96a4ce2b8e9b10e928d7dd13973feac883) )
-	ROM_LOAD16_BYTE( "bor_dun_7.u20", 0x20000, 0x10000, BAD_DUMP CRC(7e28ba2f) SHA1(ac8d4e95efce87456f569a71650bd7afcb59095e) )
-	ROM_LOAD16_BYTE( "bor_dun_5.u22", 0x20001, 0x10000, BAD_DUMP CRC(52f98575) SHA1(b786c441d5ef47ff4cb50835c6ac6889cb169c6e) )
+	ROM_REGION( 0x80000, "gfx2", 0 )    // All ROMs are 28-pins mask ROMs dumped as Fujitsu MB831000 or TC531000 (mask ROM).
+	ROM_LOAD16_BYTE( "bor_dun_8.u19", 0x00000, 0x20000, CRC(adf0b7ce) SHA1(41d9fb16eb20e1fd2960117b7e4ea23a97b88961) )
+	ROM_LOAD16_BYTE( "bor_dun_6.u21", 0x00001, 0x20000, CRC(37be2cbe) SHA1(78acda58aab605cb992c3b9fbaf18d38f768ed1a) )
+	ROM_LOAD16_BYTE( "bor_dun_7.u20", 0x40000, 0x20000, CRC(43908665) SHA1(41b9cee0723d9da6934ab7934012fb1625a8f080) )
+	ROM_LOAD16_BYTE( "bor_dun_5.u22", 0x40001, 0x20000, CRC(ca17a632) SHA1(d491310ccdbe9b59a1e607f9254646f20700d79d) )
 ROM_END
 
 

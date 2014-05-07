@@ -459,19 +459,6 @@ READ8_MEMBER(fortecar_state::ppi0_portc_r)
 	return ((m_eeprom->do_read()<<4) & 0x10);
 }
 
-static I8255A_INTERFACE( ppi8255_intf )
-{
-	/*  Init with 0x9a... A, B and high C as input
-	 Serial Eprom connected to Port C */
-	DEVCB_INPUT_PORT("SYSTEM"),                     /* Port A read */
-	DEVCB_NULL,                                     /* Port A write */
-	DEVCB_INPUT_PORT("INPUT"),                      /* Port B read */
-	DEVCB_NULL,                                     /* Port B write */
-	DEVCB_DRIVER_MEMBER(fortecar_state,ppi0_portc_r),   /* Port C read */
-	DEVCB_DRIVER_MEMBER(fortecar_state,ppi0_portc_w)    /* Port C write */
-};
-
-
 WRITE8_MEMBER(fortecar_state::ayporta_w)
 {
 /*  System Lamps...
@@ -526,34 +513,6 @@ Seems to work properly, but must be checked closely...
 
 //  logerror("AY port B write %02x\n",data);
 }
-
-
-static const ay8910_interface ay8910_config =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(fortecar_state,ayporta_w),
-	DEVCB_DRIVER_MEMBER(fortecar_state,ayportb_w)
-};
-
-
-static MC6845_INTERFACE( mc6845_intf )
-{
-	false,      /* show border area */
-	0,0,0,0,    /* visarea adjustment */
-	8,          /* number of pixels per video memory address */
-	NULL,       /* before pixel update callback */
-	NULL,       /* row update callback */
-	NULL,       /* after pixel update callback */
-	DEVCB_NULL, /* callback for display state changes */
-	DEVCB_NULL, /* callback for cursor state changes */
-	DEVCB_NULL, /* HSYNC callback */
-	DEVCB_NULL, /* VSYNC callback */
-	NULL        /* update address callback */
-};
-
 
 static ADDRESS_MAP_START( fortecar_map, AS_PROGRAM, 8, fortecar_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
@@ -698,19 +657,29 @@ static MACHINE_CONFIG_START( fortecar, fortecar_state )
 	MCFG_EEPROM_SERIAL_93C56_ADD("eeprom")
 	MCFG_EEPROM_SERIAL_DEFAULT_VALUE(0)
 
-	MCFG_I8255A_ADD( "fcppi0", ppi8255_intf )
+	MCFG_DEVICE_ADD("fcppi0", I8255A, 0)
+	/*  Init with 0x9a... A, B and high C as input
+     Serial Eprom connected to Port C */
+	MCFG_I8255_IN_PORTA_CB(IOPORT("SYSTEM"))
+	MCFG_I8255_IN_PORTB_CB(IOPORT("INPUT"))
+	MCFG_I8255_IN_PORTC_CB(READ8(fortecar_state, ppi0_portc_r))
+	MCFG_I8255_OUT_PORTC_CB(WRITE8(fortecar_state, ppi0_portc_w))
+
 	MCFG_V3021_ADD("rtc")
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fortecar)
 	MCFG_PALETTE_ADD("palette", 0x200)
 	MCFG_PALETTE_INIT_OWNER(fortecar_state, fortecar)
 
-	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)    /* 1.5 MHz, measured */
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK)    /* 1.5 MHz, measured */
+	MCFG_MC6845_SHOW_BORDER_AREA(false)
+	MCFG_MC6845_CHAR_WIDTH(8)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)   /* 1.5 MHz, measured */
-	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_AY8910_PORT_A_WRITE_CB(WRITE8(fortecar_state, ayporta_w))
+	MCFG_AY8910_PORT_B_WRITE_CB(WRITE8(fortecar_state, ayportb_w))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 

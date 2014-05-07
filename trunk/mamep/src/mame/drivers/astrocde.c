@@ -315,7 +315,7 @@ READ8_MEMBER(astrocde_state::gorf_io_1_r)
 			m_votrax->set_output_gain(0, data ? 1.0 : 0.0);
 #endif
 			break;
-		case 7: mame_printf_debug("io_1:%d\n", data); break;
+		case 7: osd_printf_debug("io_1:%d\n", data); break;
 	}
 	return 0xff;
 }
@@ -334,7 +334,7 @@ READ8_MEMBER(astrocde_state::gorf_io_2_r)
 		case 4: output_set_lamp_value(4, data); break;
 		case 5: output_set_lamp_value(5, data); break;
 		case 6: /* n/c */                       break;
-		case 7: mame_printf_debug("io_2:%d\n", data); break;
+		case 7: osd_printf_debug("io_2:%d\n", data); break;
 	}
 	return 0xff;
 }
@@ -474,26 +474,6 @@ WRITE8_MEMBER(astrocde_state::demndrgn_sound_w)
  *
  *************************************/
 
-static Z80CTC_INTERFACE( ctc_intf )
-{
-	DEVCB_CPU_INPUT_LINE("sub", INPUT_LINE_IRQ0),   /* interrupt handler */
-	DEVCB_NULL,         /* ZC/TO0 callback */
-	DEVCB_NULL,         /* ZC/TO1 callback */
-	DEVCB_NULL          /* ZC/TO2 callback */
-};
-
-
-static const ay8910_interface ay8912_interface =
-{
-	AY8910_LEGACY_OUTPUT,
-	AY8910_DEFAULT_LOADS,
-	DEVCB_INPUT_PORT("DIPSW"),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
 WRITE8_MEMBER(astrocde_state::tenpindx_sound_w)
 {
 	soundlatch_byte_w(space, offset, data);
@@ -526,7 +506,7 @@ WRITE8_MEMBER(astrocde_state::tenpindx_lamp_w)
 WRITE8_MEMBER(astrocde_state::tenpindx_counter_w)
 {
 	coin_counter_w(machine(), 0, (data >> 0) & 1);
-	if (data & 0xfc) mame_printf_debug("tenpindx_counter_w = %02X\n", data);
+	if (data & 0xfc) osd_printf_debug("tenpindx_counter_w = %02X\n", data);
 }
 
 
@@ -1481,12 +1461,13 @@ static MACHINE_CONFIG_DERIVED( tenpindx, astrocade_16color_base )
 	MCFG_CPU_PROGRAM_MAP(tenpin_sub_map)
 	MCFG_CPU_IO_MAP(tenpin_sub_io_map)
 
-	MCFG_Z80CTC_ADD("ctc", ASTROCADE_CLOCK/4 /* same as "sub" */, ctc_intf)
+	MCFG_DEVICE_ADD("ctc", Z80CTC, ASTROCADE_CLOCK/4 /* same as "sub" */)
+	MCFG_Z80CTC_INTR_CB(INPUTLINE("sub", INPUT_LINE_IRQ0))
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8912, ASTROCADE_CLOCK/4)  /* real clock unknown */
-	MCFG_SOUND_CONFIG(ay8912_interface)
+	MCFG_AY8910_PORT_A_READ_CB(IOPORT("DIPSW"))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.33)
 MACHINE_CONFIG_END
 

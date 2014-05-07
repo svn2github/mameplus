@@ -158,9 +158,6 @@ TILE_GET_INFO_MEMBER(mystwarr_state::get_gai_936_tile_info)
 
 VIDEO_START_MEMBER(mystwarr_state,gaiapols)
 {
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_gametype = 0;
 
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0);
@@ -198,9 +195,6 @@ TILE_GET_INFO_MEMBER(mystwarr_state::get_ult_936_tile_info)
 
 VIDEO_START_MEMBER(mystwarr_state,dadandrn)
 {
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_gametype = 1;
 
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, game5bpp_tile_callback, 0);
@@ -227,9 +221,6 @@ VIDEO_START_MEMBER(mystwarr_state,dadandrn)
 
 VIDEO_START_MEMBER(mystwarr_state,mystwarr)
 {
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_gametype = 0;
 
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, mystwarr_tile_callback, 0);
@@ -252,9 +243,6 @@ VIDEO_START_MEMBER(mystwarr_state,metamrph)
 {
 	m_gametype = 0;
 
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0);
 
 	mystwarr_decode_tiles(machine());
@@ -274,9 +262,6 @@ VIDEO_START_MEMBER(mystwarr_state,viostorm)
 {
 	m_gametype = 0;
 
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0);
 
 	mystwarr_decode_tiles(machine());
@@ -295,9 +280,6 @@ VIDEO_START_MEMBER(mystwarr_state,martchmp)
 {
 	m_gametype = 0;
 
-	m_k055555->K055555_vh_start(machine());
-	K054338_vh_start(machine(), m_k055555);
-
 	m_k056832->altK056832_vh_start(machine(), "gfx1", K056832_BPP_5, 0, NULL, game5bpp_tile_callback, 0);
 
 	mystwarr_decode_tiles(machine());
@@ -311,7 +293,7 @@ VIDEO_START_MEMBER(mystwarr_state,martchmp)
 	m_k056832->set_layer_offs(2,  2-4, 0);
 	m_k056832->set_layer_offs(3,  3-4, 0);
 
-	K054338_invert_alpha(0);
+	m_k054338->invert_alpha(0);
 }
 
 
@@ -369,7 +351,7 @@ UINT32 mystwarr_state::screen_update_martchmp(screen_device &screen, bitmap_rgb3
 	m_oinprion = m_k055555->K055555_read_register(K55_OINPRI_ON);
 
 	// not quite right
-	blendmode = (m_oinprion==0xef && K054338_read_register(K338_REG_PBLEND)) ? ((1<<16|GXMIX_BLEND_FORCE)<<2) : 0;
+	blendmode = (m_oinprion==0xef && m_k054338->register_r(K338_REG_PBLEND)) ? ((1<<16|GXMIX_BLEND_FORCE)<<2) : 0;
 
 	konamigx_mixer(screen, bitmap, cliprect, 0, 0, 0, 0, blendmode, 0, 0);
 	return 0;
