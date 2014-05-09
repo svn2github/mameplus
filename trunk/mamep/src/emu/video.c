@@ -546,7 +546,7 @@ void video_manager::exit()
 		osd_ticks_t tps = osd_ticks_per_second();
 		double final_real_time = (double)m_overall_real_seconds + (double)m_overall_real_ticks / (double)tps;
 		double final_emu_time = m_overall_emutime.as_double();
-		osd_printf_error(_("Average speed: %.2f%% (%d seconds)\n"), 100 * final_emu_time / final_real_time, (m_overall_emutime + attotime(0, ATTOSECONDS_PER_SECOND / 2)).seconds);
+		osd_printf_info(_("Average speed: %.2f%% (%d seconds)\n"), 100 * final_emu_time / final_real_time, (m_overall_emutime + attotime(0, ATTOSECONDS_PER_SECOND / 2)).seconds);
 	}
 }
 
