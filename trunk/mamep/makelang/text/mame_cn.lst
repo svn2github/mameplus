@@ -994,6 +994,7 @@ berabohm	³¬¾øÂ×ÈË (ÈÕ°æ, ĞŞÕı°æ C)	³¬¾øÂ×ÈË (ÈÕ°æ, ĞŞÕı°æ C)
 berabohmb	³¬¾øÂ×ÈË (ÈÕ°æ, ĞŞÕı°æ B)	³¬¾øÂ×ÈË (ÈÕ°æ, ĞŞÕı°æ B)
 berenstn	ÉßĞĞÃÔ¹¬ 	ÉßĞĞÃÔ¹¬ 
 berlwall	°ØÁÖÇ½ 	°ØÁÖÇ½ 
+berlwallk	°ØÁÖÇ½ (º«°æ)	°ØÁÖÇ½ (º«°æ)
 berlwallt	°ØÁÖÇ½ (µÁ°æ ?)	°ØÁÖÇ½ (µÁ°æ ?)
 bermudat	°ÙÄ½´óÄ§¹íÈı½Ç (ÊÀ½ç°æ?)	°ÙÄ½´óÄ§¹íÈı½Ç (ÊÀ½ç°æ?)
 bermudata	°ÙÄ½´óÄ§¹íÈı½Ç (ÊÀ½ç°æ Wars) (ÃÀ°æ)	°ÙÄ½´óÄ§¹íÈı½Ç (ÊÀ½ç°æ Wars) (ÃÀ°æ)
@@ -1221,7 +1222,8 @@ boomranga	Ô­Ê¼ÈËÃØ±¦ (µÚ 2 Ì×)	Ô­Ê¼ÈËÃØ±¦ (µÚ 2 Ì×)
 boonggab	·¢Ğ¹ÓÎÏ· (Spank'em!)	·¢Ğ¹ÓÎÏ· (Spank'em!)
 bootcamp	Õ½¶·Ñ§Ğ£ 	Õ½¶·Ñ§Ğ£ 
 boothill	Î÷²¿´å×¯ 	Î÷²¿´å×¯ 
-borench	Á¢ÌåÇòµÀ 	Á¢ÌåÇòµÀ 
+borench	Á¢ÌåÇòµÀ (µÚ 1 Ì×)	Á¢ÌåÇòµÀ (µÚ 1 Ì×)
+borencha	Á¢ÌåÇòµÀ (µÚ 2 Ì×)	Á¢ÌåÇòµÀ (µÚ 2 Ì×)
 borntofi	ÌìÉúÈ­°Ô 	ÌìÉúÈ­°Ô 
 bosco	Ì«¿ÕÇıÖğ½¢ (ĞÂ°æ)	Ì«¿ÕÇıÖğ½¢ (ĞÂ°æ)
 boscomd	Ì«¿ÕÇıÖğ½¢ (Midway, ĞÂ°æ)	Ì«¿ÕÇıÖğ½¢ (Midway, ĞÂ°æ)
@@ -1896,7 +1898,6 @@ cps3boot	CPS3 µÁ°æ¶àºÏÒ» HD6417095 type SH2 ÓÃ (ĞÂÊÀ´ú, Èı¶È³å»÷, ÇÇÇÇµÄÆæÃîÃ°ÏÕ
 cps3boota	CPS3 µÁ°æ¶àºÏÒ» ËÀÍö±£»¤¿¨´øÓÃ (ĞÂÊÀ´ú, ¶ş¶È³å»÷, Èı¶È³å»÷)	CPS3 µÁ°æ¶àºÏÒ» ËÀÍö±£»¤¿¨´øÓÃ (ĞÂÊÀ´ú, ¶ş¶È³å»÷, Èı¶È³å»÷)
 cps3bs32	½ÖÍ·°ÔÍõ III - ¶ş¶È³å»÷ ¾ŞĞÍ¹¥»÷ (ÃÀ°æ 970930, µÁ°æ for HD6417095 type SH2, V3)	½ÖÍ·°ÔÍõ III - ¶ş¶È³å»÷ ¾ŞĞÍ¹¥»÷ (ÃÀ°æ 970930, µÁ°æ for HD6417095 type SH2, V3)
 cps3bs32a	½ÖÍ·°ÔÍõ III - ¶ş¶È³å»÷ ¾ŞĞÍ¹¥»÷ (ÃÀ°æ 970930, µÁ°æ for HD6417095 type SH2, ¾É°æ)	½ÖÍ·°ÔÍõ III - ¶ş¶È³å»÷ ¾ŞĞÍ¹¥»÷ (ÃÀ°æ 970930, µÁ°æ for HD6417095 type SH2, ¾É°æ)
-cptennis	Ö°ÒµÍøÇò (DECO Cassette)	Ö°ÒµÍøÇò (DECO Cassette)
 cr589fw	CD-ROM ÓÎÏ·Çı¶¯Éı¼¶ÏµÍ³ 2.0 (700B04)	CD-ROM ÓÎÏ·Çı¶¯Éı¼¶ÏµÍ³ 2.0 (700B04)
 cr589fwa	CD-ROM ÓÎÏ·Çı¶¯Éı¼¶ÏµÍ³ (700A04)	CD-ROM ÓÎÏ·Çı¶¯Éı¼¶ÏµÍ³ (700A04)
 crackndj	DJ Ö÷´ò 	DJ Ö÷´ò 
@@ -2529,7 +2530,8 @@ drakton	ÃÔ¹¬·É»ú (DK ×ª»»°å)	ÃÔ¹¬·É»ú (DK ×ª»»°å)
 drbyocwc	ÈüÂí¾ãÀÖ²¿ ÊÀ½ç°æ (ÈÕ°æ, ÃÀ°æ, º£Íâ°æ, º«°æ, °Ä´óÀûÑÇ°æ) (ĞŞÕı°æ C)	ÈüÂí¾ãÀÖ²¿ ÊÀ½ç°æ (ÈÕ°æ, ÃÀ°æ, º£Íâ°æ, º«°æ, °Ä´óÀûÑÇ°æ) (ĞŞÕı°æ C)
 dreamwld	ÃÎÏëÊÀ½ç 	ÃÎÏëÊÀ½ç 
 dremshpr	¹ºÎïÃÎÓï 	¹ºÎïÃÎÓï 
-drgnbowl	ÁúÖé 	ÁúÖé 
+drgnbowl	ÁúÖé (µÚ 1 Ì×, ¼ÓÃÜ°å program)	ÁúÖé (µÚ 1 Ì×, ¼ÓÃÜ°å program)
+drgnbowla	ÁúÖé (µÚ 2 Ì×, Î´¼ÓÃÜ°æ program)	ÁúÖé (µÚ 2 Ì×, Î´¼ÓÃÜ°æ program)
 drgnbstr	ÍÀÁú¼Ç 	ÍÀÁú¼Ç 
 drgninja	ÁúĞĞÈÌÕß (ÈÕ°æ)	ÁúĞĞÈÌÕß (ÈÕ°æ)
 drgninjab	ÁúĞĞÈÌÕß (µÁ°æ)	ÁúĞĞÈÌÕß (µÁ°æ)
@@ -3010,7 +3012,8 @@ firebatl	ĞÇ¼ÊÅÚ»ğ 	ĞÇ¼ÊÅÚ»ğ
 firebeas	»ğÊŞ (Ô­ĞÍ°æ)	»ğÊŞ (Ô­ĞÍ°æ)
 firefox	»ğºüÀê (µÚ 1 Ì×)	»ğºüÀê (µÚ 1 Ì×)
 firefoxa	»ğºüÀê (µÚ 2 Ì×)	»ğºüÀê (µÚ 2 Ì×)
-firehawk	»ğÓ¥ 	»ğÓ¥ 
+firehawk	»ğÓ¥ (ºá°æ)	»ğÓ¥ (ºá°æ)
+firehawkv	»ğÓ¥ (switchable orientation)	»ğÓ¥ (switchable orientation)
 fireone	ÓãÀ× 	ÓãÀ× 
 fireshrk	öŞ! öŞ! öŞ! 	öŞ! öŞ! öŞ! 
 fireshrka	öŞ! öŞ! öŞ! (×î³õ°æ)	öŞ! öŞ! öŞ! (×î³õ°æ)
@@ -3677,7 +3680,6 @@ gtrfrks	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. EAC)	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. EAC)
 gtrfrksa	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. AAC)	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. AAC)
 gtrfrksj	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. JAC)	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. JAC)
 gtrfrksu	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. UAC)	·è¿ñ¼ªËûÊÖ (GQ886 °æ±¾. UAC)
-gtroyal	½ğÅÆ¸ß¶û·ò '99 (v4.02T EDM)	½ğÅÆ¸ß¶û·ò '99 (v4.02T EDM)
 gtsers1	ÎÊ´ğ °Ù¿Æ (Questions Series 1)	ÎÊ´ğ °Ù¿Æ (Questions Series 1)
 gtsers10	ÎÊ´ğ °Ù¿Æ (Questions Series 10)	ÎÊ´ğ °Ù¿Æ (Questions Series 10)
 gtsers10a	ÎÊ´ğ °Ù¿Æ (Questions Series 10 Ìæ»»°æ Question Rom)	ÎÊ´ğ °Ù¿Æ (Questions Series 10 Ìæ»»°æ Question Rom)
@@ -3747,6 +3749,7 @@ gunlock	Ç¹Ëø (°æ±¾ 2.3O 1994/01/20)	Ç¹Ëø (°æ±¾ 2.3O 1994/01/20)
 gunmast	Ç¹Íõ 	Ç¹Íõ 
 gunnail	ÅÚ¶¤ (28th May. 1992)	ÅÚ¶¤ (28th May. 1992)
 gunsmoke	»ÄÒ°´óïÚ¿Í (ÊÀ½ç°æ)	»ÄÒ°´óïÚ¿Í (ÊÀ½ç°æ)
+gunsmokeb	»ÄÒ°´óïÚ¿Í (µÁ°æ)	»ÄÒ°´óïÚ¿Í (µÁ°æ)
 gunsmokej	»ÄÒ°´óïÚ¿Í (ÈÕ°æ)	»ÄÒ°´óïÚ¿Í (ÈÕ°æ)
 gunsmokeu	»ÄÒ°´óïÚ¿Í (ÃÀ°æ µÚ 1 Ì×)	»ÄÒ°´óïÚ¿Í (ÃÀ°æ µÚ 1 Ì×)
 gunsmokeua	»ÄÒ°´óïÚ¿Í (ÃÀ°æ µÚ 2 Ì×)	»ÄÒ°´óïÚ¿Í (ÃÀ°æ µÚ 2 Ì×)
@@ -4112,7 +4115,8 @@ indytempc	Ê¥Õ½Ææ±ø - »ÙÃğÖ®µî (Æ½ÌÉ»úÌ¨)	Ê¥Õ½Ææ±ø - »ÙÃğÖ®µî (Æ½ÌÉ»úÌ¨)
 indytempd	Ê¥Õ½Ææ±ø - »ÙÃğÖ®µî (µÂ°æ)	Ê¥Õ½Ææ±ø - »ÙÃğÖ®µî (µÂ°æ)
 inferno	Ì«¿ÕµØÓü (Williams)	Ì«¿ÕµØÓü (Williams)
 initd	Í·ÎÄ×Ö D - ½Ö»ú°æ (ĞŞÕı°æ B) (ÈÕ°æ) (GDS-0020B)	Í·ÎÄ×Ö D - ½Ö»ú°æ (ĞŞÕı°æ B) (ÈÕ°æ) (GDS-0020B)
-initdexp	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)
+initdexp	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (ĞŞÕı°æ A) (GDS-0025A)	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (ĞŞÕı°æ A) (GDS-0025A)
+initdexpo	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)
 inquiztr	·´À¡ 	·´À¡ 
 insector	É±³æ´ó×÷Õ½ (Ô­ĞÍ°æ)	É±³æ´ó×÷Õ½ (Ô­ĞÍ°æ)
 insectx	É±³æÕ½¼Ç (ÊÀ½ç°æ)	É±³æÕ½¼Ç (ÊÀ½ç°æ)
@@ -4548,7 +4552,7 @@ kof2k3hd	È­»Ê 2003 (NGH-2710)(½âÃÜ°æ C)	È­»Ê 2003 (NGH-2710)(½âÃÜ°æ C)
 kof2k4se	È­»Ê ÌØ±ğ°æ 2004 (È­»Ê 2002 µÁ°æ)	È­»Ê ÌØ±ğ°æ 2004 (È­»Ê 2002 µÁ°æ)
 kof94	È­»Ê '94 (NGM-055)(NGH-055)	È­»Ê '94 (NGM-055)(NGH-055)
 kof95	È­»Ê '95 (NGM-084)	È­»Ê '95 (NGM-084)
-kof95a	È­»Ê '95 (NGM-084), Ìæ»»°æ board	È­»Ê '95 (NGM-084), Ìæ»»°æ board
+kof95a	È­»Ê '95 (NGM-084), Ìæ»»°æ	È­»Ê '95 (NGM-084), Ìæ»»°æ
 kof95h	È­»Ê '95 (NGH-084)	È­»Ê '95 (NGH-084)
 kof96	È­»Ê '96 (NGM-214)	È­»Ê '96 (NGM-214)
 kof96ae	È­»Ê '96 (ÖÜÄê¼ÍÄî°æ, EGHT ĞŞ¸Ä°æ)	È­»Ê '96 (ÖÜÄê¼ÍÄî°æ, EGHT ĞŞ¸Ä°æ)
@@ -4564,7 +4568,7 @@ kof97pla	È­»Ê '97 - ÖØ³ö½­ºş Plus (µÁ°æ / ĞŞ¸Ä°æ)	È­»Ê '97 - ÖØ³ö½­ºş Plus (µÁ°æ
 kof97pls	È­»Ê '97 - ·çÔÆÔÙÆğ Plus (µÁ°æ)	È­»Ê '97 - ·çÔÆÔÙÆğ Plus (µÁ°æ)
 kof97xt	È­»Ê '97 - ÖÕ½áÖ®Õ½ (ĞŞ¸Ä°æ)	È­»Ê '97 - ÖÕ½áÖ®Õ½ (ĞŞ¸Ä°æ)
 kof98	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420)	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420)
-kof98a	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420, Ìæ»»°æ board)	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420, Ìæ»»°æ board)
+kof98a	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420, Ìæ»»°æ)	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGM-2420, Ìæ»»°æ)
 kof98ae	È­»Ê '98 (ÖÜÄê¼ÍÄî°æ, EGHT ĞŞ¸Ä°æ)	È­»Ê '98 (ÖÜÄê¼ÍÄî°æ, EGHT ĞŞ¸Ä°æ)
 kof98h	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGH-2420)	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (NGH-2420)
 kof98k	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (º«¹ú»ù°å)	È­»Ê '98 - ÃÎÕ½¶·Î´½áÊø (º«¹ú»ù°å)
@@ -6046,6 +6050,7 @@ nam1975	Ô½Õ½ - 1975 (NGM-001)(NGH-001)	Ô½Õ½ - 1975 (NGM-001)(NGH-001)
 namcostr	ÄÏÃÎ¹¬Ö®ĞÇ 	ÄÏÃÎ¹¬Ö®ĞÇ 
 nametune	ÎÊ´ğ Ö¸³öÕıÈ·Ãû³Æ (µÚ 1 Ì×)	ÎÊ´ğ Ö¸³öÕıÈ·Ãû³Æ (µÚ 1 Ì×)
 nametune2	ÎÊ´ğ Ö¸³öÕıÈ·Ãû³Æ (3/23/86)	ÎÊ´ğ Ö¸³öÕıÈ·Ãû³Æ (3/23/86)
+naname	ÄÈÄÈÃ×Ä§·¨·½¿é (ÈÕ°æ)	ÄÈÄÈÃ×Ä§·¨·½¿é (ÈÕ°æ)
 narc	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 7.00)	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 7.00)
 narc2	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 2.00)	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 2.00)
 narc3	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 3.20)	¶¾Æ·ËÑ²é¹Ù (ĞŞÕı°æ 3.20)
@@ -6098,6 +6103,7 @@ nemesis	ÓîÖæÑ²º½½¢ (ROM °æ±¾)	ÓîÖæÑ²º½½¢ (ROM °æ±¾)
 nemesisuk	ÓîÖæÑ²º½½¢ (ÊÀ½ç°æ?, ROM °æ±¾)	ÓîÖæÑ²º½½¢ (ÊÀ½ç°æ?, ROM °æ±¾)
 nemo	ÃÎ»ÃÃ°ÏÕ (ÊÀ½ç°æ 901130)	ÃÎ»ÃÃ°ÏÕ (ÊÀ½ç°æ 901130)
 nemoj	ÃÎ»ÃÃ°ÏÕ (ÈÕ°æ 901120)	ÃÎ»ÃÃ°ÏÕ (ÈÕ°æ 901120)
+nemor1	ÃÎ»ÃÃ°ÏÕ (ÊÀ½ç°æ 901109)	ÃÎ»ÃÃ°ÏÕ (ÊÀ½ç°æ 901109)
 neo2500	Neo 2500 ÑİÊ¾ (×ÔÖÆ³ÌĞò)	Neo 2500 ÑİÊ¾ (×ÔÖÆ³ÌĞò)
 neobattl	SD¸ß´ï - ĞÂµÄÕ½¶· (ÈÕ°æ)	SD¸ß´ï - ĞÂµÄÕ½¶· (ÈÕ°æ)
 neobombe	Õ¨µ¯ÈË: Neo »ú»Ê°æ 	Õ¨µ¯ÈË: Neo »ú»Ê°æ 
@@ -6581,11 +6587,38 @@ peekaboo	´ò×©¿é¿¡ÄĞÃÀÅ®°æ 	´ò×©¿é¿¡ÄĞÃÀÅ®°æ
 peepshow	Âé½«Î÷Ñó¾° (ÈÕ°æ 890404)	Âé½«Î÷Ñó¾° (ÈÕ°æ 890404)
 peggle	±È¸ñĞ¡×Ó (Ò¡¸Ë°æ, v1.0)	±È¸ñĞ¡×Ó (Ò¡¸Ë°æ, v1.0)
 pegglet	±È¸ñĞ¡×Ó (¹ì¼£Çò°æ, v1.0)	±È¸ñĞ¡×Ó (¹ì¼£Çò°æ, v1.0)
+peip0028	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0028) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0028) Joker Poker - ·¨°æ
+peip0029	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0029) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0029) Joker Poker - ·¨°æ
+peip0031	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0031) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0031) ±ê×¼°æ Draw Poker - ·¨°æ
 peip0041	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0041) Double Deuces Wild Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0041) Double Deuces Wild Poker - ·¨°æ
+peip0051	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0051) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0051) Joker Poker - ·¨°æ
+peip0058	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0058) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0058) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0062	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0062) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0062) Joker Poker - ·¨°æ
 peip0074	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0074) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0074) Joker Poker - ·¨°æ
 peip0079	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0079) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0079) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0101	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0101) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0101) Joker Poker - ·¨°æ
+peip0103	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0103) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0103) Joker Poker - ·¨°æ
+peip0105	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0105) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0105) Joker Poker - ·¨°æ
+peip0108	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0108) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0108) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0111	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0111) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0111) Joker Poker - ·¨°æ
+peip0112	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0112) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0112) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0114	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0114) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0114) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0115	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0115) Joker Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0115) Joker Poker - ·¨°æ
+peip0116	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0116) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0116) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0118	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0118) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0118) ±ê×¼°æ Draw Poker - ·¨°æ
+peip0120	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0120) ±ê×¼°æ Draw Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (IP0120) ±ê×¼°æ Draw Poker - ·¨°æ
 peke1012	ÓÎÏ·ÕßµÄÀûÈĞ Plus (KE1012) Keno	ÓÎÏ·ÕßµÄÀûÈĞ Plus (KE1012) Keno
 peke1013	ÓÎÏ·ÕßµÄÀûÈĞ Plus (KE1013) Keno	ÓÎÏ·ÕßµÄÀûÈĞ Plus (KE1013) Keno
+pekoc766	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0766 A5W-A6F) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0766 A5W-A6F) ±ê×¼°æ Draw Poker
+pekoc801	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0801 A5W-A6F) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0801 A5W-A6F) 10's or Better
+pekoc802	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0802 A5W-A6F) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0802 A5W-A6F) ±ê×¼°æ Draw Poker
+pekoc803	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0803 A5W-A6F) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0803 A5W-A6F) Joker Poker
+pekoc803a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0803 A50-A6N) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0803 A50-A6N) Joker Poker
+pekoc804	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0804 A5W-A6F) BonÃÀ°æ Poker Deluxe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0804 A5W-A6F) BonÃÀ°æ Poker Deluxe
+pekoc806	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0806 A5W-A6F) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0806 A5W-A6F) ±ê×¼°æ Draw Poker
+pekoc818	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0818 A5W-A6F) Joker Poker (Aces or Better)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0818 A5W-A6F) Joker Poker (Aces or Better)
+pekoc819	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0819 A5W-A6F) BonÃÀ°æ Poker Deluxe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0819 A5W-A6F) BonÃÀ°æ Poker Deluxe
+pekoc825	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0825 A59-A7C) White Hot Aces	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0825 A59-A7C) White Hot Aces
 penbros	Æó¶ìĞÖµÜ (ÈÕ°æ)	Æó¶ìĞÖµÜ (ÈÕ°æ)
 pengadvb	Æó¶ìÃ°ÏÕ (µÁ°æ MSX °æ±¾)	Æó¶ìÃ°ÏÕ (µÁ°æ MSX °æ±¾)
 pengo	Æó¶ìÍÆ±ù (µÚ 1 Ì× ĞŞÕı°æ c)	Æó¶ìÍÆ±ù (µÚ 1 Ì× ĞŞÕı°æ c)
@@ -6598,6 +6631,7 @@ penta	Æó¶ìÍÆ±ù 	Æó¶ìÍÆ±ù
 pepp0002	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0002) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0002) ±ê×¼°æ Draw Poker
 pepp0002a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0002) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0002) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)
 pepp0008	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0008) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0008) ±ê×¼°æ Draw Poker
+pepp0009	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0009) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0009) ±ê×¼°æ Draw Poker
 pepp0010	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0010) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0010) ±ê×¼°æ Draw Poker
 pepp0014	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0014) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0014) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)
 pepp0014a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0014) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0014) ±ê×¼°æ Draw Poker
@@ -6607,6 +6641,7 @@ pepp0041	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0041) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0041)
 pepp0043	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0043) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0043) 10's or Better
 pepp0045	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0045) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0045) 10's or Better
 pepp0046	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0046) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0046) 10's or Better
+pepp0046a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0046) 10's or Better (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0046) 10's or Better (ÊÀ½ç°æ)
 pepp0051	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0051) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0051) Joker Poker
 pepp0053	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0053) Joker Poker (Aces or Better)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0053) Joker Poker (Aces or Better)
 pepp0055	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0055) Deuces Wild Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0055) Deuces Wild Poker (µÚ 1 Ì×)
@@ -6618,6 +6653,7 @@ pepp0059	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0059) Two Pair or Better (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Pl
 pepp0059a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0059) Two Pair or Better (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0059) Two Pair or Better (µÚ 2 Ì×)
 pepp0060	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0060) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0060) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)
 pepp0060a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0060) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0060) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)
+pepp0063	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0063) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0063) 10's or Better
 pepp0064	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0064) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0064) Joker Poker
 pepp0065	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0065) Joker Poker (Aces or Better)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0065) Joker Poker (Aces or Better)
 pepp0083	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0083) 10's or Better	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0083) 10's or Better
@@ -6628,31 +6664,38 @@ pepp0120	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0120) Wild Sevens Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0120)
 pepp0125	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0125) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0125) Deuces Wild Poker
 pepp0126	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0126) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0126) Deuces Wild Poker
 pepp0127	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0127) Deuces Joker Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0127) Deuces Joker Wild Poker
+pepp0127a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0127) Deuces Joker Wild Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0127) Deuces Joker Wild Poker (ÊÀ½ç°æ)
 pepp0158	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)
 pepp0158a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)
 pepp0158b	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 3 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0158) 4 of a Kind BonÃÀ°æ Poker (µÚ 3 Ì×)
 pepp0159	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0159) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0159) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)
 pepp0171	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0171) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0171) Joker Poker
+pepp0171a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0171) Joker Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0171) Joker Poker (ÊÀ½ç°æ)
 pepp0178	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0178) 4 of a Kind BonÃÀ°æ Poker (Operator selectable special 4 of a Kind)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0178) 4 of a Kind BonÃÀ°æ Poker (Operator selectable special 4 of a Kind)
 pepp0188	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0188) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0188) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)
 pepp0188a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0188) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0188) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)
 pepp0190	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0190) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0190) Deuces Wild Poker
+pepp0190a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0190) Deuces Wild Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0190) Deuces Wild Poker (ÊÀ½ç°æ)
 pepp0197	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)
 pepp0197a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)
+pepp0197b	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0197) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ)
 pepp0203	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)
 pepp0203a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)
 pepp0203b	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 3 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (µÚ 3 Ì×)
+pepp0203c	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0203) 4 of a Kind BonÃÀ°æ Poker (ÊÀ½ç°æ)
 pepp0219	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0219) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0219) ±ê×¼°æ Draw Poker
 pepp0221	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0221) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0221) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)
 pepp0221a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0221) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0221) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)
 pepp0224	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0224) Deuces Wild Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0224) Deuces Wild Poker (µÚ 1 Ì×)
 pepp0224a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0224) Deuces Wild Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0224) Deuces Wild Poker (µÚ 2 Ì×)
 pepp0230	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0230) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0230) ±ê×¼°æ Draw Poker
+pepp0242	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0242) Deuces Wild Poker (ÊÀ½ç°æ Ó¢°æ/Î÷°àÑÀ°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0242) Deuces Wild Poker (ÊÀ½ç°æ Ó¢°æ/Î÷°àÑÀ°æ)
 pepp0249	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0249) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0249) Deuces Wild Poker
 pepp0250	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0250) Double Down Stud Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0250) Double Down Stud Poker
 pepp0265	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0265) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0265) 4 of a Kind BonÃÀ°æ Poker (µÚ 1 Ì×)
 pepp0265a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0265) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0265) 4 of a Kind BonÃÀ°æ Poker (µÚ 2 Ì×)
 pepp0274	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0274) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0274) ±ê×¼°æ Draw Poker
+pepp0288	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0288) ±ê×¼°æ Draw Poker (Î÷°àÑÀ°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0288) ±ê×¼°æ Draw Poker (Î÷°àÑÀ°æ)
 pepp0290	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0290) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0290) Deuces Wild Poker
 pepp0291	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0291) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0291) Deuces Wild Poker
 pepp0409	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0409) 4 of a Kind BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0409) 4 of a Kind BonÃÀ°æ Poker
@@ -6665,10 +6708,12 @@ pepp0423	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0423) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0423)
 pepp0426	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0426) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0426) Joker Poker
 pepp0428	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0428) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0428) Joker Poker
 pepp0429	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0429) Joker Poker (Aces or Better)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0429) Joker Poker (Aces or Better)
+pepp0431	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0431) Deuces Joker Wild Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0431) Deuces Joker Wild Poker (ÊÀ½ç°æ)
 pepp0434	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0434) BonÃÀ°æ Poker Deluxe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0434) BonÃÀ°æ Poker Deluxe
 pepp0447	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0447) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0447) ±ê×¼°æ Draw Poker (µÚ 1 Ì×)
 pepp0447a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0447) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0447) ±ê×¼°æ Draw Poker (µÚ 2 Ì×)
 pepp0449	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0449) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0449) ±ê×¼°æ Draw Poker
+pepp0449a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0449) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ Ó¢°æ/Î÷°àÑÀ°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0449) ±ê×¼°æ Draw Poker (ÊÀ½ç°æ Ó¢°æ/Î÷°àÑÀ°æ)
 pepp0452	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0452) Double Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0452) Double Deuces Wild Poker
 pepp0454	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0454) BonÃÀ°æ Poker Deluxe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0454) BonÃÀ°æ Poker Deluxe
 pepp0455	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0455) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0455) Joker Poker
@@ -6684,6 +6729,7 @@ pepp0515	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0515) Double BonÃÀ°æ Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ 
 pepp0515a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0515) Double BonÃÀ°æ Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0515) Double BonÃÀ°æ Poker (µÚ 2 Ì×)
 pepp0516	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (µÚ 1 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (µÚ 1 Ì×)
 pepp0516a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (µÚ 2 Ì×)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (µÚ 2 Ì×)
+pepp0516b	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (ÊÀ½ç°æ)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0516) Double BonÃÀ°æ Poker (ÊÀ½ç°æ)
 pepp0531	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0531) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0531) Joker Poker
 pepp0536	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0536) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0536) Joker Poker
 pepp0538	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0538) Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (PP0538) Double BonÃÀ°æ Poker
@@ -6740,7 +6786,7 @@ pex0053p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000053P+XP000038) Joker Poker (Aces or Better)	ÓÎÏ·
 pex0054p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000054P+XP000038) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000054P+XP000038) Deuces Wild Poker
 pex0055p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000019) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000019) Deuces Wild Poker
 pex0055pa	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000022) Deuces Wild Poker (The Orleans)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000022) Deuces Wild Poker (The Orleans)
-pex0055pb	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000023) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000023) Deuces Wild Poker
+pex0055pb	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000023) Deuces Wild Poker (The Fun Ships)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000023) Deuces Wild Poker (The Fun Ships)
 pex0055pc	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000028) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000028) Deuces Wild Poker
 pex0055pd	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000035) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000035) Deuces Wild Poker
 pex0055pe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000038) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000038) Deuces Wild Poker
@@ -6758,6 +6804,7 @@ pex0055pp	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000104) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ P
 pex0055pq	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000112) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000112) Deuces Wild Poker
 pex0055pr	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000126) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000055P+XP000126) Deuces Wild Poker
 pex0060p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000060P+XP000038) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000060P+XP000038) ±ê×¼°æ Draw Poker
+pex0150p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000150P+XP000038) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000150P+XP000038) ±ê×¼°æ Draw Poker
 pex0158p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000158P+XP000038) 4 of a Kind BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000158P+XP000038) 4 of a Kind BonÃÀ°æ Poker
 pex0171p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000171P+XP000038) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000171P+XP000038) Joker Poker
 pex0188p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000188P+XP000038) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000188P+XP000038) ±ê×¼°æ Draw Poker
@@ -6766,6 +6813,7 @@ pex0197p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000197P+XP000038) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Pl
 pex0203p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000203P+XP000038) 4 of a Kind BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000203P+XP000038) 4 of a Kind BonÃÀ°æ Poker
 pex0224p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000224P+XP000053) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000224P+XP000053) Deuces Wild Poker
 pex0225p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000225P+XP000079) Dueces Joker Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000225P+XP000079) Dueces Joker Wild Poker
+pex0242p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000242P+XP000053) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000242P+XP000053) Deuces Wild Poker
 pex0265p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000265P+XP000038) 4 of a Kind BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000265P+XP000038) 4 of a Kind BonÃÀ°æ Poker
 pex0291p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000291P+XP000053) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000291P+XP000053) Deuces Wild Poker
 pex0417p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000417P+XP000053) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000417P+XP000053) Deuces Wild Poker
@@ -6782,6 +6830,7 @@ pex0459pa	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000459P+XP000155) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X
 pex0508p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000508P+XP000038) Loose Deuce Deuces Wild! Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000508P+XP000038) Loose Deuce Deuces Wild! Poker
 pex0514p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000514P+XP000038) Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000514P+XP000038) Double BonÃÀ°æ Poker
 pex0515p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000515P+XP000038) Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000515P+XP000038) Double BonÃÀ°æ Poker
+pex0516p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000516P+XP000038) Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000516P+XP000038) Double BonÃÀ°æ Poker
 pex0536p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000536P+XP000038) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000536P+XP000038) Joker Poker
 pex0537p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000537P+XP000038) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000537P+XP000038) ±ê×¼°æ Draw Poker
 pex0568p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000568P+XP000038) Joker Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X000568P+XP000038) Joker Poker
@@ -6802,9 +6851,11 @@ pex2027p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002027P+XP000019) Deuces Wild BonÃÀ°æ Poker	ÓÎÏ·Õßµ
 pex2031p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002031P+XP000112) Lucky Deal Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002031P+XP000112) Lucky Deal Poker
 pex2035p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002035P+XP000112) White Hot Aces Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002035P+XP000112) White Hot Aces Poker
 pex2036p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002036P+XP000112) White Hot Aces Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002036P+XP000112) White Hot Aces Poker
+pex2038p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002038P+XP000038) Nevada BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002038P+XP000038) Nevada BonÃÀ°æ Poker
 pex2040p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002040P+XP000038) Nevada BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002040P+XP000038) Nevada BonÃÀ°æ Poker
 pex2042p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002042P+XP000038) Triple BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002042P+XP000038) Triple BonÃÀ°æ Poker
 pex2043p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002043P+XP000038) Triple BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002043P+XP000038) Triple BonÃÀ°æ Poker
+pex2044p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002044P+XP000038) Triple BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002044P+XP000038) Triple BonÃÀ°æ Poker
 pex2045p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002045P+XP000038) Triple BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002045P+XP000038) Triple BonÃÀ°æ Poker
 pex2066p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002066P+XP000038) Double Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002066P+XP000038) Double Double BonÃÀ°æ Poker
 pex2067p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002067P+XP000038) Double Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002067P+XP000038) Double Double BonÃÀ°æ Poker
@@ -6822,15 +6873,21 @@ pex2245p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002245P+XP000055) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Pl
 pex2245pa	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002245P+XP000079) ±ê×¼°æ Draw Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002245P+XP000079) ±ê×¼°æ Draw Poker
 pex2250p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002250P+XP000050) Shockwave Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002250P+XP000050) Shockwave Poker
 pex2251p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002251P+XP000050) Shockwave Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002251P+XP000050) Shockwave Poker
+pex2272p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002272P+XP000055) Black Jack BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002272P+XP000055) Black Jack BonÃÀ°æ Poker
+pex2275p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002275P+XP000055) Black Jack BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002275P+XP000055) Black Jack BonÃÀ°æ Poker
 pex2283p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002283P+XP000057) DeÌæ»»°æ Deuces Wild BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002283P+XP000057) DeÌæ»»°æ Deuces Wild BonÃÀ°æ Poker
 pex2284p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002284P+XP000057) Barbaric Decues Wild BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002284P+XP000057) Barbaric Decues Wild BonÃÀ°æ Poker
 pex2302p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002302P+XP000038) BonÃÀ°æ Poker Deluxe	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002302P+XP000038) BonÃÀ°æ Poker Deluxe
 pex2303p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002303P+XP000112) White Hot Aces Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002303P+XP000112) White Hot Aces Poker
+pex2306p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002306P+XP000112) Triple Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002306P+XP000112) Triple Double BonÃÀ°æ Poker
 pex2307p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002307P+XP000112) Triple Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002307P+XP000112) Triple Double BonÃÀ°æ Poker
+pex2310p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002310P+XP000112) Triple Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002310P+XP000112) Triple Double BonÃÀ°æ Poker
 pex2314p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002314P+XP000112) Triple BonÃÀ°æ Poker PlÃÀ°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002314P+XP000112) Triple BonÃÀ°æ Poker PlÃÀ°æ
 pex2374p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002374P+XP000112) Super Aces Poker (Horseshoe)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002374P+XP000112) Super Aces Poker (Horseshoe)
 pex2377p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002377P+XP000112) Super Double BonÃÀ°æ Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002377P+XP000112) Super Double BonÃÀ°æ Poker
+pex2419p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002419P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002419P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ
 pex2420p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002420P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002420P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ
+pex2421p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002421P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002421P+XP000064) Deuces Wild BonÃÀ°æ Poker - ·¨°æ
 pex2440p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002440P+XP000053) Deuces Wild Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002440P+XP000053) Deuces Wild Poker
 pex2461p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002461P+XP000055) Joker Poker (Two Pair or Better)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (X002461P+XP000055) Joker Poker (Two Pair or Better)
 pexm001p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00001P+XMP00003) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00001P+XMP00003) Multi-Poker
@@ -6841,9 +6898,12 @@ pexm005p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00005P+XMP00004) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM
 pexm006p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00006P+XMP00006) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00006P+XMP00006) Multi-Poker
 pexm007p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00007P+XMP00006) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00007P+XMP00006) Multi-Poker
 pexm008p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00008P+XMP00006) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00008P+XMP00006) Multi-Poker
+pexm009p	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00009P+XMP00002) Multi-Poker	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XM00009P+XMP00002) Multi-Poker
+pexmp013	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00013) 5-in-1 Wingboard (CG2346) - Î÷°àÑÀ°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00013) 5-in-1 Wingboard (CG2346) - Î÷°àÑÀ°æ
 pexmp017	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2298)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2298)
 pexmp017a	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2352)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2352)
 pexmp017b	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2426)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00017) 5-in-1 Wingboard (CG2426)
+pexmp026	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00026) 5-in-1 Wingboard (CG2346) - Î÷°àÑÀ°æ	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00026) 5-in-1 Wingboard (CG2346) - Î÷°àÑÀ°æ
 pexmp030	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00030) 5-in-1 Wingboard (CG2426)	ÓÎÏ·ÕßµÄÀûÈĞ Plus (XMP00030) 5-in-1 Wingboard (CG2426)
 pf2012	³¬ÄÜÁ¦´óÕ½ 2012 	³¬ÄÜÁ¦´óÕ½ 2012 
 pfghtj	³¬¼¶¿Ú´üÕ½Ê¿ (ÈÕ°æ 970904)	³¬¼¶¿Ú´üÕ½Ê¿ (ÈÕ°æ 970904)
@@ -7068,14 +7128,15 @@ policetr13b	Õ½¾¯Ë«Ç¹ (ĞŞÕı°æ 1.3B)	Õ½¾¯Ë«Ç¹ (ĞŞÕı°æ 1.3B)
 pollux	À×öªĞı·ç (µÚ 1 Ì×)	À×öªĞı·ç (µÚ 1 Ì×)
 polluxa	À×öªĞı·ç (µÚ 2 Ì×)	À×öªĞı·ç (µÚ 2 Ì×)
 polluxa2	À×öªĞı·ç (µÚ 3 Ì×)	À×öªĞı·ç (µÚ 3 Ì×)
+polluxn	À×öªĞı·ç (ÈÕ°æ, NTC ÊÚÈ¨)	À×öªĞı·ç (ÈÕ°æ, NTC ÊÚÈ¨)
 polynetw	Ê¯°æ¶ÔÕ½ (°æ±¾ JAA)	Ê¯°æ¶ÔÕ½ (°æ±¾ JAA)
 polyplay	ÆÕÀûĞ¡ÓÎÏ·ºÏ¼­ 	ÆÕÀûĞ¡ÓÎÏ·ºÏ¼­ 
 polystar	µ½´Ë! ±£ÂŞÖ®ĞÇ (°æ±¾ JAA)	µ½´Ë! ±£ÂŞÖ®ĞÇ (°æ±¾ JAA)
 pompingw	Ä§¹íÆøÅİ (ÈÕ°æ)	Ä§¹íÆøÅİ (ÈÕ°æ)
 ponchin	Âé½«Åö³Ô¸Ü (ÈÕ°æ µÚ 1 Ì×)	Âé½«Åö³Ô¸Ü (ÈÕ°æ µÚ 1 Ì×)
 ponchina	Âé½«Åö³Ô¸Ü (ÈÕ°æ µÚ 2 Ì×)	Âé½«Åö³Ô¸Ü (ÈÕ°æ µÚ 2 Ì×)
-pong	Pong µ¯Çò (ĞŞÕı°æ E) external	Pong µ¯Çò (ĞŞÕı°æ E) external
-pongf	Pong µ¯Çò (ĞŞÕı°æ E)	Pong µ¯Çò (ĞŞÕı°æ E)
+pong	Pong µ¯Çò (ĞŞÕı°æ E) external [TTL]	Pong µ¯Çò (ĞŞÕı°æ E) external [TTL]
+pongf	Pong µ¯Çò (ĞŞÕı°æ E) [TTL]	Pong µ¯Çò (ĞŞÕı°æ E) [TTL]
 ponpoko	»¶ÀÖÅöÅöÄñ 	»¶ÀÖÅöÅöÄñ 
 ponpokov	»¶ÀÖÅöÅöÄñ (Venture Line)	»¶ÀÖÅöÅöÄñ (Venture Line)
 pool10	×²Çò 10 (Òâ´óÀû°æ, µÚ 1 Ì×)	×²Çò 10 (Òâ´óÀû°æ, µÚ 1 Ì×)
@@ -7271,6 +7332,7 @@ pwrinst2	ºÀÑªËÂÒ»×å 2 (ÃÀ°æ, °æ±¾. 94/04/08)	ºÀÑªËÂÒ»×å 2 (ÃÀ°æ, °æ±¾. 94/04/08)
 pwrinst2j	ºÀÑªËÂÒ»×å 2 (ÈÕ°æ, °æ±¾. 94/04/08)	ºÀÑªËÂÒ»×å 2 (ÈÕ°æ, °æ±¾. 94/04/08)
 py2k2	´ó¼ÒÀ´ÕÒ²ê 2 	´ó¼ÒÀ´ÕÒ²ê 2 
 pyramid	½ğ×ÖËş (Dutch, Game Card 95-750-898)	½ğ×ÖËş (Dutch, Game Card 95-750-898)
+pyros	ÍßµÂÄÉÉ­ÁÖ (ÃÀ°æ)	ÍßµÂÄÉÉ­ÁÖ (ÃÀ°æ)
 pzlbowl	ÅİÅİ±£ÁäÇò (ÈÕ°æ)	ÅİÅİ±£ÁäÇò (ÈÕ°æ)
 pzlbreak	ÒæÖÇÓÎÏ· 	ÒæÖÇÓÎÏ· 
 pzlestar	Ä§»ÃĞÇ×ù (Sang Ho Soft)	Ä§»ÃĞÇ×ù (Sang Ho Soft)
@@ -7846,7 +7908,8 @@ rygar2	°¢¹ÅË¹Õ½Ê¿ (ÃÀ°æ µÚ 2 Ì×)	°¢¹ÅË¹Õ½Ê¿ (ÃÀ°æ µÚ 2 Ì×)
 rygar3	°¢¹ÅË¹Õ½Ê¿ (ÃÀ°æ µÚ 3 Ì× ¾É°æ)	°¢¹ÅË¹Õ½Ê¿ (ÃÀ°æ µÚ 3 Ì× ¾É°æ)
 rygarj	°¢¶û±°Ë¹¹ÅÕ½Ê¿ (ÈÕ°æ)	°¢¶û±°Ë¹¹ÅÕ½Ê¿ (ÈÕ°æ)
 ryorioh	ÎÊ´ğ ÊÀ½çÁÏÀíÍõ 98 (ÈÕ°æ)	ÎÊ´ğ ÊÀ½çÁÏÀíÍõ 98 (ÈÕ°æ)
-ryouran	VS Âé½«ÒÒÅ®çÔÂÒ 	VS Âé½«ÒÒÅ®çÔÂÒ 
+ryouran	VS Âé½«ÒÒÅ®çÔÂÒ (µÚ 1 Ì×)	VS Âé½«ÒÒÅ®çÔÂÒ (µÚ 1 Ì×)
+ryourano	VS Âé½«ÒÒÅ®çÔÂÒ (µÚ 2 Ì×)	VS Âé½«ÒÒÅ®çÔÂÒ (µÚ 2 Ì×)
 ryujin	ÁúÉñ (ÈÕ°æ)	ÁúÉñ (ÈÕ°æ)
 ryukendn	ÈÌÕßÁú½£´« (ÈÕ°æ, µÚ 1 Ì×)	ÈÌÕßÁú½£´« (ÈÕ°æ, µÚ 1 Ì×)
 ryukendna	ÈÌÕßÁú½£´« (ÈÕ°æ, µÚ 2 Ì×)	ÈÌÕßÁú½£´« (ÈÕ°æ, µÚ 2 Ì×)
@@ -8092,6 +8155,8 @@ sc4goldwf	»Æ½ğ¹Ú¾ü (Bellfruit) (Scorpion 4) (µÚ 7 Ì×)	»Æ½ğ¹Ú¾ü (Bellfruit) (Scor
 sc4goldwg	»Æ½ğ¹Ú¾ü (Bellfruit) (Scorpion 4) (µÚ 8 Ì×)	»Æ½ğ¹Ú¾ü (Bellfruit) (Scorpion 4) (µÚ 8 Ì×)
 sc4hotrd	¼«ËÙÂíÁ¦ (Bellfruit) (Scorpion 4) (µÚ 1 Ì×)	¼«ËÙÂíÁ¦ (Bellfruit) (Scorpion 4) (µÚ 1 Ì×)
 sc4hotrda	¼«ËÙÂíÁ¦ (Bellfruit) (Scorpion 4) (µÚ 2 Ì×)	¼«ËÙÂíÁ¦ (Bellfruit) (Scorpion 4) (µÚ 2 Ì×)
+sc4knokb	Õ¼µØÎªÍõ Knock Out!! (PR2057, PKOT) (Mazooma) (Scorpion 4) (µÚ 1 Ì×)	Õ¼µØÎªÍõ Knock Out!! (PR2057, PKOT) (Mazooma) (Scorpion 4) (µÚ 1 Ì×)
+sc4knokc	Õ¼µØÎªÍõ Knock Out!! (PR2057, PKOT) (Mazooma) (Scorpion 4) (µÚ 2 Ì×)	Õ¼µØÎªÍõ Knock Out!! (PR2057, PKOT) (Mazooma) (Scorpion 4) (µÚ 2 Ì×)
 sc4mcas	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 1 Ì×)	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 1 Ì×)
 sc4mcas0	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 15 Ì×)	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 15 Ì×)
 sc4mcas1	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 16 Ì×)	´ó¸»ÎÌ - ¶Ä³¡ (PR2354) (Mazooma) (Scorpion 4) (GMBU, µÚ 16 Ì×)
@@ -8998,8 +9063,8 @@ spdcoin	¿ìËÙÓ²±Ò (Ô­ĞÍ°æ)	¿ìËÙÓ²±Ò (Ô­ĞÍ°æ)
 spdodgeb	ÈÈÑª¸ßĞ£¶ã±ÜÇò (ÃÀ°æ)	ÈÈÑª¸ßĞ£¶ã±ÜÇò (ÃÀ°æ)
 speakres	Ì«¿Õ·ÀÎÀ - Speak & Rescue 	Ì«¿Õ·ÀÎÀ - Speak & Rescue 
 speakresb	Ì«¿Õ·ÀÎÀ - Speak & Rescue (µÁ°æ)	Ì«¿Õ·ÀÎÀ - Speak & Rescue (µÁ°æ)
-spec2k	¹âÆÕ 2000 (Å·°æ)	¹âÆÕ 2000 (Å·°æ)
-spec2kv	¹âÆÕ 2000 (×İ°æ)	¹âÆÕ 2000 (×İ°æ)
+spec2k	¹âÆÕ 2000 (×İ°æ)	¹âÆÕ 2000 (×İ°æ)
+spec2kh	¹âÆÕ 2000 (ºá°æ, buggy) (Å·°æ)	¹âÆÕ 2000 (ºá°æ, buggy) (Å·°æ)
 spectar	³Ô¶¹Èü³µ (ĞŞÕı°æ 3)	³Ô¶¹Èü³µ (ĞŞÕı°æ 3)
 spectar1	³Ô¶¹Èü³µ (ĞŞÕı°æ 1?)	³Ô¶¹Èü³µ (ĞŞÕı°æ 1?)
 speedatk	¿ì¹¥ÆË¿Ë (ÈÕ°æ)	¿ì¹¥ÆË¿Ë (ÈÕ°æ)
@@ -9517,8 +9582,9 @@ tantrbl	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µÚ 1 Ì×)	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µ
 tantrbl2	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µÚ 2 Ì×)	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µÚ 2 Ì×)
 tantrbl3	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µÚ 3 Ì×)	Áú·ïÉñÍµ - ¸çÁ©ºÃ (ÈÕ°æ) (µÁ°æ µÚ 3 Ì×)
 tantrkor	Áú·ïÉñÍµ - ¸çÁ©ºÃ (º«°æ)	Áú·ïÉñÍµ - ¸çÁ©ºÃ (º«°æ)
-taotaido	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (µÚ 1 Ì×)	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (µÚ 1 Ì×)
-taotaidoa	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (µÚ 2 Ì×)	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (µÚ 2 Ì×)
+taotaido	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (2 button °æ±¾)	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (2 button °æ±¾)
+taotaido3	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (2/3 button °æ±¾)	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (2/3 button °æ±¾)
+taotaidoa	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (6 button °æ±¾)	ËÕÆÅÚ­¸ñ¶· - Ì«Å¸ÌåµÀ (6 button °æ±¾)
 tapper	¾Æ±£ (Budweiser, µÚ 1 Ì×)	¾Æ±£ (Budweiser, µÚ 1 Ì×)
 tappera	¾Æ±£ (Budweiser, µÚ 2 Ì×)	¾Æ±£ (Budweiser, µÚ 2 Ì×)
 targ	Èü³µÉ±Õó 	Èü³µÉ±Õó 
