@@ -180,7 +180,7 @@ ones.  The other 7 words are ignored.  Global scrollx is ignored.
 const device_type K056832 = &device_creator<k056832_device>;
 
 k056832_device::k056832_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, K056832, "K056832 Sprite/Tilemap Generator", tag, owner, clock, "k056832", __FILE__),
+	: device_t(mconfig, K056832, "K056832 Tilemap Generator", tag, owner, clock, "k056832", __FILE__),
 	//m_tilemap[K056832_PAGE_COUNT],
 	//*m_pixmap[K056832_PAGE_COUNT],
 	//m_regs[0x20],
@@ -1477,7 +1477,7 @@ printf("\nend\n");
 }
 */
 	last_active = m_active_layer;
-	new_colorbase = (m_k055555 != NULL) ? m_k055555->k055555_get_palette_index(m_k055555, layer) : 0;
+	new_colorbase = (m_k055555 != NULL) ? m_k055555->K055555_get_palette_index(layer) : 0;
 
 	for (r = 0; r < rowspan; r++)
 	{
@@ -1782,7 +1782,7 @@ void k056832_device::tilemap_draw_dj( screen_device &screen, bitmap_rgb32 &bitma
 		sdat_adv = -sdat_adv;
 
 	last_active = m_active_layer;
-	new_colorbase = (m_k055555 != NULL) ? m_k055555->k055555_get_palette_index(m_k055555, layer) : 0;
+	new_colorbase = (m_k055555 != NULL) ? m_k055555->K055555_get_palette_index(layer) : 0;
 
 	for (r = 0; r <= rowspan; r++)
 	{

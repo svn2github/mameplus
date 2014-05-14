@@ -11,1300 +11,544 @@
 #include "emu.h"
 
 
-//**************************************************************************
-//  GLOBAL VARIABLES
-//**************************************************************************
-
-// special identifiers used to discover NULL functions
-UINT8 devcb_resolved_read_line::s_null;
-UINT8 devcb_resolved_write_line::s_null;
-UINT8 devcb_resolved_read8::s_null;
-UINT8 devcb_resolved_write8::s_null;
-UINT8 devcb_resolved_read16::s_null;
-UINT8 devcb_resolved_write16::s_null;
-UINT8 devcb_resolved_read32::s_null;
-UINT8 devcb_resolved_write32::s_null;
-UINT8 devcb_resolved_read64::s_null;
-UINT8 devcb_resolved_write64::s_null;
-
-
 
 //**************************************************************************
-//  TYPE DEFINITIONS
-//**************************************************************************
-
-// ======================> devcb_resolver
-
-class devcb_resolver
-{
-public:
-	static ioport_port *resolve_port(const char *tag, device_t &current);
-	static device_t *resolve_device(int index, const char *tag, device_t &current);
-	static device_execute_interface *resolve_execute_interface(const char *tag, device_t &current);
-};
-
-
-
-//**************************************************************************
-//  DEVCB RESOLVER
+//  DEVCB BASE CLASS
 //**************************************************************************
 
 //-------------------------------------------------
-//  resolve_port - resolve to an input port object
-//  based on the provided tag
+//  devcb_base - constructor
 //-------------------------------------------------
 
-ioport_port *devcb_resolver::resolve_port(const char *tag, device_t &current)
+devcb_base::devcb_base(device_t &device, UINT64 defmask)
+	: m_device(device),
+		m_rshift(0),
+		m_mask(defmask),
+		m_xor(0)
 {
-	astring fullname;
-	ioport_port *result = current.ioport(current.siblingtag(fullname, tag));
-	if (result == NULL)
-		throw emu_fatalerror("Unable to find input port '%s' (requested by %s '%s')", fullname.cstr(), current.name(), current.tag());
-	return result;
+	reset();
 }
 
 
 //-------------------------------------------------
-//  resolve_device - resolve to a device given
-//  a tag and special index type
+//  reset - reset/initialize state
 //-------------------------------------------------
 
-device_t *devcb_resolver::resolve_device(int index, const char *tag, device_t &current)
+void devcb_base::reset(callback_type type)
 {
-	device_t *result = current.siblingdevice(tag);
-	if (result == NULL)
-		throw emu_fatalerror("Unable to resolve device '%s' (requested by callback to %s '%s')", tag, current.name(), current.tag());
-	return result;
+	m_type = type;
+	m_target_tag = NULL;
+	m_target_int = 0;
+	m_space_tag = NULL;
+	m_space_num = AS_0;
+	m_space = NULL;
+	m_target.ptr = NULL;
+	m_rshift = 0;
+	m_mask = ~U64(0);
 }
 
 
 //-------------------------------------------------
-//  resolve_execute_interface - resolve to an
-//  execute interface on a device given a device
-//  tag
+//  resolve_ioport - resolve an I/O port or fatal
+//  error if we can't find it
 //-------------------------------------------------
 
-device_execute_interface *devcb_resolver::resolve_execute_interface(const char *tag, device_t &current)
+void devcb_base::resolve_ioport()
 {
-	// find our target device
-	device_t *targetdev = current.siblingdevice(tag);
-	if (targetdev == NULL)
-		throw emu_fatalerror("Unable to resolve device '%s' (requested by %s '%s')", tag, current.name(), current.tag());
+	// attempt to resolve, fatal error if fail
+	m_target.ioport = (m_target_tag != NULL) ? m_device.owner()->ioport(m_target_tag) : NULL;
+	if (m_target.ioport == NULL)
+		throw emu_fatalerror("Unable to resolve I/O port callback reference to '%s' in device '%s'\n", m_target_tag, m_device.tag());
+}
 
-	// make sure the target device has an execute interface
+
+//-------------------------------------------------
+//  resolve_inputline - resolve a device and input
+//  number or fatal error if we can't find it
+//-------------------------------------------------
+
+void devcb_base::resolve_inputline()
+{
+	// attempt to resolve, fatal error if fail
+	m_target.device = (m_target_tag != NULL) ? m_device.owner()->subdevice(m_target_tag) : NULL;
+	if (m_target.device == NULL)
+		throw emu_fatalerror("Unable to resolve device reference to '%s' in device '%s'\n", m_target_tag, m_device.tag());
+
+	// make sure we have an execute interface
 	device_execute_interface *exec;
-	if (!targetdev->interface(exec))
-		throw emu_fatalerror("Device '%s' (requested by %s '%s') has no execute interface", tag, current.name(), current.tag());
-
-	return exec;
-}
-
-
-//**************************************************************************
-//  DEVCB RESOLVED READ LINE
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_read_line - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_read_line::devcb_resolved_read_line()
-{
-	m_object.port = NULL;
-	m_helper.read_line = NULL;
+	if (!m_target.device->interface(exec))
+		throw emu_fatalerror("No execute interface found for device reference to '%s' in device '%s'\n", m_target_tag, m_device.tag());
 }
 
 
 //-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
+//  resolve_space - resolve an address space or
+//  fatal error if we can't find it
 //-------------------------------------------------
 
-void devcb_resolved_read_line::resolve(const devcb_read_line &desc, device_t &device)
+void devcb_base::resolve_space()
 {
-	switch (desc.type)
+	// attempt to resolve, fatal error if fail
+	device_t *spacedev = (m_space_tag != NULL) ? m_device.owner()->subdevice(m_space_tag) : NULL;
+	if (spacedev == NULL)
+		throw emu_fatalerror("Unable to resolve device reference to '%s' in device '%s'\n", m_space_tag, m_device.tag());
+	if (!spacedev->memory().has_space(m_space_num))
+		throw emu_fatalerror("Unable to resolve device address space %d on '%s' in device '%s'\n", m_space_num, m_space_tag, m_device.tag());
+	m_space = &spacedev->memory().space(m_space_num);
+}
+
+
+
+//**************************************************************************
+//  DEVCB READ CLASS
+//**************************************************************************
+
+//-------------------------------------------------
+//  devcb_read_base - constructor
+//-------------------------------------------------
+
+devcb_read_base::devcb_read_base(device_t &device, UINT64 defmask)
+	: devcb_base(device, defmask)
+{
+}
+
+
+//-------------------------------------------------
+//  reset - reset/initialize state
+//-------------------------------------------------
+
+void devcb_read_base::reset(callback_type type)
+{
+	// parent first
+	devcb_base::reset(type);
+
+	// local stuff
+	m_readline = read_line_delegate();
+	m_read8 = read8_delegate();
+	m_read16 = read16_delegate();
+	m_read32 = read32_delegate();
+	m_read64 = read64_delegate();
+	m_adapter = &devcb_read_base::read_unresolved_adapter;
+}
+
+
+//-------------------------------------------------
+//  resolve - resolve the specified callback to
+//  its final form
+//-------------------------------------------------
+
+void devcb_read_base::resolve()
+{
+	// first resolve any address spaces
+	if (m_space_tag != NULL)
+		resolve_space();
+	else
+		m_space = &downcast<driver_device &>(m_device.machine().root_device()).generic_space();
+
+	// then handle the various types
+	const char *name = "unknown";
+	try
 	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_object.constant = 0;
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(&devcb_resolved_read_line::from_constant, "(null)", this);
-			break;
+		switch (m_type)
+		{
+			case CALLBACK_NONE:
+				break;
 
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(&devcb_resolved_read_line::from_port, desc.tag, this);
-			break;
+			case CALLBACK_LINE:
+				name = m_readline.name();
+				m_readline.bind_relative_to(*m_device.owner());
+				m_target_int = 0;
+				m_adapter = m_readline.isnull() ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read_line_adapter;
+				break;
 
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.readline != NULL)
-				*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(desc.readline, desc.name, m_object.device);
-			else
-			{
-				m_helper.read8_device = desc.readdevice;
-				*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(&devcb_resolved_read_line::from_read8, desc.name, this);
-			}
-			break;
+			case CALLBACK_8:
+				name = m_read8.name();
+				m_read8.bind_relative_to(*m_device.owner());
+				m_target_int = 0;
+				m_adapter = m_read8.isnull() ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read8_adapter;
+				break;
 
-		case DEVCB_TYPE_CONSTANT:
-			m_object.constant = desc.index;
-			*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(&devcb_resolved_read_line::from_constant, "constant", this);
-			break;
+			case CALLBACK_16:
+				name = m_read16.name();
+				m_read16.bind_relative_to(*m_device.owner());
+				m_target_int = 0;
+				m_adapter = m_read16.isnull() ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read16_adapter;
+				break;
 
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_read_line_delegate *>(this) = devcb_read_line_delegate(&devcb_resolved_read_line::from_unmap, "unmap", this);
-			break;
+			case CALLBACK_32:
+				name = m_read32.name();
+				m_read32.bind_relative_to(*m_device.owner());
+				m_target_int = 0;
+				m_adapter = m_read32.isnull() ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read32_adapter;
+				break;
+
+			case CALLBACK_64:
+				name = m_read64.name();
+				m_read64.bind_relative_to(*m_device.owner());
+				m_target_int = 0;
+				m_adapter = m_read64.isnull() ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read64_adapter;
+				break;
+
+			case CALLBACK_IOPORT:
+				resolve_ioport();
+				m_target_int = 0;
+				m_adapter = (m_target.ioport == NULL) ? &devcb_read_base::read_constant_adapter : &devcb_read_base::read_ioport_adapter;
+				break;
+
+			case CALLBACK_LOG:
+				m_adapter = &devcb_read_base::read_logged_adapter;
+				break;
+
+			case CALLBACK_CONSTANT:
+				m_adapter = &devcb_read_base::read_constant_adapter;
+				break;
+
+			case CALLBACK_INPUTLINE:
+				throw emu_fatalerror("Device read callbacks can't be connected to input lines\n");
+		}
+	}
+	catch (binding_type_exception &binderr)
+	{
+		throw emu_fatalerror("devcb_read: Error performing a late bind of type %s to %s (name=%s)\n", binderr.m_actual_type.name(), binderr.m_target_type.name(), name);
 	}
 }
 
 
 //-------------------------------------------------
-//  from_port - helper to convert from an I/O port
-//  value to a line value
+//  resolve_safe - resolve the callback; if not
+//  specified, resolve to a constant callback with
+//  the given value
 //-------------------------------------------------
 
-int devcb_resolved_read_line::from_port()
+void devcb_read_base::resolve_safe(UINT64 none_constant_value)
 {
-	return (m_object.port->read() & 1) ? ASSERT_LINE : CLEAR_LINE;
-}
-
-
-//-------------------------------------------------
-//  from_read8 - helper to convert from an 8-bit
-//  memory read value to a line value
-//-------------------------------------------------
-
-int devcb_resolved_read_line::from_read8()
-{
-	return ((*m_helper.read8_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), 0, 0xff) & 1) ? ASSERT_LINE : CLEAR_LINE;
-}
-
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  constant value to a line value
-//-------------------------------------------------
-
-int devcb_resolved_read_line::from_constant()
-{
-	return (m_object.constant & 1) ? ASSERT_LINE : CLEAR_LINE;
-}
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  unmap value to a line value
-//-------------------------------------------------
-
-int devcb_resolved_read_line::from_unmap()
-{
-	logerror("%s: unmapped devcb read\n",
-					m_object.device->tag());
-	return CLEAR_LINE;
-}
-
-
-//**************************************************************************
-//  DEVCB RESOLVED WRITE LINE
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_write_line - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_write_line::devcb_resolved_write_line()
-{
-	m_object.port = NULL;
-	m_helper.write_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_write_line::resolve(const devcb_write_line &desc, device_t &device)
-{
-	switch (desc.type)
+	// convert to a constant if none specified
+	if (m_type == CALLBACK_NONE)
 	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(&devcb_resolved_write_line::to_null, "(null)", this);
-			break;
+		m_target_int = none_constant_value;
+		m_type = CALLBACK_CONSTANT;
+	}
+	resolve();
+}
 
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(&devcb_resolved_write_line::to_port, desc.tag, this);
-			break;
 
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.writeline != NULL)
-				*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(desc.writeline, desc.name, m_object.device);
-			else
-			{
-				m_helper.write8_device = desc.writedevice;
-				*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(&devcb_resolved_write_line::to_write8, desc.name, this);
-			}
-			break;
+//-------------------------------------------------
+//  read_unresolved_adapter - error-generating
+//  unresolved adapter
+//-------------------------------------------------
 
-		case DEVCB_TYPE_INPUT_LINE:
-			m_object.execute = devcb_resolver::resolve_execute_interface(desc.tag, device);
-			m_helper.input_line = desc.index;
-			*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(&devcb_resolved_write_line::to_input, desc.tag, this);
-			break;
+UINT64 devcb_read_base::read_unresolved_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	throw emu_fatalerror("Attempted to read through an unresolved devcb item");
+}
 
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_write_line_delegate *>(this) = devcb_write_line_delegate(&devcb_resolved_write_line::to_unmap, "unmap", this);
-			break;
+
+//-------------------------------------------------
+//  read_line_adapter - read from a line delegate
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read_line_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_readline() & 1);
+}
+
+
+//-------------------------------------------------
+//  read8_adapter - read from an 8-bit delegate
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read8_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_read8(space, offset, unshift_mask(mask)));
+}
+
+
+//-------------------------------------------------
+//  read16_adapter - read from a 16-bit delegate
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read16_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_read16(space, offset, unshift_mask(mask)));
+}
+
+
+//-------------------------------------------------
+//  read32_adapter - read from a 32-bit delegate
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read32_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_read32(space, offset, unshift_mask(mask)));
+}
+
+
+//-------------------------------------------------
+//  read64_adapter - read from a 64-bit delegate
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read64_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_read64(space, offset, unshift_mask(mask)));
+}
+
+
+//-------------------------------------------------
+//  read_ioport - read from an I/O port
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read_ioport_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_target.ioport->read());
+}
+
+
+//-------------------------------------------------
+//  read_logged_adapter - log a read and return a
+//  constant
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read_logged_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	logerror("%s: read %s\n", m_device.machine().describe_context(), m_target_tag);
+	return shift_mask_xor(m_target_int);
+}
+
+
+//-------------------------------------------------
+//  read_constant - read from a constant
+//-------------------------------------------------
+
+UINT64 devcb_read_base::read_constant_adapter(address_space &space, offs_t offset, UINT64 mask)
+{
+	return shift_mask_xor(m_target_int);
+}
+
+
+
+//**************************************************************************
+//  DEVCB WRITE CLASS
+//**************************************************************************
+
+//-------------------------------------------------
+//  devcb_write_base - constructor
+//-------------------------------------------------
+
+devcb_write_base::devcb_write_base(device_t &device, UINT64 defmask)
+	: devcb_base(device, defmask)
+{
+}
+
+
+//-------------------------------------------------
+//  reset - reset/initialize state
+//-------------------------------------------------
+
+void devcb_write_base::reset(callback_type type)
+{
+	// parent first
+	devcb_base::reset(type);
+
+	// local stuff
+	m_writeline = write_line_delegate();
+	m_write8 = write8_delegate();
+	m_write16 = write16_delegate();
+	m_write32 = write32_delegate();
+	m_write64 = write64_delegate();
+	m_adapter = &devcb_write_base::write_unresolved_adapter;
+}
+
+
+//-------------------------------------------------
+//  resolve - resolve the specified callback to
+//  its final form
+//-------------------------------------------------
+
+void devcb_write_base::resolve()
+{
+	// first resolve any address spaces
+	if (m_space_tag != NULL)
+		resolve_space();
+	else
+		m_space = &downcast<driver_device &>(m_device.machine().root_device()).generic_space();
+
+	// then handle the various types
+	const char *name = "unknown";
+	try
+	{
+		switch (m_type)
+		{
+			case CALLBACK_NONE:
+				break;
+
+			case CALLBACK_LINE:
+				name = m_writeline.name();
+				m_writeline.bind_relative_to(*m_device.owner());
+				m_adapter = m_writeline.isnull() ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write_line_adapter;
+				break;
+
+			case CALLBACK_8:
+				name = m_write8.name();
+				m_write8.bind_relative_to(*m_device.owner());
+				m_adapter = m_write8.isnull() ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write8_adapter;
+				break;
+
+			case CALLBACK_16:
+				name = m_write16.name();
+				m_write16.bind_relative_to(*m_device.owner());
+				m_adapter = m_write16.isnull() ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write16_adapter;
+				break;
+
+			case CALLBACK_32:
+				name = m_write32.name();
+				m_write32.bind_relative_to(*m_device.owner());
+				m_adapter = m_write32.isnull() ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write32_adapter;
+				break;
+
+			case CALLBACK_64:
+				name = m_write64.name();
+				m_write64.bind_relative_to(*m_device.owner());
+				m_adapter = m_write64.isnull() ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write64_adapter;
+				break;
+
+			case CALLBACK_IOPORT:
+				resolve_ioport();
+				m_adapter = (m_target.ioport == NULL) ? &devcb_write_base::write_noop_adapter : &devcb_write_base::write_ioport_adapter;
+				break;
+
+			case CALLBACK_LOG:
+				m_adapter = &devcb_write_base::write_logged_adapter;
+				break;
+
+			case CALLBACK_CONSTANT:
+				m_adapter = &devcb_write_base::write_noop_adapter;
+				break;
+
+			case CALLBACK_INPUTLINE:
+				resolve_inputline();
+				m_adapter = &devcb_write_base::write_inputline_adapter;
+				break;
+		}
+	}
+	catch (binding_type_exception &binderr)
+	{
+		throw emu_fatalerror("devcb_write: Error performing a late bind of type %s to %s (name=%s)\n", binderr.m_actual_type.name(), binderr.m_target_type.name(), name);
 	}
 }
 
 
 //-------------------------------------------------
-//  to_null - helper to handle a NULL write
+//  resolve_safe - resolve the callback; if not
+//  specified, resolve to a no-op
 //-------------------------------------------------
 
-void devcb_resolved_write_line::to_null(int state)
+void devcb_write_base::resolve_safe()
 {
+	// convert to a constant if none specified
+	if (m_type == CALLBACK_NONE)
+		m_type = CALLBACK_CONSTANT;
+	resolve();
 }
 
-//-------------------------------------------------
-//  to_unmap - helper to handle a unmap write
-//-------------------------------------------------
-
-void devcb_resolved_write_line::to_unmap(int state)
-{
-	logerror("%s: unmapped devcb write %s\n",
-					m_object.device->tag(),
-					core_i64_format(state, 2 * sizeof(UINT8),false));
-}
-
-//-------------------------------------------------
-//  to_port - helper to convert to an I/O port
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write_line::to_port(int state)
-{
-	m_object.port->write(state, 0xffffffff);
-}
-
-
-//-------------------------------------------------
-//  to_write8 - helper to convert to an 8-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write_line::to_write8(int state)
-{
-	(*m_helper.write8_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), 0, state, 0xff);
-}
-
-
-//-------------------------------------------------
-//  to_input - helper to convert to a device input
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write_line::to_input(int state)
-{
-	m_object.execute->set_input_line(m_helper.input_line, state);
-}
-
-
-
-//**************************************************************************
-//  DEVCB RESOLVED READ8
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_read8 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_read8::devcb_resolved_read8()
-{
-	m_object.port = NULL;
-	m_helper.read_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_read8::resolve(const devcb_read8 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_object.constant = 0;
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_constant, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.readdevice != NULL)
-			{
-				m_helper.read8_device = desc.readdevice;
-				*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_read8device, desc.name, this);
-			}
-			else
-			{
-				m_helper.read_line = desc.readline;
-				*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_readline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_CONSTANT:
-			m_object.constant = desc.index;
-			*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_constant, "constant", this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_read8_delegate *>(this) = devcb_read8_delegate(&devcb_resolved_read8::from_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  from_port - helper to convert from an I/O port
-//  value to an 8-bit value
-//-------------------------------------------------
-
-UINT8 devcb_resolved_read8::from_port(offs_t offset, UINT8 mem_mask)
-{
-	return m_object.port->read();
-}
-
-
-//-------------------------------------------------
-//  from_read8device - helper to convert from a device
-//  line read value to an 8-bit value
-//-------------------------------------------------
-
-UINT8 devcb_resolved_read8::from_read8device(offs_t offset, UINT8 mem_mask)
-{
-	return (*m_helper.read8_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, mem_mask);
-}
-
-
-//-------------------------------------------------
-//  from_readline - helper to convert from a device
-//  line read value to an 8-bit value
-//-------------------------------------------------
-
-UINT8 devcb_resolved_read8::from_readline(offs_t offset, UINT8 mem_mask)
-{
-	return (*m_helper.read_line)(m_object.device);
-}
-
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  constant value to an 8-bit value
-//-------------------------------------------------
-
-UINT8 devcb_resolved_read8::from_constant(offs_t offset, UINT8 mem_mask)
-{
-	return m_object.constant;
-}
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  unmap value to an 8-bit value
-//-------------------------------------------------
-
-UINT8 devcb_resolved_read8::from_unmap(offs_t offset, UINT8 mem_mask)
-{
-	logerror("%s: unmapped devcb read\n",
-					m_object.device->tag());
-	return 0;
-}
-
-//**************************************************************************
-//  DEVCB RESOLVED WRITE8
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_write8 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_write8::devcb_resolved_write8()
-{
-	m_object.port = NULL;
-	m_helper.write_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_write8::resolve(const devcb_write8 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_null, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.writedevice != NULL)
-			{
-				m_helper.write8_device = desc.writedevice;
-				*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_write8device, desc.name, this);
-			}
-			else
-			{
-				m_helper.write_line = desc.writeline;
-				*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_writeline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_INPUT_LINE:
-			m_object.execute = devcb_resolver::resolve_execute_interface(desc.tag, device);
-			m_helper.input_line = desc.index;
-			*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_input, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_write8_delegate *>(this) = devcb_write8_delegate(&devcb_resolved_write8::to_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  to_null - helper to handle a NULL write
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_null(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-}
-
-//-------------------------------------------------
-//  to_unmap - helper to handle a unmap write
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_unmap(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-	logerror("%s: unmapped devcb write %s & %s\n",
-				m_object.device->tag(),
-				core_i64_format(data, 2 * sizeof(UINT8),false),
-				core_i64_format(mem_mask, 2 * sizeof(UINT8),false));
-}
-
-//-------------------------------------------------
-//  to_port - helper to convert to an I/O port
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_port(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-	m_object.port->write(data, mem_mask);
-}
-
-
-//-------------------------------------------------
-//  to_write8device - helper to convert to an 8-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_write8device(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-	(*m_helper.write8_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, data, mem_mask);
-}
-
-
-//-------------------------------------------------
-//  to_write8 - helper to convert to an 8-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_writeline(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-	(*m_helper.write_line)(m_object.device, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-//-------------------------------------------------
-//  to_input - helper to convert to a device input
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write8::to_input(offs_t offset, UINT8 data, UINT8 mem_mask)
-{
-	m_object.execute->set_input_line(m_helper.input_line, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-
-//**************************************************************************
-//  DEVCB RESOLVED READ16
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_read16 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_read16::devcb_resolved_read16()
-{
-	m_object.port = NULL;
-	m_helper.read_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_read16::resolve(const devcb_read16 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_object.constant = 0;
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_constant, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.readdevice != NULL)
-			{
-				m_helper.read16_device = desc.readdevice;
-				*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_read16, desc.name, this);
-			}
-			else
-			{
-				m_helper.read_line = desc.readline;
-				*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_readline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_CONSTANT:
-			m_object.constant = desc.index;
-			*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_constant, "constant", this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_read16_delegate *>(this) = devcb_read16_delegate(&devcb_resolved_read16::from_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  from_port - helper to convert from an I/O port
-//  value to a 16-bit value
-//-------------------------------------------------
-
-UINT16 devcb_resolved_read16::from_port(offs_t offset, UINT16 mask)
-{
-	return m_object.port->read();
-}
-
-
-//-------------------------------------------------
-//  from_read16 - helper to convert from a device
-//  line read value to a 16-bit value
-//-------------------------------------------------
-
-UINT16 devcb_resolved_read16::from_read16(offs_t offset, UINT16 mask)
-{
-	return (*m_helper.read16_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, mask);
-}
-
-
-//-------------------------------------------------
-//  from_read16 - helper to convert from a device
-//  line read value to a 16-bit value
-//-------------------------------------------------
-
-UINT16 devcb_resolved_read16::from_readline(offs_t offset, UINT16 mask)
-{
-	return (*m_helper.read_line)(m_object.device);
-}
-
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  constant value to a 16-bit value
-//-------------------------------------------------
-
-UINT16 devcb_resolved_read16::from_constant(offs_t offset, UINT16 mask)
-{
-	return m_object.constant;
-}
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  unmap value to a 16-bit value
-//-------------------------------------------------
-
-UINT16 devcb_resolved_read16::from_unmap(offs_t offset, UINT16 mem_mask)
-{
-	logerror("%s: unmapped devcb read\n",
-					m_object.device->tag());
-	return 0;
-}
-
-//**************************************************************************
-//  DEVCB RESOLVED WRITE16
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_write16 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_write16::devcb_resolved_write16()
-{
-	m_object.port = NULL;
-	m_helper.write_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_write16::resolve(const devcb_write16 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_null, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.writedevice != NULL)
-			{
-				m_helper.write16_device = desc.writedevice;
-				*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_write16, desc.name, this);
-			}
-			else
-			{
-				m_helper.write_line = desc.writeline;
-				*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_writeline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_INPUT_LINE:
-			m_object.execute = devcb_resolver::resolve_execute_interface(desc.tag, device);
-			m_helper.input_line = desc.index;
-			*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_input, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_write16_delegate *>(this) = devcb_write16_delegate(&devcb_resolved_write16::to_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  to_null - helper to handle a NULL write
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_null(offs_t offset, UINT16 data, UINT16 mask)
-{
-}
-
-
-//-------------------------------------------------
-//  to_unmap - helper to handle a unmap write
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_unmap(offs_t offset, UINT16 data, UINT16 mask)
-{
-	logerror("%s: unmapped devcb write %s & %s\n",
-				m_object.device->tag(),
-				core_i64_format(data, 2 * sizeof(UINT16),false),
-				core_i64_format(mask, 2 * sizeof(UINT16),false));
-}
-
-//-------------------------------------------------
-//  to_port - helper to convert to an I/O port
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_port(offs_t offset, UINT16 data, UINT16 mask)
-{
-	m_object.port->write(data, mask);
-}
-
-
-//-------------------------------------------------
-//  to_write16 - helper to convert to a 16-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_write16(offs_t offset, UINT16 data, UINT16 mask)
-{
-	(*m_helper.write16_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, data, mask);
-}
-
-
-//-------------------------------------------------
-//  to_write16 - helper to convert to a 16-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_writeline(offs_t offset, UINT16 data, UINT16 mask)
-{
-	(*m_helper.write_line)(m_object.device, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-//-------------------------------------------------
-//  to_input - helper to convert to a device input
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write16::to_input(offs_t offset, UINT16 data, UINT16 mask)
-{
-	m_object.execute->set_input_line(m_helper.input_line, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-//**************************************************************************
-//  DEVCB RESOLVED READ32
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_read32 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_read32::devcb_resolved_read32()
-{
-	m_object.port = NULL;
-	m_helper.read_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_read32::resolve(const devcb_read32 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_object.constant = 0;
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_constant, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.readdevice != NULL)
-			{
-				m_helper.read32_device = desc.readdevice;
-				*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_read32, desc.name, this);
-			}
-			else
-			{
-				m_helper.read_line = desc.readline;
-				*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_readline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_CONSTANT:
-			m_object.constant = desc.index;
-			*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_constant, "constant", this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_read32_delegate *>(this) = devcb_read32_delegate(&devcb_resolved_read32::from_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  from_port - helper to convert from an I/O port
-//  value to a 32-bit value
-//-------------------------------------------------
-
-UINT32 devcb_resolved_read32::from_port(offs_t offset, UINT32 mask)
-{
-	return m_object.port->read();
-}
-
-
-//-------------------------------------------------
-//  from_read32 - helper to convert from a device
-//  line read value to a 32-bit value
-//-------------------------------------------------
-
-UINT32 devcb_resolved_read32::from_read32(offs_t offset, UINT32 mask)
-{
-	return (*m_helper.read32_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, mask);
-}
-
-
-//-------------------------------------------------
-//  from_read32 - helper to convert from a device
-//  line read value to a 32-bit value
-//-------------------------------------------------
-
-UINT32 devcb_resolved_read32::from_readline(offs_t offset, UINT32 mask)
-{
-	return (*m_helper.read_line)(m_object.device);
-}
-
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  constant value to a 32-bit value
-//-------------------------------------------------
-
-UINT32 devcb_resolved_read32::from_constant(offs_t offset, UINT32 mask)
-{
-	return m_object.constant;
-}
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  unmap value to a 32-bit value
-//-------------------------------------------------
-
-UINT32 devcb_resolved_read32::from_unmap(offs_t offset, UINT32 mem_mask)
-{
-	logerror("%s: unmapped devcb read\n",
-					m_object.device->tag());
-	return 0;
-}
 
-//**************************************************************************
-//  DEVCB RESOLVED WRITE32
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_write32 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_write32::devcb_resolved_write32()
-{
-	m_object.port = NULL;
-	m_helper.write_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_write32::resolve(const devcb_write32 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_null, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.writedevice != NULL)
-			{
-				m_helper.write32_device = desc.writedevice;
-				*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_write32, desc.name, this);
-			}
-			else
-			{
-				m_helper.write_line = desc.writeline;
-				*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_writeline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_INPUT_LINE:
-			m_object.execute = devcb_resolver::resolve_execute_interface(desc.tag, device);
-			m_helper.input_line = desc.index;
-			*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_input, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_write32_delegate *>(this) = devcb_write32_delegate(&devcb_resolved_write32::to_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  to_null - helper to handle a NULL write
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_null(offs_t offset, UINT32 data, UINT32 mask)
-{
-}
-
-
-//-------------------------------------------------
-//  to_unmap - helper to handle a unmap write
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_unmap(offs_t offset, UINT32 data, UINT32 mask)
-{
-	logerror("%s: unmapped devcb write %s & %s\n",
-				m_object.device->tag(),
-				core_i64_format(data, 2 * sizeof(UINT32),false),
-				core_i64_format(mask, 2 * sizeof(UINT32),false));
-}
-
-//-------------------------------------------------
-//  to_port - helper to convert to an I/O port
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_port(offs_t offset, UINT32 data, UINT32 mask)
-{
-	m_object.port->write(data, mask);
-}
-
-
-//-------------------------------------------------
-//  to_write32 - helper to convert to a 32-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_write32(offs_t offset, UINT32 data, UINT32 mask)
-{
-	(*m_helper.write32_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, data, mask);
-}
-
-
-//-------------------------------------------------
-//  to_write32 - helper to convert to a 32-bit
-//  memory read value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_writeline(offs_t offset, UINT32 data, UINT32 mask)
-{
-	(*m_helper.write_line)(m_object.device, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-//-------------------------------------------------
-//  to_input - helper to convert to a device input
-//  value from a line value
-//-------------------------------------------------
-
-void devcb_resolved_write32::to_input(offs_t offset, UINT32 data, UINT32 mask)
-{
-	m_object.execute->set_input_line(m_helper.input_line, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
-}
-
-//**************************************************************************
-//  DEVCB RESOLVED READ64
-//**************************************************************************
-
-//-------------------------------------------------
-//  devcb_resolved_read64 - empty constructor
-//-------------------------------------------------
-
-devcb_resolved_read64::devcb_resolved_read64()
-{
-	m_object.port = NULL;
-	m_helper.read_line = NULL;
-}
-
-
-//-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
-//-------------------------------------------------
-
-void devcb_resolved_read64::resolve(const devcb_read64 &desc, device_t &device)
-{
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_object.constant = 0;
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_constant, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.readdevice != NULL)
-			{
-				m_helper.read64_device = desc.readdevice;
-				*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_read64, desc.name, this);
-			}
-			else
-			{
-				m_helper.read_line = desc.readline;
-				*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_readline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_CONSTANT:
-			m_object.constant = desc.index;
-			*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_constant, "constant", this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_read64_delegate *>(this) = devcb_read64_delegate(&devcb_resolved_read64::from_unmap, "unmap", this);
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  from_port - helper to convert from an I/O port
-//  value to a 64-bit value
-//-------------------------------------------------
-
-UINT64 devcb_resolved_read64::from_port(offs_t offset, UINT64 mask)
-{
-	return m_object.port->read();
-}
-
-
 //-------------------------------------------------
-//  from_read64 - helper to convert from a device
-//  line read value to a 64-bit value
+//  write_unresolved_adapter - error-generating
+//  unresolved adapter
 //-------------------------------------------------
 
-UINT64 devcb_resolved_read64::from_read64(offs_t offset, UINT64 mask)
+void devcb_write_base::write_unresolved_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	return (*m_helper.read64_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, mask);
+	throw emu_fatalerror("Attempted to write through an unresolved devcb item");
 }
 
 
 //-------------------------------------------------
-//  from_read64 - helper to convert from a device
-//  line read value to a 64-bit value
+//  write_line_adapter - write from a line delegate
 //-------------------------------------------------
 
-UINT64 devcb_resolved_read64::from_readline(offs_t offset, UINT64 mask)
+void devcb_write_base::write_line_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	return (*m_helper.read_line)(m_object.device);
+	m_writeline(unshift_mask_xor(data) & 1);
 }
-
-
-//-------------------------------------------------
-//  from_constant - helper to convert from a
-//  constant value to a 64-bit value
-//-------------------------------------------------
 
-UINT64 devcb_resolved_read64::from_constant(offs_t offset, UINT64 mask)
-{
-	return m_object.constant;
-}
 
 //-------------------------------------------------
-//  from_constant - helper to convert from a
-//  unmap value to a 64-bit value
+//  write8_adapter - write from an 8-bit delegate
 //-------------------------------------------------
 
-UINT64 devcb_resolved_read64::from_unmap(offs_t offset, UINT64 mem_mask)
+void devcb_write_base::write8_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	logerror("%s: unmapped devcb read\n",
-					m_object.device->tag());
-	return 0;
+	m_write8(space, offset, unshift_mask_xor(data), unshift_mask(mask));
 }
 
-//**************************************************************************
-//  DEVCB RESOLVED WRITE64
-//**************************************************************************
 
 //-------------------------------------------------
-//  devcb_resolved_write64 - empty constructor
+//  write16_adapter - write from a 16-bit delegate
 //-------------------------------------------------
 
-devcb_resolved_write64::devcb_resolved_write64()
+void devcb_write_base::write16_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	m_object.port = NULL;
-	m_helper.write_line = NULL;
+	m_write16(space, offset, unshift_mask_xor(data), unshift_mask(mask));
 }
 
 
 //-------------------------------------------------
-//  resolve - resolve to a delegate from a static
-//  structure definition
+//  write32_adapter - write from a 32-bit delegate
 //-------------------------------------------------
 
-void devcb_resolved_write64::resolve(const devcb_write64 &desc, device_t &device)
+void devcb_write_base::write32_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	switch (desc.type)
-	{
-		default:
-		case DEVCB_TYPE_NULL:
-			m_helper.null_indicator = &s_null;
-			*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_null, "(null)", this);
-			break;
-
-		case DEVCB_TYPE_IOPORT:
-			m_object.port = devcb_resolver::resolve_port(desc.tag, device);
-			*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_port, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_DEVICE:
-			m_object.device = devcb_resolver::resolve_device(desc.index, desc.tag, device);
-			if (desc.writedevice != NULL)
-			{
-				m_helper.write64_device = desc.writedevice;
-				*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_write64, desc.name, this);
-			}
-			else
-			{
-				m_helper.write_line = desc.writeline;
-				*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_writeline, desc.name, this);
-			}
-			break;
-
-		case DEVCB_TYPE_INPUT_LINE:
-			m_object.execute = devcb_resolver::resolve_execute_interface(desc.tag, device);
-			m_helper.input_line = desc.index;
-			*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_input, desc.tag, this);
-			break;
-
-		case DEVCB_TYPE_UNMAP:
-			m_helper.null_indicator = &s_null;
-			m_object.device = &device;
-			*static_cast<devcb_write64_delegate *>(this) = devcb_write64_delegate(&devcb_resolved_write64::to_unmap, "unmap", this);
-			break;
-	}
+	m_write32(space, offset, unshift_mask_xor(data), unshift_mask(mask));
 }
 
 
 //-------------------------------------------------
-//  to_null - helper to handle a NULL write
+//  write64_adapter - write from a 64-bit delegate
 //-------------------------------------------------
 
-void devcb_resolved_write64::to_null(offs_t offset, UINT64 data, UINT64 mask)
+void devcb_write_base::write64_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
+	m_write64(space, offset, unshift_mask_xor(data), unshift_mask(mask));
 }
-
-
-//-------------------------------------------------
-//  to_unmap - helper to handle a unmap write
-//-------------------------------------------------
 
-void devcb_resolved_write64::to_unmap(offs_t offset, UINT64 data, UINT64 mask)
-{
-	logerror("%s: unmapped devcb write %s & %s\n",
-				m_object.device->tag(),
-				core_i64_format(data, 2 * sizeof(UINT64),false),
-				core_i64_format(mask, 2 * sizeof(UINT64),false));
-}
 
 //-------------------------------------------------
-//  to_port - helper to convert to an I/O port
-//  value from a line value
+//  write_ioport - write from an I/O port
 //-------------------------------------------------
 
-void devcb_resolved_write64::to_port(offs_t offset, UINT64 data, UINT64 mask)
+void devcb_write_base::write_ioport_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	m_object.port->write(data, mask);
+	m_target.ioport->write_safe(unshift_mask_xor(data));
 }
 
 
 //-------------------------------------------------
-//  to_write64 - helper to convert to a 64-bit
-//  memory read value from a line value
+//  write_logged_adapter - logging unresolved
+//  adapter
 //-------------------------------------------------
 
-void devcb_resolved_write64::to_write64(offs_t offset, UINT64 data, UINT64 mask)
+void devcb_write_base::write_logged_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	(*m_helper.write64_device)(m_object.device, m_object.device->machine().driver_data()->generic_space(), offset, data, mask);
+	logerror("%s: unresolved devcb write\n", m_device.machine().describe_context());
 }
 
 
 //-------------------------------------------------
-//  to_write64 - helper to convert to a 64-bit
-//  memory read value from a line value
+//  write_constant - write from a constant
 //-------------------------------------------------
 
-void devcb_resolved_write64::to_writeline(offs_t offset, UINT64 data, UINT64 mask)
+void devcb_write_base::write_noop_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	(*m_helper.write_line)(m_object.device, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
+	// constant for writes is a no-op
 }
 
 
 //-------------------------------------------------
-//  to_input - helper to convert to a device input
-//  value from a line value
+//  write_inputline_adapter - write to an device's
+//  input line
 //-------------------------------------------------
 
-void devcb_resolved_write64::to_input(offs_t offset, UINT64 data, UINT64 mask)
+void devcb_write_base::write_inputline_adapter(address_space &space, offs_t offset, UINT64 data, UINT64 mask)
 {
-	m_object.execute->set_input_line(m_helper.input_line, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
+	m_target.device->execute().set_input_line(m_target_int, unshift_mask_xor(data) & 1);
 }

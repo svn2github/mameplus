@@ -188,6 +188,7 @@ SOUNDS += SN76496
 SOUNDS += POKEY
 SOUNDS += TIA
 SOUNDS += NES_APU
+SOUNDS += AMIGA
 SOUNDS += ASTROCADE
 SOUNDS += NAMCO
 SOUNDS += NAMCO_15XX
@@ -349,6 +350,7 @@ VIDEOS += VOODOO
 # specify available machine cores
 #-------------------------------------------------
 
+MACHINES += AKIKO
 MACHINES += NCR53C7XX
 MACHINES += LSI53C810
 MACHINES += 6522VIA
@@ -794,9 +796,9 @@ $(MAMEOBJ)/alpha.a: \
 
 $(MAMEOBJ)/amiga.a: \
 	$(DRIVERS)/alg.o \
-	$(MACHINE)/amiga.o $(AUDIO)/amiga.o $(VIDEO)/amiga.o $(VIDEO)/amigaaga.o\
+	$(MACHINE)/amiga.o $(VIDEO)/amiga.o $(VIDEO)/amigaaga.o\
 	$(DRIVERS)/arcadia.o \
-	$(DRIVERS)/cd32.o $(MACHINE)/cd32.o \
+	$(DRIVERS)/cubo.o \
 	$(DRIVERS)/mquake.o \
 	$(DRIVERS)/upscope.o \
 
@@ -990,6 +992,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/sonson.o $(VIDEO)/sonson.o \
 	$(DRIVERS)/srumbler.o $(VIDEO)/srumbler.o \
 	$(DRIVERS)/tigeroad.o $(VIDEO)/tigeroad.o \
+	$(MACHINE)/tigeroad.o \
 	$(DRIVERS)/vulgus.o $(VIDEO)/vulgus.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
@@ -1007,7 +1010,6 @@ $(MAMEOBJ)/cinemat.a: \
 $(MAMEOBJ)/comad.a: \
 	$(DRIVERS)/funybubl.o $(VIDEO)/funybubl.o \
 	$(DRIVERS)/galspnbl.o $(VIDEO)/galspnbl.o \
-	$(DRIVERS)/pushman.o $(VIDEO)/pushman.o \
 	$(DRIVERS)/zerozone.o $(VIDEO)/zerozone.o \
 
 $(MAMEOBJ)/cvs.a: \
@@ -2228,6 +2230,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/chicago.o \
 	$(DRIVERS)/chsuper.o \
 	$(DRIVERS)/cidelsa.o $(VIDEO)/cidelsa.o \
+	$(DRIVERS)/cocoloco.o \
 	$(DRIVERS)/coinmstr.o \
 	$(DRIVERS)/coinmvga.o \
 	$(DRIVERS)/comebaby.o \

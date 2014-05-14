@@ -25,7 +25,6 @@ OBJDIRS += \
 	$(EMUOBJ)/cpu \
 	$(EMUOBJ)/sound \
 	$(EMUOBJ)/debug \
-	$(EMUOBJ)/debugint \
 	$(EMUOBJ)/audio \
 	$(EMUOBJ)/bus \
 	$(EMUOBJ)/drivers \
@@ -39,7 +38,10 @@ OSDSRC = $(SRC)/osd
 OSDOBJ = $(OBJ)/osd
 
 OBJDIRS += \
-	$(OSDOBJ)
+	$(OSDOBJ) \
+	$(OSDOBJ)/modules \
+	$(OSDOBJ)/modules/sound \
+	$(OSDOBJ)/modules/debugger \
 
 
 #-------------------------------------------------
@@ -58,7 +60,6 @@ EMUOBJS = \
 	$(EMUOBJ)/debugger.o \
 	$(EMUOBJ)/devdelegate.o \
 	$(EMUOBJ)/devcb.o \
-	$(EMUOBJ)/devcb2.o \
 	$(EMUOBJ)/devcpu.o \
 	$(EMUOBJ)/devfind.o \
 	$(EMUOBJ)/device.o \
@@ -143,12 +144,14 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/dvtext.o \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
-	$(EMUOBJ)/debugint/debugint.o \
 	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/webengine.o \
 	$(OSDOBJ)/osdcore.o \
 	$(OSDOBJ)/osdepend.o \
 	$(OSDOBJ)/osdnet.o \
+	$(OSDOBJ)/modules/sound/none.o \
+	$(OSDOBJ)/modules/debugger/none.o \
+	$(OSDOBJ)/modules/debugger/debugint.o \
 
 ifneq ($(USE_CMD_LIST),)
 EMUOBJS += \

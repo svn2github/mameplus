@@ -1958,7 +1958,8 @@ void ui_menu_video_options::populate()
 	for (viewnum = 0; ; viewnum++)
 	{
 		// mamep: return the localized name of the indexed view
-		const char *name = target->translated_view_name(viewnum);
+		//const char *name = target->translated_view_name(viewnum);
+		const char *name = target->view_name(viewnum);
 		if (name == NULL)
 			break;
 

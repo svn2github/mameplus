@@ -53,7 +53,6 @@ private:
 #endif /* USE_SCALE_EFFECTS */
 		CROSSHAIR,
 		CHEAT,
-		MEMORY_CARD,
 #ifdef CMD_LIST
 		COMMAND,
 #endif /* CMD_LIST */

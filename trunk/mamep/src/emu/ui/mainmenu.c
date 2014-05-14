@@ -244,8 +244,8 @@ void ui_menu_main::handle()
 		case SCALE_EFFECT:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_scale_effect(machine(), container)));
 			break;
-#endif /* USE_SCALE_EFFECTS */
 
+#endif /* USE_SCALE_EFFECTS */
 		case CROSSHAIR:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_crosshair(machine(), container)));
 			break;
@@ -258,8 +258,8 @@ void ui_menu_main::handle()
 		case COMMAND:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command(machine(), container)));
 			break;
-#endif /* CMD_LIST */
 
+#endif /* CMD_LIST */
 		case SELECT_GAME:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_select_game(machine(), container, 0)));
 			break;

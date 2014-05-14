@@ -300,9 +300,9 @@ public:
 		DIODE     = 6,   // Diode
 		BJT_SWITCH = 7,  // BJT(Switch)
 		VCVS       = 8,  // Voltage controlled voltage source
-		VCCS       = 9,  // Voltage controlled voltage source
+		VCCS       = 9,  // Voltage controlled current source
 		BJT_EB     = 10, // BJT(Ebers-Moll)
-		GND        = 11, // BJT(Ebers-Moll)
+		GND        = 11, // GND device
 	};
 
 	ATTR_COLD netlist_object_t(const type_t atype, const family_t afamily);
@@ -721,14 +721,7 @@ public:
 
 	ATTR_COLD void initial(const double val);
 
-	ATTR_HOT inline void set_Q(const double newQ, const netlist_time delay)
-	{
-		if (newQ != net().m_new_Analog)
-		{
-			net().m_new_Analog = newQ;
-			net().push_to_queue(delay);
-		}
-	}
+	ATTR_HOT void set_Q(const double newQ);
 
 };
 
@@ -855,9 +848,7 @@ public:
 
 	typedef netlist_list_t<netlist_core_device_t *> list_t;
 
-	//ATTR_COLD netlist_core_device_t();
-	ATTR_COLD netlist_core_device_t(const family_t afamily);
-	ATTR_COLD netlist_core_device_t(const netlist_logic_family_desc_t *family_desc);
+	ATTR_COLD netlist_core_device_t(const family_t afamily, const netlist_logic_family_desc_t *family_desc);
 
 	ATTR_COLD virtual ~netlist_core_device_t();
 
@@ -904,9 +895,9 @@ public:
 
 	ATTR_HOT inline const double TERMANALOG(const netlist_terminal_t &term) const { return term.net().Q_Analog(); }
 
-	ATTR_HOT inline void OUTANALOG(netlist_analog_output_t &out, const double val, const netlist_time delay)
+	ATTR_HOT inline void OUTANALOG(netlist_analog_output_t &out, const double val)
 	{
-		out.set_Q(val, delay);
+		out.set_Q(val);
 	}
 
 	ATTR_HOT virtual void inc_active() {  }

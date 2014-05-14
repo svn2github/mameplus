@@ -104,7 +104,7 @@ protected:
 
 	ATTR_HOT ATTR_ALIGN void update()
 	{
-		OUTANALOG(m_Q, 0.0, NLTIME_IMMEDIATE);
+		OUTANALOG(m_Q, 0.0);
 	}
 
 private:
@@ -238,34 +238,22 @@ protected:
 
 		register_sub(m_R, "R");
 		register_output("_Q", m_Q);
-		register_subalias("Q", m_R.m_N);
+		register_subalias("Q", m_R.m_P);
 
-		connect(m_R.m_P, m_Q);
-
-		//m_Q.initial(m_family_desc->m_low_V);
-		//m_R.set_R(m_family_desc->m_R_low);
+		connect(m_R.m_N, m_Q);
 	}
 
 	ATTR_COLD void reset()
 	{
-		//m_Q.initial(m_family_desc->m_low_V);
-		//m_R.set_R(m_family_desc->m_R_low);
 		m_R.do_reset();
 	}
 
 	ATTR_COLD virtual netlist_core_terminal_t &out()
 	{
-		return m_R.m_N;
+		return m_R.m_P;
 	}
 
-	ATTR_HOT ATTR_ALIGN void update()
-	{
-		double R = INPLOGIC(m_I) ? m_family_desc->m_R_high : m_family_desc->m_R_low;
-		double V = INPLOGIC(m_I) ? m_family_desc->m_high_V : m_family_desc->m_low_V;
-		//printf("%f %f\n", R, V);
-		m_R.set_R(R);
-		OUTANALOG(m_Q, V, NLTIME_FROM_NS(0));
-	}
+	ATTR_HOT ATTR_ALIGN void update();
 
 private:
 	netlist_analog_output_t m_Q;

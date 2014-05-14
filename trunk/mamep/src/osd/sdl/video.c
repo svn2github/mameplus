@@ -447,7 +447,7 @@ static void init_monitors(void)
 			// allocate a new monitor info
 			monitor = global_alloc_clear(sdl_monitor_info);
 
-			snprintf(monitor->monitor_device, sizeof(monitor->monitor_device)-1, "%s%d", SDLOPTION_SCREEN,i);
+			snprintf(monitor->monitor_device, sizeof(monitor->monitor_device)-1, "%s%d", OSDOPTION_SCREEN,i);
 
 			SDL_GetDesktopDisplayMode(i, &dmode);
 			monitor->monitor_width = dmode.w;
@@ -623,6 +623,14 @@ static void extract_video_config(running_machine &machine)
 
 	// d3d options: extract the data
 	stemp = options.video();
+	if (strcmp(stemp, "auto") == 0) 
+	{
+#ifdef SDLMAME_MACOSX
+		stemp = "opengl";
+#else
+		stemp = "soft";
+#endif		
+	}
 	if (strcmp(stemp, SDLOPTVAL_SOFT) == 0)
 		video_config.mode = VIDEO_MODE_SOFT;
 	else if (strcmp(stemp, SDLOPTVAL_NONE) == 0)

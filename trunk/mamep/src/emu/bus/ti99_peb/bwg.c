@@ -1104,14 +1104,6 @@ void snug_bwg_legacy_device::device_reset()
 	m_ram_page = 0;
 }
 
-const wd17xx_interface bwgleg_wd17xx_interface =
-{
-	DEVCB_NULL,
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, snug_bwg_legacy_device, intrq_w),
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, snug_bwg_legacy_device, drq_w),
-	{ PFLOPPY_0, PFLOPPY_1, PFLOPPY_2, PFLOPPY_3 }
-};
-
 INPUT_PORTS_START( bwg_fdc_legacy )
 	PORT_START( "BWGDIP1" )
 	PORT_DIPNAME( 0x01, 0x00, "BwG step rate" )
@@ -1132,7 +1124,9 @@ INPUT_PORTS_START( bwg_fdc_legacy )
 INPUT_PORTS_END
 
 MACHINE_CONFIG_FRAGMENT( bwg_fdc_legacy )
-	MCFG_WD1773_ADD(FDCLEG_TAG, bwgleg_wd17xx_interface )
+	MCFG_WD1773_ADD(FDCLEG_TAG, default_wd17xx_interface)
+	MCFG_WD17XX_INTRQ_CALLBACK(WRITELINE(snug_bwg_legacy_device, intrq_w))
+	MCFG_WD17XX_DRQ_CALLBACK(WRITELINE(snug_bwg_legacy_device, drq_w))
 
 	MCFG_DEVICE_ADD(CLOCK_TAG, MM58274C, 0)
 	MCFG_MM58274C_MODE24(1) // 24 hour

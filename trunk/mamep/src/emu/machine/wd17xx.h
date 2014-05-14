@@ -17,17 +17,24 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
+#define MCFG_WD17XX_INTRQ_CALLBACK(_write) \
+	devcb = &wd1770_device::set_intrq_wr_callback(*device, DEVCB_##_write);
+
+#define MCFG_WD17XX_DRQ_CALLBACK(_write) \
+	devcb = &wd1770_device::set_drq_wr_callback(*device, DEVCB_##_write);
+
+#define MCFG_WD17XX_DDEN_CALLBACK(_write) \
+	devcb = &wd1770_device::set_dden_rd_callback(*device, DEVCB_##_write);
+
 /* Interface */
 struct wd17xx_interface
 {
-	devcb_read_line in_dden_func;
-	devcb_write_line out_intrq_func;
-	devcb_write_line out_drq_func;
 	const char *floppy_drive_tags[4];
 };
 
 extern const wd17xx_interface default_wd17xx_interface;
 extern const wd17xx_interface default_wd17xx_interface_2_drives;
+extern const wd17xx_interface default_wd17xx_interface_1_drive;
 
 /***************************************************************************
     MACROS
@@ -38,6 +45,10 @@ class wd1770_device : public device_t
 public:
 	wd1770_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	wd1770_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source);
+
+	template<class _Object> static devcb_base &set_intrq_wr_callback(device_t &device, _Object object) { return downcast<wd1770_device &>(device).m_out_intrq_func.set_callback(object); }
+	template<class _Object> static devcb_base &set_drq_wr_callback(device_t &device, _Object object) { return downcast<wd1770_device &>(device).m_out_drq_func.set_callback(object); }
+	template<class _Object> static devcb_base &set_dden_rd_callback(device_t &device, _Object object) { return downcast<wd1770_device &>(device).m_in_dden_func.set_callback(object); }
 
 	/* the following are not strictly part of the wd179x hardware/emulation
 	but will be put here for now until the flopdrv code has been finalised more */
@@ -102,9 +113,9 @@ protected:
 
 	// internal state
 	/* callbacks */
-	devcb_resolved_read_line m_in_dden_func;
-	devcb_resolved_write_line m_out_intrq_func;
-	devcb_resolved_write_line m_out_drq_func;
+	devcb_write_line m_out_intrq_func;
+	devcb_write_line m_out_drq_func;
+	devcb_read_line m_in_dden_func;
 
 	/* input lines */
 	int m_mr;            /* master reset */

@@ -2075,7 +2075,7 @@ static void AspectSetOptionName(datamap *map, HWND dialog, HWND control, char *b
 	if (nSelectedScreen > 0)
 		snprintf(buffer, buffer_size, "aspect%d", nSelectedScreen - 1);
 	else
-		strcpy(buffer, WINOPTION_ASPECT);
+		strcpy(buffer, "");
 }
 
 /* Read controls that are not handled in the DataMap */
@@ -2396,11 +2396,11 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	nIndex = g_nGame;
 
-	d3d = !core_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "d3d");
-	ddraw = !core_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "ddraw");
+	d3d = !core_stricmp(pCurrentOpts.value(OSDOPTION_VIDEO), "d3d");
+	ddraw = !core_stricmp(pCurrentOpts.value(OSDOPTION_VIDEO), "ddraw");
 	gdi = !d3d && !ddraw;
 
-	in_window = pCurrentOpts.bool_value(WINOPTION_WINDOW);
+//	in_window = pCurrentOpts.bool_value(WINOPTION_WINDOW);
 	Button_SetCheck(GetDlgItem(hWnd, IDC_ASPECT), g_bAutoAspect[GetSelectedScreen(hWnd)] );
 
 	//mamep: control -maximize option
@@ -2745,7 +2745,7 @@ static void ScreenSetOptionName(datamap *map, HWND dialog, HWND control, char *b
 	if (nSelectedScreen > 0)
 		snprintf(buffer, buffer_size, "screen%d", nSelectedScreen - 1);
 	else
-		strcpy(buffer, WINOPTION_SCREEN);
+		strcpy(buffer, "");
 }
 
 
@@ -2820,7 +2820,7 @@ static void ViewSetOptionName(datamap *map, HWND dialog, HWND control, char *buf
 	if (nSelectedScreen > 0)
 		snprintf(buffer, buffer_size, "view%d", nSelectedScreen - 1);
 	else
-		strcpy(buffer, WINOPTION_VIEW);
+		strcpy(buffer, "");
 }
 
 static BOOL ViewPopulateControl(datamap *map, HWND dialog, HWND control, windows_options *opts, const char *option_name)
@@ -2983,7 +2983,7 @@ static void ResolutionSetOptionName(datamap *map, HWND dialog, HWND control, cha
 	if (nSelectedScreen > 0)
 		snprintf(buffer, buffer_size, "resolution%d", nSelectedScreen - 1);
 	else
-		strcpy(buffer, WINOPTION_RESOLUTION);
+		strcpy(buffer, "");
 }
 
 
@@ -3242,7 +3242,7 @@ static void BuildDataMap(void)
 	// core sound options
 	datamap_add(properties_datamap, IDC_SAMPLERATE,				DM_INT,		OPTION_SAMPLERATE);
 	datamap_add(properties_datamap, IDC_SAMPLES,				DM_BOOL,	OPTION_SAMPLES);
-	datamap_add(properties_datamap, IDC_USE_SOUND,				DM_BOOL,	OPTION_SOUND);
+//	datamap_add(properties_datamap, IDC_USE_SOUND,				DM_BOOL,	OPTION_SOUND);
 	datamap_add(properties_datamap, IDC_VOLUME,					DM_INT,		OPTION_VOLUME);
 	datamap_add(properties_datamap, IDC_VOLUMEDISP,				DM_INT,		OPTION_VOLUME);
 #ifdef USE_AUDIO_SYNC
@@ -3277,9 +3277,9 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_MOUSE,					DM_STRING,	OPTION_MOUSE_DEVICE);
 
 	// core debugging options
-	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OPTION_LOG);
-	datamap_add(properties_datamap, IDC_DEBUG,					DM_BOOL,	OPTION_DEBUG);
-	datamap_add(properties_datamap, IDC_VERBOSE,				DM_BOOL,	OPTION_VERBOSE);
+	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OSDOPTION_LOG);
+	datamap_add(properties_datamap, IDC_DEBUG,					DM_BOOL,	OSDOPTION_DEBUG);
+	datamap_add(properties_datamap, IDC_VERBOSE,				DM_BOOL,	OSDOPTION_VERBOSE);
 	datamap_add(properties_datamap, IDC_UPDATEINPAUSE,			DM_BOOL,	OPTION_UPDATEINPAUSE);
 	datamap_add(properties_datamap, IDC_DEBUGSCRIPT,			DM_STRING,	OPTION_DEBUGSCRIPT);
 
@@ -3297,27 +3297,27 @@ static void BuildDataMap(void)
 #endif /* TRANS_UI */
 
 	// windows debugging options
-	datamap_add(properties_datamap, IDC_OSLOG,					DM_BOOL,	WINOPTION_OSLOG);
+//	datamap_add(properties_datamap, IDC_OSLOG,					DM_BOOL,	WINOPTION_OSLOG);
 	// watchdog missing
 
 	// windows performance options
 	datamap_add(properties_datamap, IDC_HIGH_PRIORITY,			DM_INT,		WINOPTION_PRIORITY);
 	datamap_add(properties_datamap, IDC_HIGH_PRIORITYTXT,		DM_INT,		WINOPTION_PRIORITY);
-	datamap_add(properties_datamap, IDC_MULTITHREAD_RENDERING,	DM_BOOL,	WINOPTION_MULTITHREADING);
+//	datamap_add(properties_datamap, IDC_MULTITHREAD_RENDERING,	DM_BOOL,	WINOPTION_MULTITHREADING);
 
 	// windows video options
-	datamap_add(properties_datamap, IDC_VIDEO_MODE,				DM_STRING,	WINOPTION_VIDEO);
-	datamap_add(properties_datamap, IDC_NUMSCREENS,				DM_INT,		WINOPTION_NUMSCREENS);
-	datamap_add(properties_datamap, IDC_NUMSCREENSDISP,			DM_INT,		WINOPTION_NUMSCREENS);
-	datamap_add(properties_datamap, IDC_WINDOWED,				DM_BOOL,	WINOPTION_WINDOW);
-	datamap_add(properties_datamap, IDC_MAXIMIZE,				DM_BOOL,	WINOPTION_MAXIMIZE);
-	datamap_add(properties_datamap, IDC_KEEPASPECT,				DM_BOOL,	WINOPTION_KEEPASPECT);
+	datamap_add(properties_datamap, IDC_VIDEO_MODE,				DM_STRING,	OSDOPTION_VIDEO);
+//	datamap_add(properties_datamap, IDC_NUMSCREENS,				DM_INT,		WINOPTION_NUMSCREENS);
+//	datamap_add(properties_datamap, IDC_NUMSCREENSDISP,			DM_INT,		WINOPTION_NUMSCREENS);
+//	datamap_add(properties_datamap, IDC_WINDOWED,				DM_BOOL,	WINOPTION_WINDOW);
+//	datamap_add(properties_datamap, IDC_MAXIMIZE,				DM_BOOL,	WINOPTION_MAXIMIZE);
+//	datamap_add(properties_datamap, IDC_KEEPASPECT,				DM_BOOL,	WINOPTION_KEEPASPECT);
 	datamap_add(properties_datamap, IDC_PRESCALE,				DM_INT,		WINOPTION_PRESCALE);
 	datamap_add(properties_datamap, IDC_PRESCALEDISP,			DM_INT,		WINOPTION_PRESCALE);
 	//mamep: use standard combobox
 	datamap_add(properties_datamap, IDC_EFFECT,					DM_STRING,	OPTION_EFFECT);
-	datamap_add(properties_datamap, IDC_WAITVSYNC,				DM_BOOL,	WINOPTION_WAITVSYNC);
-	datamap_add(properties_datamap, IDC_SYNCREFRESH,			DM_BOOL,	WINOPTION_SYNCREFRESH);
+//	datamap_add(properties_datamap, IDC_WAITVSYNC,				DM_BOOL,	WINOPTION_WAITVSYNC);
+//	datamap_add(properties_datamap, IDC_SYNCREFRESH,			DM_BOOL,	WINOPTION_SYNCREFRESH);
 #ifdef USE_SCALE_EFFECTS
 	datamap_add(properties_datamap, IDC_SCALEEFFECT,			DM_STRING,	OPTION_SCALE_EFFECT);
 #endif /* USE_SCALE_EFFECTS */
@@ -3340,7 +3340,7 @@ static void BuildDataMap(void)
 
 	// full screen options
 	datamap_add(properties_datamap, IDC_TRIPLE_BUFFER,			DM_BOOL,	WINOPTION_TRIPLEBUFFER);
-	datamap_add(properties_datamap, IDC_SWITCHRES,				DM_BOOL,	WINOPTION_SWITCHRES);
+//	datamap_add(properties_datamap, IDC_SWITCHRES,				DM_BOOL,	WINOPTION_SWITCHRES);
 	datamap_add(properties_datamap, IDC_FSBRIGHTNESS,			DM_FLOAT,	WINOPTION_FULLSCREENBRIGHTNESS);
 	datamap_add(properties_datamap, IDC_FSBRIGHTNESSDISP,		DM_FLOAT,	WINOPTION_FULLSCREENBRIGHTNESS);
 	datamap_add(properties_datamap, IDC_FSCONTRAST,				DM_FLOAT,	WINOPTION_FULLSCREENCONTRAST);
@@ -3349,8 +3349,8 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_FSGAMMADISP,			DM_FLOAT,	WINOPTION_FULLSCREENGAMMA);
 
 	// windows sound options
-	datamap_add(properties_datamap, IDC_AUDIO_LATENCY,			DM_INT,		WINOPTION_AUDIO_LATENCY);
-	datamap_add(properties_datamap, IDC_AUDIO_LATENCY_DISP,		DM_INT,		WINOPTION_AUDIO_LATENCY);
+//	datamap_add(properties_datamap, IDC_AUDIO_LATENCY,			DM_INT,		WINOPTION_AUDIO_LATENCY);
+//	datamap_add(properties_datamap, IDC_AUDIO_LATENCY_DISP,		DM_INT,		WINOPTION_AUDIO_LATENCY);
 
 	// input device options
 	datamap_add(properties_datamap, IDC_DUAL_LIGHTGUN,			DM_BOOL,	WINOPTION_DUAL_LIGHTGUN);
@@ -3672,21 +3672,22 @@ static void UpdateSelectScreenUI(HWND hwnd)
 	HWND hCtrl = GetDlgItem(hwnd, IDC_SCREENSELECT);
 	if (hCtrl)
 	{
-		int i, curSel;
+//		int i, 
+		int curSel;
 		curSel = ComboBox_GetCurSel(hCtrl);
 		if ((curSel < 0) || (curSel >= NUMSELECTSCREEN))
 			curSel = 0;
 		(void)ComboBox_ResetContent(hCtrl );
-		for (i = 0; i < NUMSELECTSCREEN && i < pCurrentOpts.int_value(WINOPTION_NUMSCREENS) + 1; i++)
-		{
-			(void)ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxSelectScreen[i].m_pText));
-			(void)ComboBox_SetItemData( hCtrl, i, g_ComboBoxSelectScreen[i].m_pData);
-		}
+//		for (i = 0; i < NUMSELECTSCREEN && i < pCurrentOpts.int_value(WINOPTION_NUMSCREENS) + 1; i++)
+//		{
+//			(void)ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxSelectScreen[i].m_pText));
+//			(void)ComboBox_SetItemData( hCtrl, i, g_ComboBoxSelectScreen[i].m_pData);
+//		}
 		// Smaller Amount of screens was selected, so use 0
-		if( i< curSel )
+//		if( i< curSel )
 			(void)ComboBox_SetCurSel(hCtrl, 0 );
-		else
-			(void)ComboBox_SetCurSel(hCtrl, curSel );
+//		else
+//			(void)ComboBox_SetCurSel(hCtrl, curSel );
 	}
 }
 
