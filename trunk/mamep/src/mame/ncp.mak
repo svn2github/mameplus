@@ -80,6 +80,12 @@ MACHINES += PD4990A_OLD
 MACHINES += UPD1990A
 
 #-------------------------------------------------
+# specify available bus cores
+#-------------------------------------------------
+
+BUSES += SCSI
+
+#-------------------------------------------------
 # this is the list of driver libraries that
 # comprise MAME plus mamedriv.o which contains
 # the list of drivers
@@ -134,6 +140,7 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
+	$(MACHINE)/ng_memcard.o \
 
 #-------------------------------------------------
 # layout dependencies
