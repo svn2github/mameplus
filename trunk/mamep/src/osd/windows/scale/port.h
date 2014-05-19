@@ -152,6 +152,8 @@ typedef UINT8 scale3x_uint8;
 typedef UINT16 scale3x_uint16;
 typedef UINT32 scale3x_uint32;
 
+typedef UINT32 xbrz_uint32;
+
 #ifndef TRUE
 #define TRUE 1
 #endif

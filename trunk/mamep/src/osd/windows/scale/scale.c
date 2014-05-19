@@ -33,6 +33,8 @@ enum
 	SCALE_EFFECT_HQ3X,
 	SCALE_EFFECT_HQ3XS,
 	SCALE_EFFECT_HQ3XBOLD,
+	SCALE_EFFECT_2XBRZ,
+	SCALE_EFFECT_3XBRZ,
 	SCALE_EFFECT_LAST
 };
 
@@ -89,6 +91,8 @@ static const char *str_name[] =
 	"hq3x",
 	"hq3xs",
 	"hq3xbold",
+	"2xbrz",
+	"3xbrz",
 	NULL
 };
 
@@ -110,6 +114,8 @@ static const char *str_desc[] =
 	"HQ3x",         // by Maxim Stepin
 	"HQ3xS",
 	"HQ3xBold",
+	"2xBRZ",      // by HqMAME v2.1.4
+	"3xBRZ",      // by HqMAME v2.1.4
 	NULL
 };
 
@@ -168,6 +174,10 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 
 // functions from Kega Fusion
 void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth);
+
+void InitXbrz(void);
+void Render2xXbrz(unsigned char *src, int srcPitch, unsigned char *dst, int trgPitch, int nWidth, int nHeight);
+void Render3xXbrz(unsigned char *src, int srcPitch, unsigned char *dst, int trgPitch, int nWidth, int nHeight);
 
 #undef INTERP_RGB16_TABLE
 static void interp_init(void)
@@ -420,6 +430,20 @@ int scale_init(void)
 			break;
 		}
 
+		case SCALE_EFFECT_2XBRZ:
+		{
+			sprintf(name, "2xXBRZ");
+			scale_effect.xsize = scale_effect.ysize = 2;
+			break;
+		}
+
+		case SCALE_EFFECT_3XBRZ:
+		{
+			sprintf(name, "3xXBRZ");
+			scale_effect.xsize = scale_effect.ysize = 3;
+			break;
+		}
+
 		default:
 		{
 			return 1;
@@ -503,6 +527,13 @@ int scale_check(int depth)
 				InitLUTs();
 				return 0;
 			}
+			else
+				return 1;
+
+		case SCALE_EFFECT_2XBRZ:
+		case SCALE_EFFECT_3XBRZ:
+			if (depth == 32)
+				return 0;
 			else
 				return 1;
 
@@ -604,6 +635,14 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 
 		case SCALE_EFFECT_HQ3XBOLD:
 			RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 0);
+			return 0;
+			
+		case SCALE_EFFECT_2XBRZ:
+			Render2xXbrz((unsigned char*)src, src_pitch, (unsigned char*)dst, dst_pitch, width, height);
+			return 0;
+
+		case SCALE_EFFECT_3XBRZ:
+			Render3xXbrz((unsigned char*)src, src_pitch, (unsigned char*)dst, dst_pitch, width, height);
 			return 0;
 
 		default:

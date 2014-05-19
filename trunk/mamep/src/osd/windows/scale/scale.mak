@@ -55,5 +55,6 @@ OSDOBJS += \
 	$(SCALEOBJ)/scanline.o \
 	$(SCALEOBJ)/snes9x_render.o \
 	$(SCALEOBJ)/vba_hq2x.o \
+	$(SCALEOBJ)/xbrz.o \
 
 
