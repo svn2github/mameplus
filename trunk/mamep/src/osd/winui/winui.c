@@ -1005,6 +1005,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	// Time the game run.
 	time(&start);
 	windows_osd_interface osd;
+	osd.register_options(mame_opts);
 	mame_execute(mame_opts, osd);
 	// Calc the duration
 	time(&end);

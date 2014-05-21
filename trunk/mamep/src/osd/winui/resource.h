@@ -245,7 +245,8 @@
 #define IDC_LANGUAGEEDIT                0    // N/A
 #define IDC_FILTER_EDIT                 1133
 #define IDC_ABOUT                       1134
-#define IDC_USE_SOUND                   1136
+#define IDC_SOUNDTEXT                   1135
+#define IDC_SOUND_MODE                  1136
 #define IDC_WAITVSYNC                   1137
 #define IDC_HWSTRETCH                   1138
 #define IDC_SWITCHRES                   1139

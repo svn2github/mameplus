@@ -118,7 +118,6 @@ extern const DWORD dwHelpIDs[] =
 	IDC_UPDATEINPAUSE             ,HIDC_UPDATEINPAUSE,
 	IDC_USE_DEFAULT               ,HIDC_USE_DEFAULT,
 	IDC_USE_MOUSE                 ,HIDC_USE_MOUSE,
-	IDC_USE_SOUND                 ,HIDC_USE_SOUND,
 	IDC_VERBOSE                   ,HIDC_VERBOSE,
 	IDC_VIDEO_MODE                ,HIDC_VIDEO_MODE,
 	IDC_VIEW                      ,HIDC_VIEW,
