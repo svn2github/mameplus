@@ -2468,56 +2468,6 @@ static void SetPropEnabledControls(HWND hWnd)
 		hlsl_on = FALSE;
 
 	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ON),		hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHATEXT),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHADISP),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHA),		hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURVTEXT),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURVDISP),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURV),		hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SATTEXT),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SATDISP),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SAT),		hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOWTEXT),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOWDISP),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOW),		hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PINTEXT),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PINDISP),	hlsl_on);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PIN),		hlsl_on);
-// The following use multiple parameters per line, which cannot currently be supported.
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_XFOCUS),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_YFOCUS),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_XFOCUSDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_YFOCUSDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_FOCUSTEXT),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RSCALE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GSCALE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BSCALE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RSCALEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GSCALEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BSCALEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SCALETEXT),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPOWER),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPOWER),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPOWER),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPOWERDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPOWERDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPOWERDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_POWERTEXT),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPLIFE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPLIFE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPLIFE),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPLIFEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPLIFEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPLIFEDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PLIFETEXT),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RFLOOR),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GFLOOR),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BFLOOR),		0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RFLOORDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GFLOORDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BFLOORDISP),	0);
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_FLOORTEXT),	0);
-
 
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();

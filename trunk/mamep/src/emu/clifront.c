@@ -116,8 +116,10 @@ cli_frontend::~cli_frontend()
 
 	// report any unfreed memory on clean exits
 	track_memory(false);
+#ifdef MAME_DEBUG
 	if (m_result == MAMERR_NONE)
 		dump_unfreed_mem(m_start_memory);
+#endif
 }
 
 
