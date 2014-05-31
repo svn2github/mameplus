@@ -105,13 +105,8 @@ static void remove_all_source_options(void);
  ***************************************************************************/
 
 #define UI_INI_FILENAME				MAMEUINAME ".ini"
+//#define CORE_INI_FILENAME						"DIRECTORIES.ini"
 #define DEFAULT_OPTIONS_INI_FILENAME		emulator_info::get_configname()
-
-//#ifdef PTR64
-//#define GAMEINFO_INI_FILENAME			"GameInfo64.ini"
-//#else
-//#define GAMEINFO_INI_FILENAME			"GameInfo32.ini"
-//#endif
 #define GAMEINFO_INI_FILENAME			"GameInfo.ini"
 
 
@@ -487,8 +482,6 @@ static const char *const image_tabs_short_name[MAX_TAB_TYPES] =
 };
 
 
-static BOOL save_gui_settings = TRUE;
-static BOOL save_default_options = TRUE;
 static HANDLE hOptsMutex = NULL;
 
 #define MUTEX_STR TEXT(MAMEUINAME "PLUS_OPTION_MUTEX")
@@ -636,7 +629,6 @@ void ResetGUI(void)
 	settings.revert(OPTION_PRIORITY_NORMAL);
 	// Save the new MAME32ui.ini
 	SaveOptions();
-	save_gui_settings = FALSE;
 	SetLangcode(GetLangcode());
 	SetUseLangList(UseLangList());
 }
@@ -1650,7 +1642,6 @@ void ResetGameDefaults(void)
 	// Walk the global settings and reset everything to defaults;
 	ResetToDefaults(global, OPTION_PRIORITY_MAXIMUM);
 	save_options(OPTIONS_GLOBAL, global, 1);
-	save_default_options = FALSE;
 }
 
 /*
@@ -2766,11 +2757,7 @@ static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts,
 		astring inistring;
 		inistring.expand(8 * 1024);
 
-#ifdef MESS
-		opts.output_ini(inistring);
-#else
 		opts.output_ini(inistring,baseopts);
-#endif
 
 		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = file.open(filename);
@@ -2795,11 +2782,7 @@ static file_error SaveSettingsFile(windows_options &opts, windows_options *baseo
 		astring inistring;
 		inistring.expand(8 * 1024);
 
-#ifdef MESS
-		opts.output_ini(inistring);
-#else
 		opts.output_ini(inistring,baseopts);
-#endif
 
 		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = file.open(filename);
@@ -2880,6 +2863,29 @@ static void LoadOptionsAndSettings(void)
 	setup_language(global);
 	SetLangcode(GetLangcode());
 	SetUseLangList(UseLangList());
+}
+
+void SetDirectories(windows_options &opts)
+{
+/*
+	astring error_string;
+	opts.set_value(OPTION_MEDIAPATH, GetRomDirs(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_SAMPLEPATH, GetSampleDirs(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_CFG_DIRECTORY, GetCfgDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_SNAPSHOT_DIRECTORY, GetImgDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_INPUT_DIRECTORY, GetInpDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_STATE_DIRECTORY, GetStateDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_ARTPATH, GetArtDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_NVRAM_DIRECTORY, GetNvramDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_CTRLRPATH, GetCtrlrDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_CHEATPATH, GetCheatDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_CROSSHAIRPATH, GetCrosshairDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_FONTPATH, GetFontDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_DIFF_DIRECTORY, GetDiffDir(), OPTION_PRIORITY_CMDLINE, error_string);
+	opts.set_value(OPTION_SNAPNAME, GetSnapName(), OPTION_PRIORITY_CMDLINE, error_string);
+	assert(!error_string);
+*/
 }
 
 
@@ -2979,31 +2985,31 @@ static void AddFolderFlags(winui_options &opts)
 // Save the UI ini
 void SaveOptions(void)
 {
-	if (save_gui_settings)
-	{
-		HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
-		dprintf("waiting for mutex...");
-		WaitForSingleObject(hMutex , INFINITE);
-		dprintf("saving %s...", UI_INI_FILENAME);
-
-		// Add the folder flag to settings.
-		AddFolderFlags(settings);
-		// Save opts if it is non-null, else save settings.
-		// It will be null if there are no filters set.
-		char buffer[MAX_PATH];
-		GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
-		SaveSettingsFile(settings, NULL, buffer);
-
-		// Save GameInfo.ini - game options.
-		GetGameOptionsFileName(buffer, ARRAY_LENGTH(buffer));
-		game_opts.save_file(buffer);
-
-		dprintf("%s saved", UI_INI_FILENAME);
-		ReleaseMutex(hMutex);
-		CloseHandle(hMutex);
-	}
+	// Add the folder flag to settings.
+	AddFolderFlags(settings);
+	// Save opts if it is non-null, else save settings.
+	// It will be null if there are no filters set.
+	char buffer[MAX_PATH];
+	GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
+	SaveSettingsFile(settings, NULL, buffer);
 }
 
+void SaveGameListOptions(void)
+{
+	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
+	dprintf("waiting for mutex...");
+	WaitForSingleObject(hMutex , INFINITE);
+	dprintf("saving %s...", UI_INI_FILENAME);
+
+	// Save GameInfo.ini - game options.
+	char buffer[MAX_PATH];
+	GetGameOptionsFileName(buffer, ARRAY_LENGTH(buffer));
+	game_opts.save_file(buffer);
+
+	dprintf("%s saved", UI_INI_FILENAME);
+	ReleaseMutex(hMutex);
+	CloseHandle(hMutex);
+}
 
 void SaveDefaultOptions(void)
 {
@@ -3094,6 +3100,7 @@ static void ui_parse_ini_file(windows_options &opts, const char *name)
 	astring fname (inidir, PATH_SEPARATOR, name, ".ini");
 	osd_free(inidir);
 	LoadSettingsFile(opts, fname);
+	SetDirectories(opts);
 }
 
 static void ui_parse_global_ini_file(windows_options &opts)
@@ -3246,7 +3253,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		// Don't try to save a null global options file,  or it will be erased.
 		//if (NULL == opts)
 			//return;
-		global = opts;
+		//global = opts;
 		filename.cpy(emulator_info::get_configname());
 	} else if (opt_type == OPTIONS_VECTOR)
 	{
@@ -3287,10 +3294,15 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 			osd_free(inidir);
 		}
 
+		SetDirectories(opts);
 		SaveSettingsFile(opts, baseopts, filepath);
 
 		if (baseopts != NULL)
 			global_free(baseopts);
+
+		//FIXME global option reload
+		if (opt_type == OPTIONS_GLOBAL)
+			ui_parse_global_ini_file(global);
 	}
 }
 

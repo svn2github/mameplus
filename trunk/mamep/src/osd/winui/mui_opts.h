@@ -178,6 +178,8 @@ void OptionsExit(void);
 #define OPTIONS_TYPE_GLOBAL		-1
 #define OPTIONS_TYPE_FOLDER		-2
 
+void SetDirectories(windows_options &opts);
+
 void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num);
 void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num);
 
@@ -193,6 +195,8 @@ DWORD LoadFolderFlags(const char *path);
 void SaveFolderFlags(const char *path, DWORD flags);
 
 void SaveOptions(void);
+void SaveDefaultOptions(void);
+void SaveGameListOptions(void);
 
 void ResetGUI(void);
 void ResetGameDefaults(void);
@@ -414,8 +418,6 @@ void GetTextPlayTime(int driver_index, WCHAR *buf);
 void ResetPlayTime(int driver_index);
 
 const char *GetVersionString(void);
-
-void SaveDefaultOptions(void);
 
 BOOL IsGlobalOption(const char *option_name);
 

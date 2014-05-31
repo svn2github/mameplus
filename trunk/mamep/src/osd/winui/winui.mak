@@ -35,7 +35,7 @@ RC = @windres --use-temp-file
 
 RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
-# include UISRC direcotry
+# include UISRC directory
 RCFLAGS = -O coff -I $(UISRC) -I $(UIOBJ)
 
 
