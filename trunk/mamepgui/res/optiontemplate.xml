@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<!-- mame .136u2 / sdlmame .129 -->
+<!-- mame .154 / sdlmame .129 -->
 <optiontemplate version="1">
 	<!-- GUI Only -->
 	<option name="cabinet_directory" default="cabinets" type="dirs" guivisible="1" />
@@ -112,13 +112,19 @@
 		<value guivalue="HQ3x">hq3x</value>
 		<value guivalue="HQ3xS">hq3xs</value>
 		<value guivalue="HQ4xBold">hq3xbold</value>
+		<value guivalue="2xBRZ">2xbrz</value>
+		<value guivalue="3xBRZ">3xbrz</value>
 	</option>
 	
 	<option name="antialias" guiname="draw antialiased vectors" type="bool" />
 	<option name="beam" guiname="beam width" type="float" min="0.1" max="10.0" />
 	<option name="flicker" type="float" min="0" max="100.0" />
 	
-	<option name="sound" guiname="enable sound output" type="bool" />
+	<option name="sound" guiname="enable sound output" type="string">
+		<value guivalue="Auto">auto</value>
+		<value os="win" guivalue="DirectSound">dsound</value>
+		<value guivalue="None">none</value>
+	</option>
 	<option name="samplerate" guiname="sample rate" type="string">
 		<value>11025</value>
 		<value>22050</value>
