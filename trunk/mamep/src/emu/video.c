@@ -646,6 +646,7 @@ bool video_manager::finish_screen_updates()
 {
 	// finish updating the screens
 	screen_device_iterator iter(machine().root_device());
+
 	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		screen->update_partial(screen->visible_area().max_y);
 
@@ -970,7 +971,7 @@ void video_manager::update_refresh_speed()
 			// if we changed, log that verbosely
 			if (target_speed != m_speed)
 			{
-				osd_printf_error(_("Adjusting target speed to %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n"), target_speed / 10.0, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 1000.0 / target_speed));
+				osd_printf_verbose(_("Adjusting target speed to %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n"), target_speed / 10.0, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 1000.0 / target_speed));
 				m_speed = target_speed;
 			}
 		}

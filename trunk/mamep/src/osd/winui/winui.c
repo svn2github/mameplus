@@ -969,7 +969,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 //	mame_opts = mame_options_init(mame_win_options);
 
 	// Tell mame were to get the INIs
-	//mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
+	// mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
 //	SetDirectories(mame_opts);
 
 	// add image specific device options
@@ -1006,7 +1006,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	time(&start);
 	windows_osd_interface osd;
 	osd.register_options(mame_opts);
-	mame_execute(mame_opts, osd);
+	machine_manager::instance(mame_opts, osd);
 	// Calc the duration
 	time(&end);
 	elapsedtime = end - start;

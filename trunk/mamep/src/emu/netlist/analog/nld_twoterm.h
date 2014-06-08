@@ -98,23 +98,21 @@ public:
 
 	ATTR_HOT inline void set(const double G, const double V, const double I)
 	{
-		m_P.m_go = m_N.m_go = m_P.m_gt = m_N.m_gt = G;
-		m_N.m_Idr = ( -V) * G + I;
-		m_P.m_Idr = (  V) * G - I;
+	    /*      GO, GT, I                */
+		m_P.set( G,  G, (  V) * G - I);
+		m_N.set( G,  G, ( -V) * G + I);
 	}
 
-	ATTR_HOT inline double deltaV() { return m_P.net().Q_Analog()- m_N.net().Q_Analog(); }
+	ATTR_HOT inline double deltaV()
+	{
+	    return m_P.net().as_analog().Q_Analog() - m_N.net().as_analog().Q_Analog();
+	}
 
 	ATTR_HOT void set_mat(double a11, double a12, double a21, double a22, double r1, double r2)
 	{
-		m_P.m_gt = a11;
-		m_P.m_go = -a12;
-		m_N.m_gt = a22;
-		m_N.m_go = -a21;
-
-		m_P.m_Idr = -r1;
-		m_N.m_Idr = -r2;
-
+        /*      GO, GT, I                */
+	    m_P.set(-a12, a11, -r1);
+	    m_N.set(-a21, a22, -r2);
 	}
 
 protected:
@@ -137,7 +135,6 @@ public:
 	inline void set_R(const double R)
 	{
 	    set(1.0 / R, 0.0, 0.0);
-	    //update_dev();
 	}
 
 protected:

@@ -65,7 +65,6 @@ TOOLS += \
 	nltool$(EXE) \
 
 
-
 #-------------------------------------------------
 # romcmp
 #-------------------------------------------------
@@ -221,3 +220,4 @@ NLTOOLOBJS = \
 nltool$(EXE): $(NLTOOLOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+

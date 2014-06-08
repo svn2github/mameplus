@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "includes/cps3.h"
+#include "cps3.h"
 
 
 // device type definition
@@ -47,15 +47,11 @@ void cps3_sound_device::device_start()
 
 void cps3_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
 {
-	// the actual 'user5' region only exists on the nocd sets, on the others it's allocated in the initialization.
-	// it's a shared gfx/sound region, so can't be allocated as part of the sound device.
-	m_base = (INT8*)machine().driver_data<cps3_state>()->m_user5region;
-
 	/* Clear the buffers */
 	memset(outputs[0], 0, samples*sizeof(*outputs[0]));
 	memset(outputs[1], 0, samples*sizeof(*outputs[1]));
 
-	for (int i = 0; i < CPS3_VOICES; i ++)
+	for (int i = 0; i < 16; i ++)
 	{
 		if (m_key & (1 << i))
 		{
@@ -113,8 +109,7 @@ void cps3_sound_device::sound_stream_update(sound_stream &stream, stream_sample_
 					}
 					else
 					{
-						// key off
-						m_key &= ~(1 << i);
+						// sample end (don't force key off)
 						break;
 					}
 				}
@@ -147,7 +142,7 @@ WRITE32_MEMBER( cps3_sound_device::cps3_sound_w )
 
 		UINT16 key = data >> 16;
 
-		for (int i = 0; i < CPS3_VOICES; i++)
+		for (int i = 0; i < 16; i++)
 		{
 			// Key off -> Key on
 			if ((key & (1 << i)) && !(m_key & (1 << i)))

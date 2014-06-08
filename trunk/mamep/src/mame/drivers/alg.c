@@ -27,7 +27,6 @@
 #include "render.h"
 #include "includes/amiga.h"
 #include "machine/ldstub.h"
-#include "machine/6526cia.h"
 #include "machine/nvram.h"
 #include "machine/amigafdc.h"
 
@@ -54,19 +53,11 @@ public:
 	TIMER_CALLBACK_MEMBER(response_timer);
 
 protected:
-	// driver_device overrides
-	virtual void machine_start();
-
 	// amiga_state overrides
-	virtual void vblank();
-	virtual void serdat_w(UINT16 data);
 	virtual void potgo_w(UINT16 data);
 
 private:
 	required_device<sony_ldp1450_device> m_laserdisc;
-
-	emu_timer *m_serial_timer;
-	UINT8 m_serial_timer_active;
 
 	UINT16 m_input_select;
 };
@@ -98,6 +89,7 @@ static int get_lightgun_pos(screen_device &screen, int player, int *x, int *y)
 
 
 
+
 /*************************************
  *
  *  Video startup
@@ -114,74 +106,6 @@ VIDEO_START_MEMBER(alg_state,alg)
 	amiga_set_genlock_color(machine(), 4096);
 }
 
-
-
-/*************************************
- *
- *  Machine start/reset
- *
- *************************************/
-
-void alg_state::machine_start()
-{
-	amiga_state::machine_start();
-
-	m_serial_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(alg_state::response_timer),this));
-	m_serial_timer_active = FALSE;
-}
-
-
-
-/*************************************
- *
- *  Laserdisc communication
- *
- *************************************/
-
-TIMER_CALLBACK_MEMBER(alg_state::response_timer)
-{
-	/* if we still have data to send, do it now */
-	if (m_laserdisc->data_available_r() == ASSERT_LINE)
-	{
-		UINT8 data = m_laserdisc->data_r();
-		if (data != 0x0a)
-			osd_printf_debug("Sending serial data = %02X\n", data);
-		serial_in_w(data);
-	}
-
-	/* if there's more to come, set another timer */
-	if (m_laserdisc->data_available_r() == ASSERT_LINE)
-		m_serial_timer->adjust(serial_char_period());
-	else
-		m_serial_timer_active = FALSE;
-}
-
-
-void alg_state::vblank()
-{
-	amiga_state::vblank();
-
-	/* if we have data available, set a timer to read it */
-	if (!m_serial_timer_active && m_laserdisc->data_available_r() == ASSERT_LINE)
-	{
-		m_serial_timer->adjust(serial_char_period());
-		m_serial_timer_active = TRUE;
-	}
-}
-
-
-void alg_state::serdat_w(UINT16 data)
-{
-	/* write to the laserdisc player */
-	m_laserdisc->data_w(data & 0xff);
-
-	/* if we have data available, set a timer to read it */
-	if (!m_serial_timer_active && m_laserdisc->data_available_r() == ASSERT_LINE)
-	{
-		m_serial_timer->adjust(serial_char_period());
-		m_serial_timer_active = TRUE;
-	}
-}
 
 
 
@@ -368,16 +292,14 @@ static MACHINE_CONFIG_START( alg_r1, alg_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
+	/* video hardware */
+	MCFG_FRAGMENT_ADD(ntsc_video)
+
 	MCFG_LASERDISC_LDP1450_ADD("laserdisc")
+	MCFG_LASERDISC_SCREEN("screen")
 	MCFG_LASERDISC_OVERLAY_DRIVER(512*2, 262, amiga_state, screen_update_amiga)
 	MCFG_LASERDISC_OVERLAY_CLIP((129-8)*2, (449+8-1)*2, 44-8, 244+8-1)
 	MCFG_LASERDISC_OVERLAY_PALETTE("palette")
-
-	/* video hardware */
-	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")
-	MCFG_SCREEN_REFRESH_RATE(59.997)
-	MCFG_SCREEN_SIZE(512*2, 262)
-	MCFG_SCREEN_VISIBLE_AREA((129-8)*2, (449+8-1)*2, 44-8, 244+8-1)
 
 	MCFG_PALETTE_ADD("palette", 4097)
 	MCFG_PALETTE_INIT_OWNER(alg_state,amiga)
@@ -398,36 +320,32 @@ static MACHINE_CONFIG_START( alg_r1, alg_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	/* cia */
-	MCFG_DEVICE_ADD("cia_0", LEGACY_MOS8520, amiga_state::CLK_E_NTSC)
+	MCFG_DEVICE_ADD("cia_0", MOS8520, amiga_state::CLK_E_NTSC)
 	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, cia_0_irq))
 	MCFG_MOS6526_PA_INPUT_CALLBACK(IOPORT("FIRE"))
 	MCFG_MOS6526_PA_OUTPUT_CALLBACK(WRITE8(amiga_state, cia_0_port_a_write))
-	MCFG_DEVICE_ADD("cia_1", LEGACY_MOS8520, amiga_state::CLK_E_NTSC)
+	MCFG_DEVICE_ADD("cia_1", MOS8520, amiga_state::CLK_E_NTSC)
 	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, cia_1_irq))
 
 	/* fdc */
 	MCFG_DEVICE_ADD("fdc", AMIGA_FDC, amiga_state::CLK_7M_NTSC)
-	MCFG_AMIGA_FDC_INDEX_CALLBACK(DEVWRITELINE("cia_1", legacy_mos6526_device, flag_w))
+	MCFG_AMIGA_FDC_INDEX_CALLBACK(DEVWRITELINE("cia_1", mos8520_device, flag_w))
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( alg_r2, alg_r1 )
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(main_map_r2)
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( picmatic, alg_r1 )
-
 	/* adjust for PAL specs */
 	MCFG_CPU_REPLACE("maincpu", M68000, amiga_state::CLK_7M_PAL)
 	MCFG_CPU_PROGRAM_MAP(main_map_picmatic)
 
-	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_REFRESH_RATE(50)
-	MCFG_SCREEN_SIZE(512*2, 312)
-	MCFG_SCREEN_VISIBLE_AREA((129-8)*2, (449+8-1)*2, 44-8, 300+8-1)
+	MCFG_DEVICE_REMOVE("screen")
+	MCFG_FRAGMENT_ADD(pal_video)
 
 	MCFG_DEVICE_MODIFY("amiga")
 	MCFG_DEVICE_CLOCK(amiga_state::CLK_C1_PAL)
@@ -629,13 +547,13 @@ ROM_END
 
 DRIVER_INIT_MEMBER( alg_state, ntsc )
 {
-	m_agnus_id = AGNUS_HR_NTSC;
+	m_agnus_id = AGNUS_NTSC;
 	m_denise_id = DENISE;
 }
 
 DRIVER_INIT_MEMBER( alg_state, pal )
 {
-	m_agnus_id = AGNUS_HR_PAL;
+	m_agnus_id = AGNUS_PAL;
 	m_denise_id = DENISE;
 }
 

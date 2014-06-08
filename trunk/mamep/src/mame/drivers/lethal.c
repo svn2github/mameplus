@@ -462,24 +462,6 @@ static INPUT_PORTS_START( lethalene ) /* European region does not have non-engli
 		PORT_DIPUNUSED_DIPLOC( 0x10, 0x10, "DSW:4")
 INPUT_PORTS_END
 
-static const gfx_layout lethal_6bpp =
-{
-	16,16,
-	RGN_FRAC(1,2),
-	6,
-	{ RGN_FRAC(1,2)+8,RGN_FRAC(1,2)+0, 8, 0, 24, 16 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7,
-	8*32+0, 8*32+1, 8*32+2, 8*32+3, 8*32+4, 8*32+5, 8*32+6, 8*32+7 },
-	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32,
-		16*32, 17*32, 18*32, 19*32, 20*32, 21*32, 22*32, 23*32 },
-	128*8
-};
-
-/* we use this decode instead of the one done by the sprite video start due to it being 6bpp */
-static GFXDECODE_START( lethal )
-	GFXDECODE_ENTRY( "gfx2", 0, lethal_6bpp,   0x000/*0x400*/, 256  ) /* sprites tiles */
-GFXDECODE_END
-
 
 /* sound */
 
@@ -511,30 +493,13 @@ void lethal_state::machine_reset()
 
 static const k056832_interface lethalen_k056832_intf =
 {
-	"gfx1", 1,
+	"gfx1", 0,
 	K056832_BPP_8LE,
 	1, 0,
 	KONAMI_ROM_DEINTERLEAVE_NONE,
 	lethalen_tile_callback, "none"
 };
 
-static const k05324x_interface lethalen_k05324x_intf =
-{
-	"gfx3", 2,
-	NORMAL_PLANE_ORDER,
-	95, 0,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	lethalen_sprite_callback
-};
-
-static const k05324x_interface lethalej_k05324x_intf =
-{
-	"gfx3", 2,
-	NORMAL_PLANE_ORDER,
-	-105, 0,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	lethalen_sprite_callback
-};
 
 static MACHINE_CONFIG_START( lethalen, lethal_state )
 
@@ -555,7 +520,7 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
-	MCFG_GFXDECODE_ADD("gfxdecode", "palette", lethal)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -573,9 +538,13 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	MCFG_K056832_ADD("k056832", lethalen_k056832_intf)
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
-	MCFG_K053244_ADD("k053244", lethalen_k05324x_intf)
-	MCFG_K053244_GFXDECODE("gfxdecode")
-	MCFG_K053244_PALETTE("palette")
+
+	MCFG_DEVICE_ADD("k053244", K053244, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K05324X_BPP(6)
+	MCFG_K05324X_OFFSETS(95, 0)
+	MCFG_K05324X_CB(lethal_state, sprite_callback)
+
 	MCFG_K054000_ADD("k054000")
 
 	/* sound hardware */
@@ -592,10 +561,8 @@ static MACHINE_CONFIG_DERIVED( lethalej, lethalen )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(224, 512-1, 16, 240-1)
 
-	MCFG_DEVICE_REMOVE("k053244")
-	MCFG_K053244_ADD("k053244", lethalej_k05324x_intf)
-	MCFG_K053244_GFXDECODE("gfxdecode")
-	MCFG_K053244_PALETTE("palette")
+	MCFG_DEVICE_MODIFY("k053244")
+	MCFG_K05324X_OFFSETS(-105, 0)
 MACHINE_CONFIG_END
 
 ROM_START( lethalen )   // US version UAE
@@ -611,16 +578,10 @@ ROM_START( lethalen )   // US version UAE
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -642,16 +603,10 @@ ROM_START( lethalenub ) // US version UAB
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -673,16 +628,10 @@ ROM_START( lethalenua ) // US version UAA
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -704,16 +653,10 @@ ROM_START( lethalenux ) // US version ?, proto / hack?, very different to other 
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -735,16 +678,10 @@ ROM_START( lethaleneab )    // Euro ver. EAB
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -766,16 +703,10 @@ ROM_START( lethaleneae )    // Euro ver. EAE
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -797,16 +728,10 @@ ROM_START( lethalenj )  // Japan version JAD
 	ROM_LOAD32_WORD( "191a07", 0x200002, 0x100000, CRC(1dad184c) SHA1(b2c4a8e48084005056aef2c8eaccb3d2eca71b73) )
 	ROM_LOAD32_WORD( "191a09", 0x200000, 0x100000, CRC(e2028531) SHA1(63ccce7855d829763e9e248a6c3eb6ea89ab17ee) )
 
-	ROM_REGION( 0x400000, "gfx2", ROMREGION_ERASE00 )   /* sprites - fake 6bpp decode is done from here */
-	ROM_LOAD( "191a04", 0x000000, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
-	ROM_LOAD( "191a05", 0x100000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
-	ROM_LOAD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
-
-	ROM_REGION( 0x200000, "gfx3", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0,0, 0x200000)
-
-	ROM_REGION( 0x200000, "gfx4", ROMREGION_ERASE00 )
-	ROM_COPY("gfx2",0x200000,0, 0x200000)
+	ROM_REGION( 0x400000, "k053244", ROMREGION_ERASE00 )   /* sprites */
+	ROM_LOAD32_WORD( "191a05", 0x000000, 0x100000, CRC(f2e3b58b) SHA1(0bbc2fe87a4fd00b5073a884bcfebcf9c2c402ad) )
+	ROM_LOAD32_WORD( "191a04", 0x000002, 0x100000, CRC(5c3eeb2b) SHA1(33ea8b3968b78806334b5a0aab3a2c24e45c604e) )
+	ROM_LOAD32_WORD( "191a06", 0x200000, 0x100000, CRC(ee11fc08) SHA1(ec6dd684e8261b181d65b8bf1b9e97da5c4468f7) )
 
 	ROM_REGION( 0x200000, "k054539", 0 )    /* K054539 samples */
 	ROM_LOAD( "191a03", 0x000000, 0x200000, CRC(9b13fbe8) SHA1(19b02dbd9d6da54045b0ba4dfe7b282c72745c9c))
@@ -816,18 +741,12 @@ ROM_START( lethalenj )  // Japan version JAD
 ROM_END
 
 
-DRIVER_INIT_MEMBER(lethal_state,lethalen)
-{
-	konamid_rom_deinterleave_2_half(machine(), "gfx2");
-	konamid_rom_deinterleave_2(machine(), "gfx4");
-}
-
-GAME( 1992, lethalen,   0,        lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAE, 11/19/92 15:04)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UE to eeprom
-GAME( 1992, lethalenub, lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAB, 09/01/92 11:12)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UB to eeprom
-GAME( 1992, lethalenua, lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAA, 08/17/92 21:38)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UA to eeprom
-GAME( 1992, lethalenux, lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver unknown, US, 08/06/92 15:11, hacked/proto?)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UA to eeprom but earlier than suspected UAA set, might be a proto, might be hacked, fails rom test, definitely a good dump, another identical set was found in Italy
-GAME( 1992, lethaleneae,lethalen, lethalen, lethalene,lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAE, 11/19/92 16:24)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EE to eeprom
-GAME( 1992, lethaleneab,lethalen, lethalen, lethalene,lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAB, 10/14/92 19:53)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EC to eeprom?!
+GAME( 1992, lethalen,   0,        lethalen, lethalen,  driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAE, 11/19/92 15:04)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UE to eeprom
+GAME( 1992, lethalenub, lethalen, lethalen, lethalen,  driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAB, 09/01/92 11:12)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UB to eeprom
+GAME( 1992, lethalenua, lethalen, lethalen, lethalen,  driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAA, 08/17/92 21:38)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UA to eeprom
+GAME( 1992, lethalenux, lethalen, lethalen, lethalen,  driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver unknown, US, 08/06/92 15:11, hacked/proto?)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UA to eeprom but earlier than suspected UAA set, might be a proto, might be hacked, fails rom test, definitely a good dump, another identical set was found in Italy
+GAME( 1992, lethaleneae,lethalen, lethalen, lethalene, driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAE, 11/19/92 16:24)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EE to eeprom
+GAME( 1992, lethaleneab,lethalen, lethalen, lethalene, driver_device, 0, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAB, 10/14/92 19:53)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EC to eeprom?!
 
 // different mirror / display setup
-GAME( 1992, lethalenj,  lethalen, lethalej, lethalenj,lethal_state, lethalen, ORIENTATION_FLIP_X, "Konami", "Lethal Enforcers (ver JAD, 12/04/92 17:16)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes JC to eeprom?!
+GAME( 1992, lethalenj,  lethalen, lethalej, lethalenj, driver_device, 0, ORIENTATION_FLIP_X, "Konami", "Lethal Enforcers (ver JAD, 12/04/92 17:16)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes JC to eeprom?!

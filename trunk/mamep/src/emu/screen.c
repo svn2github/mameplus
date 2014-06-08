@@ -338,6 +338,7 @@ void screen_device::static_set_type(device_t &device, screen_type_enum type)
 void screen_device::static_set_raw(device_t &device, UINT32 pixclock, UINT16 htotal, UINT16 hbend, UINT16 hbstart, UINT16 vtotal, UINT16 vbend, UINT16 vbstart)
 {
 	screen_device &screen = downcast<screen_device &>(device);
+	screen.m_clock = pixclock;
 	screen.m_refresh = HZ_TO_ATTOSECONDS(pixclock) * htotal * vtotal;
 	screen.m_vblank = screen.m_refresh / vtotal * (vtotal - (vbstart - vbend));
 	screen.m_width = htotal;
@@ -491,9 +492,9 @@ void screen_device::device_validity_check(validity_checker &valid) const
 
 	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
 	if (m_palette == NULL && texformat == TEXFORMAT_PALETTE16)
-		osd_printf_error("Screen does not have palette defined\n");
+		osd_printf_error(_("Screen does not have palette defined\n"));
 	if (m_palette != NULL && texformat == TEXFORMAT_RGB32)
-		osd_printf_warning("Screen does not need palette defined\n");
+		osd_printf_warning(_("Screen does not need palette defined\n"));
 }
 
 
@@ -639,7 +640,7 @@ void screen_device::device_timer(emu_timer &timer, device_timer_id id, int param
 			vblank_end();
 			break;
 
-		// first visible scanline
+		// first scanline
 		case TID_SCANLINE0:
 			reset_partial_updates();
 			break;
@@ -695,22 +696,30 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	m_scantime = frame_period / height;
 	m_pixeltime = frame_period / (height * width);
 
-	// if there has been no VBLANK time specified in the MACHINE_DRIVER, compute it now
-	// from the visible area, otherwise just used the supplied value
-	if (m_vblank == 0 && !m_oldstyle_vblank_supplied)
-		m_vblank_period = m_scantime * (height - visarea.height());
-	else
+	// if an old style VBLANK_TIME was specified in the MACHINE_CONFIG,
+	// use it; otherwise calculate the VBLANK period from the visible area
+	if (m_oldstyle_vblank_supplied)
 		m_vblank_period = m_vblank;
+	else
+		m_vblank_period = m_scantime * (height - visarea.height());
 
-	// if we are on scanline 0 already, reset the update timer immediately
-	// otherwise, defer until the next scanline 0
+	// we are now fully configured with the new parameters
+	// and can safely call time_until_pos(), etc.
+
+	// if the frame period was reduced so that we are now past the end of the frame,
+	// call the VBLANK start timer now; otherwise, adjust it for the future
+	attoseconds_t delta = (machine().time() - m_vblank_start_time).as_attoseconds();
+	if (delta >= m_frame_period)
+		vblank_begin();
+	else
+		m_vblank_begin_timer->adjust(time_until_vblank_start());
+
+	// if we are on scanline 0 already, call the scanline 0 timer
+	// by hand now; otherwise, adjust it for the future
 	if (vpos() == 0)
-		m_scanline0_timer->adjust(attotime::zero);
+		reset_partial_updates();
 	else
 		m_scanline0_timer->adjust(time_until_pos(0));
-
-	// start the VBLANK timer
-	m_vblank_begin_timer->adjust(time_until_vblank_start());
 
 	// adjust speed if necessary
 	machine().video().update_refresh_speed();
@@ -738,7 +747,7 @@ void screen_device::reset_origin(int beamy, int beamx)
 
 	// if we are resetting relative to (visarea.max_y + 1, 0) == VBLANK start,
 	// call the VBLANK start timer now; otherwise, adjust it for the future
-	if (beamy == m_visarea.max_y + 1 && beamx == 0)
+	if (beamy == ((m_visarea.max_y + 1) % m_height) && beamx == 0)
 		vblank_begin();
 	else
 		m_vblank_begin_timer->adjust(time_until_vblank_start());
@@ -901,48 +910,49 @@ bool screen_device::update_partial(int scanline)
 		}
 	}
 
-	// skip if less than the lowest so far
+	// skip if we already rendered this line
 	if (scanline < m_last_partial_scan)
 	{
-		LOG_PARTIAL_UPDATES(("skipped because less than previous\n"));
-		return FALSE;
+		LOG_PARTIAL_UPDATES(("skipped because line was already rendered\n"));
+		return false;
 	}
 
-	// set the start/end scanlines
+	// set the range of scanlines to render
 	rectangle clip = m_visarea;
 	if (m_last_partial_scan > clip.min_y)
 		clip.min_y = m_last_partial_scan;
 	if (scanline < clip.max_y)
 		clip.max_y = scanline;
 
-	// render if necessary
-	bool result = false;
-	if (clip.min_y <= clip.max_y)
+	// skip if entirely outside of visible area
+	if (clip.min_y > clip.max_y)
 	{
-		UINT32 flags = UPDATE_HAS_NOT_CHANGED;
-
-		g_profiler.start(PROFILER_VIDEO);
-		LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
-
-		screen_bitmap &curbitmap = m_bitmap[m_curbitmap];
-		switch (curbitmap.format())
-		{
-			default:
-			case BITMAP_FORMAT_IND16:   flags = m_screen_update_ind16(*this, curbitmap.as_ind16(), clip);   break;
-			case BITMAP_FORMAT_RGB32:   flags = m_screen_update_rgb32(*this, curbitmap.as_rgb32(), clip);   break;
-		}
-
-		m_partial_updates_this_frame++;
-		g_profiler.stop();
-
-		// if we modified the bitmap, we have to commit
-		m_changed |= ~flags & UPDATE_HAS_NOT_CHANGED;
-		result = true;
+		LOG_PARTIAL_UPDATES(("skipped because outside of visible area\n"));
+		return false;
 	}
+
+	// otherwise, render
+	LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
+	g_profiler.start(PROFILER_VIDEO);
+
+	UINT32 flags = UPDATE_HAS_NOT_CHANGED;
+	screen_bitmap &curbitmap = m_bitmap[m_curbitmap];
+	switch (curbitmap.format())
+	{
+		default:
+		case BITMAP_FORMAT_IND16:   flags = m_screen_update_ind16(*this, curbitmap.as_ind16(), clip);   break;
+		case BITMAP_FORMAT_RGB32:   flags = m_screen_update_rgb32(*this, curbitmap.as_rgb32(), clip);   break;
+	}
+
+	m_partial_updates_this_frame++;
+	g_profiler.stop();
+
+	// if we modified the bitmap, we have to commit
+	m_changed |= ~flags & UPDATE_HAS_NOT_CHANGED;
 
 	// remember where we left off
 	m_last_partial_scan = scanline + 1;
-	return result;
+	return true;
 }
 
 
@@ -1139,7 +1149,7 @@ void screen_device::vblank_begin()
 	// reset the VBLANK start timer for the next frame
 	m_vblank_begin_timer->adjust(time_until_vblank_start());
 
-	// if no VBLANK period, call the VBLANK end callback immedietely, otherwise reset the timer
+	// if no VBLANK period, call the VBLANK end callback immediately, otherwise reset the timer
 	if (m_vblank_period == 0)
 		vblank_end();
 	else

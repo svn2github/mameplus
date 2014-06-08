@@ -619,7 +619,7 @@ void neogeo_state::decrypt_matrimbl()
 	kof2002_decrypt_68k();
 	cthd2003_c(0);
 	neogeo_sfix_decrypt();
-	m_fixed_layer_bank_type = 2;
+	m_sprgen->m_fixed_layer_bank_type = 2;
 }
 
 

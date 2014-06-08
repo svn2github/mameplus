@@ -415,7 +415,6 @@ void netlist_parser::device(const pstring &dev_type)
 	netlist_device_t *dev;
 	nl_util::pstring_list termlist = f->term_param_list();
 	nl_util::pstring_list def_params = f->def_params();
-	token_t tok;
 
 	int cnt;
 
@@ -433,7 +432,7 @@ void netlist_parser::device(const pstring &dev_type)
 
 		NL_VERBOSE_OUT(("Defparam: %s\n", paramfq.cstr()));
 		require_token(m_tok_comma);
-		tok = get_token();
+		token_t tok = get_token();
 		if (tok.is_type(STRING))
 		{
 			m_setup.register_param(paramfq, tok.str());
@@ -446,7 +445,7 @@ void netlist_parser::device(const pstring &dev_type)
 		cnt++;
 	}
 
-	tok = get_token();
+	token_t tok = get_token();
 	cnt = 0;
 	while (tok.is(m_tok_comma) && cnt < termlist.count())
 	{
@@ -458,7 +457,7 @@ void netlist_parser::device(const pstring &dev_type)
 		tok = get_token();
 	}
 	if (cnt != termlist.count())
-		fatalerror("netlist: input count mismatch for %s - expected %d found %d\n", devname.cstr(), termlist.count(), cnt);
+		m_setup.netlist().error("netlist: input count mismatch for %s - expected %d found %d\n", devname.cstr(), termlist.count(), cnt);
 	require_token(tok, m_tok_param_right);
 }
 

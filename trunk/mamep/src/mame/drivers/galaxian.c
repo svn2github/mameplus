@@ -857,7 +857,6 @@ WRITE8_MEMBER(galaxian_state::froggrmc_sound_control_w)
 }
 
 
-
 /*************************************
  *
  *  Frog (Falcon) I/O
@@ -1772,7 +1771,6 @@ static ADDRESS_MAP_START( sfx_sample_portmap, AS_IO, 8, galaxian_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0xff) AM_READWRITE(sfx_sample_io_r, sfx_sample_io_w)
 ADDRESS_MAP_END
-
 
 
 /*************************************
@@ -5473,6 +5471,64 @@ static MACHINE_CONFIG_DERIVED( scobra, konami_base )
 	MCFG_CPU_PROGRAM_MAP(scobra_map)
 MACHINE_CONFIG_END
 
+/*
+
+Quaak (Frogger bootleg)
+=======================
+
+Dumper: Martin Ponweiser / m.ponweiser@gmail.com
+
+Top Board (Sound)
+-----------------
+
+Silkscreened label: "09041"
+
+18-Pin Connector, Frogger Pinout (https://www.mikesarcade.com/cgi-bin/spies.cgi?action=url&type=pinout&page=Frogger.txt)
+Note the difference to the Sega Pinout: B18 is 12V, NOT -5V.
+
+1 x 6-DIP Switch (https://www.mikesarcade.com/cgi-bin/spies.cgi?action=url&type=dip&page=Frogger.txt)
+
+1 x Z8400, Z80 CPU
+1 x XTAL 14.31818 Mhz
+2 x P8255A Intel
+2 x AY-3-8910
+3 x D2716-6 EPROMs labelled: "A", "B", "C"
+2 x MM2114N-15L
+1 x LM377N
+
+
+Bottom Board (Main)
+-------------------
+
+Silkscreened label: "10041"
+
+1 x Z8400, Z80 CPU
+8 x MM2114N-15L
+6 x D2716-6 ("1F"..."6F"), 2 empty sockets
+2 x D2716-6 ("7H","8H")
+1 x N82S123N 7920 (socketed, yet undumped)
+1 x XTAL 18.4320 Mhz
+1 x 555
+5 x D2115A
+
+
+2014-05-08: ROMS dumped with EETools MegaMax
+
+(note 2x AY even if one is unused by the game, board was probably made for Super Cobra?)
+
+*/
+
+
+static MACHINE_CONFIG_DERIVED( quaak, konami_base )
+	MCFG_FRAGMENT_ADD(konami_sound_2x_ay8910)
+
+	MCFG_DEVICE_MODIFY("8910.0")
+	MCFG_AY8910_PORT_B_READ_CB(READ8(galaxian_state, frogger_sound_timer_r))
+
+	/* alternate memory map */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(scobra_map)
+MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( anteater, scobra )
 
@@ -6403,6 +6459,7 @@ DRIVER_INIT_MEMBER(galaxian_state,scobra)
 }
 
 
+
 DRIVER_INIT_MEMBER(galaxian_state,losttomb)
 {
 	/* video extensions */
@@ -6422,6 +6479,13 @@ DRIVER_INIT_MEMBER(galaxian_state,frogger)
 	/* decrypt */
 	decode_frogger_sound();
 	decode_frogger_gfx();
+}
+
+
+DRIVER_INIT_MEMBER(galaxian_state,quaak)
+{
+	/* video extensions */
+	common_init(NULL, &galaxian_state::quaak_draw_background, &galaxian_state::frogger_extend_tile_info, &galaxian_state::frogger_extend_sprite_info);
 }
 
 
@@ -6846,6 +6910,23 @@ ROM_START( zerotime )
 	ROM_LOAD( "6l.bpr",       0x0000, 0x0020, CRC(c3ac9467) SHA1(f382ad5a34d282056c78a5ec00c30ec43772bae2) )
 ROM_END
 
+// Late-to-market bootleg with PCB mods to use a single program rom
+// Datamat is the old name of Datasat, a technical service and distributor of arcade PCB's from the 80's and 90's.
+// A lot of the bootleg PCB's around Spain have Datamat stickers on the roms. It was one of the most important PCB sellers/distributors in the country from the era.
+// Datamat still operate today as Datasat http://datasat.info/
+ROM_START( zerotimed )
+	ROM_REGION( 0x4000, "maincpu", 0 )
+	ROM_LOAD( "zerotime_datamat.bin",  0x0000, 0x4000, CRC(be60834b) SHA1(426cb27a38fd99485481cb74c7372df8b7c8832a) )
+
+	ROM_REGION( 0x1000, "gfx1", 0 )
+	ROM_LOAD( "ztc-2.016",    0x0000, 0x0800, CRC(1b13ca05) SHA1(6999068771dacc6bf6c17eb858af593a929d09af) )
+	ROM_LOAD( "ztc-1.016",    0x0800, 0x0800, CRC(5cd7df03) SHA1(77873408c89546a17b1da3f64b7e96e314fadb17) )
+
+	ROM_REGION( 0x0020, "proms", 0 )
+	ROM_LOAD( "6l.bpr",       0x0000, 0x0020, CRC(c3ac9467) SHA1(f382ad5a34d282056c78a5ec00c30ec43772bae2) )
+ROM_END
+
+
 ROM_START( starfght )
 	ROM_REGION( 0x4000, "maincpu", 0 )
 	ROM_LOAD( "ja.1",         0x0000, 0x0400, CRC(c6ab558b) SHA1(2b707e332c57b9ec6a61220ab2b79ed5076d0628) )
@@ -6903,7 +6984,7 @@ ROM_START( galaxbsf2 )
 	ROM_LOAD( "gal09.ic13",        0x2400, 0x0400, CRC(5876f695) SHA1(e8c0d13066cfe4a409293b9e1380513099b35330) )
 
 	ROM_REGION( 0x0400, "unknown", 0 )
-	ROM_LOAD( "gal00eg.ic4",       0x0000, 0x0400, CRC(1038467f) SHA1(e34cc53a1203335cf9c9a94c3f96cab5a444a34a) )   // the first 0x100 bytes of this is ic41, the rest is different? should it bank in somehow to give extra features??
+	ROM_LOAD( "gal00eg(__galaxbsf2).ic4", 0x0000, 0x0400, CRC(1038467f) SHA1(e34cc53a1203335cf9c9a94c3f96cab5a444a34a) )   // the first 0x100 bytes of this is ic41, the rest is different? should it bank in somehow to give extra features??
 
 	ROM_REGION( 0x1000, "gfx1", 0 )
 	ROM_LOAD( "galaxian.1h",       0x0000, 0x0800, CRC(39fb43a4) SHA1(4755609bd974976f04855d51e08ec0d62ab4bc07) )
@@ -9278,6 +9359,28 @@ ROM_START( froggrs )
 	ROM_LOAD( "pr-91.6l",     0x0000, 0x0020, CRC(413703bf) SHA1(66648b2b28d3dcbda5bdb2605d1977428939dd3c) )
 ROM_END
 
+ROM_START( quaak )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "1f.bin",   0x0000, 0x0800, CRC(5d0e2716) SHA1(c484ae162bfe5ef9d5d2a6930c9c476394e70bbd) )
+	ROM_LOAD( "2f.bin",   0x0800, 0x0800, CRC(cfbf8219) SHA1(400ba52d9a2977344842fdb8c40d8629cb16110b) )
+	ROM_LOAD( "3f.bin",   0x1000, 0x0800, CRC(cbb17731) SHA1(7103c4ce0a103b4916cf88c69a24f0f5cc1e2628) )
+	ROM_LOAD( "4f.bin",   0x1800, 0x0800, CRC(817ff82d) SHA1(0111af02ab8fa4f52877e5539a954b37550ceb40) )
+	ROM_LOAD( "5f.bin",   0x2000, 0x0800, CRC(5a8dd54b) SHA1(2e7769fc1ccc540f1f2552d7d427c6fdb1174488) )
+	ROM_LOAD( "6f.bin",   0x2800, 0x0800, CRC(e1d46369) SHA1(0da5f1918cd711e5e593c8b04103371936665c2f) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "a.bin",  0x0000, 0x0800, CRC(b4c2180e) SHA1(25894481ef3b55b11a875ab08c665d5d541f1a06) )
+	ROM_LOAD( "b.bin",  0x0800, 0x0800, CRC(a1aae0bc) SHA1(1cb06b0cfde9fdd7f176f4a51de801d97785d279) )
+	ROM_LOAD( "c.bin",  0x1000, 0x0800, CRC(9d88fd0a) SHA1(ecfb8ddf67cd7755cbdbc1cc5e7788e1b5b3c882) )
+
+	ROM_REGION( 0x1000, "gfx1", 0 )
+	ROM_LOAD( "7h.bin",  0x0000, 0x0800, CRC(28350f17) SHA1(c1999d1dadc243ed742610db39a278acd8422a73) )
+	ROM_LOAD( "8h.bin",  0x0800, 0x0800, CRC(e080f942) SHA1(45371ba3399101bd4fcd4819c8618d8cf2078723) )
+
+	ROM_REGION( 0x0020, "proms", 0 )
+	ROM_LOAD( "n82s123.bin",     0x0000, 0x0020, CRC(a35ec965) SHA1(ea5851f3e0e54f043347c7ae9869db8f6711d031) )
+ROM_END
+
 ROM_START( turtles )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "turt_vid.2c",  0x0000, 0x1000, CRC(ec5e61fb) SHA1(3ca89800fda7a7e61f54d71d5302908be2706def) )
@@ -10498,6 +10601,7 @@ GAME( 1979, galap4,   galaxian, galaxian, superg, galaxian_state,   galaxian, RO
 GAME( 1979, swarm,    galaxian, galaxian, swarm, galaxian_state,    galaxian, ROT90,  "bootleg? (Subelectro)", "Swarm (bootleg?)", GAME_SUPPORTS_SAVE )
 GAME( 1980, astrians, galaxian, galaxian, swarm,  galaxian_state,   galaxian, ROT90,  "bootleg (BGV Ltd.)", "Astrians (clone of Swarm)", GAME_SUPPORTS_SAVE )
 GAME( 1979, zerotime, galaxian, galaxian, zerotime, galaxian_state, galaxian, ROT90,  "bootleg? (Petaco S.A.)", "Zero Time", GAME_SUPPORTS_SAVE )
+GAME( 1979, zerotimed,galaxian, galaxian, zerotime, galaxian_state, galaxian, ROT90,  "bootleg (Datamat)", "Zero Time (Datamat)", GAME_SUPPORTS_SAVE ) // a 1994 bootleg of the Petaco bootleg
 GAME( 1979, starfght, galaxian, galaxian, swarm, galaxian_state,    galaxian, ROT90,  "bootleg (Jeutel)", "Star Fighter", GAME_SUPPORTS_SAVE )
 GAME( 1979, galaxbsf, galaxian, galaxian, galaxian, galaxian_state, galaxian, ROT90,  "bootleg", "Galaxian (bootleg, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1979, galaxianbl,galaxian,galaxian, galaxianbl,galaxian_state,galaxian, ROT90,  "bootleg", "Galaxian (bootleg, set 2)", GAME_SUPPORTS_SAVE )
@@ -10662,6 +10766,7 @@ GAME( 1981, froggers, frogger,  froggers, frogger, galaxian_state,  froggers, RO
 GAME( 1981, frogf,    frogger,  frogf,    frogger, galaxian_state,  froggers, ROT90,  "bootleg (Falcon)", "Frog (Falcon bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1981, frogg,    frogger,  galaxian, frogg, galaxian_state,    frogg,    ROT90,  "bootleg", "Frog (Galaxian hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1981, froggrs,  frogger,  froggers, frogger,  galaxian_state, froggrs,  ROT90,  "bootleg (Coin Music)", "Frogger (Scramble hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1981, quaak,    frogger,  quaak,    frogger,  galaxian_state, quaak,    ROT90,  "bootleg", "Quaak (bootleg of Frogger)", GAME_SUPPORTS_SAVE ) // closest to Super Cobra hardware, presumably a bootleg from Germany (Quaak is the German frog sound)
 
 
 /*

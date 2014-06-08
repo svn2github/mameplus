@@ -32,7 +32,7 @@ NETLIB_UPDATE_PARAM(clock)
 
 NETLIB_UPDATE(clock)
 {
-	OUTLOGIC(m_Q, !m_Q.net().new_Q(), m_inc  );
+	OUTLOGIC(m_Q, !m_Q.net().as_logic().new_Q(), m_inc  );
 }
 
 // ----------------------------------------------------------------------------------------
@@ -91,7 +91,8 @@ ATTR_HOT ATTR_ALIGN void nld_d_to_a_proxy::update()
 {
     double R = INPLOGIC(m_I) ? m_family_desc->m_R_high : m_family_desc->m_R_low;
     double V = INPLOGIC(m_I) ? m_family_desc->m_high_V : m_family_desc->m_low_V;
-    //printf("%f %f\n", R, V);
+
+    m_R.update_dev();
     OUTANALOG(m_Q, V);
     m_R.set_R(R);
 }

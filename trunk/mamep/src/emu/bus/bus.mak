@@ -355,6 +355,7 @@ BUSOBJS += $(BUSOBJ)/isa/svga_cirrus.o
 BUSOBJS += $(BUSOBJ)/isa/ega.o
 BUSOBJS += $(BUSOBJ)/isa/vga.o
 BUSOBJS += $(BUSOBJ)/isa/vga_ati.o
+BUSOBJS += $(BUSOBJ)/isa/mach32.o
 BUSOBJS += $(BUSOBJ)/isa/svga_tseng.o
 BUSOBJS += $(BUSOBJ)/isa/svga_s3.o
 BUSOBJS += $(BUSOBJ)/isa/s3virge.o
@@ -384,6 +385,49 @@ OBJDIRS += $(BUSOBJ)/isbx
 BUSOBJS += $(BUSOBJ)/isbx/isbx.o
 BUSOBJS += $(BUSOBJ)/isbx/compis_fdc.o
 BUSOBJS += $(BUSOBJ)/isbx/isbc_218a.o
+endif
+
+
+#-------------------------------------------------
+#
+#@src/emu/bus/msx_slot/slot.h,BUSES += MSX_SLOT
+#-------------------------------------------------
+
+ifneq ($(filter MSX_SLOT,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/msx_slot
+BUSOBJS += $(BUSOBJ)/msx_slot/bunsetsu.o
+BUSOBJS += $(BUSOBJ)/msx_slot/cartridge.o
+BUSOBJS += $(BUSOBJ)/msx_slot/disk.o
+BUSOBJS += $(BUSOBJ)/msx_slot/fs4600.o
+BUSOBJS += $(BUSOBJ)/msx_slot/music.o
+BUSOBJS += $(BUSOBJ)/msx_slot/panasonic08.o
+BUSOBJS += $(BUSOBJ)/msx_slot/rom.o
+BUSOBJS += $(BUSOBJ)/msx_slot/ram.o
+BUSOBJS += $(BUSOBJ)/msx_slot/ram_mm.o
+BUSOBJS += $(BUSOBJ)/msx_slot/slot.o
+BUSOBJS += $(BUSOBJ)/msx_slot/sony08.o
+OBJDIRS += $(BUSOBJ)/msx_cart
+BUSOBJS += $(BUSOBJ)/msx_cart/arc.o
+BUSOBJS += $(BUSOBJ)/msx_cart/ascii.o
+BUSOBJS += $(BUSOBJ)/msx_cart/bm_012.o
+BUSOBJS += $(BUSOBJ)/msx_cart/cartridge.o
+BUSOBJS += $(BUSOBJ)/msx_cart/crossblaim.o
+BUSOBJS += $(BUSOBJ)/msx_cart/dooly.o
+BUSOBJS += $(BUSOBJ)/msx_cart/fmpac.o
+BUSOBJS += $(BUSOBJ)/msx_cart/halnote.o
+BUSOBJS += $(BUSOBJ)/msx_cart/hfox.o
+BUSOBJS += $(BUSOBJ)/msx_cart/holy_quran.o
+BUSOBJS += $(BUSOBJ)/msx_cart/konami.o
+BUSOBJS += $(BUSOBJ)/msx_cart/korean.o
+BUSOBJS += $(BUSOBJ)/msx_cart/majutsushi.o
+BUSOBJS += $(BUSOBJ)/msx_cart/msx_audio.o
+BUSOBJS += $(BUSOBJ)/msx_cart/msx_audio_kb.o
+BUSOBJS += $(BUSOBJ)/msx_cart/msxdos2.o
+BUSOBJS += $(BUSOBJ)/msx_cart/nomapper.o
+BUSOBJS += $(BUSOBJ)/msx_cart/rtype.o
+BUSOBJS += $(BUSOBJ)/msx_cart/superloderunner.o
+BUSOBJS += $(BUSOBJ)/msx_cart/super_swangi.o
+BUSOBJS += $(BUSOBJ)/msx_cart/yamaha.o
 endif
 
 
@@ -1084,13 +1128,69 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/bus/zorro/zorro.h,BUSES += ZORRO
+#@src/emu/bus/amiga/zorro/zorro.h,BUSES += ZORRO
 #-------------------------------------------------
 
 ifneq ($(filter ZORRO,$(BUSES)),)
-OBJDIRS += $(BUSOBJ)/zorro
-BUSOBJS += $(BUSOBJ)/zorro/zorro.o
-BUSOBJS += $(BUSOBJ)/zorro/cards.o
-BUSOBJS += $(BUSOBJ)/zorro/a590.o
-BUSOBJS += $(BUSOBJ)/zorro/action_replay.o
+OBJDIRS += $(BUSOBJ)/amiga/zorro
+BUSOBJS += $(BUSOBJ)/amiga/zorro/zorro.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/cards.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/a2052.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/a2232.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/a590.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/action_replay.o
+BUSOBJS += $(BUSOBJ)/amiga/zorro/buddha.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/ql/exp.h,BUSES += QL
+#-------------------------------------------------
+
+ifneq ($(filter QL,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/ql
+BUSOBJS += $(BUSOBJ)/ql/exp.o
+BUSOBJS += $(BUSOBJ)/ql/cst_qdisc.o
+BUSOBJS += $(BUSOBJ)/ql/cst_q_plus4.o
+BUSOBJS += $(BUSOBJ)/ql/cumana_fdi.o
+BUSOBJS += $(BUSOBJ)/ql/kempston_di.o
+BUSOBJS += $(BUSOBJ)/ql/miracle_gold_card.o
+BUSOBJS += $(BUSOBJ)/ql/mp_fdi.o
+BUSOBJS += $(BUSOBJ)/ql/opd_basic_master.o
+BUSOBJS += $(BUSOBJ)/ql/pcml_qdisk.o
+BUSOBJS += $(BUSOBJ)/ql/qubide.o
+BUSOBJS += $(BUSOBJ)/ql/sandy_superdisk.o
+BUSOBJS += $(BUSOBJ)/ql/sandy_superqboard.o
+BUSOBJS += $(BUSOBJ)/ql/trumpcard.o
+BUSOBJS += $(BUSOBJ)/ql/rom.o
+BUSOBJS += $(BUSOBJ)/ql/miracle_hd.o
+BUSOBJS += $(BUSOBJ)/ql/std.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/vtech/memexp/memexp.h,BUSES += VTECH_MEMEXP
+#-------------------------------------------------
+
+ifneq ($(filter VTECH_MEMEXP,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vtech/memexp
+BUSOBJS += $(BUSOBJ)/vtech/memexp/memexp.o
+BUSOBJS += $(BUSOBJ)/vtech/memexp/carts.o
+BUSOBJS += $(BUSOBJ)/vtech/memexp/floppy.o
+BUSOBJS += $(BUSOBJ)/vtech/memexp/memory.o
+BUSOBJS += $(BUSOBJ)/vtech/memexp/rs232.o
+BUSOBJS += $(BUSOBJ)/vtech/memexp/wordpro.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/vtech/ioexp/ioexp.h,BUSES += VTECH_IOEXP
+#-------------------------------------------------
+
+ifneq ($(filter VTECH_IOEXP,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vtech/ioexp
+BUSOBJS += $(BUSOBJ)/vtech/ioexp/ioexp.o
+BUSOBJS += $(BUSOBJ)/vtech/ioexp/carts.o
+BUSOBJS += $(BUSOBJ)/vtech/ioexp/joystick.o
+BUSOBJS += $(BUSOBJ)/vtech/ioexp/printer.o
 endif

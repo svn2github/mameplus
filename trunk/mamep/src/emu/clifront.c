@@ -215,6 +215,8 @@ int cli_frontend::execute(int argc, char **argv)
 				throw emu_fatalerror(MAMERR_FATALERROR, NULL);
 			}
 		}
+		
+		m_options.parse_standard_inis(option_errors);
 		// parse the command line, adding any system-specific options
 		if (!m_options.parse_command_line(argc, argv, option_errors))
 		{
@@ -243,13 +245,25 @@ int cli_frontend::execute(int argc, char **argv)
 		// otherwise, check for a valid system
 		else
 		{
+			// We need to preprocess the config files once to determine the web server's configuration
+			// and file locations
+			if (m_options.read_config())
+			{
+				m_options.revert(OPTION_PRIORITY_INI);
+				m_options.parse_standard_inis(option_errors);
+			}
+			if (option_errors)
+				osd_printf_error(_("Error in command line:\n%s\n"), option_errors.trimspace().cstr());
+		
 			// if we can't find it, give an appropriate error
 			const game_driver *system = m_options.system();
 			if (system == NULL && *(m_options.system_name()) != 0)
 				throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "Unknown system '%s'", m_options.system_name());
 
 			// otherwise just run the game
-			m_result = mame_execute(m_options, m_osd);
+			machine_manager *manager = machine_manager::instance(m_options, m_osd);
+			m_result = manager->execute();
+			global_free(manager);
 		}
 	}
 

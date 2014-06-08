@@ -348,7 +348,7 @@ static struct ComboBoxSound
 	const char*		m_pData;
 } g_ComboBoxSound[] =
 {
-	{ TEXT("DirectSound"),      "dsound" },
+	{ TEXT("DirectSound"),          "dsound" },
 	{ TEXT("Auto"),         	"auto"   },
 	{ TEXT("None"),         	"none"   },
 };

@@ -152,7 +152,7 @@ void netlist_mame_analog_output_t::device_start()
 // ----------------------------------------------------------------------------------------
 
 netlist_mame_logic_input_t::netlist_mame_logic_input_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-		: device_t(mconfig, NETLIST_ANALOG_INPUT, "netlist analog input", tag, owner, clock, "netlist_analog_input", __FILE__),
+		: device_t(mconfig, NETLIST_ANALOG_INPUT, "Netlist Logic Input", tag, owner, clock, "netlist_logic_input", __FILE__),
 			netlist_mame_sub_interface(*owner),
 			m_param(0),
 			m_mask(0xffffffff),
@@ -185,7 +185,7 @@ void netlist_mame_logic_input_t::device_start()
 // ----------------------------------------------------------------------------------------
 
 netlist_mame_stream_input_t::netlist_mame_stream_input_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-		: device_t(mconfig, NETLIST_ANALOG_INPUT, "netlist analog input", tag, owner, clock, "netlist_analog_input", __FILE__),
+		: device_t(mconfig, NETLIST_ANALOG_INPUT, "Netlist Stream Input", tag, owner, clock, "netlist_stream_input", __FILE__),
 			netlist_mame_sub_interface(*owner),
 			m_channel(0),
 			m_param_name("")
@@ -226,7 +226,7 @@ void netlist_mame_stream_input_t::custom_netlist_additions(netlist_setup_t &setu
 // ----------------------------------------------------------------------------------------
 
 netlist_mame_stream_output_t::netlist_mame_stream_output_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-		: device_t(mconfig, NETLIST_ANALOG_INPUT, "netlist analog input", tag, owner, clock, "netlist_analog_input", __FILE__),
+		: device_t(mconfig, NETLIST_ANALOG_INPUT, "Netlist Stream Output", tag, owner, clock, "netlist_stream_output", __FILE__),
 			netlist_mame_sub_interface(*owner),
 			m_channel(0),
 			m_out_name("")
@@ -439,7 +439,10 @@ ATTR_COLD void netlist_mame_device_t::save_state()
 		switch (s->m_dt)
 		{
 			case DT_DOUBLE:
-				save_pointer((double *) s->m_ptr, s->m_name, s->m_count);
+	                {
+	                    double *td = s->resolved<double>();
+	                    if (td != NULL) save_pointer(td, s->m_name, s->m_count);
+	                }
 				break;
 			case DT_INT64:
 				save_pointer((INT64 *) s->m_ptr, s->m_name, s->m_count);
@@ -472,7 +475,7 @@ ATTR_COLD void netlist_mame_device_t::save_state()
 // ----------------------------------------------------------------------------------------
 
 netlist_mame_cpu_device_t::netlist_mame_cpu_device_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: netlist_mame_device_t(mconfig, NETLIST_CPU, "Netlist cpu device", tag, owner, clock, "netlist_cpu", __FILE__),
+	: netlist_mame_device_t(mconfig, NETLIST_CPU, "Netlist CPU Device", tag, owner, clock, "netlist_cpu", __FILE__),
 		device_execute_interface(mconfig, *this),
 		device_state_interface(mconfig, *this),
 		device_disasm_interface(mconfig, *this),
@@ -497,11 +500,11 @@ void netlist_mame_cpu_device_t::device_start()
 		netlist_net_t *n = netlist().m_nets[i];
 		if (n->isFamily(netlist_object_t::LOGIC))
 		{
-			state_add(i*2, n->name(), n->Q_state_ptr());
+			state_add(i*2, n->name(), downcast<netlist_logic_net_t *>(n)->Q_state_ptr());
 		}
 		else
 		{
-			state_add(i*2+1, n->name(), n->Q_Analog_state_ptr()).formatstr("%20s");
+			state_add(i*2+1, n->name(), downcast<netlist_analog_net_t *>(n)->Q_Analog_state_ptr()).formatstr("%20s");
 		}
 	}
 
@@ -574,7 +577,7 @@ ATTR_HOT void netlist_mame_cpu_device_t::execute_run()
 // ----------------------------------------------------------------------------------------
 
 netlist_mame_sound_device_t::netlist_mame_sound_device_t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: netlist_mame_device_t(mconfig, NETLIST_CPU, "Netlist sound device", tag, owner, clock, "netlist_sound", __FILE__),
+	: netlist_mame_device_t(mconfig, NETLIST_CPU, "Netlist Sound Device", tag, owner, clock, "netlist_sound", __FILE__),
 		device_sound_interface(mconfig, *this)
 {
 }
@@ -588,7 +591,7 @@ void netlist_mame_sound_device_t::device_start()
 
 	// Configure outputs
 
-	netlist_list_t<nld_sound_out *> outdevs = netlist().get_device_list<nld_sound_out>();
+	plinearlist_t<nld_sound_out *> outdevs = netlist().get_device_list<nld_sound_out>();
 	if (outdevs.count() == 0)
 		fatalerror("No output devices");
 
@@ -614,7 +617,7 @@ void netlist_mame_sound_device_t::device_start()
 	m_num_inputs = 0;
 	m_in = NULL;
 
-	netlist_list_t<nld_sound_in *> indevs = netlist().get_device_list<nld_sound_in>();
+	plinearlist_t<nld_sound_in *> indevs = netlist().get_device_list<nld_sound_in>();
 	if (indevs.count() > 1)
 		fatalerror("A maximum of one input device is allowed!");
 	if (indevs.count() == 1)

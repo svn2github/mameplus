@@ -59,7 +59,6 @@ public:
 	int get_rmrd_line();
 	void tilemap_update();
 	int is_irq_enabled();
-	void set_layer_offsets(int layer, int dx, int dy);
 	void tilemap_mark_dirty(int tmap_num);
 	void tilemap_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int tmap_num, UINT32 flags, UINT8 priority);
 
@@ -88,7 +87,6 @@ private:
 	UINT8    m_has_extra_video_ram;
 	INT32    m_rmrd_line;
 	UINT8    m_irq_enabled;
-	INT32    m_dx[3], m_dy[3];
 	UINT8    m_romsubbank, m_scrollctrl;
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<palette_device> m_palette;

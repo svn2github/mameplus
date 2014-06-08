@@ -44,7 +44,9 @@ SOUNDS += VRC6
 
 BUSES += GAMEBOY
 BUSES += GBA
+BUSES += MIDI
 BUSES += MEGADRIVE
+BUSES += MSX_SLOT
 BUSES += NES
 BUSES += PCE
 BUSES += SATURN
@@ -105,7 +107,10 @@ $(MESSOBJ)/mame.a: \
 $(MESSOBJ)/ascii.a:             \
 	$(MESS_DRIVERS)/msx.o       \
 	$(MESS_MACHINE)/msx.o       \
-	$(MESS_MACHINE)/msx_slot.o  \
+	$(MESS_MACHINE)/msx_switched.o \
+	$(MESS_MACHINE)/msx_matsushita.o \
+	$(MESS_MACHINE)/msx_s1985.o \
+	$(MESS_MACHINE)/msx_systemflags.o \
 
 $(MESSOBJ)/atari.a:             \
 	$(MESS_MACHINE)/atarifdc.o  \

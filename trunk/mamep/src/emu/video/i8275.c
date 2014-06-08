@@ -210,7 +210,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 			m_write_vrtc(0);
 		}
 		
-		if (m_scanline < (m_vrtc_scanline - SCANLINES_PER_ROW))
+		if (m_scanline <= (m_vrtc_scanline - SCANLINES_PER_ROW))
 		{
 			if (lc == 0)
 			{
@@ -231,8 +231,11 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 					m_buffer_idx = 0;
 					m_fifo_idx = 0;
 
-					// start DMA burst
-					m_drq_on_timer->adjust(clocks_to_attotime(DMA_BURST_SPACE));
+					if ((m_scanline < (m_vrtc_scanline - SCANLINES_PER_ROW)))
+					{
+						// start DMA burst
+						m_drq_on_timer->adjust(clocks_to_attotime(DMA_BURST_SPACE));
+					}
 				}
 			}
 		}
@@ -286,6 +289,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 		{
 			int line_counter = OFFSET_LINE_COUNTER ? ((lc - 1) % SCANLINES_PER_ROW) : lc;
 			bool end_of_row = false;
+			int fifo_idx = 0;
 			m_hlgt = (m_stored_attr & FAC_H) ? 1 : 0;
 			m_vsp = (m_stored_attr & FAC_B) ? 1 : 0;
 			m_gpa = (m_stored_attr & FAC_GG) >> 2;
@@ -315,8 +319,6 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 
 						if (!VISIBLE_FIELD_ATTRIBUTE)
 						{
-							int fifo_idx = 0;
-
 							data = m_fifo[!m_buffer_dma][fifo_idx];
 
 							fifo_idx++;

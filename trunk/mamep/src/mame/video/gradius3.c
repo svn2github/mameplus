@@ -70,20 +70,10 @@ void gradius3_state::gradius3_postload()
 
 void gradius3_state::video_start()
 {
-	int i;
-
 	m_layer_colorbase[0] = 0;
 	m_layer_colorbase[1] = 32;
 	m_layer_colorbase[2] = 48;
 	m_sprite_colorbase = 16;
-
-	m_k052109->set_layer_offsets(2, -2, 0);
-	m_k051960->k051960_set_sprite_offsets(2, 0);
-
-	/* re-decode the sprites because the ROMs are connected to the custom IC differently
-	   from how they are connected to the CPU. */
-	for (i = 0; i < TOTAL_SPRITES; i++)
-		m_gfxdecode->gfx(1)->mark_dirty(i);
 
 	m_gfxdecode->gfx(0)->set_source((UINT8 *)m_gfxram.target());
 

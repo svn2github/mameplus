@@ -24,9 +24,10 @@ OBJDIRS += \
 	$(LIBOBJ)/lib7z \
 	$(LIBOBJ)/portmidi \
 	$(LIBOBJ)/lua \
+	$(LIBOBJ)/lua/lib \
 	$(LIBOBJ)/web \
 	$(LIBOBJ)/web/json \
-
+	$(LIBOBJ)/sqlite3 \
 
 #-------------------------------------------------
 # utility library objects
@@ -182,6 +183,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/pmd_cas.o     \
 	$(LIBOBJ)/formats/primoptp.o    \
 	$(LIBOBJ)/formats/pyldin_dsk.o  \
+	$(LIBOBJ)/formats/ql_dsk.o      \
 	$(LIBOBJ)/formats/rk_cas.o      \
 	$(LIBOBJ)/formats/sc3000_bit.o  \
 	$(LIBOBJ)/formats/sf7000_dsk.o  \
@@ -500,6 +502,7 @@ LUAOBJS = \
 	$(LIBOBJ)/lua/ltablib.o \
 	$(LIBOBJ)/lua/loadlib.o \
 	$(LIBOBJ)/lua/linit.o \
+	$(LIBOBJ)/lua/lib/lsqlite3.o \
 
 $(OBJ)/liblua.a: $(LUAOBJS)
 
@@ -531,3 +534,24 @@ $(OBJ)/libweb.a: $(WEBOBJS)
 $(LIBOBJ)/web/%.o: $(LIBSRC)/web/%.cpp | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -I$(LIBSRC)/web -c $< -o $@
+
+$(LIBOBJ)/web/%.o: $(LIBSRC)/web/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -I$(LIBSRC)/web -DNS_STACK_SIZE=0 -c $< -o $@
+
+#-------------------------------------------------
+# SQLite3 library objects
+#-------------------------------------------------
+
+SQLITEOBJS = \
+	$(LIBOBJ)/sqlite3/sqlite3.o \
+
+$(OBJ)/libsqlite3.a: $(SQLITEOBJS)
+
+ifeq ($(TARGETOS),linux)
+LIBS += -ldl
+endif
+
+$(LIBOBJ)/sqlite3/sqlite3.o: $(LIBSRC)/sqlite3/sqlite3.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CONLYFLAGS) -Wno-bad-function-cast -I$(LIBSRC)/sqlite3 -c $< -o $@

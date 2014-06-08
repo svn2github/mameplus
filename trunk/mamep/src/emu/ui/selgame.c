@@ -158,7 +158,7 @@ void ui_menu_select_game::inkey_select(const ui_menu_event *menu_event)
 		// if everything looks good, schedule the new driver
 		if (summary == media_auditor::CORRECT || summary == media_auditor::BEST_AVAILABLE)
 		{
-			mame_schedule_new_driver(*driver);
+			machine().manager().schedule_new_driver(*driver);
 			machine().schedule_hard_reset();
 			ui_menu::stack_reset(machine());
 		}
@@ -323,11 +323,9 @@ void ui_menu_select_game::custom_render(void *selectedref, float top, float bott
 		const char *gfxstat, *soundstat;
 
 		// first line is game name
-		//tempbuf[0].printf("%-.100s", _LST(driver->description));
 		tempbuf[0].printf("%-.100s", driver->description);
 
 		// next line is year, manufacturer
-		//tempbuf[1].printf("%s, %-.100s", driver->year, _MANUFACT(driver->manufacturer));
 		tempbuf[1].printf("%s, %-.100s", driver->year, driver->manufacturer);
 
 		// next line source path

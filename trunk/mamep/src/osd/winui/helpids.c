@@ -27,7 +27,6 @@ extern const DWORD dwHelpIDs[] =
 	IDC_CONTRAST                  ,HIDC_CONTRAST,
 	IDC_CYCLETIMESEC              ,HIDC_CYCLETIMESEC,
 	IDC_D3D_FILTER                ,HIDC_D3D_FILTER,
-	IDC_D3D_VERSION               ,HIDC_D3D_VERSION,
 	IDC_DEBUG                     ,HIDC_DEBUG,
 	IDC_DEFAULT_INPUT             ,HIDC_DEFAULT_INPUT,
 	IDC_DIAL                      ,HIDC_DIAL,

@@ -232,12 +232,12 @@ void nes_waixing_j_device::device_start()
 void nes_waixing_j_device::pcb_reset()
 {
 	m_chr_source = m_vrom_chunks ? CHRROM : CHRRAM;
-	mmc3_common_initialize(0xff, 0xff, 0);
 
 	m_reg[0] = 0x01;
 	m_reg[1] = 0x02;
 	m_reg[2] = 0x7e;
 	m_reg[3] = 0x7f;
+	mmc3_common_initialize(0xff, 0xff, 0);
 	set_prg(m_prg_base, m_prg_mask);
 }
 
@@ -374,7 +374,7 @@ void nes_waixing_fs304_device::pcb_reset()
 	prg32(0);
 	chr8(0, m_chr_source);
 
-	m_reg[0] = m_reg[1] = 0;
+	memset(m_reg, 0x00, sizeof(m_reg));
 }
 
 

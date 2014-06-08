@@ -6,12 +6,18 @@
 
 #include "machine/intelfsh.h"
 #include "cpu/sh2/sh2.h"
+#include "audio/cps3.h"
+
 
 class cps3_state : public driver_device
 {
 public:
 	cps3_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette"),
+		m_cps3sound(*this, "cps3sound"),
 		m_mainram(*this, "mainram"),
 		m_spriteram(*this, "spriteram"),
 		m_colourram(*this, "colourram"),
@@ -20,10 +26,13 @@ public:
 		m_tilemap40_regs_base(*this, "tmap40_regs"),
 		m_tilemap50_regs_base(*this, "tmap50_regs"),
 		m_fullscreenzoom(*this, "fullscreenzoom"),
-		m_0xc0000000_ram(*this, "0xc0000000_ram"),
-		m_maincpu(*this, "maincpu"),
-		m_gfxdecode(*this, "gfxdecode"),
-		m_palette(*this, "palette") { }
+		m_0xc0000000_ram(*this, "0xc0000000_ram")
+	{ }
+
+	required_device<sh2_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
+	required_device<cps3_sound_device> m_cps3sound;
 
 	required_shared_ptr<UINT32> m_mainram;
 	required_shared_ptr<UINT32> m_spriteram;
@@ -71,6 +80,7 @@ public:
 	unsigned short m_lastb;
 	unsigned short m_lastb2;
 	UINT8* m_user5region;
+
 	DECLARE_READ32_MEMBER(cps3_ssram_r);
 	DECLARE_WRITE32_MEMBER(cps3_ssram_w);
 	DECLARE_WRITE32_MEMBER(cps3_0xc0000000_ram_w);
@@ -131,66 +141,11 @@ public:
 	void cps3_process_character_dma(UINT32 address);
 	void copy_from_nvram();
 	inline void cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp, const rectangle &clip, gfx_element *gfx,
-									unsigned int code, unsigned int color, int flipx, int flipy, int sx, int sy,
-									int transparency, int transparent_color,
-									int scalex, int scaley, bitmap_ind8 *pri_buffer, UINT32 pri_mask);
+		unsigned int code, unsigned int color, int flipx, int flipy, int sx, int sy,
+		int transparency, int transparent_color,
+		int scalex, int scaley, bitmap_ind8 *pri_buffer, UINT32 pri_mask);
 
-	required_device<sh2_device> m_maincpu;
-	required_device<gfxdecode_device> m_gfxdecode;
-	required_device<palette_device> m_palette;
 	int m_use_fastboot;
 	emu_timer* m_fastboot_timer;
 	TIMER_CALLBACK_MEMBER(fastboot_timer_callback);
 };
-
-
-/*----------- defined in audio/cps3.c -----------*/
-
-#define CPS3_VOICES (16)
-
-//**************************************************************************
-//  TYPE DEFINITIONS
-//**************************************************************************
-
-struct cps3_voice
-{
-	cps3_voice() :
-		pos(0),
-		frac(0)
-	{
-		memset(regs, 0, sizeof(UINT32)*8);
-	}
-
-	UINT32 regs[8];
-	UINT32 pos;
-	UINT32 frac;
-};
-
-// ======================> cps3_sound_device
-
-class cps3_sound_device : public device_t,
-							public device_sound_interface
-{
-public:
-	cps3_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	~cps3_sound_device() { }
-
-protected:
-	// device-level overrides
-	virtual void device_start();
-
-	// sound stream update overrides
-	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
-
-public:
-	DECLARE_WRITE32_MEMBER( cps3_sound_w );
-	DECLARE_READ32_MEMBER( cps3_sound_r );
-
-private:
-	sound_stream *m_stream;
-	cps3_voice m_voice[CPS3_VOICES];
-	UINT16     m_key;
-	INT8*      m_base;
-};
-
-extern const device_type CPS3;

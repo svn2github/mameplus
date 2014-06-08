@@ -1085,6 +1085,19 @@ endif
 $(CPUOBJ)/mb86233/mb86233.o:    $(CPUSRC)/mb86233/mb86233.c \
 								$(CPUSRC)/mb86233/mb86233.h
 
+#-------------------------------------------------
+# Fujitsu MB86235
+#@src/emu/cpu/mb86233/mb86235.h,CPUS += MB86235
+#-------------------------------------------------
+
+ifneq ($(filter MB86235,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/mb86235
+CPUOBJS += $(CPUOBJ)/mb86235/mb86235.o
+DASMOBJS += $(CPUOBJ)/mb86235/mb86235d.o
+endif
+
+$(CPUOBJ)/mb86233/mb86235.o:    $(CPUSRC)/mb86233/mb86235.c \
+								$(CPUSRC)/mb86235/mb86235.h
 
 
 #-------------------------------------------------
@@ -1205,6 +1218,8 @@ endif
 
 M37710DEPS = \
 	$(CPUSRC)/m37710/m37710.h \
+	$(CPUSRC)/m37710/m37710cm.h \
+	$(CPUSRC)/m37710/m37710il.h \
 	$(CPUSRC)/m37710/m37710op.h \
 	$(CPUSRC)/m37710/m7700ds.h
 

@@ -17,7 +17,7 @@ public:
 	virtual ~ptokenizer() {}
 
 	ptokenizer()
-	: m_line(1), m_line_ptr(NULL), m_px(NULL)
+	: m_line(1), m_line_ptr(NULL), m_px(NULL), m_string('"')
 	{}
 
 	enum token_type
@@ -43,7 +43,6 @@ public:
 
 	struct token_t
 	{
-		token_t() {};
 		token_t(token_type type)
 		{
 			m_type = type;
@@ -128,7 +127,7 @@ private:
 
 	pstring m_identifier_chars;
 	pstring m_number_chars;
-	netlist_list_t<pstring> m_tokens;
+	plinearlist_t<pstring> m_tokens;
 	pstring m_whitespace;
 	char  m_string;
 
@@ -142,7 +141,7 @@ class netlist_parser : public ptokenizer
 	NETLIST_PREVENT_COPYING(netlist_parser)
 public:
 	netlist_parser(netlist_setup_t &setup)
-	: ptokenizer(), m_setup(setup) {}
+	: ptokenizer(), m_setup(setup), m_buf(NULL) {}
 
 	bool parse(const char *buf, const pstring nlname = "");
 
@@ -183,7 +182,7 @@ private:
 class netlist_source_t
 {
 public:
-	typedef netlist_list_t<netlist_source_t> list_t;
+	typedef plinearlist_t<netlist_source_t> list_t;
 
 	enum source_e
 	{

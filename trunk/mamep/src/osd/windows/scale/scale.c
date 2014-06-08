@@ -114,8 +114,8 @@ static const char *str_desc[] =
 	"HQ3x",         // by Maxim Stepin
 	"HQ3xS",
 	"HQ3xBold",
-	"2xBRZ",      // by HqMAME v2.1.4
-	"3xBRZ",      // by HqMAME v2.1.4
+	"2xBRZ",        // by HqMAME v2.1.4
+	"3xBRZ",        // by HqMAME v2.1.4
 	NULL
 };
 

@@ -101,6 +101,7 @@ mspacmnf        // hack
 mspacmat        // hack
 msheartb        // hack
 mspacmanbg      // bootleg
+mspacmanbgd     // bootleg
 woodpeck        // (c) 1981 Amenip (Palcom Queen River)
 woodpeca        // (c) 1981 Amenip Nova Games Ltd.
 mspacmab        // bootleg
@@ -175,6 +176,7 @@ galap4          // hack
 galturbo        // hack
 swarm           // hack
 zerotime        // hack
+zerotimed       // hack
 starfght        // hack
 galaxbsf        // hack
 galaxianbl      // bootleg
@@ -279,6 +281,7 @@ bongo           // (c) 1983 Jetsoft
 hunchbkg        // (c) 1983 Century
 harem           // [1983] I.G.R.
 tazzmang        // bootleg
+tazzmang2       // bootleg
 racknrol        // (c) 1986 Status (Shinkia license) (Senko Kit)
 hexpool         // (c) 1986 Shinkia (Senko Kit)
 hexpoola        // (c) 1986 Shinkia (Senko Kit)
@@ -322,6 +325,7 @@ omega           // bootleg
 ckongs          // bootleg
 froggers        // bootleg
 frogf           // bootleg
+quaak           // bootleg
 amidars         // GX337 (c) 1982 Konami
 triplep         // (c) 1982 KKI / made by Sanritsu?
 triplepa        // (c) 1982 KKI / made by Sanritsu?
@@ -697,6 +701,7 @@ pleiadsb2       // bootleg
 pleiadbl        // bootleg
 pleiadce        // (c) 1981 Centuri + Tehkan
 pleiadsi        // bootleg?
+pleiadss        // bootleg
 capitol         // bootleg?
 survival        // (c) 1982 Rock-ola
 naughtyb        // (c) 1982 Jaleco
@@ -2894,6 +2899,7 @@ mysticmp        // (c) 1983 Prototype
 tshoot          // (c) 1984
 inferno         // (c) 1984
 joust2          // (c) 1986
+joust2r1        // (c) 1986
 lottofun        // (c) 1987 H.A.R. Management
 wmg             // Williams 6in1 Multigame, Clay Cowgill
 
@@ -3197,7 +3203,7 @@ slampic         // bootleg
 mbomberj        // 13/07/1993 (c) 1993 (Japan) (CPS1 + QSound)
 mbombrd         // 06/12/1993 (c) 1993 (World) (CPS1 + QSound)
 mbombrdj        // 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound)
-				// 1994 Ken Sei Mogura (not listed on Capcom's site)
+kenseim         // 1994 Ken Sei Mogura (not listed on Capcom's site)
 pnickj          // 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site
 qtono2j         // 23/01/1995 (c) 1995 (Japan)
 pang3           // 01/06/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site
@@ -3210,6 +3216,7 @@ rockmanj        // 22/09/1995 (c) 1995 (Japan)
 fcrash          // bootleg of Final Fight
 ffightbl        // bootleg
 ganbare         // 11/04/2000 (c) 2000 (Japan)
+
 
 // Capcom CPS2 games
 // list completed by CPS2Shock
@@ -3893,6 +3900,7 @@ dsfdct          // 1999 - Dancing Stage featuring Dreams Come True (GC910 VER. J
 dsfdcta         // 1999 - Dancing Stage featuring Dreams Come True (GC910 VER. JAA)
 drmn2m          // 1999 - DrumMania 2nd Mix (GE912 VER. JAB)
 drmn2mpu        // 1999 - DrumMania 2nd Mix Session Power Up Kit (GE912 VER. JAB)
+stepchmp        // 1999 - Step Champ (GE930 VER. JA)
 dncfrks         // 2000 - Dance Freaks (G*874 VER. KAA)
 dmx             // 2000 - Dance Maniax (G*874 VER. JAA)
 gunmania        // 2000 - GunMania (GL906 VER. JAA)
@@ -5429,8 +5437,8 @@ initdv2j        // 2002.12 Initial D Arcade Stage Ver. 2 (Japan) (Rev B)
 initdv2jo       // 2002.12 Initial D Arcade Stage Ver. 2 (Japan)
 initdv2e        // 2002.12 Initial D Arcade Stage Ver. 2 (export)
 vf4evo          // 2002.12 Virtua Fighter 4 Evolution Ver.B
-clubk2k3        // 2003.?? Club Kart: European Session 2003
-clubk2kf
+clubk2k3        // 2003.?? Club Kart: European Session (2003)
+clubk2kf        // 2003.?? Club Kart: European Session (2003, not protected)
 initdexp        // 2002.?? Initial D Arcade Stage (Export) (Rev A)
 initdexpo       // 2002.?? Initial D Arcade Stage (Export)
 				// 2002.?? Sega Driving Simulator
@@ -5510,10 +5518,11 @@ airtrix         // 2001.02 Air Trix
 triforce        // 2002.?? Triforce BIOS
 vs2002j         // 2002.10 Virtua Striker 2002 (Japan)
 vs2002ex        // 2002.10 Virtua Striker 2002 (Export)
-				// 2003.06 F-Zero AX
+fzeroaxc		// 2003.06 F-Zero AX (Rev. C)
 avalons         // 2003.07 The Key Of Avalon: The Wizard Master (server) (Rev C)
 				// 2003.10 The Key Of Avalon 1.01
 gekpurya        // 2003.10 Gekitou Pro Yakyuu Mizushima Shinji All Stars vs. Pro Yakyuu (Rev C)
+fzeroax         // 2003.12 F-Zero AX (Rev. E)
 				// 2003.12 The Key Of Avalon 1.10
 				// 2004.04 The Key Of Avalon 1.20 - Summon The New Monsters
 avalon13        // 2004.07 The Key Of Avalon 1.30 - Chaotic Sabbat (client) (Rev C)
@@ -5866,6 +5875,7 @@ cbuster         // MAB (c) 1990 Data East Corporation (World)
 cbusterw        // MAB (c) 1990 Data East Corporation (World)
 cbusterj        // MAB (c) 1990 Data East Corporation (Japan)
 twocrude        // MAB (c) 1990 Data East USA (US)
+twocrudea       // MAB (c) 1990 Data East USA (US)
 darkseal        // MAC (c) 1990 Data East Corporation (World)
 darkseal1       // MAC (c) 1990 Data East Corporation (World)
 darksealj       // MAC (c) 1990 Data East Corporation (Japan)
@@ -6630,7 +6640,8 @@ racjamdx        // G?676 (c)1997 Japan JAA
 thrilld         // GX713 (c)1998 Japan JAE
 thrilldb        // GX713 (c)1998 Japan JAB
 thrilldae       // GX713 (c)1998 Europe EAA
-midnrun         // GX476 (c)1995
+midnrun         // GX476 (c)1995 Europe EAA
+midnruna        // GX477 (c)1995 Asia AAA
 windheat        // GX677 (c)1996 Europe EAA
 windheatu       // GX677 (c)1996 USA UBC
 windheatj       // GX677 (c)1996 Japan JAA
@@ -7665,7 +7676,9 @@ skyadvnt        // Alpha-68K96V  'SA' (c) 1989 Alpha Denshi Co.
 skyadvntu       // Alpha-68K96V  'SA' (c) 1989 SNK of America licensed from Alpha
 skyadvntj       // Alpha-68K96V  'SA' (c) 1989 Alpha Denshi Co.
 gangwars        // Alpha-68K96V       (c) 1989 Alpha Denshi Co.
+gangwarsj       // Alpha-68K96V       (c) 1989 Alpha Denshi Co.
 gangwarsu       // Alpha-68K96V       (c) 1989 Alpha Denshi Co.
+gangwarsb       // bootleg
 sbasebal        // Alpha-68K96V       (c) 1989 SNK of America licensed from Alpha
 tnextspc        // A8003 'NS' (c) 1989 - MASKROM
 tnextspc2       // A8003 'NS' (c) 1989 - EPROMs
@@ -8316,6 +8329,7 @@ ejanhs          // (c) 1996 Seibu Kaihatsu
 rdft            // (c) 1996 Seibu Kaihatsu
 rdftu           // (c) 1996 Seibu Kaihatsu (Fabtek license)
 rdftau          // (c) 1996 Seibu Kaihatsu
+rdftauge        // (c) 1996 Seibu Kaihatsu (Tuning license and text display, but Australia region code)
 rdftj           // (c) 1996 Seibu Kaihatsu
 rdftadi         // (c) 1996 Seibu Kaihatsu (Dream Island license)
 rdftam          // (c) 1996 Seibu Kaihatsu (Metrotainment license)
@@ -10850,9 +10864,11 @@ pepp0023        // (c) 1987 IGT - International Game Technology
 pepp0040        // (c) 1987 IGT - International Game Technology
 pepp0041        // (c) 1987 IGT - International Game Technology
 pepp0043        // (c) 1987 IGT - International Game Technology
+pepp0043a       // (c) 1987 IGT - International Game Technology
 pepp0045        // (c) 1987 IGT - International Game Technology
 pepp0046        // (c) 1987 IGT - International Game Technology
 pepp0046a       // (c) 1987 IGT - International Game Technology
+pepp0046b       // (c) 1987 IGT - International Game Technology
 pepp0051        // (c) 1987 IGT - International Game Technology
 pepp0053        // (c) 1987 IGT - International Game Technology
 pepp0055        // (c) 1987 IGT - International Game Technology
@@ -10905,6 +10921,7 @@ pepp0249        // (c) 1987 IGT - International Game Technology
 pepp0250        // (c) 1987 IGT - International Game Technology
 pepp0265        // (c) 1987 IGT - International Game Technology
 pepp0265a       // (c) 1987 IGT - International Game Technology
+pepp0265b       // (c) 1987 IGT - International Game Technology
 pepp0274        // (c) 1987 IGT - International Game Technology
 pepp0288        // (c) 1987 IGT - International Game Technology
 pepp0290        // (c) 1987 IGT - International Game Technology
@@ -10956,6 +10973,7 @@ pepp0728        // (c) 1987 IGT - International Game Technology
 pepp0760        // (c) 1987 IGT - International Game Technology
 pepp0763        // (c) 1987 IGT - International Game Technology
 pepp0775        // (c) 1987 IGT - International Game Technology
+pepp0816        // (c) 1987 IGT - International Game Technology
 peip0028        // (c) 1987 IGT - International Game Technology
 peip0029        // (c) 1987 IGT - International Game Technology
 peip0031        // (c) 1987 IGT - International Game Technology
@@ -11065,6 +11083,7 @@ pex2018p        // (c) 1995 IGT - International Game Technology
 pex2025p        // (c) 1995 IGT - International Game Technology
 pex2026p        // (c) 1995 IGT - International Game Technology
 pex2027p        // (c) 1995 IGT - International Game Technology
+pex2029p        // (c) 1995 IGT - International Game Technology
 pex2031p        // (c) 1995 IGT - International Game Technology
 pex2035p        // (c) 1995 IGT - International Game Technology
 pex2036p        // (c) 1995 IGT - International Game Technology
@@ -11092,6 +11111,7 @@ pex2250p        // (c) 1995 IGT - International Game Technology
 pex2251p        // (c) 1995 IGT - International Game Technology
 pex2272p        // (c) 1995 IGT - International Game Technology
 pex2275p        // (c) 1995 IGT - International Game Technology
+pex2276p        // (c) 1995 IGT - International Game Technology
 pex2283p        // (c) 1995 IGT - International Game Technology
 pex2284p        // (c) 1995 IGT - International Game Technology
 pex2302p        // (c) 1995 IGT - International Game Technology
@@ -11158,6 +11178,7 @@ butrfly         // (c) 1995 Bordun International
 mbutrfly        // (c) 1999 (Bordun International?)
 madzoo          // (c) 1995 Bordun International
 leader          // Bootleg?
+gallag50        // Bootleg?
 neraidou        // Bootleg?
 sstar97         // (c) 199? Bordun International
 livequiz        // (c) 1999 Andamiro
@@ -11383,6 +11404,9 @@ pkrmasta        // (c) 199? unknown
 cb2001          // (c) 2001 Dyna Electronics
 scherrym        // (c) 2001? Dyna Electronics
 
+star100         // (c) 199? Sang Ho
+crazybon        // (c) 199? Sang Ho
+
 // STG?
 queen
 
@@ -11467,6 +11491,7 @@ lucky8c         // (c) 1989 Wing Co. Ltd
 lucky8d         // (c) 1989 Wing Co. Ltd
 lucky8e         // (c) 1989 Wing Co. Ltd
 megaline        // (c) 1991 Fun World.
+bonusch         // (c) 1990 Wing Co. Ltd
 luckgrln        // (c) 1991 Wing Co. Ltd
 7smash          // (c) 1993 Sovic
 luckylad        // (c) 1985 Wing Co. Ltd
@@ -12096,7 +12121,9 @@ sweetl2_2d      // bootleg
 fcockt2a        // bootleg - Fruit Cocktail 2
 fcockt2_4a      // bootleg
 fcockt2_4b      // bootleg
+fcockt2_4c      // bootleg
 fcockt2_4d      // bootleg
+fcockt2_4e      // bootleg
 fcockt2_4f      // bootleg
 
 igromult        // Multigame bootleg
@@ -29778,6 +29805,7 @@ wrldtour
 wrldtour2
 usafootb
 mystcast
+mystcasta
 pstlpkr
 punchy
 dinoeggs
@@ -29795,6 +29823,7 @@ spcrider
 */
 supermap
 hercules
+fourx4
 /*
    Atari Generation/System 3
 */
@@ -29926,6 +29955,7 @@ kissp
 atlantip
 beatclck
 blackblt
+blackblt2
 black100
 black100s
 cityslck
@@ -29939,8 +29969,10 @@ hvymetap
 ladyluck
 motrdome
 prtyanim
+prtyanimg
 specforc
 strngsci
+strngscg
 trucksp3
 trucksp2
 
@@ -30027,6 +30059,7 @@ trek_200
 trek_120
 trek_110
 trek_11a
+stwr_104
 stwr_103
 stwr_g11
 stwr_a14
@@ -30065,6 +30098,7 @@ bmf_sp
 bmf_jp
 bmf_time
 baywatch
+bay_e400
 frankst
 frankstg
 mav_402
@@ -30081,7 +30115,8 @@ flicker
 
 // g627.c
 rotation
-
+rota_115
+rota_101
 
 // gp_1.c
 gp_110
@@ -30246,6 +30281,7 @@ arena
 badgirls
 bighouse
 bonebstr
+bonebstrf
 bountyh
 triplay
 diamondp
@@ -30288,6 +30324,7 @@ canasta
 pinclown
 corsario
 mundial
+pinmoonl
 lapbylap
 metalman
 
@@ -30304,6 +30341,7 @@ pimbal
 petaco
 petaco2
 halley
+halleya
 olympus
 
 
@@ -30369,19 +30407,26 @@ attack
 blkfever
 cerberup
 madrace
+zira
 
 
 // play_3.c
 megaaton
+megaatona
 
 
 // play_5.c
 spain82
+nautilus
+theraid
 ufo_x
 kz26
 rock2500
 starfirp
+starfirpa
 trailer
+fldragon
+sklflite
 
 // rowamet.c
 heavymtl
@@ -30406,11 +30451,13 @@ tts_l1
 f14_l1
 f14_p3
 f14_p4
+f14_p5
 fire_l3
 milln_l3
 pb_l5
 pb_l2
 pb_l3
+pb_p4
 
 
 // s11b.c
@@ -30473,6 +30520,7 @@ dd_l2
 dd_p6
 pool_l7
 pool_l6
+pool_l5
 pool_le2
 pool_p7
 radcl_l1
@@ -30500,6 +30548,7 @@ disco_l1
 
 // s4.c
 flash_l1
+flash_l2
 flash_t1
 phnix_l1
 pkrno_l1
@@ -30550,7 +30599,10 @@ csmic_l1
 dfndr_l4
 fpwr2_l2
 hypbl_l4
+hypbl_l2
 jst_l2
+jst_l1
+jngld_l1
 jngld_l2
 lsrcu_l2
 pharo_l2
@@ -30559,6 +30611,8 @@ strlt_l1
 tmfnt_l5
 wrlok_l3
 thund_p1
+thund_p2
+thund_p3
 ratrc_l1
 
 
@@ -30577,7 +30631,208 @@ sshtl_l7
 alcat_l7
 szone_l5
 szone_l2
+scrzy_l1
 
+// sam.c
+
+24_130
+24_140
+24_144
+24_150
+bdk_130
+bdk_150
+bdk_160
+bdk_200
+bdk_210
+bdk_220
+bdk_290
+bdk_294
+bbh_140
+bbh_150
+bbh_160
+csi_102
+csi_103
+csi_104
+csi_200
+csi_210
+csi_230
+csi_240
+fg_1000af
+fg_1000ag
+fg_1000ai
+fg_1000al
+fg_110af
+fg_110ag
+fg_110ai
+fg_110al
+fg_120af
+fg_120ag
+fg_120ai
+fg_120al
+fg_300ai
+fg_400a
+fg_400ag
+fg_700af
+fg_700al
+fg_800al
+im2_100
+im2_110
+im2_120
+im2_140
+indy_113a
+indy_113f
+indy_113g
+indy_113i
+indy_113l
+indy_114a
+indy_114f
+indy_114g
+indy_114i
+indy_114l
+indy_116a
+indy_116f
+indy_116g
+indy_116i
+indy_116l
+indy_210
+indy_210f
+nba_500
+nba_600
+nba_700
+nba_801
+nba_802
+potc_110af
+potc_110ai
+potc_110gf
+potc_111as
+potc_113af
+potc_113ai
+potc_113as
+potc_113gf
+potc_115af
+potc_115ai
+potc_115as
+potc_115gf
+potc_300af
+potc_300ai
+potc_300as
+potc_300gf
+potc_400af
+potc_400ai
+potc_400as
+potc_400gf
+potc_600
+potc_600ai
+potc_600as
+potc_600gf
+sh_141
+skc_090
+skc_103
+skc_105
+sman_130ef
+sman_130ei
+sman_130es
+sman_130gf
+sman_140e
+sman_140ef
+sman_140ei
+sman_140es
+sman_140gf
+sman_142e
+sman_160e
+sman_160ef
+sman_160ei
+sman_160es
+sman_160gf
+sman_170e
+sman_170ef
+sman_170ei
+sman_170es
+sman_170gf
+sman_190e
+sman_190ef
+sman_190ei
+sman_190es
+sman_190gf
+sman_192e
+sman_192ef
+sman_192ei
+sman_192es
+sman_192gf
+sman_200e
+sman_210e
+sman_210f
+sman_210ei
+sman_210es
+sman_210gf
+sman_220e
+sman_230e
+sman_240
+wof_100a
+wof_200a
+wof_200f
+wof_200g
+wof_200i
+wof_300a
+wof_300f
+wof_300g
+wof_300i
+wof_300l
+wof_400a
+wof_400f
+wof_400g
+wof_400i
+wof_400l
+wof_500a
+wof_500f
+wof_500g
+wof_500i
+wof_500l
+wpt_103a
+wpt_105a
+wpt_106a
+wpt_106f
+wpt_106g
+wpt_106i
+wpt_106l
+wpt_108a
+wpt_108f
+wpt_108g
+wpt_108i
+wpt_108l
+wpt_109a
+wpt_109f
+wpt_109f2
+wpt_109g
+wpt_109i
+wpt_109l
+wpt_111a
+wpt_111af
+wpt_111ai
+wpt_111al
+wpt_111f
+wpt_111g
+wpt_111gf
+wpt_111i
+wpt_111l
+wpt_112a
+wpt_112af
+wpt_112ai
+wpt_112al
+wpt_112f
+wpt_112g
+wpt_112gf
+wpt_112i
+wpt_112l
+wpt_1400
+wpt_1400af
+wpt_1400ai
+wpt_1400al
+wpt_1400f
+wpt_1400g
+wpt_1400gf
+wpt_1400i
+wpt_1400l
 
 // sleic.c
 sleicpin
@@ -30686,6 +30941,7 @@ papillon
 
 // whitestar.c
 apollo13
+apollo13_10
 aust301
 aust300
 aust201
@@ -30698,6 +30954,7 @@ godzillp
 gldneye
 goldcue
 harl_a13
+harl_u13
 harl_a10
 harl_f13
 harl_g13
@@ -30727,6 +30984,7 @@ hirol_gr
 hirol_gr_210
 hirol_it
 id4
+id4_201
 lostspc
 monopolp
 monop303
@@ -30742,27 +31000,32 @@ nfl
 playboys
 playboys_401
 playboys_303
+playboys_302
 playboys_300
 playboys_203
 playnew
 playboyf
 playboyf_401
 playboyf_303
+playboyf_302
 playboyf_300
 playboyf_203
 playboyg
 playboyg_401
 playboyg_303
+playboyg_302
 playboyg_300
 playboyg_203
 playboyi
 playboyi_401
 playboyi_303
+playboyi_302
 playboyi_300
 playboyi_203
 playboyl
 playboyl_401
 playboyl_303
+playboyl_302
 playboyl_300
 playboyl_203
 rctycn
@@ -30812,31 +31075,40 @@ strxt_fr
 strxt_it
 strxt_sp
 term3
+term3_301
 term3_205
 t3new
 term3g
+term3g_301
 term3l
+term3l_301
 term3l_205
 term3f
+term3f_301
 term3f_205
 term3i
+term3i_301
 term3i_205
 jplstw22
 jplstw20
 simpprty
 simpprty_400
+simpprty_300
 simpprty_204
 simpnew
 simpprtg
 simpprtg_400
 simpprtl
 simpprtl_400
+simpprtl_300
 simpprtl_204
 simpprtf
 simpprtf_400
+simpprtf_300
 simpprtf_204
 simpprti
 simpprti_400
+simpprti_300
 simpprti_204
 xfilesp
 xfiles2
@@ -31018,6 +31290,8 @@ afm_11u
 afm_10
 cc_12
 cc_13
+cc_10
+cc_104
 cv_14
 cv_20h
 cv_10
@@ -31026,6 +31300,7 @@ cv_13
 congo_21
 congo_20
 congo_13
+congo_11
 jy_12
 jy_11
 jy_03
@@ -31056,6 +31331,7 @@ sc_18s2
 sc_17
 sc_17n
 sc_14
+sc_091
 ss_15
 ss_14
 ss_12
@@ -31107,15 +31383,21 @@ ij_l3
 jd_l7
 jd_l1
 jd_l6
+jd_l5
+jd_l4
 pop_lx5
+pop_la4
 pop_pa3
 sttng_l7
 sttng_x7
+sttng_p8
 sttng_p5
+sttng_p4
 sttng_s7
 sttng_g7
 sttng_l1
 sttng_l2
+sttng_l3
 afv_l4
 
 
@@ -31173,6 +31455,7 @@ tafg_h3
 tafg_la2
 tafg_la3
 gw_l5
+gw_pb
 gw_pc
 gw_l1
 gw_l2
@@ -31207,18 +31490,23 @@ lc_11
 corv_21
 corv_px4
 corv_lx1
+corv_lx2
+corv_la1
 dh_lx2
 i500_11r
+i500_10r
 i500_11b
 jb_10r
 jb_10b
 jm_12r
 jm_12b
+jm_05r
 nf_23x
 nf_23
 nf_23f
 nf_22
 nf_20
+nf_10
 rs_l6
 rs_la5
 rs_lx5
@@ -31252,6 +31540,7 @@ wd_10f
 wd_03r
 wd_048r
 wcs_l2
+wcs_la2
 wcs_p2
 wcs_p3
 tfs_12

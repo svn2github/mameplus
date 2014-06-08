@@ -328,8 +328,6 @@ public:
 	m_cdda(*this, "cdda")
 	{ }
 
-	DECLARE_WRITE8_MEMBER(microtouch_tx);
-
 	DECLARE_CUSTOM_INPUT_MEMBER(cubo_input);
 	DECLARE_CUSTOM_INPUT_MEMBER(cd32_sel_mirror_input);
 
@@ -345,15 +343,15 @@ public:
 	DECLARE_DRIVER_INIT(lasstixx);
 	DECLARE_DRIVER_INIT(lsrquiz);
 
-	required_ioport m_p1_port;
-	required_ioport m_p2_port;
+	optional_ioport m_p1_port;
+	optional_ioport m_p2_port;
 
 	int m_oldstate[2];
 	int m_cd32_shifter[2];
 	UINT16 m_potgo_value;
 
 protected:
-	virtual void serdat_w(UINT16 data);
+	virtual void rs232_tx(int state);
 	virtual void potgo_w(UINT16 data);
 
 private:
@@ -429,6 +427,11 @@ ADDRESS_MAP_END
  *  Inputs
  *
  *************************************/
+
+void cubo_state::rs232_tx(int state)
+{
+	m_microtouch->rx_w(state);
+}
 
 void cubo_state::potgo_w(UINT16 data)
 {
@@ -1041,9 +1044,8 @@ static MACHINE_CONFIG_START( cubo, cubo_state )
 	MCFG_AKIKO_SDA_WRITE_HANDLER(DEVWRITELINE("i2cmem", i2cmem_device, write_sda))
 
 	// video hardware
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_SCREEN_RAW_PARAMS(amiga_state::CLK_28M_PAL / 4 * 2, 910, 186, 910, 312, 29 /* 26 */, 312)
+	MCFG_FRAGMENT_ADD(pal_video)
+	MCFG_DEVICE_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(amiga_state, screen_update_amiga_aga)
 
 	MCFG_VIDEO_START_OVERRIDE(amiga_state, amiga_aga)
@@ -1063,21 +1065,21 @@ static MACHINE_CONFIG_START( cubo, cubo_state )
 
 	/* cia */
 	// these are setup differently on other amiga drivers (needed for floppy to work) which is correct / why?
-	MCFG_DEVICE_ADD("cia_0", LEGACY_MOS8520, amiga_state::CLK_E_PAL)
+	MCFG_DEVICE_ADD("cia_0", MOS8520, amiga_state::CLK_E_PAL)
 	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, cia_0_irq))
 	MCFG_MOS6526_PA_INPUT_CALLBACK(IOPORT("CIA0PORTA"))
 	MCFG_MOS6526_PA_OUTPUT_CALLBACK(WRITE8(cubo_state, akiko_cia_0_port_a_write))
-	MCFG_DEVICE_ADD("cia_1", LEGACY_MOS8520, amiga_state::CLK_E_PAL)
+	MCFG_DEVICE_ADD("cia_1", MOS8520, amiga_state::CLK_E_PAL)
 	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, cia_1_irq))
 
-	MCFG_MICROTOUCH_ADD("microtouch", WRITE8(cubo_state, microtouch_tx))
+	MCFG_MICROTOUCH_ADD("microtouch", 9600, WRITELINE(cubo_state, rs232_rx_w))
 
 	MCFG_CDROM_ADD("cd32_cdrom")
 	MCFG_CDROM_INTERFACE("cd32_cdrom")
 
 	/* fdc */
 	MCFG_DEVICE_ADD("fdc", AMIGA_FDC, amiga_state::CLK_7M_PAL)
-	MCFG_AMIGA_FDC_INDEX_CALLBACK(DEVWRITELINE("cia_1", legacy_mos6526_device, flag_w))
+	MCFG_AMIGA_FDC_INDEX_CALLBACK(DEVWRITELINE("cia_1", mos8520_device, flag_w))
 MACHINE_CONFIG_END
 
 
@@ -1340,19 +1342,6 @@ static INPUT_PORTS_START( odeontw2 )
 	PORT_DIPSETTING(    0x00, "Set" )
 
 INPUT_PORTS_END
-
-
-void cubo_state::serdat_w(UINT16 data)
-{
-	data &= 0xff;
-	if (data)
-		m_microtouch->rx(generic_space(), 0, data);
-}
-
-WRITE8_MEMBER( cubo_state::microtouch_tx )
-{
-	serial_in_w(data);
-}
 
 
 

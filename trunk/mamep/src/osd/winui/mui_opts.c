@@ -105,7 +105,6 @@ static void remove_all_source_options(void);
  ***************************************************************************/
 
 #define UI_INI_FILENAME				MAMEUINAME ".ini"
-//#define CORE_INI_FILENAME						"DIRECTORIES.ini"
 #define DEFAULT_OPTIONS_INI_FILENAME		emulator_info::get_configname()
 #define GAMEINFO_INI_FILENAME			"GameInfo.ini"
 

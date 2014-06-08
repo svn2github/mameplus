@@ -502,6 +502,14 @@ static int drawogl_window_create(sdl_window_info *window, int width, int height)
 	sdl->extra_flags |= SDL_WINDOW_OPENGL;
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+	/* FIXME: A reminder that gamma is wrong throughout MAME. Currently, SDL2.0 doesn't seem to
+	 * support the following attribute although my hardware lists GL_ARB_framebuffer_sRGB as an extension.
+	 *
+	 * SDL_GL_SetAttribute( SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1 );
+	 *
+	 */
+
 	//Moved into init
 	//load_gl_lib(window->machine());
 
@@ -591,6 +599,8 @@ static int drawogl_window_create(sdl_window_info *window, int width, int height)
 
 	extstr = (char *)glGetString(GL_EXTENSIONS);
 	vendor = (char *)glGetString(GL_VENDOR);
+
+	//printf("%s\n", extstr);
 
 	// print out the driver info for debugging
 	if (!shown_video_info)
@@ -1131,6 +1141,11 @@ static int drawogl_window_draw(sdl_window_info *window, UINT32 dc, int update)
 	if (sdl->init_context)
 	{
 		// do some one-time OpenGL setup
+#if (SDLMAME_SDL2)
+	    // FIXME: SRGB conversion is working on SDL2, may be of use
+	    // when we eventually target gamma and monitor profiles.
+        //glEnable(GL_FRAMEBUFFER_SRGB);
+#endif
 		glShadeModel(GL_SMOOTH);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClearDepth(1.0f);

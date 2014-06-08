@@ -1,5 +1,6 @@
 
 #include "video/tecmo_spr.h"
+#include "video/tecmo_mix.h"
 
 class spbactn_state : public driver_device
 {
@@ -15,7 +16,10 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_gfxdecode(*this, "gfxdecode"),
 		m_screen(*this, "screen"),
-		m_palette(*this, "palette") { }
+		m_palette(*this, "palette"),
+		m_sprgen(*this, "spritegen"),
+		m_mixer(*this, "mixer")
+		{ }
 
 	required_shared_ptr<UINT16> m_bgvideoram;
 	required_shared_ptr<UINT16> m_fgvideoram;
@@ -40,6 +44,7 @@ public:
 
 	bitmap_ind16 m_tile_bitmap_bg;
 	bitmap_ind16 m_tile_bitmap_fg;
+	bitmap_ind16 m_sprite_bitmap;
 
 
 	DECLARE_WRITE16_MEMBER(soundcommand_w);
@@ -73,4 +78,9 @@ public:
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
+	required_device<tecmo_spr_device> m_sprgen;
+	required_device<tecmo_mix_device> m_mixer;
+
+
+	
 };
