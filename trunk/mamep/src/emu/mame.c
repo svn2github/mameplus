@@ -103,11 +103,7 @@ machine_manager* machine_manager::instance(emu_options &options,osd_interface &o
 
 machine_manager* machine_manager::instance()
 {
-	if(!m_manager)
-	{
-		throw emu_fatalerror("machine_manager must be instanced already!");		
-	}
-	return m_manager;
+    return m_manager;
 }
 
 //-------------------------------------------------
@@ -129,6 +125,7 @@ machine_manager::machine_manager(emu_options &options,osd_interface &osd)
 
 machine_manager::~machine_manager()
 {
+	m_manager = NULL;
 }
 
 

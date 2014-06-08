@@ -6,7 +6,7 @@
     <message>
         <location filename="../about.ui" line="14"/>
         <source>About MAME Plus! GUI</source>
-        <translation type="unfinished">关于 MAME Plus! GUI</translation>
+        <translation>关于 MAME Plus! GUI</translation>
     </message>
 </context>
 <context>
@@ -14,7 +14,7 @@
     <message>
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
-        <translation type="unfinished">命令行选项</translation>
+        <translation>命令行选项</translation>
     </message>
 </context>
 <context>
@@ -22,27 +22,27 @@
     <message>
         <location filename="../directories.ui" line="14"/>
         <source>Directories</source>
-        <translation type="unfinished">目录</translation>
+        <translation>目录</translation>
     </message>
     <message>
         <location filename="../directories.ui" line="33"/>
         <source>Browse...</source>
-        <translation type="unfinished">浏览...</translation>
+        <translation>浏览...</translation>
     </message>
     <message>
         <location filename="../directories.ui" line="40"/>
         <source>Delete</source>
-        <translation type="unfinished">删除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <location filename="../directories.ui" line="47"/>
         <source>Insert</source>
-        <translation type="unfinished">插入</translation>
+        <translation>插入</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="336"/>
         <source>Directory name:</source>
-        <translation type="unfinished">目录名:</translation>
+        <translation>目录名:</translation>
     </message>
 </context>
 <context>
@@ -163,12 +163,12 @@
     <message>
         <location filename="../gamelist.cpp" line="1454"/>
         <source>Mechanical</source>
-        <translation type="unfinished">機械的</translation>
+        <translation>机械的</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1455"/>
         <source>Non Mechanical</source>
-        <translation type="unfinished">非機械的</translation>
+        <translation type=>非机械的</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1828"/>
@@ -325,32 +325,32 @@ must be mounted:
     <message>
         <location filename="../ips.ui" line="27"/>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ips.ui" line="32"/>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ips.ui" line="53"/>
         <source>Clear</source>
-        <translation type="unfinished">清除</translation>
+        <translation>清除</translation>
     </message>
     <message>
         <location filename="../ips.ui" line="73"/>
         <source>Enforce relationship</source>
-        <translation type="unfinished">强制关联</translation>
+        <translation>强制关联</translation>
     </message>
     <message>
         <location filename="../ips.cpp" line="19"/>
         <source>Description</source>
-        <translation type="unfinished">描述</translation>
+        <translation>描述</translation>
     </message>
     <message>
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
-        <translation type="unfinished">名称</translation>
+        <translation>名称</translation>
     </message>
 </context>
 <context>
@@ -358,7 +358,7 @@ must be mounted:
     <message>
         <location filename="../m1.cpp" line="80"/>
         <source>Loading M1, please wait...</source>
-        <translation type="unfinished">M1 载入中，请稍候...</translation>
+        <translation>M1 载入中，请稍候...</translation>
     </message>
 </context>
 <context>
@@ -701,7 +701,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="712"/>
         <source>Hide &amp;Mechanical</source>
-        <translation type="unfinished">隱藏機械的遊戲(&amp;M)</translation>
+        <translation>隐藏机械的游戏(&amp;M)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="725"/>
@@ -932,12 +932,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../prototype.cpp" line="628"/>
         <source>Cache signature error.</source>
-        <translation type="unfinished"></translation>
+        <translation>缓存签署错误。</translation>
     </message>
     <message>
         <location filename="../prototype.cpp" line="637"/>
         <source>Cache streamVersion has been updated. A full refresh is required.</source>
-        <translation type="unfinished"></translation>
+        <translation>快取流版本已更新，需要完全重整</translation>
     </message>
     <message>
         <location filename="../prototype.cpp" line="871"/>
@@ -978,7 +978,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1010"/>
         <source>Driver Config</source>
-        <translation type="unfinished"></translation>
+        <translation>驱动程式设定</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1117"/>
@@ -1246,7 +1246,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1520"/>
         <source>create burn-in snapshots</source>
-        <translation type="unfinished"></translation>
+        <translation>建立烧机快照</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1522"/>
@@ -1316,7 +1316,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1553"/>
         <source>sound output method</source>
-        <translation type="unfinished"></translation>
+        <translation>声音输出方式</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1554"/>
@@ -1641,7 +1641,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2132"/>
         <source>OSD full screen</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 全屏幕</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2133"/>
@@ -1651,7 +1651,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2130"/>
         <source>OSD video</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 视频</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2131"/>
@@ -1676,7 +1676,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2162"/>
         <source>Windows performance</source>
-        <translation type="unfinished">Windows 性能</translation>
+        <translation>Windows 性能</translation>
     </message>
     <message>
         <source>per-window video</source>
@@ -1744,7 +1744,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2165"/>
         <source>Windows debugging</source>
-        <translation type="unfinished">Windows 调试</translation>
+        <translation>Windows 调试</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1593"/>
@@ -2014,17 +2014,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2136"/>
         <source>Direct3D post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Direct3D 后处理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2137"/>
         <source>OSD performance</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 性能</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2139"/>
         <source>NTSC post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>NTSC 后处理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2154"/>
@@ -2044,12 +2044,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2144"/>
         <source>OSD sound</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 音讯</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2164"/>
         <source>OSD debugging</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 除错</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2279"/>
@@ -2312,37 +2312,37 @@ Do you wish to continue?</source>
     <message>
         <location filename="../options.ui" line="14"/>
         <source>Options</source>
-        <translation type="unfinished">选项</translation>
+        <translation>选项</translation>
     </message>
     <message>
         <location filename="../options.ui" line="27"/>
         <source>GUI</source>
-        <translation type="unfinished">图形界面</translation>
+        <translation>图形界面</translation>
     </message>
     <message>
         <location filename="../options.ui" line="47"/>
         <source>Global</source>
-        <translation type="unfinished">全局</translation>
+        <translation>全局</translation>
     </message>
     <message>
         <location filename="../options.ui" line="67"/>
         <source>Source</source>
-        <translation type="unfinished">驱动</translation>
+        <translation>驱动</translation>
     </message>
     <message>
         <location filename="../options.ui" line="87"/>
         <source>BIOS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../options.ui" line="107"/>
         <source>Clone Of</source>
-        <translation type="unfinished">原作</translation>
+        <translation>原作</translation>
     </message>
     <message>
         <location filename="../options.ui" line="127"/>
         <source>Game</source>
-        <translation type="unfinished">游戏</translation>
+        <translation>游戏</translation>
     </message>
 </context>
 <context>
@@ -2350,7 +2350,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../playoptions.ui" line="14"/>
         <source>Play</source>
-        <translation type="unfinished">播放</translation>
+        <translation>播放</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="23"/>
@@ -2360,65 +2360,65 @@ Do you wish to continue?</source>
         <location filename="../playoptions.ui" line="63"/>
         <location filename="../playoptions.ui" line="73"/>
         <source>Browse...</source>
-        <translation type="unfinished">浏览...</translation>
+        <translation>浏览...</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="90"/>
         <source>Load Savestate</source>
-        <translation type="unfinished">载入游戏进度</translation>
+        <translation>载入游戏进度</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="97"/>
         <source>Playback Input</source>
-        <translation type="unfinished">播放录像</translation>
+        <translation>播放录像</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="104"/>
         <source>Record Input</source>
-        <translation type="unfinished">录制录像</translation>
+        <translation>录制录像</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="111"/>
         <source>Record MNG Output</source>
-        <translation type="unfinished">录制 MNG 视频输出</translation>
+        <translation>录制 MNG 视频输出</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="118"/>
         <source>Record AVI Output</source>
-        <translation type="unfinished">录制 AVI 视频输出</translation>
+        <translation>录制 AVI 视频输出</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="125"/>
         <source>Record Wave Output</source>
-        <translation type="unfinished">录制波形音频输出</translation>
+        <translation>录制波形音频输出</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="218"/>
         <location filename="../dialogs.cpp" line="220"/>
         <source>File name:</source>
-        <translation type="unfinished">文件名:</translation>
+        <translation>文件名:</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="229"/>
         <source>Savestate files</source>
-        <translation type="unfinished">游戏进度文件</translation>
+        <translation>游戏进度文件</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="235"/>
         <location filename="../dialogs.cpp" line="254"/>
         <source>Input files</source>
-        <translation type="unfinished">录像文件</translation>
+        <translation>录像文件</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="262"/>
         <location filename="../dialogs.cpp" line="270"/>
         <source>Videos</source>
-        <translation type="unfinished">视频文件</translation>
+        <translation>视频文件</translation>
     </message>
     <message>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
-        <translation type="unfinished">声音文件</translation>
+        <translation>声音文件</translation>
     </message>
 </context>
 <context>

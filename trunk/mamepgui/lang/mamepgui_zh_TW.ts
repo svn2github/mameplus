@@ -937,7 +937,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../prototype.cpp" line="637"/>
         <source>Cache streamVersion has been updated. A full refresh is required.</source>
-        <translation type="unfinished"></translation>
+        <translation>快取串流版本已更新，需要完全重整。</translation>
     </message>
     <message>
         <location filename="../prototype.cpp" line="871"/>
@@ -1186,7 +1186,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1520"/>
         <source>create burn-in snapshots</source>
-        <translation type="unfinished"></translation>
+        <translation>建立燒機擷圖</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1522"/>
@@ -1321,7 +1321,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1553"/>
         <source>sound output method</source>
-        <translation type="unfinished"></translation>
+        <translation>聲音輸出方式</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1554"/>
@@ -1851,7 +1851,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2132"/>
         <source>OSD full screen</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 全螢幕</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2133"/>
@@ -1861,7 +1861,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2130"/>
         <source>OSD video</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 視訊</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2131"/>
@@ -1946,7 +1946,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2162"/>
         <source>Windows performance</source>
-        <translation type="unfinished">Windows 效能選項</translation>
+        <translation>Windows 版效能選項</translation>
     </message>
     <message>
         <source>per-window video</source>
@@ -2014,7 +2014,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2165"/>
         <source>Windows debugging</source>
-        <translation type="unfinished">Windows 除錯選項</translation>
+        <translation>Windows 除錯選項</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2270"/>
@@ -2054,7 +2054,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2164"/>
         <source>OSD debugging</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 除錯中</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2290"/>
@@ -2069,12 +2069,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2136"/>
         <source>Direct3D post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Direct3D 後處理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2137"/>
         <source>OSD performance</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 效能</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2138"/>
@@ -2084,27 +2084,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="2139"/>
         <source>NTSC post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>NTSC 後處理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2154"/>
         <source>Vector post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>向量後處理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2140"/>
         <source>Bloom post-processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloom 後處理</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2142"/>
         <source>OSD per-window video</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 各個畫面的視訊選項</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2144"/>
         <source>OSD sound</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD 音訊</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2150"/>

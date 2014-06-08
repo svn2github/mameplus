@@ -772,7 +772,7 @@ enable HLSL AVI writing (huge disk bandwidth suggested)
 
 # osd/windows/winmain.c: 300
 enable HLSL post-processing (PS3.0 required)
-啟用 HLSL 預先處理 (需 PS3.0)
+啟用 HLSL 後處理 (需 PS3.0)
 
 # osd/windows/winmain.c: 413
 enable audio sync
