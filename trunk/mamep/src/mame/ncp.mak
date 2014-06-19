@@ -78,6 +78,8 @@ MACHINES += SCSI
 MACHINES += V3021
 MACHINES += PD4990A_OLD
 MACHINES += UPD1990A
+MACHINES += Z80CTC
+MACHINES += I8255
 
 #-------------------------------------------------
 # specify available bus cores
@@ -113,6 +115,7 @@ DRVLIBS += \
 
 $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
+	$(DRIVERS)/kenseim.o \
 	$(DRIVERS)/cps2.o \
 	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
 	$(DRIVERS)/fcrash.o \
@@ -152,6 +155,8 @@ $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 $(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
 $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
+
+$(DRIVERS)/kenseim.o:   $(LAYOUT)/kenseim.lh
 
 #-------------------------------------------------
 # mamep: driver list dependencies
