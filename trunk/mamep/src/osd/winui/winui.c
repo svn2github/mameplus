@@ -1006,7 +1006,9 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	time(&start);
 	windows_osd_interface osd;
 	osd.register_options(mame_opts);
-	machine_manager::instance(mame_opts, osd);
+	machine_manager *manager = machine_manager::instance(mame_opts, osd);
+	manager->execute();
+	global_free(manager);	
 	// Calc the duration
 	time(&end);
 	elapsedtime = end - start;
