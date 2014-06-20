@@ -168,7 +168,7 @@
     <message>
         <location filename="../gamelist.cpp" line="1455"/>
         <source>Non Mechanical</source>
-        <translation type=>非机械的</translation>
+        <translation>非机械的</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1828"/>
