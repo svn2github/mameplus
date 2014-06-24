@@ -271,13 +271,15 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
 		// This handler is called for each incoming websocket frame, one or more
 		// times for connection lifetime.
 		// Echo websocket data back to the client.
-		//const char *msg = "update_machine";
-		//mg_websocket_write(conn, 1, msg, strlen(msg));
 		return conn->content_len == 4 && !memcmp(conn->content, "exit", 4) ? MG_FALSE : MG_TRUE;
     } else {
 		web_engine *engine = static_cast<web_engine *>(conn->server_param);	
-		return engine->begin_request_handler(conn);    
+		return engine->begin_request_handler(conn);
 	}
+  } else if (ev== MG_WS_CONNECT) {
+	// New websocket connection. Send connection ID back to the client.
+	mg_websocket_printf(conn, WEBSOCKET_OPCODE_TEXT, "update_machine");
+	return MG_FALSE;
   } else if (ev == MG_AUTH) {
     return MG_TRUE;
   } else {

@@ -56,8 +56,8 @@
 	MCFG_MSX_SLOT_CARTRIDGE_ADD(_tag, WRITELINE(msx_state, msx_irq_source1)) \
 	msx_state::install_slot_pages(*owner, _prim, _sec, 0, 4, device);
 
-#define MCFG_MSX_LAYOUT_YAMAHA_EXPANSION(_tag, _prim, _sec) \
-	MCFG_MSX_SLOT_YAMAHA_EXPANSION_ADD(_tag, WRITELINE(msx_state, msx_irq_source2)) \
+#define MCFG_MSX_LAYOUT_YAMAHA_EXPANSION(_tag, _prim, _sec, _default) \
+	MCFG_MSX_SLOT_YAMAHA_EXPANSION_ADD(_tag, WRITELINE(msx_state, msx_irq_source2), _default) \
 	msx_state::install_slot_pages(*owner, _prim, _sec, 0, 4, device);
 
 #define MCFG_MSX_LAYOUT_RAM_MM(_tag, _prim, _sec, _total_size) \
@@ -81,6 +81,10 @@
 
 #define MCFG_MSX_LAYOUT_DISK4(_tag, _prim, _sec, _page, _numpages, _region, _offset) \
 	MCFG_MSX_SLOT_DISK4_ADD(_tag, _page, _numpages, _region, _offset, "fdc", "fdc:0", "fdc:1") \
+	msx_state::install_slot_pages(*owner, _prim, _sec, _page, _numpages, device);
+
+#define MCFG_MSX_LAYOUT_DISK5(_tag, _prim, _sec, _page, _numpages, _region, _offset) \
+	MCFG_MSX_SLOT_DISK5_ADD(_tag, _page, _numpages, _region, _offset, "fdc", "fdc:0", "fdc:1", "fdc:2", "fdc:3") \
 	msx_state::install_slot_pages(*owner, _prim, _sec, _page, _numpages, device);
 
 #define MCFG_MSX_LAYOUT_MUSIC(_tag, _prim, _sec, _page, _numpages, _region, _offset) \

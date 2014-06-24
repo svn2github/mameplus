@@ -100,9 +100,8 @@ TILE_GET_INFO_MEMBER(goldstar_state::get_sangho_fg_tile_info)
 	int attr = m_fg_atrram[tile_index];
 
 	SET_TILE_INFO_MEMBER(0,
-//			code | (attr & 0xf0)<<4,
 			code | (attr & 0x0f)<<8,
-			attr&0x0f,
+			(attr&0x70)>>4,
 			0);
 }
 
@@ -112,9 +111,8 @@ TILE_GET_INFO_MEMBER(goldstar_state::get_sangho_bg_tile_info)
 	int attr = m_bg_atrram[tile_index];
 
 	SET_TILE_INFO_MEMBER(1,
-//			code | (attr & 0xf0)<<4,
 			code | (attr & 0x0f)<<8,
-			attr&0x0f,
+			(attr&0x70)>>4,
 			0);
 }
 
@@ -273,8 +271,7 @@ TILE_GET_INFO_MEMBER(goldstar_state::get_sangho_reel1_tile_info)
 
 	SET_TILE_INFO_MEMBER(1,
 			code | (attr & 0x0f)<<8,
-//			(attr&0xf0)>>4,
-			(attr&0x0f)>>0,
+			(attr&0x70)>>4,
 			0);
 }
 
@@ -285,8 +282,7 @@ TILE_GET_INFO_MEMBER(goldstar_state::get_sangho_reel2_tile_info)
 
 	SET_TILE_INFO_MEMBER(1,
 			code | (attr & 0x0f)<<8,
-//			(attr&0xf0)>>4,
-			(attr&0x0f)>>0,
+			(attr&0x70)>>4,
 			0);
 }
 
@@ -297,8 +293,7 @@ TILE_GET_INFO_MEMBER(goldstar_state::get_sangho_reel3_tile_info)
 
 	SET_TILE_INFO_MEMBER(1,
 			code | (attr & 0x0f)<<8,
-//			(attr&0xf0)>>4,
-			(attr&0x0f)>>0,
+			(attr&0x70)>>4,
 			0);
 }
 
@@ -764,9 +759,9 @@ UINT32 goldstar_state::screen_update_sangho(screen_device &screen, bitmap_ind16 
 		}
 
 		// are these hardcoded, or registers?
-		const rectangle visible1(0*8, (14+48)*8-1,  4*8,  (4+7)*8-1);
-		const rectangle visible2(0*8, (14+48)*8-1, 12*8, (12+7)*8-1);
-		const rectangle visible3(0*8, (14+48)*8-1, 20*8, (20+7)*8-1);
+		const rectangle visible1(0*8, (15+48)*8-1,  4*8,  (4+7)*8-1);
+		const rectangle visible2(0*8, (15+48)*8-1, 12*8, (12+7)*8-1);
+		const rectangle visible3(0*8, (15+48)*8-1, 20*8, (20+7)*8-1);
 
 		m_reel1_tilemap->draw(screen, bitmap, visible1, 0, 0);
 		m_reel2_tilemap->draw(screen, bitmap, visible2, 0, 0);

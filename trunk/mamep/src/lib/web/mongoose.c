@@ -147,6 +147,8 @@ union socket_address {
   struct sockaddr_in sin;
 #ifdef NS_ENABLE_IPV6
   struct sockaddr_in6 sin6;
+#else
+  struct sockaddr sin6;
 #endif
 };
 
@@ -222,6 +224,7 @@ int ns_server_poll(struct ns_server *, int milli);
 void ns_server_wakeup(struct ns_server *);
 void ns_server_wakeup_ex(struct ns_server *, ns_callback_t, void *, size_t);
 void ns_iterate(struct ns_server *, ns_callback_t cb, void *param);
+struct ns_connection *ns_next(struct ns_server *, struct ns_connection *);
 struct ns_connection *ns_add_sock(struct ns_server *, sock_t sock, void *p);
 
 int ns_bind(struct ns_server *, const char *addr);
@@ -337,7 +340,7 @@ void *ns_start_thread(void *(*f)(void *), void *p) {
   (void) pthread_attr_init(&attr);
   (void) pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-#if NS_STACK_SIZE > 1
+#if defined(NS_STACK_SIZE) && NS_STACK_SIZE > 1
   (void) pthread_attr_setstacksize(&attr, NS_STACK_SIZE);
 #endif
 
@@ -547,10 +550,16 @@ static sock_t ns_open_listening_socket(union socket_address *sa) {
 
   if ((sock = socket(sa->sa.sa_family, SOCK_STREAM, 6)) != INVALID_SOCKET &&
 #ifndef _WIN32
+      // SO_RESUSEADDR is not enabled on Windows because the semantics of
+      // SO_REUSEADDR on UNIX and Windows is different. On Windows,
+      // SO_REUSEADDR allows to bind a socket to a port without error even if
+      // the port is already open by another program. This is not the behavior
+      // SO_REUSEADDR was designed for, and leads to hard-to-track failure
+      // scenarios. Therefore, SO_REUSEADDR was disabled on Windows.
       !setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void *) &on, sizeof(on)) &&
 #endif
       !bind(sock, &sa->sa, sa->sa.sa_family == AF_INET ?
-            sizeof(sa->sin) : sizeof(sa->sa)) &&
+            sizeof(sa->sin) : sizeof(sa->sin6)) &&
       !listen(sock, SOMAXCONN)) {
     ns_set_non_blocking_mode(sock);
     // In case port was set to 0, get the real port number
@@ -676,8 +685,8 @@ void ns_sock_to_str(sock_t sock, char *buf, size_t len, int flags) {
 #endif
     }
     if (flags & 2) {
-      snprintf(buf + strlen(buf), len - (strlen(buf) + 1), ":%d",
-      (int) ntohs(sa.sin.sin_port));
+      snprintf(buf + strlen(buf), len - (strlen(buf) + 1), "%s%d",
+               flags & 1 ? ":" : "", (int) ntohs(sa.sin.sin_port));
     }
   }
 }
@@ -861,6 +870,10 @@ int ns_server_poll(struct ns_server *server, int milli) {
   tv.tv_usec = (milli % 1000) * 1000;
 
   if (select((int) max_fd + 1, &read_set, &write_set, NULL, &tv) > 0) {
+    // select() might have been waiting for a long time, reset current_time
+    // now to prevent last_io_time being set to the past.
+    current_time = time(NULL);
+    
     // Accept new connections
     if (server->listening_sock != INVALID_SOCKET &&
         FD_ISSET(server->listening_sock, &read_set)) {
@@ -885,7 +898,6 @@ int ns_server_poll(struct ns_server *server, int milli) {
 
     for (conn = server->active_connections; conn != NULL; conn = tmp_conn) {
       tmp_conn = conn->next;
-      //DBG(("%p LOOP %p", conn, conn->ssl));
       if (FD_ISSET(conn->sock, &read_set)) {
         conn->last_io_time = current_time;
         ns_read_from_socket(conn);
@@ -977,6 +989,10 @@ struct ns_connection *ns_add_sock(struct ns_server *s, sock_t sock, void *p) {
     DBG(("%p %d", conn, sock));
   }
   return conn;
+}
+
+struct ns_connection *ns_next(struct ns_server *s, struct ns_connection *conn) {
+  return conn == NULL ? s->active_connections : conn->next;
 }
 
 void ns_iterate(struct ns_server *server, ns_callback_t cb, void *param) {
@@ -1656,7 +1672,7 @@ static void *push_to_stdin(void *arg) {
 
 static void *pull_from_stdout(void *arg) {
   struct threadparam *tp = (struct threadparam *)arg;
-  int k=0, stop = 0;
+  int k = 0, stop = 0;
   DWORD n, sent;
   char buf[IOBUF_SIZE];
 
@@ -2704,6 +2720,12 @@ size_t mg_websocket_write(struct mg_connection* conn, int opcode,
       free(copy);
     }
 
+    // If we send closing frame, schedule a connection to be closed after
+    // data is drained to the client.
+    if (opcode == WEBSOCKET_OPCODE_CONNECTION_CLOSE) {
+      MG_CONN_2_CONN(conn)->ns_conn->flags |= NSF_FINISHED_SENDING_DATA;
+    }
+
     return MG_CONN_2_CONN(conn)->ns_conn->send_iobuf.len;
 }
 
@@ -2734,6 +2756,7 @@ static void send_websocket_handshake_if_requested(struct mg_connection *conn) {
     if (call_user(MG_CONN_2_CONN(conn), MG_WS_HANDSHAKE) == MG_FALSE) {
       send_websocket_handshake(conn, key);
     }
+    call_user(MG_CONN_2_CONN(conn), MG_WS_CONNECT);
   }
 }
 
@@ -3995,29 +4018,6 @@ static void handle_ssi_request(struct connection *conn, const char *path) {
 }
 #endif
 
-static int parse_url(const char *url, char *proto, size_t plen,
-                     char *host, size_t hlen, unsigned short *port) {
-  int n;
-  char fmt1[100], fmt2[100], fmt3[100];
-
-  *port = 80;
-  proto[0] = host[0] = '\0';
-
-  snprintf(fmt1, sizeof(fmt1), "%%%zu[a-z]://%%%zu[^: ]:%%hu%%n", plen, hlen);
-  snprintf(fmt2, sizeof(fmt2), "%%%zu[a-z]://%%%zu[^/ ]%%n", plen, hlen);
-  snprintf(fmt3, sizeof(fmt3), "%%%zu[^: ]:%%hu%%n", hlen);
-
-  if (sscanf(url, fmt1, proto, host, port, &n) == 3 ||
-      sscanf(url, fmt2, proto, host, &n) == 2) {
-    return n;
-  } else if (sscanf(url, fmt3, host, port, &n) == 2) {
-    proto[0] = '\0';
-    return n;
-  }
-
-  return 0;
-}
-
 static void proxy_request(struct ns_connection *pc, struct mg_connection *c) {
   int i, sent_close_header = 0;
 
@@ -4042,16 +4042,50 @@ static void proxy_request(struct ns_connection *pc, struct mg_connection *c) {
 
 }
 
+#ifdef NS_ENABLE_SSL
+int mg_terminate_ssl(struct mg_connection *c, const char *cert) {
+  static const char ok[] = "HTTP/1.0 200 OK\r\n\r\n";
+  struct connection *conn = MG_CONN_2_CONN(c);
+  int n;
+  SSL_CTX *ctx;
+
+  DBG(("%p MITM", conn));
+  SSL_library_init();
+  if ((ctx = SSL_CTX_new(SSLv23_server_method())) == NULL) return 0;
+
+  SSL_CTX_use_certificate_file(ctx, cert, 1);
+  SSL_CTX_use_PrivateKey_file(ctx, cert, 1);
+  SSL_CTX_use_certificate_chain_file(ctx, cert);
+
+  // When clear-text reply is pushed to client, switch to SSL mode.
+  n = send(conn->ns_conn->sock, ok, sizeof(ok) - 1, 0);
+  DBG(("%p %lu %d SEND", c, sizeof(ok) - 1, n));
+  conn->ns_conn->send_iobuf.len = 0;
+  conn->endpoint_type = EP_USER;  // To keep-alive in close_local_endpoint()
+  close_local_endpoint(conn);     // Clean up current CONNECT request
+  if ((conn->ns_conn->ssl = SSL_new(ctx)) != NULL) {
+    SSL_set_fd(conn->ns_conn->ssl, conn->ns_conn->sock);
+  }
+  SSL_CTX_free(ctx);
+  return 1;
+}
+#endif
+
 static void proxify_connection(struct connection *conn) {
   char proto[10], host[500], cert[500];
   unsigned short port = 80;
   struct mg_connection *c = &conn->mg_conn;
   struct ns_server *server = &conn->server->ns_server;
-  struct ns_connection *pc;
-  int n, use_ssl;
+  struct ns_connection *pc = NULL;
+  int n = 0;
+  const char *url = c->uri;
 
   proto[0] = host[0] = cert[0] = '\0';
-  n = parse_url(c->uri, proto, sizeof(proto), host, sizeof(host), &port);
+  if (sscanf(url, "%499[^: ]:%hu%n", host, &port, &n) != 2 &&
+      sscanf(url, "%9[a-z]://%499[^: ]:%hu%n", proto, host, &port, &n) != 3 &&
+      sscanf(url, "%9[a-z]://%499[^/ ]%n", proto, host, &n) != 2) {
+    n = 0;
+  }
 
 #ifdef NS_ENABLE_SSL
   // Find out whether we should be in the MITM mode
@@ -4060,24 +4094,24 @@ static void proxify_connection(struct connection *conn) {
     int host_len = strlen(host);
     struct vec a, b;
 
-    while ((certs = next_option(certs, &a, &b)) != NULL) {
-      if (a.len == host_len && mg_strncasecmp(a.ptr, host, a.len) == 0) {
-        snprintf(cert, sizeof(cert), "%.*s", b.len, b.ptr);
-        break;
-      }
+    while (conn->ns_conn->ssl == NULL && port != 80 &&
+           (certs = next_option(certs, &a, &b)) != NULL) {
+      if (a.len != host_len || mg_strncasecmp(a.ptr, host, a.len)) continue;
+      snprintf(cert, sizeof(cert), "%.*s", b.len, b.ptr);
+      mg_terminate_ssl(&conn->mg_conn, cert);
+      return;
     }
   }
 #endif
 
-  use_ssl = port != 80 && cert[0] != '\0';
-
   if (n > 0 &&
-      (pc = ns_connect(server, host, port, use_ssl, conn)) != NULL) {
+      (pc = ns_connect(server, host, port, conn->ns_conn->ssl != NULL,
+                       conn)) != NULL) {
     // Interlink two connections
     pc->flags |= MG_PROXY_CONN;
     conn->endpoint_type = EP_PROXY;
     conn->endpoint.nc = pc;
-    DBG(("%p [%s] -> %p %d", conn, c->uri, pc, use_ssl));
+    DBG(("%p [%s] -> %p %p", conn, c->uri, pc, conn->ns_conn->ssl));
 
     if (strcmp(c->request_method, "CONNECT") == 0) {
       // For CONNECT request, reply with 200 OK. Tunnel is established.
@@ -4085,34 +4119,6 @@ static void proxify_connection(struct connection *conn) {
       conn->request_len = 0;
       free(conn->request);
       conn->request = NULL;
-#ifdef NS_ENABLE_SSL
-      if (use_ssl) {
-        SSL_CTX *ctx;
-
-        DBG(("%s", "Triggering MITM mode: terminating SSL connection"));
-        SSL_library_init();
-        ctx = SSL_CTX_new(SSLv23_server_method());
-
-        if (ctx == NULL) {
-          pc->flags |= NSF_CLOSE_IMMEDIATELY;
-        } else {
-          SSL_CTX_use_certificate_file(ctx, cert, 1);
-          SSL_CTX_use_PrivateKey_file(ctx, cert, 1);
-          SSL_CTX_use_certificate_chain_file(ctx, cert);
-
-          // When clear-text reply is pushed to client, switch to SSL mode.
-          n = send(conn->ns_conn->sock, conn->ns_conn->send_iobuf.buf,
-                   conn->ns_conn->send_iobuf.len, 0);
-          DBG(("%p %lu %d SEND", c, conn->ns_conn->send_iobuf.len, n));
-          conn->ns_conn->send_iobuf.len = 0;
-          if ((conn->ns_conn->ssl = SSL_new(ctx)) != NULL) {
-            //SSL_set_fd((SSL *) c->connection_param, conn->ns_conn->sock);
-            SSL_set_fd(conn->ns_conn->ssl, conn->ns_conn->sock);
-          }
-          SSL_CTX_free(ctx);
-        }
-      }
-#endif
     } else {
       // For other methods, forward the request to the target host.
       c->uri += n;
@@ -4187,9 +4193,11 @@ void mg_send_file(struct mg_connection *c, const char *file_name) {
 #endif  // !MONGOOSE_NO_FILESYSTEM
 
 static void open_local_endpoint(struct connection *conn, int skip_user) {
+#ifndef MONGOOSE_NO_FILESYSTEM
   char path[MAX_PATH_SIZE];
   file_stat_t st;
   int exists = 0;
+#endif
 
   // If EP_USER was set in a prev call, reset it
   conn->endpoint_type = EP_NONE;
@@ -4302,10 +4310,9 @@ static void try_parse(struct connection *conn) {
 
 static void do_proxy(struct connection *conn) {
   if (conn->request_len == 0) {
-    DBG(("%p parsing", conn));
     try_parse(conn);
-    if (conn->request_len > 0 &&
-        call_user(conn, MG_REQUEST) == MG_FALSE) {
+    DBG(("%p parsing -> %d", conn, conn->request_len));
+    if (conn->request_len > 0 && call_user(conn, MG_REQUEST) == MG_FALSE) {
       proxy_request(conn->endpoint.nc, &conn->mg_conn);
     } else if (conn->request_len < 0) {
       ns_forward(conn->ns_conn, conn->endpoint.nc);
@@ -4564,6 +4571,15 @@ static void iter(struct ns_connection *nsconn, enum ns_event ev, void *param) {
   }
 }
 
+struct mg_connection *mg_next(struct mg_server *s, struct mg_connection *c) {
+  struct connection *conn = MG_CONN_2_CONN(c);
+  struct ns_connection *nc = ns_next(&s->ns_server,
+                                     c == NULL ? NULL : conn->ns_conn);
+    
+  return nc == NULL ? NULL :
+    & ((struct connection *) nc->connection_data)->mg_conn;
+}
+
 // Apply function to all active connections.
 void mg_iterate_over_connections(struct mg_server *server, mg_handler_t cb,
   void *param) {
@@ -4730,12 +4746,10 @@ const char *mg_set_option(struct mg_server *server, const char *name,
     if (port < 0) {
       error_msg = "Cannot bind to port";
     } else {
-      if (!strcmp(value, "0")) {
-        char buf[10];
-        mg_snprintf(buf, sizeof(buf), "%d", port);
-        free(*v);
-        *v = mg_strdup(buf);
-      }
+      char buf[100];
+      ns_sock_to_str(server->ns_server.listening_sock, buf, sizeof(buf), 2);
+      free(*v);
+      *v = mg_strdup(buf);
     }
 #ifndef _WIN32
   } else if (ind == RUN_AS_USER) {
@@ -4829,7 +4843,9 @@ static void hexdump(struct ns_connection *nc, const char *path,
 
 static void mg_ev_handler(struct ns_connection *nc, enum ns_event ev, void *p) {
   struct connection *conn = (struct connection *) nc->connection_data;
+#ifndef MONGOOSE_NO_FILESYSTEM
   struct mg_server *server = (struct mg_server *) nc->server;
+#endif
 
   // Send NS event to the handler. Note that call_user won't send an event
   // if conn == NULL. Therefore, repeat this for NS_ACCEPT event as well.
@@ -4923,7 +4939,10 @@ static void mg_ev_handler(struct ns_connection *nc, enum ns_event ev, void *p) {
 
     case NS_POLL:
       if (call_user(conn, MG_POLL) == MG_TRUE) {
-        nc->flags |= NSF_FINISHED_SENDING_DATA;
+        if (conn->ns_conn->flags & MG_HEADERS_SENT) {
+          write_terminating_chunk(conn);
+        }
+        close_local_endpoint(conn);
       }
 
       if (conn != NULL && conn->endpoint_type == EP_FILE) {

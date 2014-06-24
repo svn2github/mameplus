@@ -27,11 +27,9 @@
 #include "cpu/m68000/m68000.h"
 #include "machine/tmp68301.h"
 #include "video/v9938.h"
-#include "cpu/z80/z80.h"
-#include "machine/z80ctc.h"
+#include "cpu/z80/tmpz84c011.h"
 #include "sound/dac.h"
 #include "sound/3812intf.h"
-#include "cpu/z80/z80daisy.h"
 #include "machine/nvram.h"
 #include "cpu/h8/h83002.h"
 
@@ -46,14 +44,16 @@ public:
 		m_v9958(*this, "v9958"),
 		m_dac1(*this, "dac1"),
 		m_dac2(*this, "dac2")
-		{ }
-
-	UINT16 m_mux_data;
-
+	{ }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<tmp68301_device> m_tmp68301;
 	required_device<v9958_device> m_v9958;
+	required_device<dac_device> m_dac1;
+	required_device<dac_device> m_dac2;
+
+	UINT16 m_mux_data;
+
 	DECLARE_READ16_MEMBER(csplayh5_mux_r);
 	DECLARE_WRITE16_MEMBER(csplayh5_mux_w);
 	DECLARE_WRITE16_MEMBER(csplayh5_sound_w);
@@ -80,8 +80,6 @@ public:
 	virtual void machine_reset();
 	TIMER_DEVICE_CALLBACK_MEMBER(csplayh5_irq);
 	DECLARE_WRITE_LINE_MEMBER(csplayh5_vdp0_interrupt);
-	required_device<dac_device> m_dac1;
-	required_device<dac_device> m_dac2;
 };
 
 
@@ -235,7 +233,6 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( csplayh5_sound_io_map, AS_IO, 8, csplayh5_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE("ymsnd", ym3812_device, write)
 ADDRESS_MAP_END
 
@@ -453,7 +450,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(csplayh5_state::csplayh5_irq)
 
 static const z80_daisy_config daisy_chain_sound[] =
 {
-	{ "ctc" },
+	TMPZ84C011_DAISY_INTERNAL,
 	{ NULL }
 };
 
@@ -478,15 +475,12 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_CPU_CONFIG(daisy_chain_sound)
 	MCFG_CPU_PROGRAM_MAP(csplayh5_sound_map)
 	MCFG_CPU_IO_MAP(csplayh5_sound_io_map)
-	MCFG_TMPZ84C011_PORTA_WRITE_CALLBACK(WRITE8(csplayh5_state, soundcpu_porta_w))
-	MCFG_TMPZ84C011_PORTB_WRITE_CALLBACK(WRITE8(csplayh5_state,soundcpu_dac2_w))
-	MCFG_TMPZ84C011_PORTC_WRITE_CALLBACK(WRITE8(csplayh5_state,soundcpu_dac1_w))
-	MCFG_TMPZ84C011_PORTD_READ_CALLBACK(READ8(csplayh5_state, soundcpu_portd_r))
-	MCFG_TMPZ84C011_PORTE_WRITE_CALLBACK(WRITE8(csplayh5_state,soundcpu_porte_w))
-
-	MCFG_DEVICE_ADD("ctc", Z80CTC, 8000000)
-	MCFG_Z80CTC_INTR_CB(INPUTLINE("audiocpu", INPUT_LINE_IRQ0))
-	MCFG_Z80CTC_ZC0_CB(DEVWRITELINE("ctc", z80ctc_device, trg3))
+	MCFG_TMPZ84C011_PORTA_WRITE_CB(WRITE8(csplayh5_state, soundcpu_porta_w))
+	MCFG_TMPZ84C011_PORTB_WRITE_CB(WRITE8(csplayh5_state, soundcpu_dac2_w))
+	MCFG_TMPZ84C011_PORTC_WRITE_CB(WRITE8(csplayh5_state, soundcpu_dac1_w))
+	MCFG_TMPZ84C011_PORTD_READ_CB(READ8(csplayh5_state, soundcpu_portd_r))
+	MCFG_TMPZ84C011_PORTE_WRITE_CB(WRITE8(csplayh5_state, soundcpu_porte_w))
+	MCFG_TMPZ84C011_ZC0_CB(DEVWRITELINE("audiocpu", tmpz84c011_device, trg3))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -758,11 +752,11 @@ GAME( 1995, csplayh1,   0,   csplayh5,  csplayh5, csplayh5_state,  csplayh1,    
 
 // 1999
 /* 07 */ GAME( 1999, mjmania,   0,   csplayh5,  csplayh5, csplayh5_state,  mjmania,         ROT0, "Sphinx/Just&Just", "Mahjong Mania - Kairakukan e Youkoso (Japan)", GAME_NOT_WORKING )
-/* 08 */ // GAME( 1995, renaimj,   0,   csplayh5,  csplayh5, csplayh5_state,  renaimj,         ROT0, "Nichibutsu/eic",   "Renai Mahjong Idol Gakuen (Japan)", GAME_NOT_WORKING )
+/* 08 */ //GAME( 1995, renaimj,   0,   csplayh5,  csplayh5, csplayh5_state,  renaimj,         ROT0, "Nichibutsu/eic",   "Renai Mahjong Idol Gakuen (Japan)", GAME_NOT_WORKING )
 /* 09 */ GAME( 1999, bikiniko,  0,   csplayh5,  csplayh5, csplayh5_state,  bikiniko,        ROT0, "Nichibutsu/eic",   "BiKiNikko - Okinawa de Ippai Shichaimashita (Japan)", GAME_NOT_WORKING )
 // 10 : Mahjong Hanafuda Cosplay Tengoku 6 - Junai hen : Nichibutsu/eic
 /* 11 */ GAME( 1999, thenanpa,  0,   csplayh5,  csplayh5, csplayh5_state,  thenanpa,        ROT0, "Nichibutsu/Love Factory/eic", "The Nanpa (Japan)", GAME_NOT_WORKING )
-/* 12 */ // GAME( 1999, pokoachu,  0,   csplayh5,  csplayh5, driver_device,  0,        ROT0, "Nichibutsu/eic", "PokoaPoka Onsen de CHU - Bijin 3 Shimai ni Kiotsukete! (Japan)", GAME_NOT_WORKING )
+/* 12 */ //GAME( 1999, pokoachu,  0,   csplayh5,  csplayh5, driver_device,  0,        ROT0, "Nichibutsu/eic", "PokoaPoka Onsen de CHU - Bijin 3 Shimai ni Kiotsukete! (Japan)", GAME_NOT_WORKING )
 /* 13 */ GAME( 1999, csplayh7,  0,   csplayh5,  csplayh5, csplayh5_state,  csplayh7,        ROT0, "Nichibutsu/eic", "Cosplay Tengoku 7 - Super Kogal Grandprix (Japan)", GAME_NOT_WORKING )
 // 14 : Ai-mode - Pet Shiiku : Nichibutsu/eic
 

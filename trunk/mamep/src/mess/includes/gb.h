@@ -93,19 +93,14 @@ public:
 	DECLARE_READ8_MEMBER(gb_io_r);
 	DECLARE_WRITE8_MEMBER(gbc_io2_w);
 	DECLARE_READ8_MEMBER(gbc_io2_r);
-	DECLARE_MACHINE_START(gb);
-	DECLARE_MACHINE_RESET(gb);
 	DECLARE_PALETTE_INIT(gb);
 	DECLARE_MACHINE_START(sgb);
 	DECLARE_MACHINE_RESET(sgb);
 	DECLARE_PALETTE_INIT(sgb);
-	DECLARE_MACHINE_START(gbpocket);
-	DECLARE_MACHINE_RESET(gbpocket);
 	DECLARE_PALETTE_INIT(gbp);
 	DECLARE_MACHINE_START(gbc);
 	DECLARE_MACHINE_RESET(gbc);
 	DECLARE_PALETTE_INIT(gbc);
-	INTERRUPT_GEN_MEMBER(gb_scanline_interrupt);
 	TIMER_CALLBACK_MEMBER(gb_serial_timer_proc);
 	DECLARE_WRITE8_MEMBER(gb_timer_callback);
 
@@ -137,6 +132,9 @@ protected:
 	void save_gb_base();
 	void save_gbc_only();
 	void save_sgb_only();
+
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 

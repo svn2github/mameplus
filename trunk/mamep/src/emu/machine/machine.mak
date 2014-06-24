@@ -512,6 +512,15 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/e05a03.h,MACHINES += E05A03
+#-------------------------------------------------
+
+ifneq ($(filter E05A03,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/e05a03.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/machine/eeprom.h,MACHINES += EEPROMDEV
 #@src/emu/machine/eepromser.h,MACHINES += EEPROMDEV
 #@src/emu/machine/eeprompar.h,MACHINES += EEPROMDEV
@@ -530,15 +539,6 @@ endif
 
 ifneq ($(filter ER2055,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/er2055.o
-endif
-
-#-------------------------------------------------
-#
-#@src/emu/machine/er59256.h,MACHINES += ER59256
-#-------------------------------------------------
-
-ifneq ($(filter ER59256,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/er59256.o
 endif
 
 #-------------------------------------------------
@@ -1672,6 +1672,15 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/ym2148.h,MACHINES += YM2148
+#-------------------------------------------------
+
+ifneq ($(filter YM2148,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/ym2148.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/machine/z80ctc.h,MACHINES += Z80CTC
 #-------------------------------------------------
 
@@ -1749,6 +1758,7 @@ endif
 
 ifneq ($(filter I8255,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/i8255.o
+MACHINEOBJS += $(MACHINEOBJ)/mb89363b.o
 endif
 
 $(MACHINEOBJ)/s3c2400.o:    $(MACHINESRC)/s3c24xx.inc
@@ -1844,6 +1854,15 @@ endif
 
 ifneq ($(filter SMC92X4,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/smc92x4.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/hdc9234.h,MACHINES += HDC9234
+#-------------------------------------------------
+
+ifneq ($(filter HDC9234,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/hdc9234.o
 endif
 
 #-------------------------------------------------

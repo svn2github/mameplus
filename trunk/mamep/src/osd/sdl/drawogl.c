@@ -187,7 +187,6 @@ struct texture_info
 	UINT32              mpass_texture_scrn[2];  // Multipass OpenGL texture "name"/ID for the shader
 	UINT32              mpass_fbo_scrn[2];      // framebuffer object for this texture, multipass
 
-	UINT32              lut_texture;            // LUT OpenGL texture "name"/ID for the shader
 	int                 lut_table_width;        // LUT table width
 	int                 lut_table_height;       // LUT table height
 
@@ -1619,6 +1618,15 @@ static void texture_compute_type_subroutine(sdl_info *sdl, const render_texinfo 
 				texture->texpow2   = (sdl->usetexturerect)?0:sdl->texpoweroftwo;
 	}
 
+	if ( texture->type == TEXTURE_TYPE_NONE && sdl->useglsl &&
+		 texture->xprescale == 1 && texture->yprescale == 1 &&
+		 texsource->rowpixels <= sdl->texture_max_width )
+	 {
+		 texture->type      = TEXTURE_TYPE_SHADER;
+		 texture->texTarget = GL_TEXTURE_2D;
+		 texture->texpow2   = sdl->texpoweroftwo;
+	 }
+
 	// determine if we can skip the copy step
 	// if this was not already decided by the shader condition above
 	if    ( texture_copy_properties[texture->format][SDL_TEXFORMAT_SRC_EQUALS_DEST] &&
@@ -1865,8 +1873,8 @@ static int texture_shader_create(sdl_window_info *window,
 	int lut_table_width_pow2=0;
 	int lut_table_height_pow2=0;
 	int i;
-	int surf_w_pow2  = get_valid_pow2_value (window->width, texture->texpow2);
-	int surf_h_pow2  = get_valid_pow2_value (window->height, texture->texpow2);
+	int surf_w_pow2  = get_valid_pow2_value (window->blitwidth, texture->texpow2);
+	int surf_h_pow2  = get_valid_pow2_value (window->blitheight, texture->texpow2);
 
 	assert ( texture->type==TEXTURE_TYPE_SHADER );
 
@@ -1951,28 +1959,20 @@ static int texture_shader_create(sdl_window_info *window,
 			GL_CHECK_ERROR_NORMAL();
 		}
 
-		{
-			GLfloat color_texture_pow2_sz[2] = { (GLfloat)texture->rawwidth_create, (GLfloat)texture->rawheight_create };
-			uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "color_texture_pow2_sz");
-			pfn_glUniform2fvARB(uniform_location, 1, &(color_texture_pow2_sz[0]));
-			GL_CHECK_ERROR_NORMAL();
-		}
-		if ( i>sdl->glsl_program_mb2sc )
-		{
-			{
-				GLfloat screen_texture_sz[2] = { (GLfloat)window->width, (GLfloat)window->height };
-				uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "screen_texture_sz");
-				pfn_glUniform2fvARB(uniform_location, 1, &(screen_texture_sz[0]));
-				GL_CHECK_ERROR_NORMAL();
-			}
+		GLfloat color_texture_pow2_sz[2] = { (GLfloat)texture->rawwidth_create, (GLfloat)texture->rawheight_create };
+		uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "color_texture_pow2_sz");
+		pfn_glUniform2fvARB(uniform_location, 1, &(color_texture_pow2_sz[0]));
+		GL_CHECK_ERROR_NORMAL();
 
-			{
-				GLfloat screen_texture_pow2_sz[2] = { (GLfloat)surf_w_pow2, (GLfloat)surf_h_pow2 };
-				uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "screen_texture_pow2_sz");
-				pfn_glUniform2fvARB(uniform_location, 1, &(screen_texture_pow2_sz[0]));
-				GL_CHECK_ERROR_NORMAL();
-			}
-		}
+		GLfloat screen_texture_sz[2] = { (GLfloat)window->blitwidth, (GLfloat)window->blitheight };
+		uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "screen_texture_sz");
+		pfn_glUniform2fvARB(uniform_location, 1, &(screen_texture_sz[0]));
+		GL_CHECK_ERROR_NORMAL();
+
+		GLfloat screen_texture_pow2_sz[2] = { (GLfloat)surf_w_pow2, (GLfloat)surf_h_pow2 };
+		uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[i], "screen_texture_pow2_sz");
+		pfn_glUniform2fvARB(uniform_location, 1, &(screen_texture_pow2_sz[0]));
+		GL_CHECK_ERROR_NORMAL();
 	}
 
 	pfn_glUseProgramObjectARB(sdl->glsl_program[0]); // start with 1st shader
@@ -2276,7 +2276,7 @@ static texture_info *texture_create(sdl_window_info *window, const render_texinf
 //  copyline_palette16
 //============================================================
 
-INLINE void copyline_palette16(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix)
+INLINE void copyline_palette16(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix, int xprescale)
 {
 	int x;
 
@@ -2284,7 +2284,11 @@ INLINE void copyline_palette16(UINT32 *dst, const UINT16 *src, int width, const 
 	if (xborderpix)
 		*dst++ = 0xff000000 | palette[*src];
 	for (x = 0; x < width; x++)
-		*dst++ = 0xff000000 | palette[*src++];
+	{
+		int srcpix = *src++;
+		for (int x2 = 0; x2 < xprescale; x2++)
+			*dst++ = 0xff000000 | palette[srcpix]; 
+	}
 	if (xborderpix)
 		*dst++ = 0xff000000 | palette[*--src];
 }
@@ -2295,7 +2299,7 @@ INLINE void copyline_palette16(UINT32 *dst, const UINT16 *src, int width, const 
 //  copyline_palettea16
 //============================================================
 
-INLINE void copyline_palettea16(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix)
+INLINE void copyline_palettea16(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix, int xprescale)
 {
 	int x;
 
@@ -2303,7 +2307,11 @@ INLINE void copyline_palettea16(UINT32 *dst, const UINT16 *src, int width, const
 	if (xborderpix)
 		*dst++ = palette[*src];
 	for (x = 0; x < width; x++)
-		*dst++ = palette[*src++];
+	{
+		int srcpix = *src++;
+		for (int x2 = 0; x2 < xprescale; x2++)
+			*dst++ = palette[srcpix];
+	}
 	if (xborderpix)
 		*dst++ = palette[*--src];
 }
@@ -2314,7 +2322,7 @@ INLINE void copyline_palettea16(UINT32 *dst, const UINT16 *src, int width, const
 //  copyline_rgb32
 //============================================================
 
-INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_t *palette, int xborderpix)
+INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_t *palette, int xborderpix, int xprescale)
 {
 	int x;
 
@@ -2331,7 +2339,10 @@ INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_
 		for (x = 0; x < width; x++)
 		{
 			rgb_t srcpix = *src++;
-			*dst++ = 0xff000000 | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
+			for (int x2 = 0; x2 < xprescale; x2++)
+			{
+				*dst++ = 0xff000000 | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
+			}
 		}
 		if (xborderpix)
 		{
@@ -2346,7 +2357,14 @@ INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_
 		if (xborderpix)
 			*dst++ = 0xff000000 | *src;
 		for (x = 0; x < width; x++)
-			*dst++ = 0xff000000 | *src++;
+		{
+			rgb_t srcpix = *src++;
+
+			for (int x2 = 0; x2 < xprescale; x2++)
+			{
+				*dst++ = 0xff000000 | srcpix;
+			}
+		}
 		if (xborderpix)
 			*dst++ = 0xff000000 | *--src;
 	}
@@ -2356,7 +2374,7 @@ INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_
 //  copyline_argb32
 //============================================================
 
-INLINE void copyline_argb32(UINT32 *dst, const UINT32 *src, int width, const rgb_t *palette, int xborderpix)
+INLINE void copyline_argb32(UINT32 *dst, const UINT32 *src, int width, const rgb_t *palette, int xborderpix, int xprescale)
 {
 	int x;
 
@@ -2373,7 +2391,8 @@ INLINE void copyline_argb32(UINT32 *dst, const UINT32 *src, int width, const rgb
 		for (x = 0; x < width; x++)
 		{
 			rgb_t srcpix = *src++;
-			*dst++ = (srcpix & 0xff000000) | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
+			for (int x2 = 0; x2 < xprescale; x2++)
+				*dst++ = (srcpix & 0xff000000) | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 		if (xborderpix)
 		{
@@ -2388,7 +2407,11 @@ INLINE void copyline_argb32(UINT32 *dst, const UINT32 *src, int width, const rgb
 		if (xborderpix)
 			*dst++ = *src;
 		for (x = 0; x < width; x++)
-			*dst++ = *src++;
+		{
+			rgb_t srcpix = *src++;
+			for (int x2 = 0; x2 < xprescale; x2++)
+				*dst++ = srcpix;
+		}
 		if (xborderpix)
 			*dst++ = *--src;
 	}
@@ -2439,7 +2462,7 @@ INLINE UINT32 ycc_to_rgb(UINT8 y, UINT8 cb, UINT8 cr)
 //  copyline_yuy16_to_argb
 //============================================================
 
-INLINE void copyline_yuy16_to_argb(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix)
+INLINE void copyline_yuy16_to_argb(UINT32 *dst, const UINT16 *src, int width, const rgb_t *palette, int xborderpix, int xprescale)
 {
 	int x;
 
@@ -2464,8 +2487,11 @@ INLINE void copyline_yuy16_to_argb(UINT32 *dst, const UINT16 *src, int width, co
 			UINT16 srcpix1 = *src++;
 			UINT8 cb = srcpix0 & 0xff;
 			UINT8 cr = srcpix1 & 0xff;
-			*dst++ = ycc_to_rgb(palette[0x000 + (srcpix0 >> 8)], cb, cr);
-			*dst++ = ycc_to_rgb(palette[0x000 + (srcpix1 >> 8)], cb, cr);
+			for (int x2 = 0; x2 < xprescale/2; x2++)
+			{
+				*dst++ = ycc_to_rgb(palette[0x000 + (srcpix0 >> 8)], cb, cr);
+				*dst++ = ycc_to_rgb(palette[0x000 + (srcpix1 >> 8)], cb, cr);
+			}
 		}
 		if (xborderpix)
 		{
@@ -2496,8 +2522,11 @@ INLINE void copyline_yuy16_to_argb(UINT32 *dst, const UINT16 *src, int width, co
 			UINT16 srcpix1 = *src++;
 			UINT8 cb = srcpix0 & 0xff;
 			UINT8 cr = srcpix1 & 0xff;
-			*dst++ = ycc_to_rgb(srcpix0 >> 8, cb, cr);
-			*dst++ = ycc_to_rgb(srcpix1 >> 8, cb, cr);
+			for (int x2 = 0; x2 < xprescale/2; x2++)
+			{
+				*dst++ = ycc_to_rgb(srcpix0 >> 8, cb, cr);
+				*dst++ = ycc_to_rgb(srcpix1 >> 8, cb, cr);
+			}
 		}
 		if (xborderpix)
 		{
@@ -2543,38 +2572,41 @@ static void texture_set_data(texture_info *texture, const render_texinfo *texsou
 	// when nescesarry copy (and convert) the data
 	if (!texture->nocopy)
 	{
-		int y;
+		int y, y2;
 		UINT8 *dst;
 
 		for (y = 0; y < texsource->height; y++)
 		{
-			dst = (UINT8 *)(texture->data + (y * texture->yprescale + texture->borderpix) * texture->rawwidth);
-
-			switch (PRIMFLAG_GET_TEXFORMAT(flags))
+			for (y2 = 0; y2 < texture->yprescale; y2++)
 			{
-				case TEXFORMAT_PALETTE16:
-					copyline_palette16((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix);
-					break;
+				dst = (UINT8 *)(texture->data + (y * texture->yprescale + texture->borderpix + y2) * texture->rawwidth); 
 
-				case TEXFORMAT_PALETTEA16:
-					copyline_palettea16((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix);
-					break;
+				switch (PRIMFLAG_GET_TEXFORMAT(flags))
+				{
+					case TEXFORMAT_PALETTE16:
+						copyline_palette16((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix, texture->xprescale);
+						break;
 
-				case TEXFORMAT_RGB32:
-					copyline_rgb32((UINT32 *)dst, (UINT32 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix);
-					break;
+					case TEXFORMAT_PALETTEA16:
+						copyline_palettea16((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix, texture->xprescale);
+						break;
 
-				case TEXFORMAT_ARGB32:
-					copyline_argb32((UINT32 *)dst, (UINT32 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix);
-					break;
+					case TEXFORMAT_RGB32:
+						copyline_rgb32((UINT32 *)dst, (UINT32 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix, texture->xprescale);
+						break;
 
-				case TEXFORMAT_YUY16:
-					copyline_yuy16_to_argb((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix);
-					break;
+					case TEXFORMAT_ARGB32:
+						copyline_argb32((UINT32 *)dst, (UINT32 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix, texture->xprescale);
+						break;
 
-				default:
-					osd_printf_error("Unknown texture blendmode=%d format=%d\n", PRIMFLAG_GET_BLENDMODE(flags), PRIMFLAG_GET_TEXFORMAT(flags));
-					break;
+					case TEXFORMAT_YUY16:
+						copyline_yuy16_to_argb((UINT32 *)dst, (UINT16 *)texsource->base + y * texsource->rowpixels, texsource->width, texsource->palette, texture->borderpix, texture->xprescale);
+						break;
+
+					default:
+						osd_printf_error("Unknown texture blendmode=%d format=%d\n", PRIMFLAG_GET_BLENDMODE(flags), PRIMFLAG_GET_TEXFORMAT(flags));
+						break;
+				}
 			}
 		}
 	}
@@ -2590,21 +2622,13 @@ static void texture_set_data(texture_info *texture, const render_texinfo *texsou
 
 	if ( texture->type == TEXTURE_TYPE_SHADER )
 	{
-		if ( texture->lut_texture )
-		{
-			pfn_glActiveTexture(GL_TEXTURE1);
-			glBindTexture(texture->texTarget, texture->lut_texture);
-
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->lut_table_width);
-
-			// give the card a hint
-			glTexSubImage2D(texture->texTarget, 0, 0, 0, texture->lut_table_width, texture->lut_table_height,
-						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, texsource->palette );
-		}
 		pfn_glActiveTexture(GL_TEXTURE0);
 		glBindTexture(texture->texTarget, texture->texture);
 
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->texinfo.rowpixels);
+		if (texture->nocopy)
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->texinfo.rowpixels);
+		else
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, texture->rawwidth);
 
 		// and upload the image
 		glTexSubImage2D(texture->texTarget, 0, 0, 0, texture->rawwidth, texture->rawheight,
@@ -2833,50 +2857,47 @@ static void texture_mpass_flip(sdl_info *sdl, texture_info *texture, int shaderI
 static void texture_shader_update(sdl_window_info *window, texture_info *texture, int shaderIdx)
 {
 	sdl_info *sdl = (sdl_info *) window->dxdata;
-	if ( !texture->lut_texture )
+	int uniform_location, scrnum;
+	render_container *container;
+	GLfloat vid_attributes[4];
+
+	scrnum = 0;
+	container = (render_container *)NULL;
+	screen_device_iterator iter(window->machine().root_device());
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 	{
-		int uniform_location, scrnum;
-		render_container *container;
-		GLfloat vid_attributes[4]; // gamma, contrast, brightness, effect
-
-		scrnum = 0;
-		container = (render_container *)NULL;
-		screen_device_iterator iter(window->machine().root_device());
-		for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
+		if (scrnum == window->start_viewscreen)
 		{
-			if (scrnum == window->start_viewscreen)
-			{
-				container = &screen->container();
-			}
-
-			scrnum++;
+			container = &screen->container();
 		}
 
-		if (container!=NULL)
-		{
-			render_container::user_settings settings;
-			container->get_user_settings(settings);
-			//FIXME: Intended behaviour
+		scrnum++;
+	}
+
+	if (container!=NULL)
+	{
+		render_container::user_settings settings;
+		container->get_user_settings(settings);
+		//FIXME: Intended behaviour
 #if 1
-			vid_attributes[0] = window->machine().options().gamma();
-			vid_attributes[1] = window->machine().options().contrast();
-			vid_attributes[2] = window->machine().options().brightness();
+		vid_attributes[0] = window->machine().options().gamma();
+		vid_attributes[1] = window->machine().options().contrast();
+		vid_attributes[2] = window->machine().options().brightness();
 #else
-			vid_attributes[0] = settings.gamma;
-			vid_attributes[1] = settings.contrast;
-			vid_attributes[2] = settings.brightness;
+		vid_attributes[0] = settings.gamma;
+		vid_attributes[1] = settings.contrast;
+		vid_attributes[2] = settings.brightness;
 #endif
-			vid_attributes[3] = 0.0f;
-			uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[shaderIdx], "vid_attributes");
-			pfn_glUniform4fvARB(uniform_location, 1, &(vid_attributes[shaderIdx]));
-			if ( GL_CHECK_ERROR_QUIET() ) {
-				osd_printf_verbose("GLSL: could not set 'vid_attributes' for shader prog idx %d\n", shaderIdx);
-			}
+		vid_attributes[3] = 0.0f;
+		uniform_location = pfn_glGetUniformLocationARB(sdl->glsl_program[shaderIdx], "vid_attributes");
+		pfn_glUniform4fvARB(uniform_location, 1, &(vid_attributes[shaderIdx]));
+		if ( GL_CHECK_ERROR_QUIET() ) {
+			osd_printf_verbose("GLSL: could not set 'vid_attributes' for shader prog idx %d\n", shaderIdx);
 		}
-		else
-		{
-			osd_printf_verbose("GLSL: could not get render container for screen %d\n", window->start_viewscreen);
-		}
+	}
+	else
+	{
+		osd_printf_verbose("GLSL: could not get render container for screen %d\n", window->start_viewscreen);
 	}
 }
 
@@ -2972,7 +2993,7 @@ static void texture_disable(sdl_info *sdl, texture_info * texture)
 static void texture_all_disable(sdl_info *sdl)
 {
 	if ( sdl->useglsl )
-		{
+	{
 		pfn_glUseProgramObjectARB(0); // back to fixed function pipeline
 
 		pfn_glActiveTexture(GL_TEXTURE3);
@@ -2987,24 +3008,24 @@ static void texture_all_disable(sdl_info *sdl)
 		pfn_glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		if ( sdl->usefbo ) pfn_glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
-		}
+	}
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 
-		if(sdl->usetexturerect)
-		{
-				glDisable(GL_TEXTURE_RECTANGLE_ARB);
-		}
-		glDisable(GL_TEXTURE_2D);
+	if(sdl->usetexturerect)
+	{
+		glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	}
+	glDisable(GL_TEXTURE_2D);
 
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		if(sdl->usevbo)
-		{
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	if(sdl->usevbo)
+	{
 		pfn_glBindBuffer( GL_ARRAY_BUFFER_ARB, 0); // unbind ..
-		}
+	}
 	if ( sdl->usepbo )
 	{
 		pfn_glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, 0);
-		}
+	}
 }
 
 static void drawogl_destroy_all_textures(sdl_window_info *window)
@@ -3068,9 +3089,6 @@ static void drawogl_destroy_all_textures(sdl_window_info *window)
 			pfn_glDeleteFramebuffers(2, (GLuint *)&texture->mpass_fbo_scrn[0]);
 			glDeleteTextures(2, (GLuint *)&texture->mpass_texture_scrn[0]);
 		}
-
-		if(texture->lut_texture)
-			glDeleteTextures(1, (GLuint *)&texture->lut_texture);
 
 		glDeleteTextures(1, (GLuint *)&texture->texture);
 		if ( texture->data_own )

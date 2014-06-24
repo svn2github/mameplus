@@ -124,7 +124,7 @@ public:
 			: netlist_device_t()
 	{
 		assert(in_proxied.family() == LOGIC);
-		m_I.m_family_desc = in_proxied.m_family_desc;
+		m_I.m_logic_family = in_proxied.m_logic_family;
 	}
 
 	ATTR_COLD virtual ~nld_a_to_d_proxy() {}
@@ -145,9 +145,9 @@ protected:
 
 	ATTR_HOT ATTR_ALIGN void update()
 	{
-		if (m_I.Q_Analog() > m_I.m_family_desc->m_high_thresh_V)
+		if (m_I.Q_Analog() > m_I.m_logic_family->m_high_thresh_V)
 			OUTLOGIC(m_Q, 1, NLTIME_FROM_NS(1));
-		else if (m_I.Q_Analog() < m_I.m_family_desc->m_low_thresh_V)
+		else if (m_I.Q_Analog() < m_I.m_logic_family->m_low_thresh_V)
 			OUTLOGIC(m_Q, 0, NLTIME_FROM_NS(1));
 		//else
 		//  OUTLOGIC(m_Q, m_Q.net().last_Q(), NLTIME_FROM_NS(1));
@@ -166,7 +166,7 @@ public:
 			: netlist_device_t()
 	{
 		assert(out_proxied.family() == LOGIC);
-		m_family_desc = out_proxied.m_family_desc;
+		m_logic_family = out_proxied.m_logic_family;
 	}
 
 	ATTR_COLD virtual ~nld_base_d_to_a_proxy() {}
@@ -181,6 +181,12 @@ protected:
 		register_input("I", m_I);
 	}
 
+    ATTR_COLD virtual const netlist_logic_family_desc_t *logic_family()
+    {
+        return m_logic_family;
+    }
+
+    const netlist_logic_family_desc_t *m_logic_family;
 private:
 };
 
@@ -214,7 +220,7 @@ protected:
 
 	ATTR_HOT ATTR_ALIGN void update()
 	{
-		OUTANALOG(m_Q, INPLOGIC(m_I) ? m_family_desc->m_high_V : m_family_desc->m_low_V, NLTIME_FROM_NS(1));
+		OUTANALOG(m_Q, INPLOGIC(m_I) ? m_logic_family->m_high_V : m_logic_family->m_low_V, NLTIME_FROM_NS(1));
 	}
 
 private:
@@ -225,39 +231,27 @@ class nld_d_to_a_proxy : public nld_base_d_to_a_proxy
 {
 public:
 	ATTR_COLD nld_d_to_a_proxy(netlist_output_t &out_proxied)
-			: nld_base_d_to_a_proxy(out_proxied)
+    : nld_base_d_to_a_proxy(out_proxied)
+    , m_RV(TWOTERM)
+	, m_last_state(-1)
 	{
 	}
 
 	ATTR_COLD virtual ~nld_d_to_a_proxy() {}
 
 protected:
-	ATTR_COLD void start()
-	{
-		nld_base_d_to_a_proxy::start();
+	ATTR_COLD virtual void start();
 
-		register_sub(m_R, "R");
-		register_output("_Q", m_Q);
-		register_subalias("Q", m_R.m_P);
+	ATTR_COLD virtual void reset();
 
-		connect(m_R.m_N, m_Q);
-	}
-
-	ATTR_COLD void reset()
-	{
-		m_R.do_reset();
-	}
-
-	ATTR_COLD virtual netlist_core_terminal_t &out()
-	{
-		return m_R.m_P;
-	}
+	ATTR_COLD virtual netlist_core_terminal_t &out();
 
 	ATTR_HOT ATTR_ALIGN void update();
 
 private:
 	netlist_analog_output_t m_Q;
-	nld_R_base m_R;
+	nld_twoterm m_RV;
+	int m_last_state;
 };
 #endif
 

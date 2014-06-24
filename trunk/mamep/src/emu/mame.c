@@ -114,7 +114,8 @@ machine_manager::machine_manager(emu_options &options,osd_interface &osd)
        : m_osd(osd),
 	   m_options(options),
 	   m_web(options),
-	   m_new_driver_pending(NULL)
+	   m_new_driver_pending(NULL),
+	   m_machine(NULL)
 {
 }
 
@@ -147,6 +148,12 @@ void machine_manager::schedule_new_driver(const game_driver &driver)
 /***************************************************************************
     CORE IMPLEMENTATION
 ***************************************************************************/
+void machine_manager::update_machine() 
+{ 	
+	m_lua.set_machine(m_machine);
+	m_web.set_machine(m_machine);
+	if (m_machine!=NULL) m_web.push_message("update_machine");
+}
 
 /*-------------------------------------------------
     execute - run the core emulation
@@ -204,9 +211,6 @@ int machine_manager::execute()
 
 		set_machine(&machine);
 
-		m_web.set_machine(machine);
-		m_web.push_message("update_machine");
-
 		// run the machine
 		error = machine.run(firstrun);
 		firstrun = false;
@@ -249,6 +253,8 @@ int machine_manager::execute()
 
 void CLIB_DECL popmessage(const char *format, ...)
 {
+	if (machine_manager::instance()==NULL || machine_manager::instance()->machine() == NULL) return;
+
 	// if the format is NULL, it is a signal to clear the popmessage
 	if (format == NULL)
 		machine_manager::instance()->machine()->ui().popup_time(0, " ");

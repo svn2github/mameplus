@@ -1,5 +1,5 @@
 /* Kensei Mogura
-  aka Street Fighter II Whac-a-mole game */
+  aka Street Fighter II Whack-a-mole game */
 
 /*
   this game uses a CPS1 board as the 'Video board'
@@ -11,13 +11,13 @@
   https://www.youtube.com/watch?v=yQpMvRL0FfM
 
   todo:
-   we have no way of telling the physical order of the moles on the control panel vs. the reads / writes
-   so our moles could be in the wrong positions - maybe there are fixed patterns in the video we can use
-   to figure it out? * the big mole appears to be worth 2 points so that one we can identify
+  - we have no way of telling the physical order of the moles on the control panel vs. the reads / writes
+    so our moles could be in the wrong positions - maybe there are fixed patterns in the video we can use
+    to figure it out? * the big mole appears to be worth 2 points so that one we can identify
 
 
 
-  Additional 'DRIVE BOARD' PCB  (todo, improve ascii layout)
+  Additional 'DRIVE BOARD' PCB
 
   --------------------------------------------------------------------------------------------------------------|
   |                                                                                                             |
@@ -38,7 +38,7 @@
   |                                                           MB89363B                                     pin) |
   |                    TMPZ84C011-8                                                    TLP521-4                 |
   |         16.00Mhz    (rotated 180                                                                        C   |
-  |                       degress)                                                                          N   |
+  |                       degrees)                                                                          N   |
   |                                                                                                         4   |
   |                                                                                                       (4    |
   |                                                                                                        pin) |
@@ -54,7 +54,7 @@
   --------------------------------------------------------------------------------------------------------------|
 
   TMPZ84C011 - Toshiba Z80 + CTC + custom I/O, chip is rated 8MHz
-  MB89363B   - Fujitsu 6-port I/O chip, basically two 8255. See below for more info!
+  MB89363B   - Fujitsu 6-port I/O chip, basically two 8255
   TC55257BFL - Toshiba 32KB SRAM
   62381      - Toshiba TD62381F, common LED driver
   62064      - Toshiba TD62064AF, 4ch high current darlington sink driver
@@ -139,10 +139,9 @@ GND | 20
 // note: I've kept this code out of cps1.c as there is likely to be a substantial amount of game specific code here ones all the extra hardware is emulated
 
 #include "emu.h"
-#include "cpu/z80/z80.h"
-#include "machine/z80ctc.h"
+#include "cpu/z80/tmpz84c011.h"
+#include "machine/mb89363b.h"
 #include "includes/cps1.h"
-#include "machine/i8255.h"
 #include "kenseim.lh"
 
 class kenseim_state : public cps_state
@@ -207,33 +206,21 @@ public:
 
 	// certain
 
-	DECLARE_READ8_MEMBER(porta_r); // dsw1 - 8 bit in
-	DECLARE_READ8_MEMBER(portb_r); // dsw2 - 8 bit in
+	DECLARE_WRITE8_MEMBER(mb8936_portc_w); // 20x LEDs
 
-	DECLARE_WRITE8_MEMBER(i8255_portc_w); // 20x LEDs
 
-	// likely
-
-	DECLARE_READ8_MEMBER(i8255_portd_r); // mole input 1?
-	DECLARE_READ8_MEMBER(i8255_porte_r); // mole input 2?
-	DECLARE_READ8_MEMBER(portc_r);  // 4 bit in - coins + start btns
 
 	// uncertain
-	DECLARE_WRITE8_MEMBER(portc_w); // 4 bit out (lamps, coinlock etc.?)
+	DECLARE_WRITE8_MEMBER(cpu_portc_w); // 4 bit out (lamps, coinlock etc.?)
 
-	DECLARE_READ8_MEMBER(portd_r);  // 4 bit in (comms flags from 68k)
+	DECLARE_READ8_MEMBER(cpu_portd_r);  // 4 bit in (comms flags from 68k)
 
-	DECLARE_WRITE8_MEMBER(portd_w); // 4 bit out (command flags to 68k?)
-	DECLARE_WRITE8_MEMBER(porte_w); // 8 bit out (command to 68k?)
+	DECLARE_WRITE8_MEMBER(cpu_portd_w); // 4 bit out (command flags to 68k?)
+	DECLARE_WRITE8_MEMBER(cpu_porte_w); // 8 bit out (command to 68k?)
 
-	WRITE8_MEMBER(i8255_porta_w); // maybe molesa output? (6-bits?)
-	WRITE8_MEMBER(i8255_portb_w); // maybe molesb output? (6-bits?)
-	WRITE8_MEMBER(i8255_portf_w); // maybe strobe output?
-
-	// unused based on port direction assignments
-	//DECLARE_READ8_MEMBER(porte_default_r) { logerror("%s read port E but no handler assigned\n", machine().describe_context()); return 0xff; }
-	//DECLARE_WRITE8_MEMBER(porta_default_w) { logerror("%s write %02x to port A but no handler assigned\n", machine().describe_context(), data); }
-	//DECLARE_WRITE8_MEMBER(portb_default_w) { logerror("%s write %02x to port B but no handler assigned\n", machine().describe_context(), data); }
+	WRITE8_MEMBER(mb8936_porta_w); // maybe molesa output? (6-bits?)
+	WRITE8_MEMBER(mb8936_portb_w); // maybe molesb output? (6-bits?)
+	WRITE8_MEMBER(mb8936_portf_w); // maybe strobe output?
 
 	UINT8 m_to_68k_cmd_low;
 	UINT8 m_to_68k_cmd_d9;
@@ -275,11 +262,11 @@ void kenseim_state::set_leds(UINT32 ledstates)
 }
 
 // could be wrong
-WRITE8_MEMBER(kenseim_state::i8255_portc_w)
+WRITE8_MEMBER(kenseim_state::mb8936_portc_w)
 {
 	// I'm guessing these are the 20 'power meter' LEDs, 10 for each player? (it writes 42 times, with the last write being some terminator?)
 
-//	printf("%s i8255 write %02x to port C but no handler assigned (serial data?)\n", machine().describe_context(), data);
+//	printf("%s mb8936 write %02x to port C but no handler assigned (serial data?)\n", machine().describe_context(), data);
 
 	if (data & 0x08)
 	{
@@ -312,28 +299,10 @@ WRITE8_MEMBER(kenseim_state::i8255_portc_w)
 
 }
 
-// i8255 ports D and E tend to be used together in the code, and the input gets masked with 6 bits (0x3f)
-READ8_MEMBER(kenseim_state::i8255_portd_r)
+
+WRITE8_MEMBER(kenseim_state::mb8936_porta_w) // maybe molesa output? (6-bits?)
 {
-	int retvalue = 0xc0; // todo, check if upper bits are used
-
-	retvalue |= ioport("MOLEA")->read() & 0x3f;
-
-	return retvalue;
-}
-
-READ8_MEMBER(kenseim_state::i8255_porte_r)
-{
-	int retvalue = 0xc0; // todo, check if upper bits are used
-
-	retvalue |= ioport("MOLEB")->read() & 0x3f;
-
-	return retvalue;
-}
-
-WRITE8_MEMBER(kenseim_state::i8255_porta_w) // maybe molesa output? (6-bits?)
-{
-	if (data&0xc0) printf("%s i8255 write %02x to port A (mole output 1?)\n", machine().describe_context(), data);
+	//if (data&0xc0) printf("%s mb8936 write %02x to port A (mole output 1?)\n", machine().describe_context(), data);
 
 
 	for (int i = 0; i < 6; i++)
@@ -350,9 +319,9 @@ WRITE8_MEMBER(kenseim_state::i8255_porta_w) // maybe molesa output? (6-bits?)
 
 } 
 
-WRITE8_MEMBER(kenseim_state::i8255_portb_w) // maybe molesb output? (6-bits?)
+WRITE8_MEMBER(kenseim_state::mb8936_portb_w) // maybe molesb output? (6-bits?)
 {
-	if (data&0xc0) printf("%s i8255 write %02x to port B (mole output 2?)\n", machine().describe_context(), data);
+	//if (data&0xc0) printf("%s mb8936 write %02x to port B (mole output 2?)\n", machine().describe_context(), data);
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -368,78 +337,53 @@ WRITE8_MEMBER(kenseim_state::i8255_portb_w) // maybe molesb output? (6-bits?)
 
 }
 
-WRITE8_MEMBER(kenseim_state::i8255_portf_w)
+WRITE8_MEMBER(kenseim_state::mb8936_portf_w)
 {
 	// typically written when the 'moles' output is, maybe the 2 strobes?
-	printf("%s i8255 write %02x to port F (strobe?)\n", machine().describe_context(), data);
+	//printf("%s mb8936 write %02x to port F (strobe?)\n", machine().describe_context(), data);
 }
 
 
-WRITE8_MEMBER(kenseim_state::portc_w)
+WRITE8_MEMBER(kenseim_state::cpu_portc_w)
 {
 	// port direction is set to 4-in 4-out
-//	printf("%s write %01x to port C (%02x unmasked)\n", machine().describe_context(), (data & 0x30)>>4, data );
-
+	// d4: coin counter
+	// d5: coin lock
+	// d6: left start button lamp
+	// d7: right start button lamp
+	coin_lockout_w(machine(), 0, (data & 0x10) ? 0 : 1); // toggles if you attempt to insert a coin when there are already 15 coins inserted
+	coin_counter_w(machine(), 0, (data & 0x20) ? 0 : 1);
 	output_set_value("startlamp1", (data & 0x80) ? 0 : 1);
 	output_set_value("startlamp2", (data & 0x40) ? 0 : 1);
-	coin_counter_w(machine(), 0, (data & 0x20) ? 0 : 1);
-	coin_lockout_w(machine(), 0, (data & 0x10) ? 0 : 1); // toggles if you attempt to insert a coin when there are already 15 coins inserted
-
 }
 
 
-READ8_MEMBER(kenseim_state::portc_r)
-{
-	// almost certain, check as 2 pairs, 0x09 and 0x06, the two 'coin' buttons and two 'start' buttons
-	// button order not confirmed
 
-	// port direction is set to 4-in 4-out
-	//int ret = rand() & 0x0f;
-	// bits 0x09 checked at 1171
-	//logerror("%s read port C\n", machine().describe_context());
-	return ioport("CAB-IN")->read();
-}
-
-READ8_MEMBER(kenseim_state::porta_r)
-{
-	return ioport("DSW1")->read(); // confirmed by code
-}
-
-READ8_MEMBER(kenseim_state::portb_r)
-{
-	return ioport("DSW2")->read(); // confirmed by code
-}
 
 
 /*******************************
-  Comms?
+  Comms
  ******************************/
-
-
-
 
 /* 68k side COMMS reads */
 
 CUSTOM_INPUT_MEMBER(kenseim_state::kenseim_cmd_1234_r)
 {
-//	printf("kenseim_cmd_1234_r\n")
-	return (m_to_68k_cmd_low & 0x0f)>>0;
+	return (m_to_68k_cmd_low & 0x0f) >> 0;
 }
 
 CUSTOM_INPUT_MEMBER(kenseim_state::kenseim_cmd_5678_r)
 {
-//	printf("kenseim_cmd_5678_r\n")
-	return (m_to_68k_cmd_low & 0xf0)>>4;
+	return (m_to_68k_cmd_low & 0xf0) >> 4;
 }
 
 CUSTOM_INPUT_MEMBER(kenseim_state::kenseim_cmd_9_r)
 {
-	return m_to_68k_cmd_d9; // bit 9 of command?
+	return m_to_68k_cmd_d9;
 }
 
 CUSTOM_INPUT_MEMBER(kenseim_state::kenseim_cmd_req_r)
 {
-	//logerror("%s kenseim_cmd_req_r\n", machine().describe_context());
 	return m_to_68k_cmd_req;
 }
 
@@ -450,16 +394,15 @@ CUSTOM_INPUT_MEMBER(kenseim_state::kenseim_cmd_LVm_r)
 
 /* 68k side COMMS writes */
 
-
 WRITE16_MEMBER(kenseim_state::cps1_kensei_w)
 {
-
 	if (ACCESSING_BITS_8_15)
 	{
-	//	coin_counter_w(machine(), 0, data & 0x0100);
-	//	coin_counter_w(machine(), 1, data & 0x0200);
-	//	coin_lockout_w(machine(), 0, ~data & 0x0400);
-	//	coin_lockout_w(machine(), 1, ~data & 0x0800);
+		// NOTE: remapped from default jamma output pins:
+		// coin_counter_w(machine(), 0, data & 0x0100);
+		// coin_counter_w(machine(), 1, data & 0x0200);
+		// coin_lockout_w(machine(), 0, ~data & 0x0400);
+		// coin_lockout_w(machine(), 1, ~data & 0x0800);
 
 		// bit 15 = CPS-A custom reset?
 
@@ -467,21 +410,25 @@ WRITE16_MEMBER(kenseim_state::cps1_kensei_w)
 		m_from68k_st4 = (data & 0x0200) >> 9;
 		m_from68k_st2 = (data & 0x0400) >> 10;
 		m_from68k_st3 = (data & 0x0800) >> 11;
-	
-		//printf("%s cps1_kensei_w offs %04x (from 68k to DRIVE BOARD via CN2) (%02x) (%d ACK,  %d ST4,  %d ST2,  %d ST3) \n", machine().describe_context(), offset * 2, data, m_from68k_ack, m_from68k_st4, m_from68k_st2, m_from68k_st3 );
-
-	}
-	else
-	{
-		logerror("%s cps1_kensei_w offs %04x, %04x (%04x) (other byte)\n", machine().describe_context(), offset * 2, data, mem_mask);
 	}
 }
 
 
+/* Z80 side COMMS reads */
+
+READ8_MEMBER(kenseim_state::cpu_portd_r)
+{
+	// port direction is set to 4-in 4-out
+	// d4: ACK
+	// d5: ST2
+	// d6: ST3
+	// d7: ST4
+	return (m_from68k_ack << 4) | (m_from68k_st2 << 5) | (m_from68k_st3 << 6) | (m_from68k_st4 << 7);
+}
 
 /* Z80 side COMMS writes */
 
-WRITE8_MEMBER(kenseim_state::portd_w)
+WRITE8_MEMBER(kenseim_state::cpu_portd_w)
 {
 	// port direction is set to 4-in 4-out
 	// d0: D9
@@ -493,99 +440,17 @@ WRITE8_MEMBER(kenseim_state::portd_w)
 	m_to_68k_cmd_LVm = data >> 2 & 1;
 }
 
-WRITE8_MEMBER(kenseim_state::porte_w)
+WRITE8_MEMBER(kenseim_state::cpu_porte_w)
 {
 	// DT1-DT8
 	m_to_68k_cmd_low = data;
 }
 
-/* Z80 side COMMS reads */
-
-READ8_MEMBER(kenseim_state::portd_r)
-{
-	// port direction is set to 4-in 4-out
-	// d4: ACK
-	// d5: ST2
-	// d6: ST3
-	// d7: ST4
-	return (m_from68k_ack << 4) | (m_from68k_st2 << 5) | (m_from68k_st3 << 6) | (m_from68k_st4 << 7);
-}
 
 
 
 
-/*
-    Manufacturer: Fujitsu
-    Part Number: MB89363 / MB89363B / MB89363R
-    Package: Surface Mount QFP80 / QFP64P (MB89363R)
-    Description: 8-bit x 3 x 2 (6 x 8-bit) parallel data I/O port VLSI chip
-                 Parallel Communication Interface
-                 Extended I/O
 
-    Note: MB89363B is compatible with 8255
-
-    Pin Assignment:
-                                          +5v                                          
-                         P P P P P P P P P V   P P P P P P P P P                       
-                     N N 5 4 4 4 4 4 4 4 4 C N 1 1 1 1 1 1 1 1 2 N N                   
-                     C C 3 0 1 2 3 4 5 6 7 C C 7 6 5 4 3 2 1 0 3 C C                   
-                                                                                       
-                     | | ^ ^ ^ ^ ^ ^ ^ ^ ^ | | ^ ^ ^ ^ ^ ^ ^ ^ ^ | |                   
-                     | | | | | | | | | | | | | | | | | | | | | | | |                   
-                     | | v v v v v v v v v | | v v v v v v v v v | |                   
-                .-------------------------------------------------------.              
-                |    6 6 6 6 6 5 5 5 5 5 5 5 5 5 5 4 4 4 4 4 4 4 4 4    |              
-                |    4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1    |              
-      P52   <-> | 65                                                 40 | <->    P22   
-      P51   <-> | 66                                                 39 | <->    P21   
-      P50   <-> | 67                                                 38 | <->    P20   
-      P54   <-> | 68                                                 37 | <->    P24   
-      P55   <-> | 69                                                 36 | <->    P25   
-      P56   <-> | 70                                                 35 | <->    P26   
-      P57   <-> | 71                                                 34 | <->    P27   
-       NC   --- | 72                   MB89363B                      33 | ---    NC    
-       NC   --- | 73                                                 32 | <--    RSLCT1
-      GND   --> | 74                                                 31 | <--    RSLCT0
-      CS2   --> | 75                                                 30 | <--    GND   
-        R   --> | 76                                                 29 | <--    CS1   
-      P30   <-> | 77                                                 28 | <->    P00   
-      P31   <-> | 78                                                 27 | <->    P01   
-      P32   <-> | 79                                                 26 | <->    P02   
-      P33   <-> | 80                                                 25 | <->    P03   
-                 \                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2    |              
-                  \  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4    |              
-                   -----------------------------------------------------'              
-                     ^ ^ ^ ^ ^ ^ | | ^ | ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ |                   
-                     | | | | | | | | | | | | | | | | | | | | | | | |                   
-                     v v v v | | | | | | | v v v v v v v v v v v v |                   
-                                                                                       
-                     P P P P W R N N R N O D D D D D D D D P P P P N                   
-                     3 3 3 3   S C C H C U B B B B B B B B 0 0 0 0 C                   
-                     4 5 6 7   T     /   S 0 1 2 3 4 5 6 7 7 6 5 4                     
-                                     R   /                                             
-                                     L   I                                             
-                                         N                                             
-                                         S                                             
-
-    Block Diagram / Pin Descriptions:
-    http://www.mess.org/_media/datasheets/fujitsu/mb89363b_partial.pdf
-
-    D.C. Characteristics:
-    (Recommended operating conditions unless otherwise noted)
-    (VCC = +5V +- 10%, GND = 0V, TA = -40o C to 85o C)
-                                         Value
-    Parameter            Symbol      Min       Max            Unit      Test Condition
-    ----------------------------------------------------------------------------------
-    Input Low Voltage    ViL         -0.3      0.8            V
-    Input High Voltage   ViH         2.2       VCC +0.3       V
-    Output Low Voltage   VoL         -         0.4            V         IoL = 2.5mA
-    Output High Voltage  VoH         3.0       -              V         IoH =-2.5mA
-
-    Sources:
-    http://www.emb-tech.co.jp/pc104/96dio.pdf
-    http://www.pb5800.com/resources/2350ser01.pdf
-    http://www.diagramasde.com/diagramas/otros2/TS-850S%20Service%20Manual%20.pdf
-*/
 
 static ADDRESS_MAP_START( kenseim_map, AS_PROGRAM, 8, kenseim_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
@@ -594,54 +459,41 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( kenseim_io_map, AS_IO, 8, kenseim_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("gamecpu_ctc", z80ctc_device, read, write)
-
-	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("i8255",   i8255_device, read, write)
-	AM_RANGE(0x24, 0x27) AM_DEVREADWRITE("i8255_2", i8255_device, read, write)
-
+	AM_RANGE(0x20, 0x27) AM_DEVREADWRITE("mb89363b", mb89363b_device, read, write)
 ADDRESS_MAP_END
+
 
 
 static const z80_daisy_config daisy_chain_gamecpu[] =
 {
-	{ "gamecpu_ctc" },
+	TMPZ84C011_DAISY_INTERNAL,
 	{ NULL }
 };
 
-
 static MACHINE_CONFIG_DERIVED_CLASS( kenseim, cps1_12MHz, kenseim_state )
 
+	/* basic machine hardware */
 	MCFG_CPU_ADD("gamecpu", TMPZ84C011, XTAL_16MHz/2) // tmpz84c011-8
+	MCFG_CPU_CONFIG(daisy_chain_gamecpu)
 	MCFG_CPU_PROGRAM_MAP(kenseim_map)
 	MCFG_CPU_IO_MAP(kenseim_io_map)
-	//MCFG_TMPZ84C011_PORTA_WRITE_CALLBACK(WRITE8(kenseim_state, porta_default_w)) // unused?
-	//MCFG_TMPZ84C011_PORTB_WRITE_CALLBACK(WRITE8(kenseim_state, portb_default_w)) // unused?
-	MCFG_TMPZ84C011_PORTC_WRITE_CALLBACK(WRITE8(kenseim_state, portc_w))
-	MCFG_TMPZ84C011_PORTD_WRITE_CALLBACK(WRITE8(kenseim_state, portd_w))
-	MCFG_TMPZ84C011_PORTE_WRITE_CALLBACK(WRITE8(kenseim_state, porte_w))	
-	MCFG_TMPZ84C011_PORTA_READ_CALLBACK(READ8(kenseim_state, porta_r))
-	MCFG_TMPZ84C011_PORTB_READ_CALLBACK(READ8(kenseim_state, portb_r))
-	MCFG_TMPZ84C011_PORTC_READ_CALLBACK(READ8(kenseim_state, portc_r))
-	MCFG_TMPZ84C011_PORTD_READ_CALLBACK(READ8(kenseim_state, portd_r))
-	//MCFG_TMPZ84C011_PORTE_READ_CALLBACK(READ8(kenseim_state, porte_default_r)) // unused?
-	MCFG_CPU_CONFIG(daisy_chain_gamecpu)
+	MCFG_TMPZ84C011_PORTC_WRITE_CB(WRITE8(kenseim_state, cpu_portc_w))
+	MCFG_TMPZ84C011_PORTD_WRITE_CB(WRITE8(kenseim_state, cpu_portd_w))
+	MCFG_TMPZ84C011_PORTE_WRITE_CB(WRITE8(kenseim_state, cpu_porte_w))
+	MCFG_TMPZ84C011_PORTA_READ_CB(IOPORT("DSW1"))
+	MCFG_TMPZ84C011_PORTB_READ_CB(IOPORT("DSW2"))
+	MCFG_TMPZ84C011_PORTC_READ_CB(IOPORT("CAB-IN"))
+	MCFG_TMPZ84C011_PORTD_READ_CB(READ8(kenseim_state, cpu_portd_r))
 
-	MCFG_DEVICE_ADD("gamecpu_ctc", Z80CTC, XTAL_16MHz/2 ) // part of the tmpz84
-	MCFG_Z80CTC_INTR_CB(INPUTLINE("gamecpu", INPUT_LINE_IRQ0))
-	
-	// the MB89363B seems to be 2 * i8255?
-	MCFG_DEVICE_ADD("i8255", I8255, 0) // MB89363B!
-	// always $80: all ports set as output
-	MCFG_I8255_OUT_PORTA_CB(WRITE8(kenseim_state, i8255_porta_w))
-	MCFG_I8255_OUT_PORTB_CB(WRITE8(kenseim_state, i8255_portb_w))
-	MCFG_I8255_OUT_PORTC_CB(WRITE8(kenseim_state, i8255_portc_w))
-
-	MCFG_DEVICE_ADD("i8255_2", I8255, 0) // MB89363B!
-	// always $92: port A and B as input, port C as output
-	MCFG_I8255_IN_PORTA_CB(READ8(kenseim_state, i8255_portd_r))
-	MCFG_I8255_IN_PORTB_CB(READ8(kenseim_state, i8255_porte_r))
-	MCFG_I8255_OUT_PORTC_CB(WRITE8(kenseim_state, i8255_portf_w))
-
+	MCFG_MB89363B_ADD("mb89363b")
+	// a,b,c always $80: all ports set as output
+	// d,e,f always $92: port D and E as input, port F as output
+	MCFG_MB89363B_OUT_PORTA_CB(WRITE8(kenseim_state, mb8936_porta_w))
+	MCFG_MB89363B_OUT_PORTB_CB(WRITE8(kenseim_state, mb8936_portb_w))
+	MCFG_MB89363B_OUT_PORTC_CB(WRITE8(kenseim_state, mb8936_portc_w))
+	MCFG_MB89363B_IN_PORTD_CB(IOPORT("MOLEA"))
+	MCFG_MB89363B_IN_PORTE_CB(IOPORT("MOLEB"))
+	MCFG_MB89363B_OUT_PORTF_CB(WRITE8(kenseim_state, mb8936_portf_w))
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 MACHINE_CONFIG_END
@@ -765,20 +617,23 @@ static INPUT_PORTS_START( kenseim )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
 
 	PORT_START("MOLEA")
-	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_W) // big mole (2pts)
-	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_Q) 
-	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_E) 
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_A) 
-	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_S) 
-	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_D) 
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_W) // big mole (2pts)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_Q)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_E)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_A)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_S)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_PLAYER(1) PORT_CODE(KEYCODE_D)
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("MOLEB")
-	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_8_PAD) // big mole (2pts)
-	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_7_PAD)
-	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_9_PAD)
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_4_PAD)
-	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_5_PAD)
-	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_6_PAD)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_8_PAD) // big mole (2pts)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_7_PAD)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_9_PAD)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_4_PAD)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_5_PAD)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_PLAYER(2) PORT_CODE(KEYCODE_6_PAD)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) // ? (see disasm, it gets checked but seems to have no noticeable effect in-game)
 INPUT_PORTS_END
 
 ROM_START( kenseim )

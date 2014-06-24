@@ -227,10 +227,10 @@ FLOPPY_FORMATS_END
 
 // this card has two EPROMs: a program for the on-board Z8 CPU,
 // and a PC BIOS to make the card bootable on a PC.
-// we need both!
+// we have the Z8 program, we still need the PC BIOS.
 ROM_START( omti8621 )
-	ROM_REGION(0x1000, OMTI_CPU_REGION, 0)
-	ROM_LOAD("omti_z8.bin", 0x0000, 0x1000, NO_DUMP)
+	ROM_REGION(0x4000, OMTI_CPU_REGION, 0)	// disassembles fine as Z8 code
+	ROM_LOAD( "omti_8621_102640-b.bin", 0x000000, 0x004000, CRC(e6f20dbb) SHA1(cf1990ad72eac6b296485410f5fa3309a0d6d078) )
 
 	ROM_REGION(0x1000, OMTI_BIOS_REGION, 0)
 	ROM_LOAD("omti_bios", 0x0000, 0x1000, NO_DUMP)
@@ -974,8 +974,8 @@ UINT16 omti8621_device::get_data()
 {
 	UINT16 data = 0xff;
 	if (data_index < data_length) {
-		data = data_buffer[data_index++] << 8;
-		data |= data_buffer[data_index++];
+		data = data_buffer[data_index++];
+		data |= data_buffer[data_index++] << 8;
 		if (data_index >= data_length) {
 			omti_state = OMTI_STATE_STATUS;
 			status_port |= OMTI_STATUS_IO | OMTI_STATUS_CD;
@@ -994,8 +994,8 @@ UINT16 omti8621_device::get_data()
 void omti8621_device::set_data(UINT16 data)
 {
 	if (data_index < data_length) {
-		data_buffer[data_index++] = data >> 8;
 		data_buffer[data_index++] = data & 0xff;
+		data_buffer[data_index++] = data >> 8;
 		if (data_index >= data_length) {
 			do_command(command_buffer, command_index);
 		}
@@ -1013,11 +1013,11 @@ WRITE16_MEMBER(omti8621_device::write)
 	switch (mem_mask)
 	{
 		case 0x00ff:
-			write8(space, offset*2+1, data, mem_mask);
+			write8(space, offset*2, data, mem_mask);
 			break;
 
 		case 0xff00:
-			write8(space, offset*2, data>>8, mem_mask>>8);
+			write8(space, offset*2+1, data>>8, mem_mask>>8);
 			break;
 
 		default:
@@ -1125,9 +1125,9 @@ READ16_MEMBER(omti8621_device::read)
 	switch (mem_mask)
 	{
 		case 0x00ff:
-			return read8(space, offset*2+1, mem_mask);
+			return read8(space, offset*2, mem_mask);
 		case 0xff00:
-			return read8(space, offset*2, mem_mask >> 8) << 8;
+			return read8(space, offset*2+1, mem_mask >> 8) << 8;
 		default:
 			return get_data();
 	}
@@ -1212,7 +1212,7 @@ UINT32 omti8621_device::get_sector(INT32 diskaddr, UINT8 *data_buffer, UINT32 le
 	}
 	else
 	{
-		LOG1(("omti8621_get_sector %x on lun %d", diskaddr, lun));
+//		LOG1(("omti8621_get_sector %x on lun %d", diskaddr, lun));
 
 		// restrict length to size of 1 sector (i.e. 1024 Byte)
 		length = length < OMTI_DISK_SECTOR_SIZE ? length  : OMTI_DISK_SECTOR_SIZE;
