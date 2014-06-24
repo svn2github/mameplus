@@ -88,6 +88,8 @@ public slots:
 	void on_actionFAQ_triggered();
 	void on_actionBoard_triggered();
 	void on_actionAbout_triggered();
+	void on_actionHaveList_triggered();
+	void on_actionMissList_triggered();
 
 	void on_actionPlay_triggered();
 	void on_actionCommandLine_triggered();
@@ -142,6 +144,7 @@ private:
 	void setTransparentStyle(QWidget * w);
 	QList<QTabBar *> getSSTabBars();
 	void exportFixDat(int);
+	void exportGameList(bool);
 };
 
 #define MAMEPLUS_SIG 0x52111314

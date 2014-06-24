@@ -991,6 +991,8 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		return;
 	}
 
+	bool isLView	= gameList->listMode == "LargeIcons";
+
 	QString gameName = gameList->getViewString(index, COL_NAME);
 	GameInfo *gameInfo = gameList->getGameInfo(index, gameName);
 
@@ -1037,7 +1039,14 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 	const bool isLargeIcon = pmIcon.width() > 16;
 	const bool isZooming = win->actionRowDelegate->isChecked();
 
-	if (isLargeIcon)
+	if(isLView)
+	{
+		if (currentGame == gameName)
+			pmFinal.load(isDarkBg ? ":/res/mamegui/deco-darkbg.png" : ":/res/mamegui/deco-brightbg.png");
+		else
+			pmFinal = pmIcon = pmIcon.scaled(QSize(32, 32), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	else if (isLargeIcon)
 	{
 		if (currentGame == gameName && isZooming)
 			pmFinal.load(isDarkBg ? ":/res/mamegui/deco-darkbg.png" : ":/res/mamegui/deco-brightbg.png");
@@ -1051,7 +1060,12 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 	QPainter p;
 	p.begin(&pmFinal);
 
-	if (currentGame == gameName && isLargeIcon && isZooming)
+	if(isLView)
+	{
+		if(currentGame == gameName)
+			p.drawPixmap(3, 3, 32, 32, pmIcon);
+	}
+	else if (currentGame == gameName && isLargeIcon && isZooming)
 		p.drawPixmap(3, 3, 32, 32, pmIcon);
 
 	// paint the unavailable icon on top of original icon
@@ -1066,31 +1080,54 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 	p.end();
 
-	//save it for zooming
-	int icoSize, decoSize;
 
-	if (pmFinal.width() > 16)
+	if(isLView)
 	{
-		icoSize = 32;
-		decoSize = 38;
-
 		gameList->pmDeco = pmFinal;
+
+		rectDeco.setTop(rectDeco.top() + 16);
+		rectText.setTop(rectDeco.top() + 20);
+		rectText.setLeft(rectDeco.left() - 32);
+		rectText.setWidth(72);
+		rectText.setHeight(32);
+		drawDisplay(painter, option, rectText, gameList->getViewString(index, COL_DESC));
+		drawDecoration(painter, option, rectDeco, pmFinal);
 	}
 	else
 	{
-		icoSize = decoSize = 16;
+		//save it for zooming
+		int icoSize, decoSize;
 
-		if (currentGame == gameName)
-			gameList->pmDeco = QPixmap();
+		if (pmFinal.width() > 16)
+		{
+			icoSize = 32;
+			decoSize = 38;
+
+			gameList->pmDeco = pmFinal;
+		}
+		else
+		{
+			icoSize = decoSize = 16;
+
+			if (currentGame == gameName)
+				gameList->pmDeco = QPixmap();
+		}
+
+		rectDeco.setLeft(rectDeco.left() + cloneOffset);
+		rectDeco.setWidth(icoSize + 6);
+
+		if (currentGame == gameName && isLargeIcon && isZooming)
+			rectText.setLeft(rectText.left() + decoSize);
+		else
+			rectText.setLeft(rectText.left() + decoSize + cloneOffset + 6);
+		drawDisplay(painter, option, rectText, gameList->getViewString(index, COL_DESC));
+
+		//paint item icon
+		if (currentGame != gameName || !isZooming ||
+			(currentGame == gameName && !isLargeIcon))
+			drawDecoration(painter, option, rectDeco, pmFinal);
 	}
 
-	rectDeco.setLeft(rectDeco.left() + cloneOffset);
-	rectDeco.setWidth(icoSize + 6);
-
-	if (currentGame == gameName && isLargeIcon && isZooming)
-		rectText.setLeft(rectText.left() + decoSize);
-	else
-		rectText.setLeft(rectText.left() + decoSize + cloneOffset + 6);
 
 	//paint item text
 /*	QColor foreColor;
@@ -1100,12 +1137,6 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		foreColor = QColor((isDarkBg) ? Qt::white : Qt::black);
 	painter->setPen(foreColor);
 //*/
-	drawDisplay(painter, option, rectText, gameList->getViewString(index, COL_DESC));
-
-	//paint item icon
-	if (currentGame != gameName || !isZooming ||
-		(currentGame == gameName && !isLargeIcon))
-		drawDecoration(painter, option, rectDeco, pmFinal);
 
 	return;
 }
@@ -1320,8 +1351,8 @@ void Gamelist::restoreGameSelection()
 void Gamelist::centerGameSelection(QModelIndex index)
 {
 	bool isLView = false;
-//	if (win->actionLargeIcons->isChecked())
-//		isLView = true;
+	if (win->actionLargeIcons->isChecked())
+		isLView = true;
 
 	//fixme: time consuming?
 	if (isLView)
@@ -1470,11 +1501,11 @@ void Gamelist::init(bool toggleState, int initMethod)
 	{
 		listMode = "Details";
 	}
-//	else if (win->actionLargeIcons->isChecked())
-//	{
-//		listMode = "LargeIcons";
-//		isLView = true;
-//	}
+	else if (win->actionLargeIcons->isChecked())
+	{
+		listMode = "LargeIcons";
+		isLView = true;
+	}
 	else
 		listMode = "Grouped";
 
@@ -1496,6 +1527,11 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->layMainView->addWidget(win->lvGameList);
 		win->lvGameList->show();
 		win->lvGameList->setModel(gameListPModel);
+
+		if (defaultGameListDelegate == NULL)
+			defaultGameListDelegate = win->lvGameList->itemDelegate();
+
+		win->lvGameList->setItemDelegate(&gamelistDelegate);
 	}
 	else
 	{
@@ -1813,8 +1849,8 @@ mmo_readerr:
 void Gamelist::initMenus()
 {
 	bool isLView = false;
-//	if (win->actionLargeIcons->isChecked())
-//		isLView = true;
+	if (win->actionLargeIcons->isChecked())
+		isLView = true;
 
 	colSortActionGroup = new QActionGroup(win->menuArrangeIcons);
 

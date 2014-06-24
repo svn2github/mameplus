@@ -699,6 +699,16 @@ p, li { white-space: pre-wrap; }
         <translation>导出全部有问题的ROM档...</translation>
     </message>
     <message>
+        <location filename="../mainwindow.ui" line="354"/>
+        <source>Export &amp;Have List...</source>
+        <translation>导出拥有游戏列表(&amp;H)...</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="359"/>
+        <source>Export &amp;Miss List...</source>
+        <translation>导出缺失游戏列表(&amp;M)...</translation>
+    </message>
+    <message>
         <location filename="../mainwindow.ui" line="712"/>
         <source>Hide &amp;Mechanical</source>
         <translation>隐藏机械的游戏(&amp;M)</translation>

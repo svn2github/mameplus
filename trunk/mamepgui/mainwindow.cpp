@@ -48,7 +48,7 @@ bool isUME = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.6.0b1"
+#define MPGUI_VER "1.6.0b2"
 
 void MainWindow::log(QString message)
 {
@@ -214,9 +214,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	lvGameList = new QListView(centralwidget);
 	lvGameList->setMovement(QListView::Static);
-	lvGameList->setResizeMode(QListView::Adjust);
+	//lvGameList->setResizeMode(QListView::Adjust);
 	lvGameList->setViewMode(QListView::IconMode);
-//	lvGameList->setGridSize(QSize(96, 64));
+	lvGameList->setIconSize(QSize(48, 48));
+	lvGameList->setGridSize(QSize(72, 80));
 	lvGameList->setUniformItemSizes(true);
 	lvGameList->setWordWrap(true);
 //	lvGameList->setTextElideMode(Qt::TextDontClip | Qt::TextWordWrap);
@@ -559,7 +560,7 @@ void MainWindow::init()
 
 	// Actions
 	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-//	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
+	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionDetails, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
@@ -903,6 +904,49 @@ void MainWindow::on_actionBoard_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
 	aboutUI->exec();
+}
+
+void MainWindow::on_actionHaveList_triggered()
+{
+	exportGameList(true);
+}
+
+void MainWindow::on_actionMissList_triggered()
+{
+	exportGameList(false);
+}
+
+void MainWindow::exportGameList(bool have)
+{
+	QString filter = "";
+	filter.append(tr("Txt files") + " (*.txt)");
+	filter.append(";;");
+	filter.append(tr("All Files (*)"));
+
+	QFileInfo mamebin(mame_binary);
+	
+	QString fileName = QFileDialog::getSaveFileName
+		(0, tr("File name:"), mamebin.absolutePath(), filter);	
+
+	if (fileName.isEmpty())
+		return;
+
+	QFile fileinfo(fileName);
+    fileinfo.open(QIODevice::WriteOnly | QFile::Text);
+    QTextStream outinfo(&fileinfo);
+    outinfo.setCodec("UTF-8");
+
+    QStringList Available;
+    foreach (QString gameName, pMameDat->games.keys())
+    {
+        GameInfo *gameInfo = pMameDat->games[gameName];
+        if (!gameInfo->isDevice && gameInfo->devices.isEmpty() && (have ? gameInfo->available : !gameInfo->available))
+            Available.append(gameName);
+    }
+    Available.sort();
+    outinfo << Available.join("\n");
+    fileinfo.close();
+	win->poplog("Finished.");
 }
 
 void MainWindow::toggleGameListColumn()

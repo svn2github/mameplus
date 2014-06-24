@@ -77,6 +77,9 @@
      <addaction name="actionFixDatIncomplete"/>
      <addaction name="actionFixDatMissing"/>
      <addaction name="actionFixDatComplete"/>
+     <addaction name="separator"/>
+    <addaction name="actionHaveList"/>
+    <addaction name="actionMissList"/>
     </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
@@ -344,6 +347,16 @@
    </property>
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="actionHaveList">
+   <property name="text">
+    <string>Export &amp;Have List...</string>
+   </property>
+  </action>
+  <action name="actionMissList">
+   <property name="text">
+    <string>Export &amp;Miss List...</string>
    </property>
   </action>
   <action name="actionDetails">
