@@ -48,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3710"/>
+        <location filename="../gamelist.cpp" line="3746"/>
         <source>Horizontal</source>
         <translation type="unfinished">Горизонтальный</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3715"/>
+        <location filename="../gamelist.cpp" line="3751"/>
         <source>Vertical</source>
         <translation type="unfinished">Вертикальный</translation>
     </message>
@@ -61,254 +61,254 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="1296"/>
+        <location filename="../gamelist.cpp" line="1327"/>
         <source>%1 games</source>
         <translation>%1 игр</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1429"/>
+        <location filename="../gamelist.cpp" line="1460"/>
         <source>All Games</source>
         <translation>Все игры</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1430"/>
+        <location filename="../gamelist.cpp" line="1461"/>
         <source>All Systems</source>
         <translation>Все системы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1430"/>
+        <location filename="../gamelist.cpp" line="1461"/>
         <source>All Arcades</source>
         <translation>Все аркады</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1431"/>
+        <location filename="../gamelist.cpp" line="1462"/>
         <source>Available Systems</source>
         <translation>Имеющиеся системы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1431"/>
+        <location filename="../gamelist.cpp" line="1462"/>
         <source>Available Arcades</source>
         <translation>Имеющиеся аркады</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1432"/>
+        <location filename="../gamelist.cpp" line="1463"/>
         <source>Unavailable Systems</source>
         <translation>Недоступные системы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1432"/>
+        <location filename="../gamelist.cpp" line="1463"/>
         <source>Unavailable Arcades</source>
         <translation>Недоступные аркады</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1433"/>
+        <location filename="../gamelist.cpp" line="1464"/>
         <source>Softwares</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1433"/>
+        <location filename="../gamelist.cpp" line="1464"/>
         <source>Consoles</source>
         <translation>Консоли</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1434"/>
+        <location filename="../gamelist.cpp" line="1465"/>
         <source>Manufacturer</source>
         <translation>Производитель</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1435"/>
+        <location filename="../gamelist.cpp" line="1466"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1436"/>
+        <location filename="../gamelist.cpp" line="1467"/>
         <source>Driver</source>
         <translation>Драйвер</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1437"/>
+        <location filename="../gamelist.cpp" line="1468"/>
         <source>BIOS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1438"/>
+        <location filename="../gamelist.cpp" line="1469"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1439"/>
+        <location filename="../gamelist.cpp" line="1470"/>
         <source>Sound</source>
         <translation>Звук</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1440"/>
+        <location filename="../gamelist.cpp" line="1471"/>
         <source>CHD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1441"/>
+        <location filename="../gamelist.cpp" line="1472"/>
         <source>Samples</source>
         <translation>Сэмплы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1442"/>
+        <location filename="../gamelist.cpp" line="1473"/>
         <source>Dumping Status</source>
         <translation>Статус дампа</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1443"/>
+        <location filename="../gamelist.cpp" line="1474"/>
         <source>Working</source>
         <translation>Работают</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1444"/>
+        <location filename="../gamelist.cpp" line="1475"/>
         <source>Not working</source>
         <translation>Не работают</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1445"/>
+        <location filename="../gamelist.cpp" line="1476"/>
         <source>Originals</source>
         <translation>Оригиналы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1446"/>
+        <location filename="../gamelist.cpp" line="1477"/>
         <source>Clones</source>
         <translation>Клоны</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1447"/>
+        <location filename="../gamelist.cpp" line="1478"/>
         <source>Resolution</source>
         <translation>Разрешение</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1448"/>
+        <location filename="../gamelist.cpp" line="1479"/>
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1449"/>
+        <location filename="../gamelist.cpp" line="1480"/>
         <source>Refresh Rate</source>
         <translation>Частота экрана</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1450"/>
+        <location filename="../gamelist.cpp" line="1481"/>
         <source>Display</source>
         <translation>Монитор</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1451"/>
+        <location filename="../gamelist.cpp" line="1482"/>
         <source>Control Type</source>
         <translation>Тип управления</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1452"/>
+        <location filename="../gamelist.cpp" line="1483"/>
         <source>Channels</source>
         <translation>Каналы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1453"/>
+        <location filename="../gamelist.cpp" line="1484"/>
         <source>Save State</source>
         <translation>Сохранения</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1454"/>
+        <location filename="../gamelist.cpp" line="1485"/>
         <source>Mechanical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1455"/>
+        <location filename="../gamelist.cpp" line="1486"/>
         <source>Non Mechanical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1828"/>
+        <location filename="../gamelist.cpp" line="1864"/>
         <source>by %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1940"/>
+        <location filename="../gamelist.cpp" line="1976"/>
         <source>Play %1</source>
         <translation>Запустить %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1966"/>
+        <location filename="../gamelist.cpp" line="2002"/>
         <source>Remove From &quot;%1%2&quot;</source>
         <translation>Удалить из &quot;%1%2&quot;</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1972"/>
+        <location filename="../gamelist.cpp" line="2008"/>
         <source>Properties for %1</source>
         <translation>Свойства %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2197"/>
+        <location filename="../gamelist.cpp" line="2233"/>
         <source>Common image types</source>
         <translation>Файлы с изображениями</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2199"/>
+        <location filename="../gamelist.cpp" line="2235"/>
         <source>All Files</source>
         <translation>Все файлы</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2205"/>
+        <location filename="../gamelist.cpp" line="2241"/>
         <source>File name:</source>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2318"/>
+        <location filename="../gamelist.cpp" line="2354"/>
         <source>Remove All</source>
         <translation>Удалить все</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2457"/>
+        <location filename="../gamelist.cpp" line="2493"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2799"/>
+        <location filename="../gamelist.cpp" line="2835"/>
         <source>Horizontal</source>
         <translation>Горизонтальный</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2800"/>
+        <location filename="../gamelist.cpp" line="2836"/>
         <source>Vertical</source>
         <translation>Вертикальный</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2926"/>
+        <location filename="../gamelist.cpp" line="2962"/>
         <source>(H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2926"/>
+        <location filename="../gamelist.cpp" line="2962"/>
         <source>(V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3014"/>
+        <location filename="../gamelist.cpp" line="3050"/>
         <source>Root Folder [.]</source>
         <translation>Сюда [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3336"/>
+        <location filename="../gamelist.cpp" line="3372"/>
         <source>Loading M1, please wait...</source>
         <translation>Загружается M1, ждите...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3373"/>
+        <location filename="../gamelist.cpp" line="3409"/>
         <source>Could not load:
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3375"/>
+        <location filename="../gamelist.cpp" line="3411"/>
         <source>Please refresh the game list.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3415"/>
+        <location filename="../gamelist.cpp" line="3451"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -518,49 +518,56 @@ p, li { white-space: pre-wrap; }
         <translation>Настройки...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="242"/>
-        <location filename="../mainwindow.cpp" line="238"/>
+        <location filename="../mainwindow.ui" line="245"/>
+        <location filename="../mainwindow.cpp" line="239"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="244"/>
+        <location filename="../mainwindow.cpp" line="245"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="632"/>
+        <location filename="../mainwindow.cpp" line="633"/>
         <source>Executable files</source>
         <translation>Исполняемые файлы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="635"/>
-        <location filename="../mainwindow.cpp" line="815"/>
+        <location filename="../mainwindow.cpp" line="636"/>
+        <location filename="../mainwindow.cpp" line="816"/>
+        <location filename="../mainwindow.cpp" line="924"/>
         <source>All Files (*)</source>
         <translation>Все Файлы (*)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="638"/>
+        <location filename="../mainwindow.cpp" line="639"/>
         <source>MAME/MESS executable:</source>
         <translation>исполняемый файл MAME/MESS:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="813"/>
+        <location filename="../mainwindow.cpp" line="814"/>
         <source>Dat files</source>
         <translation>Dat-файлы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="820"/>
+        <location filename="../mainwindow.cpp" line="821"/>
+        <location filename="../mainwindow.cpp" line="929"/>
         <source>File name:</source>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1026"/>
+        <location filename="../mainwindow.cpp" line="922"/>
+        <source>Txt files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="1070"/>
         <source>Restart</source>
         <translation>Перезапуск</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1027"/>
+        <location filename="../mainwindow.cpp" line="1071"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>Для вступления изменений в силу требуется перезапуск. Продолжить ?</translation>
@@ -591,328 +598,338 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="97"/>
+        <location filename="../mainwindow.ui" line="100"/>
         <source>&amp;View</source>
         <translation>&amp;Вид</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="101"/>
+        <location filename="../mainwindow.ui" line="104"/>
         <source>Customize &amp;Fields</source>
         <translation>Показывать &amp;колонки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="106"/>
+        <location filename="../mainwindow.ui" line="109"/>
         <source>Game &amp;Pictures</source>
         <translation>Показывать &amp;картинки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="114"/>
+        <location filename="../mainwindow.ui" line="117"/>
         <source>Game Do&amp;cuments</source>
         <translation>Показывать &amp;информацию</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="119"/>
+        <location filename="../mainwindow.ui" line="122"/>
         <source>&amp;Show Folders</source>
         <translation>&amp;Показывать папки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="124"/>
+        <location filename="../mainwindow.ui" line="127"/>
         <source>&amp;Custom Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="133"/>
+        <location filename="../mainwindow.ui" line="136"/>
         <source>Arrange &amp;Icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="157"/>
+        <location filename="../mainwindow.ui" line="160"/>
         <source>&amp;Options</source>
         <translation>&amp;Параметры</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="161"/>
+        <location filename="../mainwindow.ui" line="164"/>
         <source>&amp;Language</source>
         <translation>&amp;Язык</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="177"/>
+        <location filename="../mainwindow.ui" line="180"/>
         <source>&amp;Background Images</source>
         <translation>Задний фон</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="185"/>
+        <location filename="../mainwindow.ui" line="188"/>
         <source>GUI &amp;Style</source>
         <translation>Стиль &amp;интерфейса</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="197"/>
+        <location filename="../mainwindow.ui" line="200"/>
         <source>&amp;Help</source>
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="212"/>
+        <location filename="../mainwindow.ui" line="215"/>
         <source>Toolbar</source>
         <translation>Панель инструментов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="256"/>
+        <location filename="../mainwindow.ui" line="259"/>
         <source>GUI Log</source>
         <translation>Лог интерфейса</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="283"/>
+        <location filename="../mainwindow.ui" line="286"/>
         <source>Folder List</source>
         <translation>Список папок</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="303"/>
+        <location filename="../mainwindow.ui" line="306"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="317"/>
+        <location filename="../mainwindow.ui" line="320"/>
         <source>Default Game &amp;Options</source>
         <translation>Общие параметры</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="326"/>
+        <location filename="../mainwindow.ui" line="329"/>
         <source>&amp;Refresh</source>
         <translation>&amp;Обновить</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="329"/>
+        <location filename="../mainwindow.ui" line="332"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="334"/>
+        <location filename="../mainwindow.ui" line="337"/>
         <source>E&amp;xit</source>
         <translation>В&amp;ыход</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="337"/>
+        <location filename="../mainwindow.ui" line="340"/>
         <source>Alt+X</source>
         <translation>Alt+X</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="346"/>
+        <location filename="../mainwindow.ui" line="349"/>
         <source>&amp;About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="358"/>
+        <location filename="../mainwindow.ui" line="354"/>
+        <source>Export &amp;Have List...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="359"/>
+        <source>Export &amp;Miss List...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="371"/>
         <source>&amp;Details</source>
         <translation>Детальный</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="373"/>
+        <location filename="../mainwindow.ui" line="386"/>
         <source>&amp;Grouped</source>
         <translation>Группировать</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="385"/>
+        <location filename="../mainwindow.ui" line="398"/>
         <source>L&amp;arge Icons</source>
         <translation>Большие иконки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="393"/>
+        <location filename="../mainwindow.ui" line="406"/>
         <source>&amp;Vertical Tabs</source>
         <translation>Вертикальные заголовки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="403"/>
+        <location filename="../mainwindow.ui" line="416"/>
         <source>&amp;Record Input...</source>
         <translation>Запись ввода...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="408"/>
+        <location filename="../mainwindow.ui" line="421"/>
         <source>Configure &amp;IPS...</source>
         <translation>Настроить IPS...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="660"/>
+        <location filename="../mainwindow.ui" line="673"/>
         <source>Export Completely Missing Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="665"/>
+        <location filename="../mainwindow.ui" line="678"/>
         <source>Export Incomplete Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="670"/>
+        <location filename="../mainwindow.ui" line="683"/>
         <source>Export All Set Issues...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="712"/>
+        <location filename="../mainwindow.ui" line="725"/>
         <source>Hide &amp;Mechanical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="725"/>
+        <location filename="../mainwindow.ui" line="738"/>
         <source>Export All Sets...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="71"/>
-        <location filename="../mainwindow.ui" line="413"/>
+        <location filename="../mainwindow.ui" line="426"/>
         <source>Audit</source>
         <translation>Аудит</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="421"/>
+        <location filename="../mainwindow.ui" line="434"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="429"/>
+        <location filename="../mainwindow.ui" line="442"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="437"/>
+        <location filename="../mainwindow.ui" line="450"/>
         <source>ROMs</source>
         <translation>ROMы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="445"/>
+        <location filename="../mainwindow.ui" line="458"/>
         <source>Manufacturer</source>
         <translation>Производитель</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="453"/>
+        <location filename="../mainwindow.ui" line="466"/>
         <source>Driver</source>
         <translation>Драйвер</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="461"/>
+        <location filename="../mainwindow.ui" line="474"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="469"/>
+        <location filename="../mainwindow.ui" line="482"/>
         <source>Clone of</source>
         <translation>Клон</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="477"/>
+        <location filename="../mainwindow.ui" line="490"/>
         <source>Sort Ascending</source>
         <translation>Сортировать по возростанию</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="485"/>
+        <location filename="../mainwindow.ui" line="498"/>
         <source>Sort Descending</source>
         <translation>Сортировать по убыванию</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="494"/>
+        <location filename="../mainwindow.ui" line="507"/>
         <source>&amp;Directories...</source>
         <translation>Папки...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="503"/>
+        <location filename="../mainwindow.ui" line="516"/>
         <source>Pr&amp;operties</source>
         <translation>Свойства</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="556"/>
+        <location filename="../mainwindow.ui" line="569"/>
         <source>Enforce Aspect Ratio</source>
         <translation>Соблюдать пропорции</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="564"/>
+        <location filename="../mainwindow.ui" line="577"/>
         <source>Local &amp;Language Game List</source>
         <translation>Перевод названий игр</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="569"/>
+        <location filename="../mainwindow.ui" line="582"/>
         <source>FAQ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="574"/>
+        <location filename="../mainwindow.ui" line="587"/>
         <source>Discussion Board</source>
         <translation>Форум</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="579"/>
+        <location filename="../mainwindow.ui" line="592"/>
         <source>Readme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="587"/>
+        <location filename="../mainwindow.ui" line="600"/>
         <source>Stretch</source>
         <translation>Растягивать</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="595"/>
+        <location filename="../mainwindow.ui" line="608"/>
         <source>Tile</source>
         <translation>Замостить</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="606"/>
+        <location filename="../mainwindow.ui" line="619"/>
         <source>Highlight Selected Icon</source>
         <translation>Увеличивать выбранную иконку</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="614"/>
+        <location filename="../mainwindow.ui" line="627"/>
         <source>Strech Screenshot Larger</source>
         <translation>Растягивать картинки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="619"/>
+        <location filename="../mainwindow.ui" line="632"/>
         <source>&amp;Playback Input...</source>
         <translation>Воспроизвести запись...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="624"/>
+        <location filename="../mainwindow.ui" line="637"/>
         <source>Record &amp;Wave Output...</source>
         <translation>Запись звука...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="629"/>
+        <location filename="../mainwindow.ui" line="642"/>
         <source>Record &amp;MNG Output...</source>
         <translation>Запись MNG-видео...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="634"/>
+        <location filename="../mainwindow.ui" line="647"/>
         <source>Record &amp;AVI Output...</source>
         <translation>Запись AVI-видео...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="639"/>
+        <location filename="../mainwindow.ui" line="652"/>
         <source>Load &amp;Savestate...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="680"/>
+        <location filename="../mainwindow.ui" line="693"/>
         <source>&amp;Audit All Roms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="688"/>
+        <location filename="../mainwindow.ui" line="701"/>
         <source>Hide C&amp;lones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="696"/>
+        <location filename="../mainwindow.ui" line="709"/>
         <source>Hide Non-Wor&amp;king</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="704"/>
+        <location filename="../mainwindow.ui" line="717"/>
         <source>Hide &amp;Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="717"/>
+        <location filename="../mainwindow.ui" line="730"/>
         <source>Command Line...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="738"/>
+        <location filename="../mainwindow.ui" line="751"/>
         <source>Audit All Samples</source>
         <translation type="unfinished"></translation>
     </message>

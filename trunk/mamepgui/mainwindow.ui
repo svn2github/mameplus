@@ -78,8 +78,8 @@
      <addaction name="actionFixDatMissing"/>
      <addaction name="actionFixDatComplete"/>
      <addaction name="separator"/>
-    <addaction name="actionHaveList"/>
-    <addaction name="actionMissList"/>
+     <addaction name="actionHaveList"/>
+     <addaction name="actionMissList"/>
     </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
