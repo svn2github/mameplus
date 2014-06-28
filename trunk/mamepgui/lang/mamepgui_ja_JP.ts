@@ -654,12 +654,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="354"/>
         <source>Export &amp;Have List...</source>
-        <translation>所有リストを出力...</translation>
+        <translation>所有リストを出力...(&amp;H)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="359"/>
         <source>Export &amp;Miss List...</source>
-        <translation>未所有リストを出力...</translation>
+        <translation>未所有リストを出力...(&amp;M)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="371"/>
