@@ -656,12 +656,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="354"/>
         <source>Export &amp;Have List...</source>
-        <translation>匯出擁有列表...(&amp;H)</translation>
+        <translation>匯出擁有列表(&amp;H)...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="359"/>
         <source>Export &amp;Miss List...</source>
-        <translation>匯出缺少列表...(&amp;M)</translation>
+        <translation>匯出缺少列表(&amp;M)...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="371"/>

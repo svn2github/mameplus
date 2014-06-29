@@ -302,7 +302,7 @@
     <message>
         <location filename="../gamelist.cpp" line="3411"/>
         <source>Please refresh the game list.</source>
-        <translation>ゲームリストを最新情報に更新ください。</translation>
+        <translation>ゲームリストを最新情報に更新して下さい。</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3451"/>
@@ -639,7 +639,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="329"/>
         <source>&amp;Refresh</source>
-        <translation>情報に更新(&amp;R)</translation>
+        <translation>情報を更新(&amp;R)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="337"/>
@@ -654,12 +654,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="354"/>
         <source>Export &amp;Have List...</source>
-        <translation>所有リストを出力...(&amp;H)</translation>
+        <translation>所有リストを出力(&amp;H)...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="359"/>
         <source>Export &amp;Miss List...</source>
-        <translation>未所有リストを出力...(&amp;M)</translation>
+        <translation>未所有リストを出力(&amp;M)...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="371"/>
