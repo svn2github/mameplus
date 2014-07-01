@@ -1,5 +1,4 @@
 #include "emu.h"
-
 #include "includes/simpsons.h"
 
 /***************************************************************************
@@ -8,11 +7,10 @@
 
 ***************************************************************************/
 
-void simpsons_tile_callback( running_machine &machine, int layer, int bank, int *code, int *color, int *flags, int *priority )
+K052109_CB_MEMBER(simpsons_state::tile_callback)
 {
-	simpsons_state *state = machine.driver_data<simpsons_state>();
 	*code |= ((*color & 0x3f) << 8) | (bank << 14);
-	*color = state->m_layer_colorbase[layer] + ((*color & 0xc0) >> 6);
+	*color = m_layer_colorbase[layer] + ((*color & 0xc0) >> 6);
 }
 
 
@@ -22,21 +20,20 @@ void simpsons_tile_callback( running_machine &machine, int layer, int bank, int 
 
 ***************************************************************************/
 
-void simpsons_sprite_callback( running_machine &machine, int *code, int *color, int *priority_mask )
+K053246_CB_MEMBER(simpsons_state::sprite_callback)
 {
-	simpsons_state *state = machine.driver_data<simpsons_state>();
 	int pri = (*color & 0x0f80) >> 6;   /* ??????? */
 
-	if (pri <= state->m_layerpri[2])
+	if (pri <= m_layerpri[2])
 		*priority_mask = 0;
-	else if (pri > state->m_layerpri[2] && pri <= state->m_layerpri[1])
+	else if (pri > m_layerpri[2] && pri <= m_layerpri[1])
 		*priority_mask = 0xf0;
-	else if (pri > state->m_layerpri[1] && pri <= state->m_layerpri[0])
+	else if (pri > m_layerpri[1] && pri <= m_layerpri[0])
 		*priority_mask = 0xf0 | 0xcc;
 	else
 		*priority_mask = 0xf0 | 0xcc | 0xaa;
 
-	*color = state->m_sprite_colorbase + (*color & 0x001f);
+	*color = m_sprite_colorbase + (*color & 0x001f);
 }
 
 

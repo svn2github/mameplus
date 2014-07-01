@@ -43,8 +43,6 @@ public:
 	INTERRUPT_GEN_MEMBER(surpratk_interrupt);
 
 	K05324X_CB_MEMBER(sprite_callback);
+	K052109_CB_MEMBER(tile_callback);
+	DECLARE_WRITE8_MEMBER(banking_callback);
 };
-
-/*----------- defined in video/surpratk.c -----------*/
-
-extern void surpratk_tile_callback(running_machine &machine, int layer,int bank,int *code,int *color,int *flags,int *priority);

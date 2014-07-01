@@ -463,14 +463,6 @@ static INPUT_PORTS_START( lethalene ) /* European region does not have non-engli
 INPUT_PORTS_END
 
 
-/* sound */
-
-static const k054539_interface k054539_config =
-{
-	NULL,
-	NULL,
-};
-
 void lethal_state::machine_start()
 {
 	membank("bank1")->configure_entries(0, 0x20, memregion("maincpu")->base(), 0x2000);
@@ -490,16 +482,6 @@ void lethal_state::machine_reset()
 	m_cur_control2 = 0;
 	m_bank4800->set_bank(0);
 }
-
-static const k056832_interface lethalen_k056832_intf =
-{
-	"gfx1", 0,
-	K056832_BPP_8LE,
-	1, 0,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	lethalen_tile_callback, "none"
-};
-
 
 static MACHINE_CONFIG_START( lethalen, lethal_state )
 
@@ -535,7 +517,9 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-	MCFG_K056832_ADD("k056832", lethalen_k056832_intf)
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(lethal_state, tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_8LE, 1, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
 
@@ -550,7 +534,7 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
 	MCFG_K054539_TIMER_HANDLER(INPUTLINE("soundcpu", INPUT_LINE_NMI))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)

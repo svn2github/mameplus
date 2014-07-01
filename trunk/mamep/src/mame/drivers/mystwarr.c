@@ -643,11 +643,6 @@ WRITE_LINE_MEMBER(mystwarr_state::k054539_nmi_gen)
 	m_sound_nmi_clk = state;
 }
 
-static const k054539_interface k054539_config =
-{
-	"shared"
-};
-
 /**********************************************************************************/
 
 static INPUT_PORTS_START( mystwarr )
@@ -1006,13 +1001,19 @@ static MACHINE_CONFIG_START( mystwarr, mystwarr_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
-
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K056832_ADD_NOINTF("k056832"/*, mystwarr_k056832_intf*/)
+
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(mystwarr_state, mystwarr_tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_5, 0, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
+
 	MCFG_K055555_ADD("k055555")
-	MCFG_K055673_ADD_NOINTF("k055673")
+
+	MCFG_DEVICE_ADD("k055673", K055673, 0)
+	MCFG_K055673_CB(mystwarr_state, mystwarr_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 0, -48, -24)
 	MCFG_K055673_GFXDECODE("gfxdecode")
 	MCFG_K055673_PALETTE("palette")
 
@@ -1020,17 +1021,19 @@ static MACHINE_CONFIG_START( mystwarr, mystwarr_state )
 	MCFG_K054338_ALPHAINV(1)
 	MCFG_K054338_MIXER("k055555")
 	
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,mystwarr)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, mystwarr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539_1", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539_1", K054539, XTAL_18_432MHz)
+	MCFG_K054539_REGION_OVERRRIDE("shared")
 	MCFG_K054539_TIMER_HANDLER(WRITELINE(mystwarr_state, k054539_nmi_gen))
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)    /* stereo channels are inverted */
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)
 
-	MCFG_K054539_ADD("k054539_2", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539_2", K054539, XTAL_18_432MHz)
+	MCFG_K054539_REGION_OVERRRIDE("shared")
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)    /* stereo channels are inverted */
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1049,7 +1052,7 @@ static MACHINE_CONFIG_DERIVED( viostorm, mystwarr )
 	MCFG_TIMER_DRIVER_CALLBACK(mystwarr_state, metamrph_interrupt)
 
 	/* video hardware */
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,viostorm)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, viostorm)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(mystwarr_state, screen_update_metamrph)
 
@@ -1057,6 +1060,13 @@ static MACHINE_CONFIG_DERIVED( viostorm, mystwarr )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(900))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(40, 40+384-1, 16, 16+224-1)
+
+	MCFG_DEVICE_MODIFY("k056832")
+	MCFG_K056832_CB(mystwarr_state, game4bpp_tile_callback)
+
+	MCFG_DEVICE_MODIFY("k055673")
+	MCFG_K055673_CB(mystwarr_state, metamrph_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 1, -62, -23)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( metamrph, mystwarr )
@@ -1075,7 +1085,7 @@ static MACHINE_CONFIG_DERIVED( metamrph, mystwarr )
 	MCFG_K053250_ADD("k053250_1", "palette", "screen", -7, 0)
 
 	/* video hardware */
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,metamrph)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, metamrph)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(mystwarr_state, screen_update_metamrph)
 
@@ -1083,6 +1093,13 @@ static MACHINE_CONFIG_DERIVED( metamrph, mystwarr )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(900))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(24, 24+288-1, 15, 15+224-1)
+
+	MCFG_DEVICE_MODIFY("k056832")
+	MCFG_K056832_CB(mystwarr_state, game4bpp_tile_callback)
+
+	MCFG_DEVICE_MODIFY("k055673")
+	MCFG_K055673_CB(mystwarr_state, metamrph_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 1, -51, -24)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dadandrn, mystwarr )
@@ -1101,7 +1118,7 @@ static MACHINE_CONFIG_DERIVED( dadandrn, mystwarr )
 	MCFG_GFXDECODE_MODIFY("gfxdecode", dadandrn)
 
 	/* video hardware */
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,dadandrn)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, dadandrn)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(mystwarr_state, screen_update_dadandrn)
 
@@ -1109,6 +1126,13 @@ static MACHINE_CONFIG_DERIVED( dadandrn, mystwarr )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(600))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(24, 24+288-1, 17, 17+224-1)
+
+	MCFG_DEVICE_MODIFY("k056832")
+	MCFG_K056832_CB(mystwarr_state, game5bpp_tile_callback)
+
+	MCFG_DEVICE_MODIFY("k055673")
+	MCFG_K055673_CB(mystwarr_state, gaiapols_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 0, -42, -22)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( gaiapols, mystwarr )
@@ -1129,7 +1153,7 @@ static MACHINE_CONFIG_DERIVED( gaiapols, mystwarr )
 	MCFG_GFXDECODE_MODIFY("gfxdecode", gaiapols)
 
 	/* video hardware */
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,gaiapols)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, gaiapols)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(mystwarr_state, screen_update_dadandrn)
 
@@ -1138,6 +1162,13 @@ static MACHINE_CONFIG_DERIVED( gaiapols, mystwarr )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(600))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(40, 40+376-1, 16, 16+224-1)
+
+	MCFG_DEVICE_MODIFY("k056832")
+	MCFG_K056832_CB(mystwarr_state, game4bpp_tile_callback)
+
+	MCFG_DEVICE_MODIFY("k055673")
+	MCFG_K055673_CB(mystwarr_state, gaiapols_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 1, -61, -22) // stage2 brick walls
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( martchmp, mystwarr )
@@ -1158,7 +1189,7 @@ static MACHINE_CONFIG_DERIVED( martchmp, mystwarr )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
-	MCFG_VIDEO_START_OVERRIDE(mystwarr_state,martchmp)
+	MCFG_VIDEO_START_OVERRIDE(mystwarr_state, martchmp)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -1166,6 +1197,13 @@ static MACHINE_CONFIG_DERIVED( martchmp, mystwarr )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(32, 32+384-1, 16, 16+224-1)
+
+	MCFG_DEVICE_MODIFY("k056832")
+	MCFG_K056832_CB(mystwarr_state, game5bpp_tile_callback)
+
+	MCFG_DEVICE_MODIFY("k055673")
+	MCFG_K055673_CB(mystwarr_state, martchmp_sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 0, 0, -58, -23)
 MACHINE_CONFIG_END
 
 /**********************************************************************************/

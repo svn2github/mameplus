@@ -289,30 +289,6 @@ static INPUT_PORTS_START( gijoe )
 	PORT_DIPUNUSED_DIPLOC( 0x8000, 0x8000, "SW1:4" )    /* Listed as "Unused" */
 INPUT_PORTS_END
 
-static const k054539_interface k054539_config =
-{
-	NULL,
-	NULL,
-};
-
-static const k056832_interface gijoe_k056832_intf =
-{
-	"gfx1", 0,
-	K056832_BPP_4,
-	1, 0,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	gijoe_tile_callback, "none"
-};
-
-static const k053247_interface gijoe_k053247_intf =
-{
-	"gfx2", 1,
-	NORMAL_PLANE_ORDER,
-	-37, 20,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	gijoe_sprite_callback
-};
-
 void gijoe_state::machine_start()
 {
 	m_dmadelay_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(gijoe_state::dmaend_callback),this));
@@ -352,18 +328,25 @@ static MACHINE_CONFIG_START( gijoe, gijoe_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K056832_ADD("k056832", gijoe_k056832_intf)
+
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(gijoe_state, tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_4, 1, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
-	MCFG_K053246_ADD("k053246", gijoe_k053247_intf)
+
+	MCFG_DEVICE_ADD("k053246", K053246, 0)
+	MCFG_K053246_CB(gijoe_state, sprite_callback)
+	MCFG_K053246_CONFIG("gfx2", 1, NORMAL_PLANE_ORDER, -37, 20)
 	MCFG_K053246_GFXDECODE("gfxdecode")
 	MCFG_K053246_PALETTE("palette")
+
 	MCFG_K053251_ADD("k053251")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
 	MCFG_K054539_TIMER_HANDLER(INPUTLINE("audiocpu", INPUT_LINE_NMI))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)

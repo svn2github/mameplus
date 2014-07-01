@@ -464,22 +464,6 @@ WRITE_LINE_MEMBER(spy_state::irqhandler)
 }
 
 
-static const k052109_interface spy_k052109_intf =
-{
-	"gfx1", 0,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	spy_tile_callback
-};
-
-static const k051960_interface spy_k051960_intf =
-{
-	"gfx2", 1,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	spy_sprite_callback
-};
-
 void spy_state::machine_start()
 {
 	UINT8 *ROM = memregion("maincpu")->base();
@@ -515,9 +499,7 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", spy_state,  spy_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
-	MCFG_CPU_PROGRAM_MAP(spy_sound_map)
-								/* nmi by the sound chip */
-
+	MCFG_CPU_PROGRAM_MAP(spy_sound_map)	/* nmi by the sound chip */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -533,12 +515,14 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K052109_ADD("k052109", spy_k052109_intf)
-	MCFG_K052109_GFXDECODE("gfxdecode")
-	MCFG_K052109_PALETTE("palette")
-	MCFG_K051960_ADD("k051960", spy_k051960_intf)
-	MCFG_K051960_GFXDECODE("gfxdecode")
-	MCFG_K051960_PALETTE("palette")
+
+	MCFG_DEVICE_ADD("k052109", K052109, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K052109_CB(spy_state, tile_callback)
+
+	MCFG_DEVICE_ADD("k051960", K051960, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K051960_CB(spy_state, sprite_callback)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -574,13 +558,13 @@ ROM_START( spy )
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* Z80 code */
 	ROM_LOAD( "857d01.bin",   0x0000, 0x8000, CRC(aad4210f) SHA1(bb40b8673939b5ce51012606da86b4dcbfc52a57) )
 
-	ROM_REGION( 0x080000, "gfx1", 0 ) /* graphics ( dont dispose as the program can read them, 0 ) */
-	ROM_LOAD( "857b09.bin",   0x00000, 0x40000, CRC(b8780966) SHA1(6c255f1e4d1398fa9010a1ae0f5172dc524df109) )  /* characters */
-	ROM_LOAD( "857b08.bin",   0x40000, 0x40000, CRC(3e4d8d50) SHA1(70f45a725bf1e9d15285ffb6b280945f7ce7faf0) )
+	ROM_REGION( 0x080000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "857b09.bin",   0x00000, 0x40000, CRC(b8780966) SHA1(6c255f1e4d1398fa9010a1ae0f5172dc524df109) )
+	ROM_LOAD32_WORD( "857b08.bin",   0x00002, 0x40000, CRC(3e4d8d50) SHA1(70f45a725bf1e9d15285ffb6b280945f7ce7faf0) )
 
-	ROM_REGION( 0x100000, "gfx2", 0 ) /* graphics ( dont dispose as the program can read them, 0 ) */
-	ROM_LOAD( "857b06.bin",   0x00000, 0x80000, CRC(7b515fb1) SHA1(3830649d47964940023760b76e2bf94bb9163f23) )  /* sprites */
-	ROM_LOAD( "857b05.bin",   0x80000, 0x80000, CRC(27b0f73b) SHA1(6b6a3da11c3005e3a62e6280818c18ae2ea31800) )
+	ROM_REGION( 0x100000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "857b06.bin",   0x00000, 0x80000, CRC(7b515fb1) SHA1(3830649d47964940023760b76e2bf94bb9163f23) )
+	ROM_LOAD32_WORD( "857b05.bin",   0x00002, 0x80000, CRC(27b0f73b) SHA1(6b6a3da11c3005e3a62e6280818c18ae2ea31800) )
 
 	ROM_REGION( 0x0200, "proms", 0 )
 	ROM_LOAD( "857a10.bin",   0x0000, 0x0100, CRC(32758507) SHA1(c21f89ad253502968a755fb0d23da98319f9cd93) )    /* priority encoder (not used) */
@@ -601,13 +585,13 @@ ROM_START( spyu )
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* Z80 code */
 	ROM_LOAD( "857d01.bin",   0x0000, 0x8000, CRC(aad4210f) SHA1(bb40b8673939b5ce51012606da86b4dcbfc52a57) )
 
-	ROM_REGION( 0x080000, "gfx1", 0 ) /* graphics ( dont dispose as the program can read them, 0 ) */
-	ROM_LOAD( "857b09.bin",   0x00000, 0x40000, CRC(b8780966) SHA1(6c255f1e4d1398fa9010a1ae0f5172dc524df109) )  /* characters */
-	ROM_LOAD( "857b08.bin",   0x40000, 0x40000, CRC(3e4d8d50) SHA1(70f45a725bf1e9d15285ffb6b280945f7ce7faf0) )
+	ROM_REGION( 0x080000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "857b09.bin",   0x00000, 0x40000, CRC(b8780966) SHA1(6c255f1e4d1398fa9010a1ae0f5172dc524df109) )
+	ROM_LOAD32_WORD( "857b08.bin",   0x00002, 0x40000, CRC(3e4d8d50) SHA1(70f45a725bf1e9d15285ffb6b280945f7ce7faf0) )
 
-	ROM_REGION( 0x100000, "gfx2", 0 ) /* graphics ( dont dispose as the program can read them, 0 ) */
-	ROM_LOAD( "857b06.bin",   0x00000, 0x80000, CRC(7b515fb1) SHA1(3830649d47964940023760b76e2bf94bb9163f23) )  /* sprites */
-	ROM_LOAD( "857b05.bin",   0x80000, 0x80000, CRC(27b0f73b) SHA1(6b6a3da11c3005e3a62e6280818c18ae2ea31800) )
+	ROM_REGION( 0x100000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "857b06.bin",   0x00000, 0x80000, CRC(7b515fb1) SHA1(3830649d47964940023760b76e2bf94bb9163f23) )  
+	ROM_LOAD32_WORD( "857b05.bin",   0x00002, 0x80000, CRC(27b0f73b) SHA1(6b6a3da11c3005e3a62e6280818c18ae2ea31800) )
 
 	ROM_REGION( 0x0200, "proms", 0 )
 	ROM_LOAD( "857a10.bin",   0x0000, 0x0100, CRC(32758507) SHA1(c21f89ad253502968a755fb0d23da98319f9cd93) )    /* priority encoder (not used) */

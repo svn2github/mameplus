@@ -323,22 +323,6 @@ static GFXDECODE_START( rungun )
 GFXDECODE_END
 
 
-
-static const k054539_interface k054539_config =
-{
-	"shared"
-};
-
-
-static const k053247_interface rng_k055673_intf =
-{
-	"gfx2", 1,
-	K055673_LAYOUT_RNG,
-	-8, 15,
-	KONAMI_ROM_DEINTERLEAVE_NONE,   // there is some interleave in video_start...
-	rng_sprite_callback
-};
-
 void rungun_state::machine_start()
 {
 	UINT8 *ROM = memregion("soundcpu")->base();
@@ -396,7 +380,9 @@ static MACHINE_CONFIG_START( rng, rungun_state )
 	MCFG_DEVICE_ADD("k053936", K053936, 0)
 	MCFG_K053936_OFFSETS(34, 9)
 
-	MCFG_K055673_ADD("k055673", rng_k055673_intf)
+	MCFG_DEVICE_ADD("k055673", K055673, 0)
+	MCFG_K055673_CB(rungun_state, sprite_callback)
+	MCFG_K055673_CONFIG("gfx2", 1, K055673_LAYOUT_RNG, -8, 15)
 	MCFG_K055673_GFXDECODE("gfxdecode")
 	MCFG_K055673_PALETTE("palette")
 
@@ -406,12 +392,14 @@ static MACHINE_CONFIG_START( rng, rungun_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539_1", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539_1", K054539, XTAL_18_432MHz)
+	MCFG_K054539_REGION_OVERRRIDE("shared")
 	MCFG_K054539_TIMER_HANDLER(WRITELINE(rungun_state, k054539_nmi_gen))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_K054539_ADD("k054539_2", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539_2", K054539, XTAL_18_432MHz)
+	MCFG_K054539_REGION_OVERRRIDE("shared")
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END

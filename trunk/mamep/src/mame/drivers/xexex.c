@@ -292,13 +292,12 @@ WRITE8_MEMBER(xexex_state::sound_bankswitch_w)
 	membank("z80bank")->set_entry(data & 0x07);
 }
 
-static void ym_set_mixing(device_t *device, double left, double right)
+K054539_CB_MEMBER(xexex_state::ym_set_mixing)
 {
-	xexex_state *state = device->machine().driver_data<xexex_state>();
-	state->m_filter1l->flt_volume_set_volume((71.0 * left) / 55.0);
-	state->m_filter1r->flt_volume_set_volume((71.0 * right) / 55.0);
-	state->m_filter2l->flt_volume_set_volume((71.0 * left) / 55.0);
-	state->m_filter2r->flt_volume_set_volume((71.0 * right) / 55.0);
+	m_filter1l->flt_volume_set_volume((71.0 * left) / 55.0);
+	m_filter1r->flt_volume_set_volume((71.0 * right) / 55.0);
+	m_filter2l->flt_volume_set_volume((71.0 * left) / 55.0);
+	m_filter2r->flt_volume_set_volume((71.0 * right) / 55.0);
 }
 
 TIMER_CALLBACK_MEMBER(xexex_state::dmaend_callback)
@@ -448,30 +447,6 @@ INPUT_PORTS_END
 
 
 
-static const k054539_interface k054539_config =
-{
-	NULL,
-	ym_set_mixing
-};
-
-static const k056832_interface xexex_k056832_intf =
-{
-	"gfx1", 0,
-	K056832_BPP_4,
-	1, 0,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	xexex_tile_callback, "none"
-};
-
-static const k053247_interface xexex_k053246_intf =
-{
-	"gfx2", 1,
-	NORMAL_PLANE_ORDER,
-	-48, 32,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	xexex_sprite_callback
-};
-
 void xexex_state::xexex_postload()
 {
 	parse_control2();
@@ -545,13 +520,21 @@ static MACHINE_CONFIG_START( xexex, xexex_state )
 	MCFG_PALETTE_ENABLE_HILIGHTS()
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K056832_ADD("k056832", xexex_k056832_intf)
+
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(xexex_state, tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_4, 1, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
-	MCFG_K053246_ADD("k053246", xexex_k053246_intf)
+
+	MCFG_DEVICE_ADD("k053246", K053246, 0)
+	MCFG_K053246_CB(xexex_state, sprite_callback)
+	MCFG_K053246_CONFIG("gfx2", 1, NORMAL_PLANE_ORDER, -48, 32)
 	MCFG_K053246_GFXDECODE("gfxdecode")
 	MCFG_K053246_PALETTE("palette")
+
 	MCFG_K053250_ADD("k053250", "palette", "screen", -5, -16)
+
 	MCFG_K053251_ADD("k053251")
 
 	MCFG_DEVICE_ADD("k053252", K053252, XTAL_32MHz/4)
@@ -567,7 +550,8 @@ static MACHINE_CONFIG_START( xexex, xexex_state )
 	MCFG_SOUND_ROUTE(1, "filter2l", 0.50)
 	MCFG_SOUND_ROUTE(1, "filter2r", 0.50)
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
+	MCFG_K054539_APAN_CB(xexex_state, ym_set_mixing)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)

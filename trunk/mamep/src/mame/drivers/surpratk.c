@@ -14,9 +14,6 @@
 #include "includes/konamipt.h"
 #include "includes/surpratk.h"
 
-/* prototypes */
-static KONAMI_SETLINES_CALLBACK( surpratk_banking );
-
 INTERRUPT_GEN_MEMBER(surpratk_state::surpratk_interrupt)
 {
 	if (m_k052109->is_irq_enabled())
@@ -134,15 +131,6 @@ static INPUT_PORTS_START( surpratk )
 INPUT_PORTS_END
 
 
-
-static const k052109_interface surpratk_k052109_intf =
-{
-	"gfx1", 0,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	surpratk_tile_callback
-};
-
 void surpratk_state::machine_start()
 {
 	membank("bank1")->configure_entries(0, 32, memregion("maincpu")->base(), 0x2000);
@@ -155,12 +143,9 @@ void surpratk_state::machine_start()
 
 void surpratk_state::machine_reset()
 {
-	int i;
-
-	konami_configure_set_lines(m_maincpu, surpratk_banking);
 	m_bank0000->set_bank(0);
 
-	for (i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		m_layerpri[i] = 0;
 		m_layer_colorbase[i] = 0;
@@ -169,12 +154,19 @@ void surpratk_state::machine_reset()
 	m_sprite_colorbase = 0;
 }
 
+WRITE8_MEMBER( surpratk_state::banking_callback )
+{
+//	logerror("%04x: setlines %02x\n", machine().device("maincpu")->safe_pc(), data);
+	membank("bank1")->set_entry(data & 0x1f);
+}
+
 static MACHINE_CONFIG_START( surpratk, surpratk_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/2/4) /* 053248, the clock input is 12MHz, and internal CPU divider of 4 */
 	MCFG_CPU_PROGRAM_MAP(surpratk_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", surpratk_state,  surpratk_interrupt)
+	MCFG_KONAMICPU_LINE_CB(WRITE8(surpratk_state, banking_callback))
 
 	MCFG_DEVICE_ADD("bank0000", ADDRESS_MAP_BANK, 0)
 	MCFG_DEVICE_PROGRAM_MAP(bank0000_map)
@@ -196,10 +188,9 @@ static MACHINE_CONFIG_START( surpratk, surpratk_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K052109_ADD("k052109", surpratk_k052109_intf)
-	MCFG_K052109_GFXDECODE("gfxdecode")
-	MCFG_K052109_PALETTE("palette")
+	MCFG_DEVICE_ADD("k052109", K052109, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K052109_CB(surpratk_state, tile_callback)
 
 	MCFG_DEVICE_ADD("k053244", K053244, 0)
 	MCFG_GFX_PALETTE("palette")
@@ -229,9 +220,9 @@ ROM_START( suratk )
 	ROM_LOAD( "911j01.f5", 0x00000, 0x20000, CRC(1e647881) SHA1(241e421d5599ebd9fcfb8be9c48dfd3b4c671958) )
 	ROM_LOAD( "911k02.h5", 0x20000, 0x20000, CRC(ef10e7b6) SHA1(0b41a929c0c579d688653a8d90dd6b40db12cfb3) )
 
-	ROM_REGION( 0x080000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) ) /* characters */
-	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) ) /* characters */
+	ROM_REGION( 0x080000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) )
+	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) )
 
 	ROM_REGION( 0x080000, "k053244", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "911d03.bin", 0x000000, 0x040000, CRC(e34ff182) SHA1(075ca7a91c843bdac7da21ddfcd43f7a043a09b6) )  /* sprites */
@@ -243,9 +234,9 @@ ROM_START( suratka )
 	ROM_LOAD( "911j01.f5", 0x00000, 0x20000, CRC(1e647881) SHA1(241e421d5599ebd9fcfb8be9c48dfd3b4c671958) )
 	ROM_LOAD( "911l02.h5", 0x20000, 0x20000, CRC(11db8288) SHA1(09fe187855172ebf0c57f561cce7f41e47f53114) )
 
-	ROM_REGION( 0x080000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) ) /* characters */
-	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) ) /* characters */
+	ROM_REGION( 0x080000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) )
+	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) )
 
 	ROM_REGION( 0x080000, "k053244", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "911d03.bin", 0x000000, 0x040000, CRC(e34ff182) SHA1(075ca7a91c843bdac7da21ddfcd43f7a043a09b6) )  /* sprites */
@@ -257,9 +248,9 @@ ROM_START( suratkj )
 	ROM_LOAD( "911m01.f5", 0x00000, 0x20000, CRC(ee5b2cc8) SHA1(4b05f7ba4e804a3bccb41fe9d3258cbcfe5324aa) )
 	ROM_LOAD( "911m02.h5", 0x20000, 0x20000, CRC(5d4148a8) SHA1(4fa5947db777b4c742775d588dea38758812a916) )
 
-	ROM_REGION( 0x080000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) ) /* characters */
-	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) ) /* characters */
+	ROM_REGION( 0x080000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "911d05.bin", 0x000000, 0x040000, CRC(308d2319) SHA1(521d2a72fecb094e2c2f23b535f0b527886b4d3a) )
+	ROM_LOAD32_WORD( "911d06.bin", 0x000002, 0x040000, CRC(91cc9b32) SHA1(e05b7bbff30f24fe6f009560410f5e90bb118692) )
 
 	ROM_REGION( 0x080000, "k053244", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "911d03.bin", 0x000000, 0x040000, CRC(e34ff182) SHA1(075ca7a91c843bdac7da21ddfcd43f7a043a09b6) )  /* sprites */
@@ -271,13 +262,6 @@ ROM_END
   Game driver(s)
 
 ***************************************************************************/
-
-static KONAMI_SETLINES_CALLBACK( surpratk_banking )
-{
-	logerror("%04x: setlines %02x\n",device->safe_pc(), lines);
-	device->machine().root_device().membank("bank1")->set_entry(lines & 0x1f);
-}
-
 
 GAME( 1990, suratk,  0,      surpratk, surpratk, driver_device, 0, ROT0, "Konami", "Surprise Attack (World ver. K)", GAME_SUPPORTS_SAVE )
 GAME( 1990, suratka, suratk, surpratk, surpratk, driver_device, 0, ROT0, "Konami", "Surprise Attack (Asia ver. L)", GAME_SUPPORTS_SAVE )

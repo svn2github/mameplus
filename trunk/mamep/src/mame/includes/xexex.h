@@ -94,9 +94,7 @@ public:
 	void xexex_postload();
 	void xexex_objdma( int limiter );
 	void parse_control2(  );
+	K056832_CB_MEMBER(tile_callback);
+	K053246_CB_MEMBER(sprite_callback);
+	K054539_CB_MEMBER(ym_set_mixing);
 };
-
-/*----------- defined in video/xexex.c -----------*/
-
-extern void xexex_sprite_callback(running_machine &machine, int *code, int *color, int *priority_mask);
-extern void xexex_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);

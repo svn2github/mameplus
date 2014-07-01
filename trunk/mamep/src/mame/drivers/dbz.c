@@ -289,24 +289,6 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static const k056832_interface dbz_k056832_intf =
-{
-	"gfx1", 2,
-	K056832_BPP_4,
-	1, 1,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	dbz_tile_callback, "none"
-};
-
-static const k053247_interface dbz_k053246_intf =
-{
-	"gfx2", 3,
-	NORMAL_PLANE_ORDER,
-	-52, 16,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	dbz_sprite_callback
-};
-
 WRITE_LINE_MEMBER(dbz_state::dbz_irq2_ack_w)
 {
 	m_maincpu->set_input_line(M68K_IRQ_2, CLEAR_LINE);
@@ -345,7 +327,6 @@ static MACHINE_CONFIG_START( dbz, dbz_state )
 	MCFG_CPU_PROGRAM_MAP(dbz_sound_map)
 	MCFG_CPU_IO_MAP(dbz_sound_io_map)
 
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(55)
@@ -361,11 +342,15 @@ static MACHINE_CONFIG_START( dbz, dbz_state )
 	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 	MCFG_PALETTE_ENABLE_SHADOWS()
 
-	MCFG_K056832_ADD("k056832", dbz_k056832_intf)
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(dbz_state, tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 2, K056832_BPP_4, 1, 1, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
 
-	MCFG_K053246_ADD("k053246", dbz_k053246_intf)
+	MCFG_DEVICE_ADD("k053246", K053246, 0)
+	MCFG_K053246_CB(dbz_state, sprite_callback)
+	MCFG_K053246_CONFIG("gfx2", 3, NORMAL_PLANE_ORDER, -87, 32)	// or -52, 16?
 	MCFG_K053246_GFXDECODE("gfxdecode")
 	MCFG_K053246_PALETTE("palette")
 
@@ -409,8 +394,8 @@ ROM_START( dbz )
 
 	/* tiles */
 	ROM_REGION( 0x400000, "gfx1", 0)
-	ROM_LOAD( "222a01.27c", 0x000000, 0x200000, CRC(9fce4ed4) SHA1(81e19375b351ee247f066434dd595149333d73c5) )
-	ROM_LOAD( "222a02.27e", 0x200000, 0x200000, CRC(651acaa5) SHA1(33942a90fb294b5da6a48e5bfb741b31babca188) )
+	ROM_LOAD32_WORD( "222a01.27c", 0x000000, 0x200000, CRC(9fce4ed4) SHA1(81e19375b351ee247f066434dd595149333d73c5) )
+	ROM_LOAD32_WORD( "222a02.27e", 0x000002, 0x200000, CRC(651acaa5) SHA1(33942a90fb294b5da6a48e5bfb741b31babca188) )
 
 	/* sprites */
 	ROM_REGION( 0x800000, "gfx2", 0)
@@ -444,8 +429,8 @@ ROM_START( dbza )
 
 	/* tiles */
 	ROM_REGION( 0x400000, "gfx1", 0)
-	ROM_LOAD( "222a01.27c", 0x000000, 0x200000, CRC(9fce4ed4) SHA1(81e19375b351ee247f066434dd595149333d73c5) )
-	ROM_LOAD( "222a02.27e", 0x200000, 0x200000, CRC(651acaa5) SHA1(33942a90fb294b5da6a48e5bfb741b31babca188) )
+	ROM_LOAD32_WORD( "222a01.27c", 0x000000, 0x200000, CRC(9fce4ed4) SHA1(81e19375b351ee247f066434dd595149333d73c5) )
+	ROM_LOAD32_WORD( "222a02.27e", 0x000002, 0x200000, CRC(651acaa5) SHA1(33942a90fb294b5da6a48e5bfb741b31babca188) )
 
 	/* sprites */
 	ROM_REGION( 0x800000, "gfx2", 0)
@@ -479,8 +464,8 @@ ROM_START( dbz2 )
 
 	/* tiles */
 	ROM_REGION( 0x400000, "gfx1", 0)
-	ROM_LOAD( "ds-b01.27c", 0x000000, 0x200000, CRC(8dc39972) SHA1(c6e3d4e0ff069e08bdb68e2b0ad24cc7314e4e93) )
-	ROM_LOAD( "ds-b02.27e", 0x200000, 0x200000, CRC(7552f8cd) SHA1(1f3beffe9733b1a18d44b5e8880ff1cc97e7a8ab) )
+	ROM_LOAD32_WORD( "ds-b01.27c", 0x000000, 0x200000, CRC(8dc39972) SHA1(c6e3d4e0ff069e08bdb68e2b0ad24cc7314e4e93) )
+	ROM_LOAD32_WORD( "ds-b02.27e", 0x000002, 0x200000, CRC(7552f8cd) SHA1(1f3beffe9733b1a18d44b5e8880ff1cc97e7a8ab) )
 
 	/* sprites */
 	ROM_REGION( 0x800000, "gfx2", 0)

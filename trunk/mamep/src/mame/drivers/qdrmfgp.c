@@ -534,36 +534,11 @@ WRITE_LINE_MEMBER(qdrmfgp_state::k054539_irq1_gen)
 	m_sound_intck = state;
 }
 
-static const k054539_interface k054539_config =
-{
-	NULL,
-	NULL,
-};
-
-
 /*************************************
  *
  *  Machine-specific init
  *
  *************************************/
-
-static const k056832_interface qdrmfgp_k056832_intf =
-{
-	"gfx1", 0,
-	K056832_BPP_4dj,
-	1, 0,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	qdrmfgp_tile_callback, "none"
-};
-
-static const k056832_interface qdrmfgp2_k056832_intf =
-{
-	"gfx1", 0,
-	K056832_BPP_4dj,
-	1, 0,
-	KONAMI_ROM_DEINTERLEAVE_NONE,
-	qdrmfgp2_tile_callback, "none"
-};
 
 MACHINE_START_MEMBER(qdrmfgp_state,qdrmfgp)
 {
@@ -622,7 +597,10 @@ static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 	MCFG_VIDEO_START_OVERRIDE(qdrmfgp_state,qdrmfgp)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K056832_ADD("k056832", qdrmfgp_k056832_intf)
+
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(qdrmfgp_state, qdrmfgp_tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_4dj, 1, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
 
@@ -632,7 +610,7 @@ static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
 	MCFG_K054539_TIMER_HANDLER(WRITELINE(qdrmfgp_state, k054539_irq1_gen))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
@@ -666,7 +644,10 @@ static MACHINE_CONFIG_START( qdrmfgp2, qdrmfgp_state )
 	MCFG_VIDEO_START_OVERRIDE(qdrmfgp_state,qdrmfgp2)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K056832_ADD("k056832", qdrmfgp2_k056832_intf)
+
+	MCFG_DEVICE_ADD("k056832", K056832, 0)
+	MCFG_K056832_CB(qdrmfgp_state, qdrmfgp2_tile_callback)
+	MCFG_K056832_CONFIG("gfx1", 0, K056832_BPP_4dj, 1, 0, "none")
 	MCFG_K056832_GFXDECODE("gfxdecode")
 	MCFG_K056832_PALETTE("palette")
 
@@ -676,7 +657,7 @@ static MACHINE_CONFIG_START( qdrmfgp2, qdrmfgp_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END

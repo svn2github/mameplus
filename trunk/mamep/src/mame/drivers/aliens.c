@@ -14,9 +14,6 @@ Preliminary driver by:
 #include "includes/konamipt.h"
 #include "includes/aliens.h"
 
-/* prototypes */
-static KONAMI_SETLINES_CALLBACK( aliens_banking );
-
 INTERRUPT_GEN_MEMBER(aliens_state::aliens_interrupt)
 {
 	if (m_k051960->k051960_is_irq_enabled())
@@ -178,22 +175,6 @@ WRITE8_MEMBER(aliens_state::volume_callback)
 	m_k007232->set_volume(1, 0, (data >> 4) * 0x11);
 }
 
-static const k052109_interface aliens_k052109_intf =
-{
-	"gfx1", 0,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	aliens_tile_callback
-};
-
-static const k051960_interface aliens_k051960_intf =
-{
-	"gfx2", 1,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	aliens_sprite_callback
-};
-
 void aliens_state::machine_start()
 {
 	membank("bank1")->configure_entries(0, 24, memregion("maincpu")->base(), 0x2000);
@@ -202,18 +183,21 @@ void aliens_state::machine_start()
 
 void aliens_state::machine_reset()
 {
-	konami_configure_set_lines(m_maincpu, aliens_banking);
-
 	m_bank0000->set_bank(0);
+}
+
+WRITE8_MEMBER( aliens_state::banking_callback )
+{
+	membank("bank1")->set_entry(data & 0x1f);
 }
 
 static MACHINE_CONFIG_START( aliens, aliens_state )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)       /* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(aliens_map)
-	MCFG_CPU_VBLANK_INT_DRIVER("screen", aliens_state,  aliens_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aliens_state, aliens_interrupt)
+	MCFG_KONAMICPU_LINE_CB(WRITE8(aliens_state, banking_callback))
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)     /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(aliens_sound_map)
@@ -238,13 +222,13 @@ static MACHINE_CONFIG_START( aliens, aliens_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K052109_ADD("k052109", aliens_k052109_intf)
-	MCFG_K052109_GFXDECODE("gfxdecode")
-	MCFG_K052109_PALETTE("palette")
-	MCFG_K051960_ADD("k051960", aliens_k051960_intf)
-	MCFG_K051960_GFXDECODE("gfxdecode")
-	MCFG_K051960_PALETTE("palette")
+	MCFG_DEVICE_ADD("k052109", K052109, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K052109_CB(aliens_state, tile_callback)
+
+	MCFG_DEVICE_ADD("k051960", K051960, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K051960_CB(aliens_state, sprite_callback)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -275,20 +259,20 @@ ROM_START( aliens )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_b03.g04", 0x00000, 0x08000, CRC(1ac4d283) SHA1(2253f1f39c7edb6cef438b3d97f3af67a1f491ff) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -306,20 +290,21 @@ ROM_START( aliens2 )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_b03.g04", 0x00000, 0x08000, CRC(1ac4d283) SHA1(2253f1f39c7edb6cef438b3d97f3af67a1f491ff) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -337,20 +322,20 @@ ROM_START( aliens3 )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_b03.g04", 0x00000, 0x08000, CRC(1ac4d283) SHA1(2253f1f39c7edb6cef438b3d97f3af67a1f491ff) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -368,20 +353,20 @@ ROM_START( aliensu )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_b03.g04", 0x00000, 0x08000, CRC(1ac4d283) SHA1(2253f1f39c7edb6cef438b3d97f3af67a1f491ff) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -399,20 +384,20 @@ ROM_START( aliensj )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_k03.g04", 0x00000, 0x08000, CRC(bd86264d) SHA1(345fd666daf8a29ef314b14306c1a976cb159bed) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -430,20 +415,20 @@ ROM_START( aliensj2 )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_k03.g04", 0x00000, 0x08000, CRC(bd86264d) SHA1(345fd666daf8a29ef314b14306c1a976cb159bed) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD32_WORD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD32_WORD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD32_WORD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD32_WORD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -461,20 +446,20 @@ ROM_START( aliensa )
 	ROM_REGION( 0x08000, "audiocpu", 0 )
 	ROM_LOAD( "875_k03.g04", 0x00000, 0x08000, CRC(bd86264d) SHA1(345fd666daf8a29ef314b14306c1a976cb159bed) )
 
-	ROM_REGION( 0x200000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )   /* characters (set 1) */
-	ROM_LOAD( "875b07.j13", 0x080000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )   /* characters (set 2) */
+	ROM_REGION( 0x200000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "875b11.k13", 0x000000, 0x80000, CRC(89c5c885) SHA1(02a1581579b6ef816e04bec312a7b3ae7c7e84f8) )
+	ROM_LOAD32_WORD( "875b12.k19", 0x000002, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )
+	ROM_LOAD32_WORD( "875b07.j13", 0x100000, 0x40000, CRC(e9c56d66) SHA1(1f58949d5391aef002a6e1ee7034e57bf99cee61) )
 	/* second half empty */
-	ROM_LOAD( "875b12.k19", 0x100000, 0x80000, CRC(ea6bdc17) SHA1(a7c22370f8adc5b479283f1ff831f493df78282f) )   /* characters (set 1) */
-	ROM_LOAD( "875b08.j19", 0x180000, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )   /* characters (set 2) */
+	ROM_LOAD32_WORD( "875b08.j19", 0x100002, 0x40000, CRC(f9387966) SHA1(470ecc4a5a3edd08d5e0ab10b0c590db1968fb0a) )
 	/* second half empty */
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* graphics */
-	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )   /* sprites (set 1) */
-	ROM_LOAD( "875b06.j08", 0x080000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )   /* sprites (set 2) */
+	ROM_REGION( 0x200000, "k051960", 0 )	/* sprites */
+	ROM_LOAD( "875b10.k08", 0x000000, 0x80000, CRC(0b1035b1) SHA1(db04020761386e79249762cd1540208375c38c7f) )
+	ROM_LOAD( "875b09.k02", 0x000002, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )
+	ROM_LOAD( "875b06.j08", 0x100000, 0x40000, CRC(081a0566) SHA1(3a4aa14178fe76a030224743c9e9cd974e08bd79) )
 	/* second half empty */
-	ROM_LOAD( "875b09.k02", 0x100000, 0x80000, CRC(e76b3c19) SHA1(6838e07460b3eaaeb129208ad0696c8019bd63d9) )   /* sprites (set 1) */
-	ROM_LOAD( "875b05.j02", 0x180000, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )   /* sprites (set 2) */
+	ROM_LOAD( "875b05.j02", 0x100002, 0x40000, CRC(19a261f2) SHA1(b0518fad833b3e613e0201d5d9cab73dc5e78e1d) )
 	/* second half empty */
 
 	ROM_REGION( 0x0100, "proms", 0 )
@@ -489,11 +474,6 @@ ROM_END
   Game driver(s)
 
 ***************************************************************************/
-
-static KONAMI_SETLINES_CALLBACK( aliens_banking )
-{
-	device->machine().root_device().membank("bank1")->set_entry(lines & 0x1f);
-}
 
 GAME( 1990, aliens,   0,      aliens, aliens, driver_device, 0, ROT0, "Konami", "Aliens (World set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, aliens2,  aliens, aliens, aliens, driver_device, 0, ROT0, "Konami", "Aliens (World set 2)", GAME_SUPPORTS_SAVE )

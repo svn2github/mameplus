@@ -45,7 +45,9 @@ private:
 template <int m_N, int _storage_N>
 void netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::log_stats()
 {
-#if 1
+#if 0
+    if (this->m_calculations == 0)
+        return;
     printf("==============================================\n");
     printf("Solver %s\n", this->name().cstr());
     printf("       ==> %d nets\n", this->N()); //, (*(*groups[i].first())->m_core_terms.first())->name().cstr());
@@ -142,8 +144,6 @@ ATTR_HOT inline int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::vsolv
             if (s>rmax)
                 rmax = s;
         }
-        //if (fabs(rmax) > 0.01)
-        //    printf("rmin %f rmax %f\n", rmin, rmax);
 #if 0
         double frobA = sqrt(frob /(iN));
         if (1 &&frobA < 1.0)
@@ -165,6 +165,8 @@ ATTR_HOT inline int netlist_matrix_solver_gauss_seidel_t<m_N, _storage_N>::vsolv
             ws = 2.0 / (1.0 + sqrt(1.0-rm));
         else
             ws = 1.0;
+        if (ws > 1.02 && rmax > 1.001)
+            printf("rmin %f rmax %f ws %f\n", rmin, rmax, ws);
 #endif
     }
 

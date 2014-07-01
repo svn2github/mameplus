@@ -15,10 +15,6 @@
 #include "includes/konamipt.h"
 #include "includes/parodius.h"
 
-/* prototypes */
-static KONAMI_SETLINES_CALLBACK( parodius_banking );
-
-
 INTERRUPT_GEN_MEMBER(parodius_state::parodius_interrupt)
 {
 	if (m_k052109->is_irq_enabled())
@@ -198,14 +194,6 @@ INPUT_PORTS_END
 
 ***************************************************************************/
 
-static const k052109_interface parodius_k052109_intf =
-{
-	"gfx1", 0,
-	NORMAL_PLANE_ORDER,
-	KONAMI_ROM_DEINTERLEAVE_2,
-	parodius_tile_callback
-};
-
 void parodius_state::machine_start()
 {
 	membank("bank1")->configure_entries(0, 16, memregion("maincpu")->base(), 0x4000);
@@ -218,11 +206,7 @@ void parodius_state::machine_start()
 
 void parodius_state::machine_reset()
 {
-	int i;
-
-	konami_configure_set_lines(m_maincpu, parodius_banking);
-
-	for (i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		m_layerpri[i] = 0;
 		m_layer_colorbase[i] = 0;
@@ -233,16 +217,24 @@ void parodius_state::machine_reset()
 	m_bank2000->set_bank(0);
 }
 
+WRITE8_MEMBER( parodius_state::banking_callback )
+{
+	if (data & 0xf0)
+		logerror("%04x: setlines %02x\n", machine().device("maincpu")->safe_pc(), data);
+	
+	membank("bank1")->set_entry((data & 0x0f) ^ 0x0f);
+}
+
 static MACHINE_CONFIG_START( parodius, parodius_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)        /* 053248 */
 	MCFG_CPU_PROGRAM_MAP(parodius_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", parodius_state,  parodius_interrupt)
+	MCFG_KONAMICPU_LINE_CB(WRITE8(parodius_state, banking_callback))
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
-	MCFG_CPU_PROGRAM_MAP(parodius_sound_map)
-								/* NMIs are triggered by the 053260 */
+	MCFG_CPU_PROGRAM_MAP(parodius_sound_map)	/* NMIs are triggered by the 053260 */
 
 	MCFG_DEVICE_ADD("bank0000", ADDRESS_MAP_BANK, 0)
 	MCFG_DEVICE_PROGRAM_MAP(bank0000_map)
@@ -271,10 +263,9 @@ static MACHINE_CONFIG_START( parodius, parodius_state )
 	MCFG_PALETTE_ENABLE_SHADOWS()
 	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
-	MCFG_K052109_ADD("k052109", parodius_k052109_intf)
-	MCFG_K052109_GFXDECODE("gfxdecode")
-	MCFG_K052109_PALETTE("palette")
+	MCFG_DEVICE_ADD("k052109", K052109, 0)
+	MCFG_GFX_PALETTE("palette")
+	MCFG_K052109_CB(parodius_state, tile_callback)
 
 	MCFG_DEVICE_ADD("k053245", K053245, 0)
 	MCFG_GFX_PALETTE("palette")
@@ -309,9 +300,9 @@ ROM_START( parodius )
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */
 	ROM_LOAD( "955e03.d14", 0x0000, 0x10000, CRC(940aa356) SHA1(e7466f049be48861fd2d929eed786bd48782b5bb) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) ) /* characters */
-	ROM_LOAD( "955d08.k24", 0x080000, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) ) /* characters */
+	ROM_REGION( 0x100000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) )
+	ROM_LOAD32_WORD( "955d08.k24", 0x000002, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) )
 
 	ROM_REGION( 0x100000, "k053245", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "955d05.k13", 0x000000, 0x080000, CRC(7a1e55e0) SHA1(7a0e04ebde28d1e7b60aef3de926dc0e78662b1e) ) /* sprites */
@@ -329,9 +320,9 @@ ROM_START( parodiuse ) /* Earlier version? */
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */
 	ROM_LOAD( "955e03.d14", 0x0000, 0x10000, CRC(940aa356) SHA1(e7466f049be48861fd2d929eed786bd48782b5bb) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) ) /* characters */
-	ROM_LOAD( "955d08.k24", 0x080000, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) ) /* characters */
+	ROM_REGION( 0x100000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) )
+	ROM_LOAD32_WORD( "955d08.k24", 0x000002, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) )
 
 	ROM_REGION( 0x100000, "k053245", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "955d05.k13", 0x000000, 0x080000, CRC(7a1e55e0) SHA1(7a0e04ebde28d1e7b60aef3de926dc0e78662b1e) ) /* sprites */
@@ -349,9 +340,9 @@ ROM_START( parodiusj )
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */
 	ROM_LOAD( "955e03.d14", 0x0000, 0x10000, CRC(940aa356) SHA1(e7466f049be48861fd2d929eed786bd48782b5bb) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) ) /* characters */
-	ROM_LOAD( "955d08.k24", 0x080000, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) ) /* characters */
+	ROM_REGION( 0x100000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) )
+	ROM_LOAD32_WORD( "955d08.k24", 0x000002, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) )
 
 	ROM_REGION( 0x100000, "k053245", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "955d05.k13", 0x000000, 0x080000, CRC(7a1e55e0) SHA1(7a0e04ebde28d1e7b60aef3de926dc0e78662b1e) ) /* sprites */
@@ -369,9 +360,9 @@ ROM_START( parodiusa )
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */
 	ROM_LOAD( "955e03.d14", 0x0000, 0x10000, CRC(940aa356) SHA1(e7466f049be48861fd2d929eed786bd48782b5bb) ) /* Labeled as D-20 */
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* graphics */
-	ROM_LOAD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) ) /* characters */
-	ROM_LOAD( "955d08.k24", 0x080000, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) ) /* characters */
+	ROM_REGION( 0x100000, "k052109", 0 )    /* tiles */
+	ROM_LOAD32_WORD( "955d07.k19", 0x000000, 0x080000, CRC(89473fec) SHA1(0da18c4b078c3a30233a6f5c2b90032168136f58) )
+	ROM_LOAD32_WORD( "955d08.k24", 0x000002, 0x080000, CRC(43d5cda1) SHA1(2c51bad4857d1d31456c6dc1e7d41326ea35468b) )
 
 	ROM_REGION( 0x100000, "k053245", 0 ) /* graphics */
 	ROM_LOAD32_WORD( "955d05.k13", 0x000000, 0x080000, CRC(7a1e55e0) SHA1(7a0e04ebde28d1e7b60aef3de926dc0e78662b1e) ) /* sprites */
@@ -386,14 +377,6 @@ ROM_END
   Game driver(s)
 
 ***************************************************************************/
-
-static KONAMI_SETLINES_CALLBACK( parodius_banking )
-{
-	if (lines & 0xf0)
-		logerror("%04x: setlines %02x\n", device->safe_pc(), lines);
-
-	device->machine().root_device().membank("bank1")->set_entry((lines & 0x0f) ^ 0x0f);
-}
 
 GAME( 1990, parodius,  0,        parodius, parodius, driver_device, 0, ROT0, "Konami", "Parodius DA! (World, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, parodiuse, parodius, parodius, parodius, driver_device, 0, ROT0, "Konami", "Parodius DA! (World, set 2)", GAME_SUPPORTS_SAVE )

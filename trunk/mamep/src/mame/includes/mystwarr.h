@@ -93,4 +93,11 @@ public:
 	TIMER_DEVICE_CALLBACK_MEMBER(metamrph_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(mchamp_interrupt);
 	void reset_sound_region();
+	K056832_CB_MEMBER(mystwarr_tile_callback);
+	K056832_CB_MEMBER(game5bpp_tile_callback);
+	K056832_CB_MEMBER(game4bpp_tile_callback);
+	K055673_CB_MEMBER(mystwarr_sprite_callback);
+	K055673_CB_MEMBER(metamrph_sprite_callback);
+	K055673_CB_MEMBER(gaiapols_sprite_callback);
+	K055673_CB_MEMBER(martchmp_sprite_callback);
 };

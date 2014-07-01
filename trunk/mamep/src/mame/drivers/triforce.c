@@ -439,7 +439,7 @@ public:
 	virtual void machine_start();
 	virtual void video_start();
 	UINT32 screen_update_triforce(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
-	required_device<cpu_device> m_maincpu;
+	required_device<ppc_device> m_maincpu;
 };
 
 READ64_MEMBER(triforce_state::gc_pi_r)
@@ -537,7 +537,7 @@ static void descrambler(UINT8* data, UINT32 size)
 void triforce_state::machine_start()
 {
 	/* set conservative DRC options */
-	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
+	m_maincpu->ppcdrc_set_options(PPCDRC_COMPATIBLE_OPTIONS);
 
 	UINT8 *rom = (UINT8*)memregion("maincpu")->base();
 	descrambler(&rom[0x100], 0x1afe00);
@@ -906,15 +906,15 @@ ROM_START( mkartag2a )
 	TRIFORCE_BIOS
 
 	ROM_REGION(0x21200000, "rom_board", 0)
-	ROM_LOAD( "ic9_mx29lv400cttc.bin", 0x00000000, 0x0080000, CRC(ff854fd0) SHA1(0e42aff9a60aacd200b7a29d4d180abdab6a732e) ) 
-	ROM_LOAD( "ic1_k9f1208u0b.bin",    0x01000000, 0x4200000, CRC(c5624816) SHA1(d6f2a2ff9e9e14d857a0ec810521c378ba1fabd5) ) 
-	ROM_LOAD( "ic2_k9f1208u0b.bin",    0x04200000, 0x4200000, CRC(44e59a1f) SHA1(68a8c1178a33e23446980ec84486bc614f830dad) ) 
-	ROM_LOAD( "ic3_k9f1208u0b.bin",    0x08400000, 0x4200000, CRC(6688e7f9) SHA1(7d1e60806c02fd765dd0981e790a698a29050aae) ) 
-	ROM_LOAD( "ic4_k9f1208u0b.bin",    0x0c600000, 0x4200000, CRC(e043eac2) SHA1(0108d940a852ff03e919170957f2bca2c1a88a03) ) 
-	ROM_LOAD( "ic5_k9f1208u0b.bin",    0x10800000, 0x4200000, CRC(20882926) SHA1(c802de32ca24bf4e9fbabf47fed23a91b3d614ac) ) 
-	ROM_LOAD( "ic6_k9f1208u0b.bin",    0x14c00000, 0x4200000, CRC(14171ba4) SHA1(3ddace539cd8a4b53a1ef03238e8404db7dcd85e) ) 
-	ROM_LOAD( "ic7_k9f1208u0b.bin",    0x18e00000, 0x4200000, CRC(bd0199df) SHA1(aafb171e9f5a4c8dc2ef55ba344a0eb310c63467) ) 
-	ROM_LOAD( "ic8_k9f1208u0b.bin",    0x1d000000, 0x4200000, CRC(8ad6c7ae) SHA1(749b99a944f62aefb895a622c029656c69b3c736) ) 
+	ROM_LOAD( "ic9_mx29lv400cttc(__alt).bin", 0x00000000, 0x0080000, CRC(ff854fd0) SHA1(0e42aff9a60aacd200b7a29d4d180abdab6a732e) ) 
+	ROM_LOAD( "ic1_k9f1208u0b(__alt).bin",    0x01000000, 0x4200000, CRC(c5624816) SHA1(d6f2a2ff9e9e14d857a0ec810521c378ba1fabd5) ) 
+	ROM_LOAD( "ic2_k9f1208u0b(__alt).bin",    0x04200000, 0x4200000, CRC(44e59a1f) SHA1(68a8c1178a33e23446980ec84486bc614f830dad) ) 
+	ROM_LOAD( "ic3_k9f1208u0b(__alt).bin",    0x08400000, 0x4200000, CRC(6688e7f9) SHA1(7d1e60806c02fd765dd0981e790a698a29050aae) ) 
+	ROM_LOAD( "ic4_k9f1208u0b(__alt).bin",    0x0c600000, 0x4200000, CRC(e043eac2) SHA1(0108d940a852ff03e919170957f2bca2c1a88a03) ) 
+	ROM_LOAD( "ic5_k9f1208u0b(__alt).bin",    0x10800000, 0x4200000, CRC(20882926) SHA1(c802de32ca24bf4e9fbabf47fed23a91b3d614ac) ) 
+	ROM_LOAD( "ic6_k9f1208u0b(__alt).bin",    0x14c00000, 0x4200000, CRC(14171ba4) SHA1(3ddace539cd8a4b53a1ef03238e8404db7dcd85e) ) 
+	ROM_LOAD( "ic7_k9f1208u0b(__alt).bin",    0x18e00000, 0x4200000, CRC(bd0199df) SHA1(aafb171e9f5a4c8dc2ef55ba344a0eb310c63467) ) 
+	ROM_LOAD( "ic8_k9f1208u0b(__alt).bin",    0x1d000000, 0x4200000, CRC(8ad6c7ae) SHA1(749b99a944f62aefb895a622c029656c69b3c736) ) 
 ROM_END
 
 /* Main board */

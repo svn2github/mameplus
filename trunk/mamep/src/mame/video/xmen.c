@@ -1,5 +1,4 @@
 #include "emu.h"
-
 #include "includes/xmen.h"
 
 
@@ -9,15 +8,13 @@
 
 ***************************************************************************/
 
-void xmen_tile_callback( running_machine &machine, int layer, int bank, int *code, int *color, int *flags, int *priority )
+K052109_CB_MEMBER(xmen_state::tile_callback)
 {
-	xmen_state *state = machine.driver_data<xmen_state>();
-
 	/* (color & 0x02) is flip y handled internally by the 052109 */
 	if (layer == 0)
-		*color = state->m_layer_colorbase[layer] + ((*color & 0xf0) >> 4);
+		*color = m_layer_colorbase[layer] + ((*color & 0xf0) >> 4);
 	else
-		*color = state->m_layer_colorbase[layer] + ((*color & 0x7c) >> 2);
+		*color = m_layer_colorbase[layer] + ((*color & 0x7c) >> 2);
 }
 
 /***************************************************************************
@@ -26,21 +23,20 @@ void xmen_tile_callback( running_machine &machine, int layer, int bank, int *cod
 
 ***************************************************************************/
 
-void xmen_sprite_callback( running_machine &machine, int *code, int *color, int *priority_mask )
+K053246_CB_MEMBER(xmen_state::sprite_callback)
 {
-	xmen_state *state = machine.driver_data<xmen_state>();
 	int pri = (*color & 0x00e0) >> 4;   /* ??????? */
 
-	if (pri <= state->m_layerpri[2])
+	if (pri <= m_layerpri[2])
 		*priority_mask = 0;
-	else if (pri > state->m_layerpri[2] && pri <= state->m_layerpri[1])
+	else if (pri > m_layerpri[2] && pri <= m_layerpri[1])
 		*priority_mask = 0xf0;
-	else if (pri > state->m_layerpri[1] && pri <= state->m_layerpri[0])
+	else if (pri > m_layerpri[1] && pri <= m_layerpri[0])
 		*priority_mask = 0xf0 | 0xcc;
 	else
 		*priority_mask = 0xf0 | 0xcc | 0xaa;
 
-	*color = state->m_sprite_colorbase + (*color & 0x001f);
+	*color = m_sprite_colorbase + (*color & 0x001f);
 }
 
 

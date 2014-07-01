@@ -25,7 +25,7 @@ public:
 	static const UINT32 VRAM_PAGES      = 2;
 	static const UINT32 VRAM_PAGE_BYTES = 512 * 1024;
 
-	required_device<cpu_device> m_maincpu;
+	required_device<ppc_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<k056800_device> m_k056800;
 	required_shared_ptr<UINT32> m_workram;
@@ -184,10 +184,10 @@ INPUT_PORTS_END
 void ultrsprt_state::machine_start()
 {
 	/* set conservative DRC options */
-	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
+	m_maincpu->ppcdrc_set_options(PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(m_maincpu, 0xff000000, 0xff01ffff, FALSE, m_workram);
+	m_maincpu->ppcdrc_add_fastram(0xff000000, 0xff01ffff, FALSE, m_workram);
 
 	m_vram = auto_alloc_array(machine(), UINT8, VRAM_PAGE_BYTES * VRAM_PAGES);
 
@@ -207,9 +207,6 @@ void ultrsprt_state::machine_reset()
 
 
 /*****************************************************************************/
-
-static k054539_interface k054539_config;
-
 
 static MACHINE_CONFIG_START( ultrsprt, ultrsprt_state )
 	/* basic machine hardware */
@@ -239,7 +236,7 @@ static MACHINE_CONFIG_START( ultrsprt, ultrsprt_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_DEVICE_ADD("k054539", K054539, XTAL_18_432MHz)
 	MCFG_K054539_TIMER_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_5))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
