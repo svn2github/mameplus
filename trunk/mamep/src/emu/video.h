@@ -111,7 +111,7 @@ private:
 	osd_ticks_t throttle_until_ticks(osd_ticks_t target_ticks);
 	void update_frameskip();
 	void update_refresh_speed();
-	void recompute_speed(attotime emutime);
+	void recompute_speed(const attotime &emutime);
 
 	// snapshot/movie helpers
 	void create_snapshot_bitmap(screen_device *screen);
@@ -170,7 +170,7 @@ private:
 	attotime            m_mng_frame_period;         // period of a single movie frame
 	attotime            m_mng_next_frame_time;      // time of next frame
 	UINT32              m_mng_frame;                // current movie frame number
-	
+
 	// movie recording - AVI
 	avi_file *          m_avi_file;                 // handle to the open movie file
 	attotime            m_avi_frame_period;         // period of a single movie frame

@@ -432,7 +432,7 @@ void ata_hle_device::set_pdiag(int state)
 	}
 }
 
-void ata_hle_device::start_busy(attotime time, int param)
+void ata_hle_device::start_busy(const attotime &time, int param)
 {
 	m_status |= IDE_STATUS_BSY;
 	m_busy_timer->adjust(time, param);
@@ -708,16 +708,16 @@ READ16_MEMBER( ata_hle_device::read_cs1 )
 				case IDE_CS1_ACTIVE_STATUS:
 					/*
 
-						bit 	description
+					    bit     description
 
-						0 		master active
-						1 		slave active
-						2 		complement of active disk head bit 0
-						3 		complement of active disk head bit 1
-						4 		complement of active disk head bit 2
-						5 		complement of active disk head bit 3
-						6 		write in progress
-						7 		floppy present (unused)
+					    0       master active
+					    1       slave active
+					    2       complement of active disk head bit 0
+					    3       complement of active disk head bit 1
+					    4       complement of active disk head bit 2
+					    5       complement of active disk head bit 3
+					    6       write in progress
+					    7       floppy present (unused)
 
 					*/
 					if (device_selected())

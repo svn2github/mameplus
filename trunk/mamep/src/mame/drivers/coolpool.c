@@ -23,6 +23,7 @@
       actually reads 2U/6U/1U/5U. The placement cannot therefore be exactly
       determined by the check passing.
 
+
 ***************************************************************************/
 
 #include "emu.h"
@@ -732,10 +733,12 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( coolpool )
 	PORT_START("IN0")
 	PORT_BIT( 0x00ff, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0xc000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0700, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P2 English")
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P2 Lock")
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 Lock")
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 English")
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1 )
@@ -794,7 +797,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const tms34010_config tms_config_amerdart =
+static const tms340x0_config tms_config_amerdart =
 {
 	FALSE,                          /* halt on reset */
 	"screen",                       /* the screen operated on */
@@ -808,7 +811,7 @@ static const tms34010_config tms_config_amerdart =
 };
 
 
-static const tms34010_config tms_config_coolpool =
+static const tms340x0_config tms_config_coolpool =
 {
 	FALSE,                          /* halt on reset */
 	"screen",                       /* the screen operated on */
@@ -833,7 +836,7 @@ static MACHINE_CONFIG_START( amerdart, coolpool_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", TMS34010, XTAL_40MHz)
-	MCFG_CPU_CONFIG(tms_config_amerdart)
+	MCFG_TMS340X0_CONFIG(tms_config_amerdart)
 	MCFG_CPU_PROGRAM_MAP(amerdart_map)
 
 	MCFG_CPU_ADD("dsp", TMS32015, XTAL_40MHz/2)
@@ -864,7 +867,7 @@ static MACHINE_CONFIG_START( coolpool, coolpool_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", TMS34010, XTAL_40MHz)
-	MCFG_CPU_CONFIG(tms_config_coolpool)
+	MCFG_TMS340X0_CONFIG(tms_config_coolpool)
 	MCFG_CPU_PROGRAM_MAP(coolpool_map)
 
 	MCFG_CPU_ADD("dsp", TMS32026,XTAL_40MHz)

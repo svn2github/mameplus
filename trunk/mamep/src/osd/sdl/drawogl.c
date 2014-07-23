@@ -570,6 +570,9 @@ static int drawogl_window_create(sdl_window_info *window, int width, int height)
 	window->width = sdl->sdlsurf->w;
 	window->height = sdl->sdlsurf->h;
 
+	window->screen_width = 0;
+	window->screen_height = 0;
+
 	if ( (video_config.mode  == VIDEO_MODE_OPENGL) && !(sdl->sdlsurf->flags & SDL_OPENGL) )
 	{
 		osd_printf_error("OpenGL not supported on this driver!\n");
@@ -763,6 +766,7 @@ static void drawogl_window_resize(sdl_window_info *window, int width, int height
 
 	sdl->sdlsurf = SDL_SetVideoMode(width, height, 0,
 			SDL_SWSURFACE | SDL_ANYFORMAT | sdl->extra_flags);
+
 	window->width = sdl->sdlsurf->w;
 	window->height = sdl->sdlsurf->h;
 #endif
@@ -1136,14 +1140,35 @@ static int drawogl_window_draw(sdl_window_info *window, UINT32 dc, int update)
 
 #if (SDLMAME_SDL2)
 	SDL_GL_MakeCurrent(window->sdl_window, sdl->gl_context_id);
+#else
+	if (!sdl->init_context)
+	{
+		screen_device_iterator myiter(window->machine().root_device());
+		for (screen = myiter.first(); screen != NULL; screen = myiter.next())
+		{
+			if (window->index == 0)
+			{
+				if ((screen->width() != window->screen_width) || (screen->height() != window->screen_height))
+				{
+					window->screen_width = screen->width();
+					window->screen_height = screen->height();
+
+					// force all textures to be regenerated
+					drawogl_destroy_all_textures(window);
+				}
+				break;
+			}
+		}
+	}
 #endif
+
 	if (sdl->init_context)
 	{
 		// do some one-time OpenGL setup
 #if (SDLMAME_SDL2)
-	    // FIXME: SRGB conversion is working on SDL2, may be of use
-	    // when we eventually target gamma and monitor profiles.
-        //glEnable(GL_FRAMEBUFFER_SRGB);
+		// FIXME: SRGB conversion is working on SDL2, may be of use
+		// when we eventually target gamma and monitor profiles.
+		//glEnable(GL_FRAMEBUFFER_SRGB);
 #endif
 		glShadeModel(GL_SMOOTH);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -1619,13 +1644,13 @@ static void texture_compute_type_subroutine(sdl_info *sdl, const render_texinfo 
 	}
 
 	if ( texture->type == TEXTURE_TYPE_NONE && sdl->useglsl &&
-		 texture->xprescale == 1 && texture->yprescale == 1 &&
-		 texsource->rowpixels <= sdl->texture_max_width )
-	 {
-		 texture->type      = TEXTURE_TYPE_SHADER;
-		 texture->texTarget = GL_TEXTURE_2D;
-		 texture->texpow2   = sdl->texpoweroftwo;
-	 }
+			texture->xprescale == 1 && texture->yprescale == 1 &&
+			texsource->rowpixels <= sdl->texture_max_width )
+		{
+			texture->type      = TEXTURE_TYPE_SHADER;
+			texture->texTarget = GL_TEXTURE_2D;
+			texture->texpow2   = sdl->texpoweroftwo;
+		}
 
 	// determine if we can skip the copy step
 	// if this was not already decided by the shader condition above
@@ -2287,7 +2312,7 @@ INLINE void copyline_palette16(UINT32 *dst, const UINT16 *src, int width, const 
 	{
 		int srcpix = *src++;
 		for (int x2 = 0; x2 < xprescale; x2++)
-			*dst++ = 0xff000000 | palette[srcpix]; 
+			*dst++ = 0xff000000 | palette[srcpix];
 	}
 	if (xborderpix)
 		*dst++ = 0xff000000 | palette[*--src];
@@ -2579,7 +2604,7 @@ static void texture_set_data(texture_info *texture, const render_texinfo *texsou
 		{
 			for (y2 = 0; y2 < texture->yprescale; y2++)
 			{
-				dst = (UINT8 *)(texture->data + (y * texture->yprescale + texture->borderpix + y2) * texture->rawwidth); 
+				dst = (UINT8 *)(texture->data + (y * texture->yprescale + texture->borderpix + y2) * texture->rawwidth);
 
 				switch (PRIMFLAG_GET_TEXFORMAT(flags))
 				{

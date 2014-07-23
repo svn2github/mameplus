@@ -1,4 +1,4 @@
-/* Kensei Mogura
+/* Ken Sei Mogura: Street Fighter II
   aka Street Fighter II Whack-a-mole game */
 
 /*
@@ -124,7 +124,7 @@ D9  | 8
 D8  | 9
 D7  | 10
 D6  | 11
-D5  | 12 
+D5  | 12
 D4  | 13
 D3  | 14
 D2  | 15
@@ -152,13 +152,13 @@ public:
 		m_to_68k_cmd_low(0),
 		m_to_68k_cmd_d9(0),
 		m_to_68k_cmd_req(0),
-		m_to_68k_cmd_LVm(0),	
+		m_to_68k_cmd_LVm(0),
 		m_from68k_ack(0),
 		m_from68k_st4(0),
 		m_from68k_st3(0),
 		m_from68k_st2(0)
 
-	{ 
+	{
 		for (int i = 0; i < 6; i++)
 		{
 			mole_state_a[i] = 0x00;
@@ -190,7 +190,7 @@ public:
 			sprintf(temp, "molea_%d", i);
 			output_set_value(temp, mole_state_a[i]);
 		}
-		
+
 		for (int i = 0; i < 6; i++)
 		{
 			char temp[32];
@@ -226,7 +226,7 @@ public:
 	UINT8 m_to_68k_cmd_d9;
 	UINT8 m_to_68k_cmd_req;
 	UINT8 m_to_68k_cmd_LVm;
-	
+
 
 	int m_from68k_ack;
 	int m_from68k_st4;
@@ -258,7 +258,7 @@ public:
 void kenseim_state::set_leds(UINT32 ledstates)
 {
 	for (int i=0; i<20; i++)
-		output_set_lamp_value(i+1, ((ledstates & (1 << i)) != 0));	
+		output_set_lamp_value(i+1, ((ledstates & (1 << i)) != 0));
 }
 
 // could be wrong
@@ -266,11 +266,10 @@ WRITE8_MEMBER(kenseim_state::mb8936_portc_w)
 {
 	// I'm guessing these are the 20 'power meter' LEDs, 10 for each player? (it writes 42 times, with the last write being some terminator?)
 
-//	printf("%s mb8936 write %02x to port C but no handler assigned (serial data?)\n", machine().describe_context(), data);
+//  printf("%s mb8936 write %02x to port C but no handler assigned (serial data?)\n", machine().describe_context(), data);
 
 	if (data & 0x08)
 	{
-
 		if (data & 0x02)
 		{
 			if (data & 0x04)
@@ -317,7 +316,7 @@ WRITE8_MEMBER(kenseim_state::mb8936_porta_w) // maybe molesa output? (6-bits?)
 
 	update_moles();
 
-} 
+}
 
 WRITE8_MEMBER(kenseim_state::mb8936_portb_w) // maybe molesb output? (6-bits?)
 {
@@ -503,35 +502,35 @@ static INPUT_PORTS_START( kenseim )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED /*IPT_COIN1*/ ) // n/c
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED /*IPT_COIN2*/ ) // n/c
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_9_r, NULL) //	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 ) // D9
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_9_r, NULL) //   PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 ) // D9
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) // n/c?
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_req_r, NULL) //	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 ) // REQ
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_LVm_r, NULL) //	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 ) // LVm
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_req_r, NULL) // PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 ) // REQ
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_LVm_r, NULL) // PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 ) // LVm
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED ) // PORT_SERVICE( 0x40, IP_ACTIVE_LOW ) n/c
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) // n/c?
 
 	PORT_START("IN1")
-//	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1) // D5
-//	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1) // D6
-//	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1) // D7
-//	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1) // D8
+//  PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1) // D5
+//  PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1) // D6
+//  PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1) // D7
+//  PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1) // D8
 	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_5678_r, NULL)
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED/*IPT_BUTTON1*/ ) /*PORT_PLAYER(1)*/ // n/c
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED/*IPT_BUTTON2*/ ) /*PORT_PLAYER(1)*/ // n/c
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED/*IPT_BUTTON3*/ ) /*PORT_PLAYER(1)*/ // n/c
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN ) // n/c?
 
-//	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2) // D1
-//	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2) // D2
-//	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2) // D3
-//	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2) // D4
+//  PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2) // D1
+//  PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2) // D2
+//  PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2) // D3
+//  PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2) // D4
 	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, kenseim_state, kenseim_cmd_1234_r, NULL)
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED /*IPT_BUTTON1*/ ) /*PORT_PLAYER(2)*/ // n/c
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED /*IPT_BUTTON2*/ ) /*PORT_PLAYER(2)*/ // n/c
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED /*IPT_BUTTON3*/ ) /*PORT_PLAYER(2)*/ // n/c
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // n/c?
 
-	// most of the regular CPS1 dips are unused  
+	// most of the regular CPS1 dips are unused
 	PORT_START("DSWA")
 	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "CPSA SW(A):1" )
 	PORT_DIPUNUSED_DIPLOC( 0x02, 0x02, "CPSA SW(A):2" )
@@ -636,10 +635,11 @@ static INPUT_PORTS_START( kenseim )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) // ? (see disasm, it gets checked but seems to have no noticeable effect in-game)
 INPUT_PORTS_END
 
+/* B-Board 91634B-2 */
 ROM_START( kenseim )
 	ROM_REGION( 0x400000, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "knm_23.8f",  0x000000, 0x80000, CRC(f8368900) SHA1(07a8e9fffcf7be6cb154b60a0559211bc7127c5d) )
-	ROM_LOAD16_WORD_SWAP( "knm_21.6f",  0x100000, 0x80000, CRC(a8025e91) SHA1(24cd3f34ae96947a1101e5f5cb6cf0d1c1d66dc0) )
+	ROM_LOAD16_WORD_SWAP( "knm_23.8f", 0x000000, 0x80000, CRC(f8368900) SHA1(07a8e9fffcf7be6cb154b60a0559211bc7127c5d) )
+	ROM_LOAD16_WORD_SWAP( "knm_21.6f", 0x100000, 0x80000, CRC(a8025e91) SHA1(24cd3f34ae96947a1101e5f5cb6cf0d1c1d66dc0) )
 
 	ROM_REGION( 0x600000, "gfx", 0 )
 	ROMX_LOAD( "knm_01.3a",  0x000000, 0x80000, CRC(923f0c0c) SHA1(2569543ba33900d1e9c7c3981c8fe1cb40743546) , ROM_GROUPWORD | ROM_SKIP(6) )
@@ -650,10 +650,10 @@ ROM_START( kenseim )
 	ROMX_LOAD( "knm_06.8a",  0x200002, 0x80000, CRC(8821a281) SHA1(216305421783baa20994eec33e26537f69f34fcb) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "knm_07.9a",  0x200004, 0x80000, CRC(00306d09) SHA1(581c4ba6f9eb3050d6bf989016532457314441e4) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "knm_08.10a", 0x200006, 0x80000, CRC(4a329d16) SHA1(60d66cec8c226ef49890d8b2cd82d798dfefa049) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "knm_10.3c", 0x400000, 0x80000, CRC(ca93a942) SHA1(1f293617e6f202054690035ebe6b6e45ffe68cc9) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "knm_11.4c", 0x400002, 0x80000, CRC(a91f3091) SHA1(7cddcd30aa6a561ce297b877611ffabfac10be28) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "knm_12.5c", 0x400004, 0x80000, CRC(5da8303a) SHA1(de30149e323f7892bb9967a98a0d3cd9c261dc69) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "knm_13.6c", 0x400006, 0x80000, CRC(889bb671) SHA1(c7952ed801343e79c06be8ed765a293e7322307b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "knm_10.3c",  0x400000, 0x80000, CRC(ca93a942) SHA1(1f293617e6f202054690035ebe6b6e45ffe68cc9) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "knm_11.4c",  0x400002, 0x80000, CRC(a91f3091) SHA1(7cddcd30aa6a561ce297b877611ffabfac10be28) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "knm_12.5c",  0x400004, 0x80000, CRC(5da8303a) SHA1(de30149e323f7892bb9967a98a0d3cd9c261dc69) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "knm_13.6c",  0x400006, 0x80000, CRC(889bb671) SHA1(c7952ed801343e79c06be8ed765a293e7322307b) , ROM_GROUPWORD | ROM_SKIP(6) )
 
 	ROM_REGION( 0x28000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "knm_09.12a",  0x00000, 0x08000, CRC(15394dd7) SHA1(d96413cc8fa6cd3cfdafb2ab6305e41cfd2b8874) )
@@ -663,8 +663,6 @@ ROM_START( kenseim )
 	ROM_LOAD( "knm_18.11c",  0x00000, 0x20000, CRC(9e3e4773) SHA1(6e750a9610fabc4bf4964b5a754414d612d43dec) )
 	ROM_LOAD( "knm_19.12c",  0x20000, 0x20000, CRC(d6c4047f) SHA1(1259a3cbfc14c348ce4bd87b5de5e97ad252f7fb) )
 
-	// to do, verify these are the correct plds
-
 	ROM_REGION( 0x0200, "aboardplds", ROMREGION_ERASE00 )
 	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
 	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
@@ -673,7 +671,7 @@ ROM_START( kenseim )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", ROMREGION_ERASE00 )
-	ROM_LOAD( "cps1-knm10b.bin",    0x0000, 0x0117, CRC(e40131d4) SHA1(47e9f67ecacdf1d946838815dfe7396c9c698f04) )
+	ROM_LOAD( "knm10b.1a",    0x0000, 0x0117, CRC(e40131d4) SHA1(47e9f67ecacdf1d946838815dfe7396c9c698f04) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -682,7 +680,7 @@ ROM_START( kenseim )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 
 	ROM_REGION( 0x08000, "gamecpu", 0 )
-	ROM_LOAD( "kensei_mogura_ver1.0.u2",  0x00000, 0x08000, CRC(725cfcfc) SHA1(5a4c6e6efe2ddb38bec3218e55a746ea0146209f) )
+	ROM_LOAD( "kensei_mogura_ver1.0.u2", 0x00000, 0x08000, CRC(725cfcfc) SHA1(5a4c6e6efe2ddb38bec3218e55a746ea0146209f) )
 ROM_END
 
 DRIVER_INIT_MEMBER(kenseim_state,kenseim)
@@ -699,5 +697,4 @@ DRIVER_INIT_MEMBER(kenseim_state,kenseim)
 
 // 1994.04.18 is from extra PCB rom, Siguma or Sigma? (Siguma is in the ROM)
 // the CPS1 board roms contain "M O G U R A   9 2 0 9 2 4" strings suggesting that part of the code was developed earlier
-GAMEL( 1994, kenseim,       0,        kenseim, kenseim,      kenseim_state,   kenseim,     ROT0,   "Sigma / Togo / Capcom", "Ken Sei Mogura (1994.04.18, Ver 1.00)", GAME_CLICKABLE_ARTWORK, layout_kenseim )
-
+GAMEL( 1994, kenseim,       0,        kenseim, kenseim,      kenseim_state,   kenseim,     ROT0,   "Capcom / Togo / Sigma", "Ken Sei Mogura: Street Fighter II (Japan 940418, Ver 1.00)", GAME_CLICKABLE_ARTWORK, layout_kenseim )

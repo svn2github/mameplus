@@ -176,7 +176,7 @@ Muscle Bomber: The Body Explosion* (Japan 930713)                  91634B-2   MB
 Muscle Bomber Duo: Ultimate Team Battle* (World 931206)      1993  91635B-?   MB63B    BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
 Muscle Bomber Duo: Heat Up Warriors* (Japan 931206)                91634B-2   MB63B    BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 
-Ken Sei Mogura (Japan ??????)                                1994  ?          ?                ?     ?            ?         ?
+Ken Sei Mogura: Street Fighter II (Japan 940418, Ver 1.00)   1994  91634B-2   KNM10B   BPRG1   IOB1  92631C-6     CPS-B-21  DL-0921-10014  C632    IOC1
 
 Pnickies (Japan 940608)                                      1994  89625B-1   PKB10B           IOB1  92631C-6     CPS-B-21  DL-0921-10014  C632    IOC1
 
@@ -1290,77 +1290,77 @@ Device   g16v8;
 
  Dedicated input pins
 
-pin 1   = I0;  Input 
-pin 2   = I1;  Input 
-pin 3   = I2;  Input 
-pin 4   = I3;  Input 
-pin 5   = I4;  Input 
-pin 6   = I5;  Input 
-pin 7   = I6;  Input 
-pin 8   = I7;  Input 
-pin 9   = I8;  Input 
-pin 11  = I9;  Input 
+pin 1   = I0;  Input
+pin 2   = I1;  Input
+pin 3   = I2;  Input
+pin 4   = I3;  Input
+pin 5   = I4;  Input
+pin 6   = I5;  Input
+pin 7   = I6;  Input
+pin 8   = I7;  Input
+pin 9   = I8;  Input
+pin 11  = I9;  Input
 
- Programmable output pins 
+ Programmable output pins
 
-pin 12  = B0;  Combinatorial output 
-pin 13  = B1;  Combinatorial output 
-pin 14  = B2;  Combinatorial output 
-pin 15  = B3;  Combinatorial output 
-pin 16  = B4;  Combinatorial output 
-pin 17  = B5;  Combinatorial output 
-pin 18  = B6;  Combinatorial output 
-pin 19  = B7;  Combinatorial output 
+pin 12  = B0;  Combinatorial output
+pin 13  = B1;  Combinatorial output
+pin 14  = B2;  Combinatorial output
+pin 15  = B3;  Combinatorial output
+pin 16  = B4;  Combinatorial output
+pin 17  = B5;  Combinatorial output
+pin 18  = B6;  Combinatorial output
+pin 19  = B7;  Combinatorial output
 
- Output equations 
+ Output equations
 
-!B7 = !I0 & !I1 & !I2 & !I3 & !I4 & !I5 & !I9 
+!B7 = !I0 & !I1 & !I2 & !I3 & !I4 & !I5 & !I9
     #  I0 & !I1 & !I2 & !I3 & !I4 & !I5 &  I9;
-!B6 = !I0 & !I1 & !I2 & !I3 & !I4 & !I5 & !I9 
+!B6 = !I0 & !I1 & !I2 & !I3 & !I4 & !I5 & !I9
     #  I0 & !I1 & !I2 & !I3 & !I4 & !I5 &  I9;
-!B5 = !I0 & !I1 & !I2 & !I3 & !I4 &  I5 & !I9 
+!B5 = !I0 & !I1 & !I2 & !I3 & !I4 &  I5 & !I9
     #  I0 & !I1 & !I2 & !I3 & !I4 &  I5 &  I9;
-!B4 = !I0 & !I1 & !I2 & !I3 & !I4 &  I5 & !I9 
+!B4 = !I0 & !I1 & !I2 & !I3 & !I4 &  I5 & !I9
     #  I0 & !I1 & !I2 & !I3 & !I4 &  I5 &  I9;
-!B3 = !I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 & !I9 
-    # !I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 & !I9 
-    #  I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 &  I9 
-    #  I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 &  I9 
-    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 &  I9 
+!B3 = !I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 & !I9
+    # !I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 & !I9
+    #  I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 &  I9
+    #  I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 &  I9
+    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 &  I9
     #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 &  I9;
-!B2 = !I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 & !I9 
-    # !I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 & !I9 
-    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 & !I9 
-    #  I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 &  I9 
-    #  I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 &  I9 
-    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 &  I9 
-    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 &  I9 
+!B2 = !I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 & !I9
+    # !I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 & !I9
+    # !I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 & !I9
+    #  I0 & !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 &  I9
+    #  I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 &  I9
+    #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 &  I9
+    #  I0 & !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 &  I9
     #  I0 & !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8 &  I9;
-!B1 = !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8 
-    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8 
-    # !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8 
-    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8 
-    # !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8 
-    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8 
-    # !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8 
+!B1 = !I1 & !I2 & !I3 &  I4 & !I5 & !I6 & !I7 & !I8
+    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 & !I8
+    # !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 & !I8
+    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 & !I8
+    # !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 &  I8
+    # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 & !I7 &  I8
+    # !I1 &  I2 &  I3 & !I4 & !I5 & !I6 &  I7 &  I8
     # !I1 &  I2 & !I3 & !I4 & !I5 &  I6 &  I7 &  I8;
 !B0 =  I0 &  I9;
 
@@ -1612,7 +1612,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"cps2",        CPS_B_21_DEF, mapper_cps2 },
 
 	/* CPS1 board + extra support boards */
-	{"kenseim",       CPS_B_21_DEF, mapper_KNM10B }, // wrong, need to convert equations from PAL
+
+	{"kenseim",     CPS_B_21_DEF, mapper_KNM10B },  // wrong, need to convert equations from PAL
 
 	{0}     /* End of table */
 };

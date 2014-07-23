@@ -52,6 +52,7 @@ v25_common_device::v25_common_device(const machine_config &mconfig, device_type 
 	, m_program_config("program", ENDIANNESS_LITTLE, is_16bit ? 16 : 8, 20, 0)
 	, m_io_config("io", ENDIANNESS_LITTLE, is_16bit ? 16 : 8, 17, 0)
 	, m_fetch_xor(fetch_xor)
+	, m_PCK(8)
 	, m_prefetch_size(prefetch_size)
 	, m_prefetch_cycles(prefetch_cycles)
 	, m_chip_type(chip_type)
@@ -159,7 +160,6 @@ UINT8 v25_common_device::fetchop()
 
 void v25_common_device::device_reset()
 {
-	int tmp;
 	attotime time;
 
 	m_ip = 0;
@@ -201,8 +201,7 @@ void v25_common_device::device_reset()
 	m_PCK = 8;
 	m_IDB = 0xFFE00;
 
-	set_clock_scale(1.0 / m_PCK);
-	tmp = m_PCK << m_TB;
+	int tmp = m_PCK << m_TB;
 	time = attotime::from_hz(unscaled_clock()) * tmp;
 	m_timers[3]->adjust(time, INTTB, time);
 
@@ -481,6 +480,7 @@ void v25_common_device::device_start()
 	save_item(NAME(m_irq_state));
 	save_item(NAME(m_poll_state));
 	save_item(NAME(m_mode_state));
+	save_item(NAME(m_no_interrupt));
 	save_item(NAME(m_halted));
 	save_item(NAME(m_TM0));
 	save_item(NAME(m_MD0));
@@ -492,6 +492,8 @@ void v25_common_device::device_start()
 	save_item(NAME(m_TB));
 	save_item(NAME(m_PCK));
 	save_item(NAME(m_IDB));
+	save_item(NAME(m_prefetch_count));
+	save_item(NAME(m_prefetch_reset));
 
 	m_program = &space(AS_PROGRAM);
 	m_direct = &m_program->direct();

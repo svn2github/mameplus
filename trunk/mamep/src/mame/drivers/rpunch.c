@@ -119,6 +119,25 @@
 
 /*************************************
  *
+ *  Machine initialization
+ *
+ *************************************/
+
+void rpunch_state::machine_start()
+{
+	save_item(NAME(m_sound_data));
+	save_item(NAME(m_sound_busy));
+	save_item(NAME(m_ym2151_irq));
+	save_item(NAME(m_upd_rom_bank));
+	save_item(NAME(m_sprite_xoffs));
+	save_item(NAME(m_videoflags));
+	save_item(NAME(m_crtc_register));
+	save_item(NAME(m_bins));
+	save_item(NAME(m_gins));
+}
+
+/*************************************
+ *
  *  Interrupt handling
  *
  *************************************/
@@ -730,7 +749,7 @@ ROM_START( svolleyu )
 	ROM_LOAD( "sps_07.bin", 0x20000, 0x10000, CRC(904b7709) SHA1(9b66a565cd599928b666baad9f97c50f35ffcc37) )
 	ROM_LOAD( "sps_08.bin", 0x30000, 0x10000, CRC(5430ffac) SHA1(163311d96f2f7e1ecb0901d0be73ac357b01bf6a) )
 	ROM_LOAD( "sps_09.bin", 0x40000, 0x10000, CRC(414a6278) SHA1(baa9dc9ab0dd3c5f27c128de23053edcddf45ad0) )
-//	ROM_LOAD( "a09.bin",    0x50000, 0x08000, CRC(dd92dfe1) SHA1(08c956e11d567a215ec3cdaf6ef75fa9a886513a) ) // not on this set?
+//  ROM_LOAD( "a09.bin",    0x50000, 0x08000, CRC(dd92dfe1) SHA1(08c956e11d567a215ec3cdaf6ef75fa9a886513a) ) // not on this set?
 
 	ROM_REGION( 0x80000, "sprites", ROMREGION_ERASEFF )
 	ROM_LOAD16_BYTE( "sps_20.bin", 0x00000, 0x10000, CRC(c9e7206d) SHA1(af5b2f49387a3b46c6693f4782aa0e587f17ab25) )
@@ -814,11 +833,11 @@ DRIVER_INIT_MEMBER(rpunch_state,svolley)
  *
  *************************************/
 
-GAME( 1987, rabiolep, 0,        rpunch,   rabiolep, rpunch_state, rabiolep, ROT0, "V-System Co.", "Rabio Lepus (Japan)", GAME_NO_COCKTAIL )
-GAME( 1987, rpunch,   rabiolep, rpunch,   rpunch, rpunch_state,   rabiolep, ROT0, "V-System Co. (Bally/Midway/Sente license)", "Rabbit Punch (US)", GAME_NO_COCKTAIL )
-GAME( 1989, svolley,  0,        svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Japan)", GAME_NO_COCKTAIL )
-GAME( 1989, svolleyk, svolley,  svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Korea)", GAME_NO_COCKTAIL )
-GAME( 1989, svolleyu, svolley,  svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co. (Data East license)", "Super Volleyball (US)", GAME_NO_COCKTAIL )
+GAME( 1987, rabiolep, 0,        rpunch,   rabiolep, rpunch_state, rabiolep, ROT0, "V-System Co.", "Rabio Lepus (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1987, rpunch,   rabiolep, rpunch,   rpunch, rpunch_state,   rabiolep, ROT0, "V-System Co. (Bally/Midway/Sente license)", "Rabbit Punch (US)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, svolley,  0,        svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, svolleyk, svolley,  svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Korea)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, svolleyu, svolley,  svolley,  svolley, rpunch_state,  svolley,  ROT0, "V-System Co. (Data East license)", "Super Volleyball (US)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 
 // video registers are changed, and there's some kind of RAM at 090xxx, possible a different sprite scheme for the bootleg (even if the original is intact)
 // the sound system seems to be ripped from the later Power Spikes (see aerofgt.c)

@@ -187,7 +187,9 @@ public:
 		m_blitter(*this, "blitter"),
 		m_serflash(*this, "game"),
 		m_eeprom(*this, "eeprom"),
-		cv1k_ram(*this, "mainram") { }
+		cv1k_ram(*this, "mainram"),
+		m_blitrate(*this, "BLITRATE"),
+		m_eepromout(*this, "EEPROMOUT") { }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<epic12_device> m_blitter;
@@ -214,6 +216,9 @@ public:
 	DECLARE_DRIVER_INIT(mushisam);
 	DECLARE_DRIVER_INIT(mushisama);
 	DECLARE_DRIVER_INIT(espgal2);
+
+	required_ioport m_blitrate;
+	required_ioport m_eepromout;
 };
 
 
@@ -226,7 +231,7 @@ public:
 
 UINT32 cv1k_state::screen_update_cv1k(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	epic12_device::set_delay_scale(m_blitter, ioport(":BLITRATE")->read());
+	epic12_device::set_delay_scale(m_blitter, m_blitrate->read());
 
 	m_blitter->draw_screen(bitmap,cliprect);
 	return 0;
@@ -306,7 +311,7 @@ WRITE8_MEMBER( cv1k_state::serial_rtc_eeprom_w )
 	switch (offset)
 	{
 		case 0x01:
-			space.machine().root_device().ioport("EEPROMOUT")->write(data, 0xff);
+			m_eepromout->write(data, 0xff);
 			break;
 		case 0x03:
 			m_serflash->flash_enab_w(space,offset,data);
@@ -404,24 +409,6 @@ static INPUT_PORTS_START( cv1k )
 INPUT_PORTS_END
 
 
-
-// none of this is verified
-// (the sh3 is different to the sh4 anyway, should be changed)
-static const struct sh4_config sh4cpu_config = {
-	0, // md2 (clock divders)
-	0, // md1 (clock divders)
-	0, // md0 (clock divders)
-	0,
-	0,
-	0,
-	1,
-	1, // md7 (master?)
-	0,
-	CPU_CLOCK // influences music sequencing in ddpdfk at least
-};
-
-
-
 INTERRUPT_GEN_MEMBER(cv1k_state::cv1k_interrupt)
 {
 	m_maincpu->set_input_line(2, HOLD_LINE);
@@ -439,7 +426,16 @@ MACHINE_RESET_MEMBER( cv1k_state, cv1k )
 static MACHINE_CONFIG_START( cv1k, cv1k_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", SH3BE, CPU_CLOCK)
-	MCFG_CPU_CONFIG(sh4cpu_config)
+	MCFG_SH4_MD0(0)  // none of this is verified
+	MCFG_SH4_MD1(0)  // (the sh3 is different to the sh4 anyway, should be changed)
+	MCFG_SH4_MD2(0)
+	MCFG_SH4_MD3(0)
+	MCFG_SH4_MD4(0)
+	MCFG_SH4_MD5(1)
+	MCFG_SH4_MD6(0)
+	MCFG_SH4_MD7(1)
+	MCFG_SH4_MD8(0)
+	MCFG_SH4_CLOCK(CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cv1k_map)
 	MCFG_CPU_IO_MAP(cv1k_port)
 	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", cv1k_state, cv1k_interrupt)
@@ -473,7 +469,16 @@ static MACHINE_CONFIG_DERIVED( cv1k_d, cv1k )
 	MCFG_DEVICE_REMOVE("maincpu")
 
 	MCFG_CPU_ADD("maincpu", SH3BE, CPU_CLOCK)
-	MCFG_CPU_CONFIG(sh4cpu_config)
+	MCFG_SH4_MD0(0)  // none of this is verified
+	MCFG_SH4_MD1(0)  // (the sh3 is different to the sh4 anyway, should be changed)
+	MCFG_SH4_MD2(0)
+	MCFG_SH4_MD3(0)
+	MCFG_SH4_MD4(0)
+	MCFG_SH4_MD5(1)
+	MCFG_SH4_MD6(0)
+	MCFG_SH4_MD7(1)
+	MCFG_SH4_MD8(0)
+	MCFG_SH4_CLOCK(CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cv1k_d_map)
 	MCFG_CPU_IO_MAP(cv1k_port)
 	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", cv1k_state, cv1k_interrupt)

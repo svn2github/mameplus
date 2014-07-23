@@ -67,7 +67,7 @@ void neogeo_state::set_pens()
 {
 	const pen_t *pen_base = m_palette->pens() + m_palette_bank + (m_screen_shadow ? 0x2000 : 0);
 	m_sprgen->set_pens(pen_base);
-	m_bg_pen = pen_base + 0xfff; 
+	m_bg_pen = pen_base + 0xfff;
 }
 
 
@@ -147,7 +147,6 @@ void neogeo_state::video_start()
 
 void neogeo_state::video_reset()
 {
-
 }
 
 

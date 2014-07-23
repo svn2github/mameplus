@@ -225,11 +225,6 @@ int _CRT_glob = 0;
 //  LOCAL VARIABLES
 //**************************************************************************
 
-//static dynamic_bind<HANDLE (WINAPI *)(LPCTSTR, LPDWORD)> av_set_mm_thread_characteristics(TEXT("avrt.dll"), "AvSetMmThreadCharacteristics" UNICODE_POSTFIX);
-//static dynamic_bind<HANDLE (WINAPI *)(LPCTSTR, LPCTSTR, LPDWORD)> av_set_mm_max_thread_characteristics(TEXT("avrt.dll"), "AvSetMmMaxThreadCharacteristics" UNICODE_POSTFIX);
-//static dynamic_bind<BOOL (WINAPI *)(HANDLE)> av_revert_mm_thread_characteristics(TEXT("avrt.dll"), "AvRevertMmThreadCharacteristics");
-
-
 static LPTOP_LEVEL_EXCEPTION_FILTER pass_thru_filter;
 
 static HANDLE watchdog_reset_event;
@@ -238,11 +233,8 @@ static HANDLE watchdog_thread;
 
 static running_machine *g_current_machine;
 
-//static HANDLE mm_task = NULL;
-//static DWORD task_index = 0;
-static int timeresult;
-//static MMRESULT result;
-static TIMECAPS caps;
+static int timeresult = !TIMERR_NOERROR;
+static TIMECAPS timecaps;
 
 static sampling_profiler *profiler = NULL;
 static symbol_manager *symbols = NULL;
@@ -674,13 +666,9 @@ void windows_osd_interface::init(running_machine &machine)
 
 	// crank up the multimedia timer resolution to its max
 	// this gives the system much finer timeslices
-	timeresult = timeGetDevCaps(&caps, sizeof(caps));
+	timeresult = timeGetDevCaps(&timecaps, sizeof(timecaps));
 	if (timeresult == TIMERR_NOERROR)
-		timeBeginPeriod(caps.wPeriodMin);
-
-	// set our multimedia tasks if we can
-//      if (av_set_mm_thread_characteristics != NULL)
-//          mm_task = (*av_set_mm_thread_characteristics)(TEXT("Playback"), &task_index);
+		timeBeginPeriod(timecaps.wPeriodMin);
 
 	// if a watchdog thread is requested, create one
 	int watchdog = options.watchdog();
@@ -744,13 +732,9 @@ void windows_osd_interface::osd_exit()
 		global_free(profiler);
 	}
 
-	// turn off our multimedia tasks
-//      if (av_revert_mm_thread_characteristics)
-//          (*av_revert_mm_thread_characteristics)(mm_task);
-
 	// restore the timer resolution
 	if (timeresult == TIMERR_NOERROR)
-		timeEndPeriod(caps.wPeriodMin);
+		timeEndPeriod(timecaps.wPeriodMin);
 
 	// one last pass at events
 	winwindow_process_events(machine(), 0, 0);

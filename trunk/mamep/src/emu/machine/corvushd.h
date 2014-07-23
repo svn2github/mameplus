@@ -206,7 +206,9 @@ private:
 	};
 
 	UINT8   m_status;             // Controller status byte (DIRECTION + BUSY/READY)
+	// Prep mode
 	bool    m_prep_mode;          // Whether the controller is in Prep Mode or not
+	UINT8   m_prep_drv;           // If in prep mode, Corvus drive id (1..15) being prepped
 	// Physical drive info
 	UINT8   m_sectors_per_track;  // Number of sectors per track for this drive
 	UINT8   m_tracks_per_cylinder;// Number of tracks per cylinder (heads)
@@ -264,7 +266,7 @@ private:
 		struct {
 			UINT8   status;     // Status code returned by command executed
 			UINT8   data[256];  // Data returned from read
-		} read_256_reponse;
+		} read_256_response;
 		//
 		// 512-byte Read Sector response
 		//
@@ -356,7 +358,8 @@ private:
 		//
 		struct {
 			UINT8   status;                     // Status code returned by command executed
-			UINT8   firmware[33];               // Firmware message
+			UINT8   firmware_desc[31];          // Firmware string description
+			UINT8   firmware_rev;               // Firmware revision number
 			UINT8   rom_version;                // ROM Version
 			struct {
 				UINT8   sectors_per_track;      // Sectors/Track
@@ -399,6 +402,14 @@ private:
 			UINT8   boot_block; // Which boot block to read (0-7)
 		} old_boot_command;
 		//
+		// Put drive into prep mode command (0x11)
+		//
+		struct {
+			UINT8   code;               // Command code
+			UINT8   drive;              // Drive number (starts at 1)
+			UINT8   prep_block[512];    // Machine code payload
+		} prep_mode_command;
+		//
 		// Read Firmware command (Prep Mode 0x32)
 		//
 		struct {
@@ -425,6 +436,18 @@ private:
 			UINT8   code;       // Command Code
 			UINT8   pattern[512]; // Pattern to be written
 		} format_drive_revbh_command;
+		//
+		// Verify Drive command (Prep Mode 0x07)
+		//
+		// On the real Corvus controller, this is a variable length response.  If the
+		// number of bad sectors is greater than zero, an additional four bytes will
+		// follow for each bad sector.  We don't emulate bad sectors, so we always
+		// return a count of 0.  That makes this a fixed length response of 2 bytes.
+		//
+		struct {
+			UINT8   status;       // Disk access status
+			UINT8   bad_sectors;  // Number of bad sectors (always zero)
+		} verify_drive_response;
 	} m_buffer;
 
 	// Structure of Block #1, the Disk Parameter Block
@@ -486,6 +509,8 @@ private:
 	UINT8 corvus_init_semaphore_table();
 	UINT8 corvus_get_drive_parameters(UINT8 drv);
 	UINT8 corvus_read_boot_block(UINT8 block);
+	UINT8 corvus_enter_prep_mode(UINT8 drv, UINT8 *prep_block);
+	UINT8 corvus_exit_prep_mode();
 	UINT8 corvus_read_firmware_block(UINT8 head, UINT8 sector);
 	UINT8 corvus_write_firmware_block(UINT8 head, UINT8 sector, UINT8 *buffer);
 	UINT8 corvus_format_drive(UINT8 *pattern, UINT16 len);

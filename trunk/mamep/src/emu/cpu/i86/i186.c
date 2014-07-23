@@ -5,14 +5,11 @@
 #include "debugger.h"
 #include "i86inline.h"
 
-#define LATCH_INTS          1
 #define LOG_PORTS           0
 #define LOG_INTERRUPTS      0
 #define LOG_INTERRUPTS_EXT  0
 #define LOG_TIMER           0
-#define LOG_OPTIMIZATION    0
 #define LOG_DMA             0
-#define CPU_RESUME_TRIGGER  7123
 
 /* external int priority masks */
 
@@ -563,20 +560,14 @@ void i80186_cpu_device::device_start()
 	save_item(NAME(m_timer[0].maxB));
 	save_item(NAME(m_timer[0].active_count));
 	save_item(NAME(m_timer[0].count));
-	save_item(NAME(m_timer[0].time_timer_active));
-	save_item(NAME(m_timer[0].last_time));
 	save_item(NAME(m_timer[1].control));
 	save_item(NAME(m_timer[1].maxA));
 	save_item(NAME(m_timer[1].maxB));
 	save_item(NAME(m_timer[1].active_count));
 	save_item(NAME(m_timer[1].count));
-	save_item(NAME(m_timer[1].time_timer_active));
-	save_item(NAME(m_timer[1].last_time));
 	save_item(NAME(m_timer[2].control));
 	save_item(NAME(m_timer[2].maxA));
 	save_item(NAME(m_timer[2].count));
-	save_item(NAME(m_timer[2].time_timer_active));
-	save_item(NAME(m_timer[2].last_time));
 	save_item(NAME(m_dma[0].source));
 	save_item(NAME(m_dma[0].dest));
 	save_item(NAME(m_dma[0].count));
@@ -595,6 +586,7 @@ void i80186_cpu_device::device_start()
 	save_item(NAME(m_intr.timer));
 	save_item(NAME(m_intr.dma));
 	save_item(NAME(m_intr.ext));
+	save_item(NAME(m_intr.ext_state));
 	save_item(NAME(m_mem.lower));
 	save_item(NAME(m_mem.upper));
 	save_item(NAME(m_mem.middle));
@@ -605,11 +597,6 @@ void i80186_cpu_device::device_start()
 	m_timer[0].int_timer = timer_alloc(TIMER_INT0);
 	m_timer[1].int_timer = timer_alloc(TIMER_INT1);
 	m_timer[2].int_timer = timer_alloc(TIMER_INT2);
-	m_timer[0].time_timer = timer_alloc(TIMER_TIME0);
-	m_timer[1].time_timer = timer_alloc(TIMER_TIME1);
-	m_timer[2].time_timer = timer_alloc(TIMER_TIME2);
-	m_dma[0].finish_timer = timer_alloc(TIMER_DMA0);
-	m_dma[1].finish_timer = timer_alloc(TIMER_DMA1);
 
 	m_out_tmrout0_func.resolve_safe();
 	m_out_tmrout1_func.resolve_safe();
@@ -636,17 +623,16 @@ void i80186_cpu_device::device_reset()
 	m_intr.request           = 0x0000;
 	m_intr.status            = 0x0000;
 	m_intr.poll_status       = 0x0000;
+	m_intr.ext_state         = 0x00;
 	m_reloc = 0x20ff;
-	m_dma[0].drq_delay = false;
-	m_dma[1].drq_delay = false;
 	m_dma[0].drq_state = false;
 	m_dma[1].drq_state = false;
 	for(int i = 0; i < ARRAY_LENGTH(m_timer); ++i)
 	{
 		m_timer[i].control = 0;
-		m_timer[i].time_timer_active = 0;
 		m_timer[i].maxA = 0;
 		m_timer[i].maxB = 0;
+		m_timer[i].count = 0;
 	}
 }
 
@@ -719,11 +705,17 @@ IRQ_CALLBACK_MEMBER(i80186_cpu_device::int_callback)
 	oldreq=m_intr.request;
 
 	/* clear the request and set the in-service bit */
-#if LATCH_INTS
-	m_intr.request &= ~m_intr.ack_mask;
-#else
-	m_intr.request &= ~(m_intr.ack_mask & 0x0f);
-#endif
+	if(m_intr.ack_mask & 0xf0)
+	{
+		int i;
+		for(i = 0; i < 4; i++)
+			if((m_intr.ack_mask >> (i + 4)) & 1)
+				break;
+		if(!(m_intr.ext[i] & EXTINT_CTRL_LTM))
+			m_intr.request &= ~m_intr.ack_mask;
+	}
+	else
+		m_intr.request &= ~m_intr.ack_mask;
 
 	if((LOG_INTERRUPTS) && (m_intr.request!=oldreq))
 		logerror("intr.request changed from %02X to %02X\n",oldreq,m_intr.request);
@@ -826,6 +818,7 @@ void i80186_cpu_device::update_interrupt_state()
 
 		/* check external interrupts */
 		for (IntNo = 0; IntNo < 4; IntNo++)
+		{
 			if ((m_intr.ext[IntNo] & 0x0F) == Priority)
 			{
 				if (LOG_INTERRUPTS)
@@ -838,6 +831,12 @@ void i80186_cpu_device::update_interrupt_state()
 				/* if there's something pending, generate an interrupt */
 				if (m_intr.request & (0x10 << IntNo))
 				{
+					if((IntNo >= 2) && (m_intr.ext[IntNo - 2] & EXTINT_CTRL_CASCADE))
+					{
+						logerror("i186: %06x: irq %d use when set for cascade mode\n", pc(), IntNo);
+						m_intr.request &= ~(0x10 << IntNo);
+						continue;
+					}
 					/* otherwise, generate an interrupt for this request */
 					new_vector = 0x0c + IntNo;
 
@@ -845,7 +844,10 @@ void i80186_cpu_device::update_interrupt_state()
 					m_intr.ack_mask = 0x0010 << IntNo;
 					goto generate_int;
 				}
+				else if ((m_intr.in_service & (0x10 << IntNo)) && (m_intr.ext[IntNo] & EXTINT_CTRL_SFNM))
+					return; // if an irq is in service and sfnm is enabled, stop here
 			}
+		}
 	}
 	return;
 
@@ -855,8 +857,6 @@ generate_int:
 	if (!m_intr.pending)
 		set_input_line(0, ASSERT_LINE);
 	m_intr.pending = 1;
-	machine().scheduler().trigger(CPU_RESUME_TRIGGER);
-	if (LOG_OPTIMIZATION) logerror("  - trigger due to interrupt pending\n");
 	if (LOG_INTERRUPTS) logerror("(%f) **** Requesting interrupt vector %02X\n", machine().time().as_double(), new_vector);
 }
 
@@ -920,18 +920,28 @@ void i80186_cpu_device::handle_eoi(int data)
 				}
 		}
 	}
+	update_interrupt_state();
 }
 
 /* Trigger an external interrupt, optionally supplying the vector to take */
-void i80186_cpu_device::external_int(UINT16 intno, int state, UINT8 vector)
+void i80186_cpu_device::external_int(UINT16 intno, int state)
 {
-	if (LOG_INTERRUPTS_EXT) logerror("generating external int %02X, vector %02X\n",intno,vector);
-
-	if(!state)
+	if(!(m_intr.ext_state & (1 << intno)) == !state)
 		return;
 
-	// Turn on the requested request bit and handle interrupt
-	m_intr.request |= (0x010 << intno);
+	if (LOG_INTERRUPTS_EXT) logerror("generating external int %02X\n",intno);
+
+	if(!state)
+	{
+		m_intr.request &= ~(0x010 << intno);
+		m_intr.ack_mask &= ~(0x0010 << intno);
+		m_intr.ext_state &= ~(1 << intno);
+	}
+	else // Turn on the requested request bit and handle interrupt
+	{
+		m_intr.request |= (0x010 << intno);
+		m_intr.ext_state |= (1 << intno);
+	}
 	update_interrupt_state();
 }
 
@@ -1007,7 +1017,8 @@ void i80186_cpu_device::device_timer(emu_timer &timer, device_timer_id id, int p
 					count = t->maxA;
 
 				count = count ? count : 0x10000;
-				t->int_timer->adjust((attotime::from_hz(clock()/8) * count), which);
+				if(!(t->control & 4))
+					t->int_timer->adjust((attotime::from_hz(clock()/8) * count), which);
 				t->count = 0;
 				if (LOG_TIMER) logerror("  Repriming interrupt\n");
 			}
@@ -1015,20 +1026,6 @@ void i80186_cpu_device::device_timer(emu_timer &timer, device_timer_id id, int p
 				t->int_timer->adjust(attotime::never, which);
 			break;
 		}
-		case TIMER_DMA0:
-		case TIMER_DMA1:
-		{
-			int which = param;
-			struct dma_state *d = &m_dma[which];
-
-			d->drq_delay = false;
-			if(d->drq_state)
-				drq_callback(which);
-			break;
-		}
-		case TIMER_TIME0:
-		case TIMER_TIME1:
-		case TIMER_TIME2:
 		default:
 			break;
 	}
@@ -1040,14 +1037,8 @@ void i80186_cpu_device::internal_timer_sync(int which)
 	struct timer_state *t = &m_timer[which];
 
 	/* if we have a timing timer running, adjust the count */
-	if (t->time_timer_active && !(t->control & 0x0c))
-	{
-		attotime current_time = t->time_timer->elapsed();
-		int net_clocks = ((current_time - t->last_time) * (clock()/8)).seconds;
-		t->last_time = current_time;
-
-		t->count = t->count + net_clocks;
-	}
+	if ((t->control & 0x8000) && !(t->control & 0x0c))
+		t->count = (((which != 2) && t->active_count) ? t->maxB : t->maxA) - t->int_timer->remaining().as_ticks(clock() / 8);
 }
 
 void i80186_cpu_device::inc_timer(int which)
@@ -1143,19 +1134,12 @@ void i80186_cpu_device::internal_timer_update(int which,int new_count,int new_ma
 			{
 				/* compute the final count */
 				internal_timer_sync(which);
-
-				/* nuke the timer and force the interrupt timer to be recomputed */
-				t->time_timer->adjust(attotime::never, which);
-				t->time_timer_active = 0;
 				update_int_timer = 1;
 			}
 
 			/* if we're going on, start the timers running except with external clock or prescale */
 			else if ((diff & 0x8000) && (new_control & 0x8000) && !(new_control & 0xc))
 			{
-				/* start the timing */
-				t->time_timer->adjust(attotime::never, which);
-				t->time_timer_active = 1;
 				update_int_timer = 1;
 			}
 
@@ -1227,9 +1211,6 @@ void i80186_cpu_device::drq_callback(int which)
 	UINT8   dma_byte;
 	UINT8   incdec_size;
 
-	if(dma->drq_delay)
-		return;
-
 	if (LOG_DMA>1)
 		logerror("Control=%04X, src=%05X, dest=%05X, count=%04X\n",dma->control,dma->source,dma->dest,dma->count);
 
@@ -1282,7 +1263,7 @@ void i80186_cpu_device::drq_callback(int which)
 	dma->count -= 1;
 
 	// Terminate if count is zero, and terminate flag set
-	if((dma->control & TERMINATE_ON_ZERO) && (dma->count==0))
+	if(((dma->control & TERMINATE_ON_ZERO) || !(dma->control & SYNC_MASK)) && (dma->count==0))
 	{
 		dma->control &= ~ST_STOP;
 		if (LOG_DMA) logerror("DMA terminated\n");
@@ -1295,9 +1276,6 @@ void i80186_cpu_device::drq_callback(int which)
 		m_intr.request |= 0x04 << which;
 		update_interrupt_state();
 	}
-
-//  dma->finish_timer->adjust(attotime::from_hz(clock()/8), 0);
-//  dma->drq_delay = true;
 }
 
 READ16_MEMBER(i80186_cpu_device::internal_port_r)
@@ -1538,36 +1516,43 @@ WRITE16_MEMBER(i80186_cpu_device::internal_port_w)
 		case 0x19:
 			if (LOG_PORTS) logerror("%05X:80186 timer interrupt contol = %04X\n", pc(), data);
 			m_intr.timer = data & 0x000f;
+			update_interrupt_state();
 			break;
 
 		case 0x1a:
 			if (LOG_PORTS) logerror("%05X:80186 DMA 0 interrupt control = %04X\n", pc(), data);
 			m_intr.dma[0] = data & 0x000f;
+			update_interrupt_state();
 			break;
 
 		case 0x1b:
 			if (LOG_PORTS) logerror("%05X:80186 DMA 1 interrupt control = %04X\n", pc(), data);
 			m_intr.dma[1] = data & 0x000f;
+			update_interrupt_state();
 			break;
 
 		case 0x1c:
 			if (LOG_PORTS) logerror("%05X:80186 INT 0 interrupt control = %04X\n", pc(), data);
 			m_intr.ext[0] = data & 0x007f;
+			update_interrupt_state();
 			break;
 
 		case 0x1d:
 			if (LOG_PORTS) logerror("%05X:80186 INT 1 interrupt control = %04X\n", pc(), data);
 			m_intr.ext[1] = data & 0x007f;
+			update_interrupt_state();
 			break;
 
 		case 0x1e:
 			if (LOG_PORTS) logerror("%05X:80186 INT 2 interrupt control = %04X\n", pc(), data);
 			m_intr.ext[2] = data & 0x001f;
+			update_interrupt_state();
 			break;
 
 		case 0x1f:
 			if (LOG_PORTS) logerror("%05X:80186 INT 3 interrupt control = %04X\n", pc(), data);
 			m_intr.ext[3] = data & 0x001f;
+			update_interrupt_state();
 			break;
 
 		case 0x28:

@@ -102,6 +102,7 @@ mspacmat        // hack
 msheartb        // hack
 mspacmanbg      // bootleg
 mspacmanbgd     // bootleg
+mspacmanbcc     // bootleg
 woodpeck        // (c) 1981 Amenip (Palcom Queen River)
 woodpeca        // (c) 1981 Amenip Nova Games Ltd.
 mspacmab        // bootleg
@@ -532,7 +533,7 @@ sexygal         // (c) 1985
 sweetgal        // (c) 1985
 ngalsumr        // (c) 1985
 pastelg         // (c) 1985
-3ds             // (c) 1985
+threeds         // (c) 1985
 galds           // (c) 1985
 crystalg        // (c) 1986
 crystal2        // (c) 1986
@@ -1679,6 +1680,7 @@ gghost          // (c) 1984
 hattrick        // (c) 1984
 otwalls         // (c) 1984
 snakepit        // (c) 1984
+snakepit2       // (c) 1983
 snakjack        // (c) 1984
 stocker         // (c) 1984
 triviag1        // (c) 1984
@@ -3002,8 +3004,9 @@ sfu             //  8/1987 (c) 1987 (US)
 sfua            //  8/1987 (c) 1987 (US)
 sfj             //  8/1987 (c) 1987 (Japan)
 sfp             //  8/1987 (c) 1987
-tigeroad        // 11/1987 (c) 1987 + Romstar (US)
-toramich        // 11/1987 (c) 1987 (Japan)
+tigeroad        // 11/1987 (c) 1987 (US)
+tigeroadu       // 11/1987 (c) 1987 + Romstar (US)
+toramich        // 11/1987 (c) 1987 (Japan
 tigeroadb       // bootleg
 f1dream         //  4/1988 (c) 1988 + Romstar
 f1dreamb        // bootleg
@@ -3209,7 +3212,7 @@ slampic         // bootleg
 mbomberj        // 13/07/1993 (c) 1993 (Japan) (CPS1 + QSound)
 mbombrd         // 06/12/1993 (c) 1993 (World) (CPS1 + QSound)
 mbombrdj        // 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound)
-kenseim         // 1994 Ken Sei Mogura (not listed on Capcom's site)
+kenseim         // 18/04/1994 (c) 1994 Togo/Sigma (Japan) not listed on Capcom's site
 pnickj          // 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site
 qtono2j         // 23/01/1995 (c) 1995 (Japan)
 pang3           // 01/06/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site
@@ -3555,6 +3558,8 @@ jojobane        // 27/09/1999 (c) 1999 (Euro)
 jojobaner1      // 13/09/1999 (c) 1999 (Euro)
 cps3boot        // bootleg
 cps3boota       // bootleg
+cps3booto       // bootleg
+cps3bootoa      // bootleg
 cps3bs32        //
 cps3bs32a       //
 
@@ -4490,6 +4495,7 @@ fantzone1       // (c) 1986 (Unprotected)
 fantzonep       // (c) 1986 (NEC 0317-5000, encrypted)
 fantzonepr      //
 sdi             // (c) 1987 (FD1089B, decrypted)
+sdia            // (c) 1987 (FD1089B, decrypted)
 shinobi         // (c) 1987 (Unprotected)
 shinobi1        // (c) 1987 (FD1094, decrypted)
 shinobls        // (c) 1987 (Star bootleg)
@@ -4551,6 +4557,7 @@ mvpj            // (c) 1989 (FD1094, decrypted)
 passsht         // (c) 1988 (FD1094, decrypted)
 passshta        // (c) 1988 (FD1094, decrypted)
 passshtj        // (c) 1988 (FD1094, decrypted)
+cencourt        // (c) 1988 (MC-8123B)
 riotcity        // (c) 1991 Sega / Westone (Unprotected)
 ryukyu          // (c) 1990 (FD1094, decrypted)
 sdib            // (c) 1987 (FD1089A, decrypted)
@@ -5433,7 +5440,7 @@ vf4             // 2001.08.02 Virtua Fighter 4 (GD-ROM)
 vf4b            // 2001.08.20 Virtua Fighter 4 (Rev B) (cartridge)
 vf4c            // 2002.01.31 Virtua Fighter 4 (Rev C) (cartridge)
 kingrt66        // 2002.02 The King of Route 66 (Rev A)
-     			// 2002.02.14 Initial D Arcade Stage (Japan)
+				// 2002.02.14 Initial D Arcade Stage (Japan)
 initd           // 2002.03 Initial D Arcade Stage (Japan) (Rev B)
 				// 2002.06 World Club Champion Football Serie A 2001-2002
 soulsurf        // 2002.07 Soul Surfer
@@ -5449,7 +5456,7 @@ clubk2kf        // 2003.?? Club Kart: European Session (2003, not protected)
 initdexpo       // 2002.?? Initial D Arcade Stage (Export)
 				// 2002.?? Sega Driving Simulator
 				// 2003.03 World Club Champion Football Serie A 2001-2002 Ver.2
-                // 2003.05 Initial D Arcade Stage Ver. 2 (Japan) (Rev A)
+				// 2003.05 Initial D Arcade Stage Ver. 2 (Japan) (Rev A)
 initdv2j        // 2003.05.27 Initial D Arcade Stage Ver. 2 (Japan) (Rev B)
 				// 2003.09 World Club Champion Football Serie A 2002-2003
 				// 2003.?? Club Kart Cycraft Edition
@@ -5526,11 +5533,11 @@ airtrix         // 2001.02 Air Trix
 triforce        // 2002.?? Triforce BIOS
 vs2002ex        // 2002.07.30 Virtua Striker 2002 (Export)
 vs2002j         // 2002.10 Virtua Striker 2002 (Japan)
-fzeroaxc		// 2003.06.11 F-Zero AX (Rev. C)
+fzeroaxc        // 2003.06.11 F-Zero AX (Rev. C)
 avalons         // 2003.07 The Key Of Avalon: The Wizard Master (server) (Rev C)
 				// 2003.10 The Key Of Avalon 1.01
 gekpurya        // 2003.10 Gekitou Pro Yakyuu Mizushima Shinji All Stars vs. Pro Yakyuu (Rev C)
-fzeroax			// 2003.12 F-Zero AX (Rev. E)
+fzeroax         // 2003.12 F-Zero AX (Rev. E)
 				// 2003.12 The Key Of Avalon 1.10
 				// 2004.04 The Key Of Avalon 1.20 - Summon The New Monsters
 avalon13        // 2004.06.08 The Key Of Avalon 1.30 - Chaotic Sabbat (client) (Rev C)
@@ -5542,11 +5549,11 @@ tfupdate        // 2004.?? Triforce GDROM Boot Update
 				// 2005.08 Avalon no Kagi Ver.2.5 Kagi Seisen
 mkartagp        // 2005.12 Mario Kart Arcade Grand Prix
 				// 2005.?? Donkey Kong Jungle Fever
-                // 2006.01.31 Virtua Striker 4 Ver.2006 (export)
+				// 2006.01.31 Virtua Striker 4 Ver.2006 (export)
 vs42006         // 2006.05 Virtua Striker 4 Ver.2006 (Japan) (Rev D)
 				// 2006.?? Firmware Update For Compact Flash Box (Rev A)
-mkartag2		// 2007.03 Mario Kart Arcade Grand Prix 2
-mkartag2a		// 2007.03 Mario Kart Arcade Grand Prix 2
+mkartag2        // 2007.03 Mario Kart Arcade Grand Prix 2
+mkartag2a       // 2007.03 Mario Kart Arcade Grand Prix 2
 
 // Chihiro (X-Box based)
 chihiro         // 2002.?? Chihiro BIOS
@@ -5584,7 +5591,7 @@ mj2c            // 2004.12 Sega Network Taisen Mahjong MJ 2 (Rev C)
 				// 2004.12 Sega Network Taisen Mahjong MJ 2 (Rev D)
 				// 2005.02 Sega Network Taisen Mahjong MJ 2 (Rev E)
 				// 2005.02 Sega Network Taisen Mahjong MJ 2 (Rev F)
-mj2				// 2005.02.02 Sega Network Taisen Mahjong MJ 2 (Rev G)
+mj2             // 2005.02.02 Sega Network Taisen Mahjong MJ 2 (Rev G)
 				// 2005.03 Sangokushi Taisen
 gundamos        // 2005.03 Gundam Battle Operating Simulator
 				// 2005.04 Quest of D Ver.1.20
@@ -5627,7 +5634,7 @@ scg06nt         // 2005.12 Sega Golf Club 2006: Next Tours (Rev A)
 				// 2008.?? Sangokushi Taisen 3 Ver.J
 				// 2008.?? Sangokushi Taisen 3 War Begins
 				// 2008.?? Sangokushi Taisen 3 War Begins Ver.3.59
-                // 2009.03 Firmware Update For Compact Flash Box
+				// 2009.03 Firmware Update For Compact Flash Box
 ccfboxa         // 2009.03.31 Firmware Update For Compact Flash Box (Rev A)
 
 hshavoc         // (c) 1993 Data East
@@ -6813,6 +6820,7 @@ missilem        // hack
 // Atari vector games
 llander         // 0345xx           no copyright notice
 llander1        // 0345xx           no copyright notice
+llandert        // (test)           no copyright notice
 asteroid        // 035127-035145    (c) 1979
 asteroid2       // 035127-035145    (c) 1979
 asteroid1       // 035127-035145    no copyright notice
@@ -8622,6 +8630,7 @@ tengaij         // (c) 1996
 // Semicom games on "Psikyo 68020"-like hardware
 baryon          // (c) 1997 SemiCom
 dreamwld        // (c) 2000 SemiCom
+rolcrush        // (c) 1999 Trust
 
 // SH2 board
 s1945ii         // (c) 1997
@@ -28337,7 +28346,7 @@ ac1pster    // Pound Sterling (Ace)
 ac1pstrt    // Pound Stretcher (Pcp)
 ac1primt    // Primetime (Ace)
 ac1taklv    // Take It Or Leave It (Ace)
-ac1cshtw    // Cash Towers (Ace) 
+ac1cshtw    // Cash Towers (Ace)
 ac1bbclb    // Big Break Club (Ace)
 ac1bbclba   //
 ac1clbsv    // Club Sovereign (Ace)
@@ -30671,7 +30680,7 @@ ratrc_l1
 // s8.c
 pfevr_l2
 pfevr_p3
-stillcra
+scrzy_l1
 
 
 // s9.c
@@ -30683,7 +30692,6 @@ sshtl_l7
 alcat_l7
 szone_l5
 szone_l2
-scrzy_l1
 
 // sam.c
 

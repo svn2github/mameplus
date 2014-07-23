@@ -110,7 +110,7 @@ GFXDECODE_MEMBER( k051960_device::gfxinfo_reverse )
 GFXDECODE_END
 
 GFXDECODE_MEMBER( k051960_device::gfxinfo_gradius3 )
-	GFXDECODE_DEVICE_RAM(DEVICE_SELF, 0, spritelayout_gradius3, 0, 1)
+	GFXDECODE_DEVICE(DEVICE_SELF, 0, spritelayout_gradius3, 0, 1)
 GFXDECODE_END
 
 
@@ -136,15 +136,15 @@ void k051960_device::set_plane_order(device_t &device, int order)
 		case K051960_PLANEORDER_BASE:
 			device_gfx_interface::static_set_info(dev, gfxinfo);
 			break;
-			
+
 		case K051960_PLANEORDER_MIA:
 			device_gfx_interface::static_set_info(dev, gfxinfo_reverse);
 			break;
-			
+
 		case K051960_PLANEORDER_GRADIUS3:
 			device_gfx_interface::static_set_info(dev, gfxinfo_gradius3);
 			break;
-			
+
 		default:
 			fatalerror("Unknown plane_order\n");
 	}
@@ -166,10 +166,10 @@ void k051960_device::device_start()
 		popmessage("driver should use VIDEO_HAS_SHADOWS");
 
 	m_ram = auto_alloc_array_clear(machine(), UINT8, 0x400);
-	
+
 	// bind callbacks
 	m_k051960_cb.bind_relative_to(*owner());
-	
+
 	save_item(NAME(m_romoffset));
 	save_item(NAME(m_spriteflip));
 	save_item(NAME(m_readroms));

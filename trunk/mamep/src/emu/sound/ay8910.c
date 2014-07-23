@@ -1,3 +1,121 @@
+/*
+ * Couriersud, July 2014:
+ *
+ * This documents recent work on the AY8910. A YM2149 is now on it's way from
+ * Hong Kong as well.
+ *
+ * TODO:
+ *
+ * - Create a true sound device nAY8910 driver.
+ * - implement approach outlined below in this driver.
+ *
+ * For years I had a AY8910 in my drawer. Arduinos were around as well.
+ * Using the approach documented in this blog post
+ *    http://www.986-studio.com/2014/05/18/another-ay-entry/#more-476
+ * I measured the output voltages using a Extech 520.
+ *
+ * Measurement Setup
+ *
+ * Laptop <--> Arduino <---> AY8910
+ *
+ * AY8910 Registers:
+ * 0x07: 3f
+ * 0x08: RV
+ * 0x09: RV
+ * 0x0A: RV
+ *
+ * Output was measured on Analog Output B with a resistor RD to
+ * ground.
+ *
+ * Measurement results:
+ *
+ * RD      983  9.830k   99.5k  1.001M    open
+ *
+ * RV        B       B       B       B       B
+ *  0   0.0000  0.0000  0.0001  0.0011  0.0616
+ *  1   0.0106  0.0998  0.6680  1.8150  2.7260
+ *  2   0.0150  0.1377  0.8320  1.9890  2.8120
+ *  3   0.0222  0.1960  1.0260  2.1740  2.9000
+ *  4   0.0320  0.2708  1.2320  2.3360  2.9760
+ *  5   0.0466  0.3719  1.4530  2.4880  3.0440
+ *  6   0.0665  0.4938  1.6680  2.6280  3.1130
+ *  7   0.1039  0.6910  1.9500  2.7900  3.1860
+ *  8   0.1237  0.7790  2.0500  2.8590  3.2340
+ *  9   0.1986  1.0660  2.3320  3.0090  3.3090
+ * 10   0.2803  1.3010  2.5050  3.0850  3.3380
+ * 11   0.3548  1.4740  2.6170  3.1340  3.3590
+ * 12   0.4702  1.6870  2.7340  3.1800  3.3730
+ * 13   0.6030  1.8870  2.8410  3.2300  3.4050
+ * 14   0.7530  2.0740  2.9280  3.2580  3.4170
+ * 15   0.9250  2.2510  3.0040  3.2940  3.4380
+ *
+ * Using an equivalent model approach with two resistors
+ *
+ *      5V
+ *       |
+ *       Z
+ *       Z Resistor Value for RV
+ *       Z
+ *       |
+ *       +---> Output signal
+ *       |
+ *       Z
+ *       Z External RD
+ *       Z
+ *       |
+ *      GND
+ *
+ * will NOT work out of the box since RV = RV(RD).
+ *
+ * The following approach will be used going forward based on die pictures
+ * of the AY8910 done by Dr. Stack van Hay:
+ *
+ *
+ *              5V
+ *             _| D
+ *          G |      NMOS
+ *     Vg ---||               Kn depends on volume selected
+ *            |_  S Vs
+ *               |
+ *               |
+ *               +---> VO Output signal
+ *               |
+ *               Z
+ *               Z External RD
+ *               Z
+ *               |
+ *              GND
+ *
+ *  Whilst conducting, the FET operates in saturation mode:
+ *
+ *  Id = Kn * (Vgs - Vth)^2
+ *
+ *  Using Id = Vs / RD
+ *
+ *  Vs = Kn * RD  * (Vg - Vs - Vth)^2
+ *
+ *  finally using Vg' = Vg - Vth
+ *
+ *  Vs = Vg' + 1 / (2 * Kn * RD) - sqrt((Vg' + 1 / (2 * Kn * RD))^2 - Vg'^2)
+ *
+ *  and finally
+ *
+ *  VO = Vs
+ *
+ *  and this can be used to re-Thenevin to 5V
+ *
+ *  RVequiv = RD * ( 5V / VO - 1)
+ *
+ *  The RV and Kn parameter are derived using least squares to match
+ *  calculation results with measurements.
+ *
+ *  FIXME:
+ *  There is voltage of 60 mV measured with the EX520 (Ri ~ 10M). This may
+ *  be induced by cutoff currents from the 15 FETs.
+ *
+ */
+
+
 /***************************************************************************
 
   ay8910.c
@@ -268,6 +386,7 @@ static const ay8910_device::ay_ym_param ay8910_param =
  * RD was measured on a real chip to be 8m Ohm, RU was 0.8m Ohm.
  */
 
+
 static const ay8910_device::ay_ym_param ay8910_param =
 {
 	800000, 8000000,
@@ -275,6 +394,34 @@ static const ay8910_device::ay_ym_param ay8910_param =
 	{ 15950, 15350, 15090, 14760, 14275, 13620, 12890, 11370,
 		10600,  8590,  7190,  5985,  4820,  3945,  3017,  2345 }
 };
+
+static const ay8910_device::mosfet_param ay8910_mosfet_param =
+{
+	1.465385778,
+	4.9,
+	16,
+	{
+			0.00076,
+			0.80536,
+			1.13106,
+			1.65952,
+			2.42261,
+			3.60536,
+			5.34893,
+			8.96871,
+			10.97202,
+			19.32370,
+			29.01935,
+			38.82026,
+			55.50539,
+			78.44395,
+		109.49257,
+		153.72985,
+	}
+};
+
+
+
 
 /*************************************
  *
@@ -374,18 +521,26 @@ INLINE void build_single_table(double rl, const ay8910_device::ay_ym_param *par,
 
 }
 
-INLINE void build_resisor_table(const ay8910_device::ay_ym_param *par, INT32 *tab, int zero_is_off)
+INLINE void build_mosfet_resistor_table(const ay8910_device::mosfet_param &par, const double rd, INT32 *tab)
 {
 	int j;
 
-	for (j=0; j < par->res_count; j++)
+	for (j=0; j < par.m_count; j++)
 	{
-		if (zero_is_off && j == 0)
-		{
-			tab[j] = 1e6;
-		}
+		const double Vd = 5.0;
+		const double Vg = par.m_Vg - par.m_Vth;
+		const double kn = par.m_Kn[j] / 1.0e6;
+		const double p2 = 1.0 / (2.0 * kn * rd) + Vg;
+		const double Vs = p2 - sqrt(p2 * p2 - Vg * Vg);
+
+		const double res = rd * ( Vd / Vs - 1.0);
+		/* That's the biggest value we can stream on to netlist. */
+
+		if (res > (1 << 28))
+			tab[j] = (1 << 28);
 		else
-			tab[j] = par->res[j];
+			tab[j] = res;
+		//printf("%d %f %10d\n", j, rd / (res + rd) * 5.0, tab[j]);
 	}
 }
 
@@ -641,11 +796,6 @@ void ay8910_device::sound_stream_update(sound_stream &stream, stream_sample_t **
 		else
 		{
 			*(buf[0]++) = mix_3D();
-#if 0
-			*(buf[0]) = (  vol_enabled[0] * m_vol_table[m_Vol[0]]
-							+ vol_enabled[1] * m_vol_table[m_Vol[1]]
-							+ vol_enabled[2] * m_vol_table[m_Vol[2]]) / m_step;
-#endif
 		}
 		samples--;
 	}
@@ -664,10 +814,13 @@ void ay8910_device::build_mixer_table()
 
 	if ((m_flags & AY8910_RESISTOR_OUTPUT) != 0)
 	{
+		if (m_type != PSG_TYPE_AY)
+			fatalerror("AY8910_RESISTOR_OUTPUT currently only supported for AY8910 devices.");
+
 		for (chan=0; chan < AY8910_NUM_CHANNELS; chan++)
 		{
-			build_resisor_table(m_par, m_vol_table[chan], m_zero_is_off);
-			build_resisor_table(m_par_env, m_env_table[chan], 0);
+			build_mosfet_resistor_table(ay8910_mosfet_param, m_res_load[chan], m_vol_table[chan]);
+			build_mosfet_resistor_table(ay8910_mosfet_param, m_res_load[chan], m_env_table[chan]);
 		}
 	}
 	else
@@ -957,6 +1110,7 @@ const device_type AY8910 = &device_creator<ay8910_device>;
 ay8910_device::ay8910_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, AY8910, "AY-3-8910A", tag, owner, clock, "ay8910", __FILE__),
 		device_sound_interface(mconfig, *this),
+		m_type(PSG_TYPE_AY),
 		m_streams(3),
 		m_ioports(2),
 		m_ready(0),
@@ -995,9 +1149,10 @@ ay8910_device::ay8910_device(const machine_config &mconfig, const char *tag, dev
 }
 
 ay8910_device::ay8910_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock,
-							 psg_type_t psg_type, int streams, int ioports, const char *shortname, const char *source)
+								psg_type_t psg_type, int streams, int ioports, const char *shortname, const char *source)
 	: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
 		device_sound_interface(mconfig, *this),
+		m_type(psg_type),
 		m_streams(streams),
 		m_ioports(ioports),
 		m_ready(0),

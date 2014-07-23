@@ -5,6 +5,10 @@
 *************************************************************************/
 
 #define MASTER_CLOCK 57272700   // main oscillator frequency
+
+#include "emu.h"
+#include "cpu/sh2/sh2.h"
+#include "sound/ymf278b.h"
 #include "machine/eepromser.h"
 
 class psikyo4_state : public driver_device
@@ -41,7 +45,7 @@ public:
 	double         m_oldbrt2;
 
 	/* devices */
-	required_device<cpu_device> m_maincpu;
+	required_device<sh2_device> m_maincpu;
 	required_device<eeprom_serial_93cxx_device> m_eeprom;
 	required_device<gfxdecode_device> m_gfxdecode;
 

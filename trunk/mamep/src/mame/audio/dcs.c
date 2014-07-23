@@ -298,6 +298,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dcs_8k_program_map, AS_PROGRAM, 32, dcs_audio_device )
 	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_SHARE("dcsint")
 	AM_RANGE(0x0800, 0x1fff) AM_RAM AM_SHARE("dcsext")
+	AM_RANGE(0x3000, 0x3003) AM_READWRITE(input_latch32_r, output_latch32_w) // why?
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dcs_8k_data_map, AS_DATA, 16, dcs_audio_device )
@@ -305,7 +306,7 @@ static ADDRESS_MAP_START( dcs_8k_data_map, AS_DATA, 16, dcs_audio_device )
 	AM_RANGE(0x0800, 0x1fff) AM_READWRITE(dcs_dataram_r, dcs_dataram_w)
 	AM_RANGE(0x2000, 0x2fff) AM_ROMBANK("databank")
 	AM_RANGE(0x3000, 0x3000) AM_WRITE(dcs_data_bank_select_w)
-	AM_RANGE(0x3400, 0x3403) AM_READWRITE(input_latch_r, output_latch_w)
+	AM_RANGE(0x3400, 0x3403) AM_READWRITE(input_latch_r, output_latch_w) // mk3 etc. need this
 	AM_RANGE(0x3800, 0x39ff) AM_RAM
 	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE(adsp_control_r, adsp_control_w)
 ADDRESS_MAP_END
@@ -779,7 +780,7 @@ void dcs_audio_device::dcs_register_state()
 		machine().save().register_postload(save_prepost_delegate(FUNC(dcs_audio_device::sdrc_remap_memory), this));
 }
 
- 
+
 //-------------------------------------------------
 //  dcs_audio_device - constructor
 //-------------------------------------------------
@@ -911,7 +912,7 @@ void dcs2_audio_device::device_start()
 	}
 	if (m_cpu != NULL && !m_cpu->started())
 		throw device_missing_dependencies();
-	
+
 	m_program = &m_cpu->space(AS_PROGRAM);
 	m_data = &m_cpu->space(AS_DATA);
 	m_channels = 2;
@@ -1439,7 +1440,7 @@ int dcs_audio_device::control_r()
 	/* only boost for DCS2 boards */
 	if (!m_auto_ack && !m_transfer.hle_enabled)
 		machine().scheduler().boost_interleave(attotime::from_nsec(500), attotime::from_usec(5));
-	if (m_rev == 15)
+	if ( /* m_rev == 1 || */ m_rev == 15) // == 1 check breaks mk3
 		return IS_OUTPUT_FULL() ? 0x80 : 0x00;
 	return m_latch_control;
 }
@@ -1450,7 +1451,7 @@ void dcs_audio_device::reset_w(int state)
 	/* going high halts the CPU */
 	if (state)
 	{
-		logerror("%s: DCS reset = %d\n", machine().describe_context(), state);
+		//      logerror("%s: DCS reset = %d\n", machine().describe_context(), state);
 
 		/* just run through the init code again */
 		machine().scheduler().synchronize(timer_expired_delegate(FUNC(dcs_audio_device::dcs_reset),this));
@@ -1492,7 +1493,7 @@ READ16_MEMBER( dcs_audio_device::fifo_input_r )
     INPUT LATCH (data from host to DCS)
 ****************************************************************************/
 
-void dcs_audio_device::dcs_delayed_data_w(UINT8 data)
+void dcs_audio_device::dcs_delayed_data_w(UINT16 data)
 {
 	if (LOG_DCS_IO)
 		logerror("%s:dcs_data_w(%04X)\n", machine().describe_context(), data);
@@ -1519,7 +1520,7 @@ TIMER_CALLBACK_MEMBER( dcs_audio_device::dcs_delayed_data_w_callback )
 }
 
 
-void dcs_audio_device::data_w(UINT8 data)
+void dcs_audio_device::data_w(UINT16 data)
 {
 	/* preprocess the write */
 	if (preprocess_write(data))
@@ -1551,6 +1552,15 @@ READ16_MEMBER( dcs_audio_device::input_latch_r )
 	return m_input_data;
 }
 
+READ32_MEMBER( dcs_audio_device::input_latch32_r )
+{
+	if (m_auto_ack)
+		input_latch_ack_w(space,0,0,0xffff);
+	if (LOG_DCS_IO)
+		logerror("%08X:input_latch32_r(%04X)\n", space.device().safe_pc(), m_input_data);
+	return m_input_data << 8;
+}
+
 /***************************************************************************
     OUTPUT LATCH (data from DCS to host)
 ****************************************************************************/
@@ -1569,6 +1579,16 @@ WRITE16_MEMBER( dcs_audio_device::output_latch_w )
 	m_pre_output_data = data;
 	if (LOG_DCS_IO)
 		logerror("%08X:output_latch_w(%04X) (empty=%d)\n", space.device().safe_pc(), data, IS_OUTPUT_EMPTY());
+
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(dcs_audio_device::latch_delayed_w),this), data>>8);
+}
+
+WRITE32_MEMBER( dcs_audio_device::output_latch32_w )
+{
+	m_pre_output_data = data >> 8;
+	if (LOG_DCS_IO)
+		logerror("%08X:output_latch32_w(%04X) (empty=%d)\n", space.device().safe_pc(), data>>8, IS_OUTPUT_EMPTY());
+
 	machine().scheduler().synchronize(timer_expired_delegate(FUNC(dcs_audio_device::latch_delayed_w),this), data>>8);
 }
 
@@ -1591,9 +1611,9 @@ void dcs_audio_device::ack_w()
 }
 
 
-UINT8 dcs_audio_device::data_r()
+UINT16 dcs_audio_device::data_r()
 {
-	/* data is actually only 8 bit (read from d8-d15, which is d0-d7 from the data access instructions POV) */
+	/* data is actually only 8 bit (read from d8-d15, which is d0-d7 from the data access instructions POV) on early dcs, but goes 16 on later (seattle) */
 	if (m_last_output_full && !m_output_full_cb.isnull())
 		m_output_full_cb(m_last_output_full = 0);
 	if (m_auto_ack)
@@ -2426,7 +2446,7 @@ dcs2_audio_device::dcs2_audio_device(const machine_config &mconfig, device_type 
 {
 }
 
-	
+
 const device_type DCS2_AUDIO_2115 = &device_creator<dcs2_audio_2115_device>;
 
 //-------------------------------------------------
@@ -2491,5 +2511,3 @@ machine_config_constructor dcs2_audio_denver_device::device_mconfig_additions() 
 {
 	return MACHINE_CONFIG_NAME( dcs2_audio_denver );
 }
-
-

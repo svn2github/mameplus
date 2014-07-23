@@ -605,10 +605,9 @@ void midas_state::machine_start()
 
 void midas_state::machine_reset()
 {
-
 }
 
-	
+
 
 
 WRITE_LINE_MEMBER(midas_state::livequiz_irqhandler)

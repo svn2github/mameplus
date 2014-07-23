@@ -430,11 +430,11 @@ void video_manager::begin_recording(const char *name, movie_format format)
 	{
 		// stop any existing recording
 		end_recording(format);
-	
+
 		// reset the state
 		m_mng_frame = 0;
-		m_mng_next_frame_time = machine().time();	
-	
+		m_mng_next_frame_time = machine().time();
+
 		// create a new movie file and start recording
 		m_mng_file.reset(global_alloc(emu_file(machine().options().snapshot_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS)));
 		file_error filerr;
@@ -479,7 +479,7 @@ void video_manager::end_recording(movie_format format)
 		{
 			avi_close(m_avi_file);
 			m_avi_file = NULL;
-			
+
 			// reset the state
 			m_avi_frame = 0;
 		}
@@ -987,7 +987,7 @@ void video_manager::update_refresh_speed()
 //  if we did not skip a frame
 //-------------------------------------------------
 
-void video_manager::recompute_speed(attotime emutime)
+void video_manager::recompute_speed(const attotime &emutime)
 {
 	// if we don't have a starting time yet, or if we're paused, reset our starting point
 	if (m_speed_last_realtime == 0 || machine().paused())
@@ -1242,13 +1242,13 @@ void video_manager::record_frame()
 				end_recording(MF_AVI);
 				break;
 			}
-			
+
 			// advance time
 			m_avi_next_frame_time += m_avi_frame_period;
 			m_avi_frame++;
 		}
 	}
-	
+
 	// handle a MNG recording
 	if (m_mng_file != NULL)
 	{
@@ -1276,13 +1276,13 @@ void video_manager::record_frame()
 				end_recording(MF_MNG);
 				break;
 			}
-			
+
 			// advance time
 			m_mng_next_frame_time += m_mng_frame_period;
 			m_mng_frame++;
 		}
 	}
-	
+
 	g_profiler.stop();
 }
 

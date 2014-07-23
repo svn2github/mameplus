@@ -800,7 +800,7 @@ WRITE16_MEMBER(neogeo_state::memcard_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		if (m_memcard->present() != -1)
-			 m_memcard->write(space, offset, data);
+			m_memcard->write(space, offset, data);
 	}
 }
 
@@ -935,6 +935,7 @@ void neogeo_state::neogeo_audio_cpu_banking_init()
 		m_bank_audio_main->configure_entry(0, memregion("audiobios")->base());
 	else /* on hardware with no SM1 ROM, the cart ROM is always enabled */
 		m_bank_audio_main->configure_entry(0, memregion("audiocpu")->base());
+
 	m_bank_audio_main->set_entry(0);
 
 	/* audio banking */
@@ -1093,6 +1094,7 @@ DRIVER_INIT_MEMBER(neogeo_state,neogeo)
 void neogeo_state::neogeo_postload()
 {
 	_set_main_cpu_bank_address();
+
 	if (m_type == NEOGEO_MVS) set_outputs();
 }
 
@@ -1100,6 +1102,7 @@ void neogeo_state::neogeo_postload()
 void neogeo_state::machine_start()
 {
 	m_type = NEOGEO_MVS;
+
 
 	/* set the initial main CPU bank */
 	neogeo_main_cpu_banking_init();
@@ -1142,11 +1145,11 @@ void neogeo_state::machine_start()
 
 	machine().save().register_postload(save_prepost_delegate(FUNC(neogeo_state::neogeo_postload), this));
 
-	
+
 	m_sprgen->set_screen(m_screen);
 	m_sprgen->set_sprite_region(m_region_sprites);
 	m_sprgen->set_fixed_regions(m_region_fixed, m_region_fixedbios);
-	
+
 }
 
 

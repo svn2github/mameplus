@@ -42,7 +42,7 @@ const rom_entry *wozfdc_device::device_rom_region() const
 //  LIVE DEVICE
 //**************************************************************************
 
-wozfdc_device::wozfdc_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source) : 
+wozfdc_device::wozfdc_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source) :
 	device_t(mconfig, type, name, tag, owner, clock, shortname, source)
 {
 }
@@ -99,7 +99,7 @@ void wozfdc_device::a3_update_drive_sel()
 	}
 	else
 	{
-		switch (drvsel & 3) 
+		switch (drvsel & 3)
 		{
 			case 0:
 				newflop = floppy0->get_device();
@@ -213,7 +213,7 @@ void wozfdc_device::phase(int ph, bool on)
 				floppy->stp_w(false);
 				floppy->stp_w(true);
 			}
-		}				   
+		}
 	}
 }
 
@@ -336,19 +336,19 @@ void wozfdc_device::control(int offset)
 		}
 }
 
-UINT64 wozfdc_device::time_to_cycles(attotime tm)
+UINT64 wozfdc_device::time_to_cycles(const attotime &tm)
 {
 	// Clock is falling edges of the ~2Mhz clock
 	// The 1021800 must be the controlling 6502's speed
 
-	UINT64 cycles = tm.as_ticks(1021800*2*2);
+	UINT64 cycles = tm.as_ticks(clock()*2);
 	cycles = (cycles+1) >> 1;
 	return cycles;
 }
 
 attotime wozfdc_device::cycles_to_time(UINT64 cycles)
 {
-	return attotime::from_ticks(cycles*2+1, 1021800*2*2);
+	return attotime::from_ticks(cycles*2+1, clock()*2);
 }
 
 void wozfdc_device::lss_start()
@@ -365,7 +365,7 @@ void wozfdc_device::lss_start()
 	lss_predict();
 }
 
-void wozfdc_device::lss_delay(UINT64 cycles, attotime tm, UINT8 data_reg, UINT8 address, bool write_line_active)
+void wozfdc_device::lss_delay(UINT64 cycles, const attotime &tm, UINT8 data_reg, UINT8 address, bool write_line_active)
 {
 	if(data_reg & 0x80)
 		address |= 0x02;
@@ -396,7 +396,7 @@ void wozfdc_device::commit_predicted()
 		cur_lss.write_start_time = cur_lss.tm;
 		cur_lss.write_position = 0;
 	}
-	
+
 	predicted_lss.tm = attotime::never;
 }
 
@@ -409,7 +409,7 @@ void wozfdc_device::lss_sync()
 	while(cur_lss.tm < tm) {
 		lss_predict(tm);
 		commit_predicted();
-	}		
+	}
 }
 
 void wozfdc_device::lss_predict(attotime limit)
@@ -450,7 +450,7 @@ void wozfdc_device::lss_predict(attotime limit)
 
 			if(mode_write) {
 				if((write_line_active && !(address & 0x80)) ||
-				   (!write_line_active && (address & 0x80))) {
+					(!write_line_active && (address & 0x80))) {
 					write_line_active = !write_line_active;
 					assert(predicted_lss.write_position != 32);
 					predicted_lss.write_buffer[predicted_lss.write_position++] = cycles_to_time(cycles);
@@ -538,36 +538,35 @@ void appleiii_fdc::control_dx(int offset)
 {
 	switch (offset)
 	{
-		case 0:	// clear drive select bit 0
+		case 0: // clear drive select bit 0
 			drvsel &= ~1;
 			break;
 
-		case 1:	// set drive select bit 0
+		case 1: // set drive select bit 0
 			drvsel |= 1;
 			break;
 
-		case 2:	// clear drive select bit 1
+		case 2: // clear drive select bit 1
 			drvsel &= ~2;
 			break;
 
-		case 3:	// set drive select bit 1
+		case 3: // set drive select bit 1
 			drvsel |= 2;
 			break;
 
-		case 4:	// clear enable 1
+		case 4: // clear enable 1
 			enable1 = 0;
 			break;
 
-		case 5:	// set enable 1
+		case 5: // set enable 1
 			enable1 = 1;
 			break;
 
-		case 6:	// clear side 2
+		case 6: // clear side 2
 		case 7: // set side 2
 			break;
 
-		default:	// cod8-c0df are not FDC related
+		default:    // cod8-c0df are not FDC related
 			break;
 	}
 }
-

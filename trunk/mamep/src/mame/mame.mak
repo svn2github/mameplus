@@ -561,7 +561,6 @@ MACHINES += Z80CTC
 MACHINES += Z80DART
 MACHINES += Z80DMA
 MACHINES += Z80PIO
-MACHINES += Z80SIO
 MACHINES += Z80STI
 MACHINES += Z8536
 MACHINES += SECFLASH
@@ -2470,6 +2469,8 @@ $(DRIVERS)/8080bw.o:    $(LAYOUT)/attackfc.lh \
 			$(LAYOUT)/shuttlei.lh \
 			$(LAYOUT)/spacecom.lh
 
+$(DRIVERS)/ace.o:       $(LAYOUT)/ace.lh
+
 $(DRIVERS)/aces1.o:     $(LAYOUT)/aces1.lh
 
 $(DRIVERS)/acefruit.o:  $(LAYOUT)/sidewndr.lh
@@ -2535,7 +2536,7 @@ $(DRIVERS)/bfm_sc4.o:   $(LAYOUT)/bfm_sc4.lh \
 			$(LAYOUT)/sc4_dmd.lh \
 			$(LAYOUT)/sc4dnd.lh \
 			$(LAYOUT)/sc4dndtp.lh \
-			$(LAYOUT)/sc4dnddw.lh		
+			$(LAYOUT)/sc4dnddw.lh
 
 $(DRIVERS)/bfm_sc5.o:   $(LAYOUT)/bfm_sc5.lh
 
@@ -2616,7 +2617,8 @@ $(DRIVERS)/funworld.o:  $(LAYOUT)/jollycrd.lh \
 			$(LAYOUT)/novoplay.lh \
 			$(LAYOUT)/royalcrd.lh
 
-$(DRIVERS)/g627.o:  $(LAYOUT)/g627.lh
+$(DRIVERS)/g627.o:      $(LAYOUT)/g627.lh
+$(DRIVERS)/gp_1.o:      $(LAYOUT)/gp_1.lh
 
 $(DRIVERS)/galaxi.o:    $(LAYOUT)/galaxi.lh
 
@@ -2653,7 +2655,7 @@ $(DRIVERS)/jankenmn.o:  $(LAYOUT)/jankenmn.lh
 
 $(DRIVERS)/jpmimpct.o:  $(LAYOUT)/jpmimpct.lh
 
-$(DRIVERS)/jpmmps.o:   $(LAYOUT)/jpmmps.lh
+$(DRIVERS)/jpmmps.o:    $(LAYOUT)/jpmmps.lh
 
 $(DRIVERS)/jpmsys5.o:   $(LAYOUT)/jpmsys5.lh
 
@@ -2688,7 +2690,7 @@ $(DRIVERS)/mcr3.o:      $(LAYOUT)/spyhunt.lh \
 
 $(DRIVERS)/mpoker.o:    $(LAYOUT)/mpoker.lh
 
-$(DRIVERS)/mpu3.o:  $(LAYOUT)/mpu3.lh
+$(DRIVERS)/mpu3.o:      $(LAYOUT)/mpu3.lh
 
 $(DRIVERS)/mpu4mod2sw.o:    $(LAYOUT)/connect4.lh \
 
@@ -2747,7 +2749,7 @@ $(DRIVERS)/neogeo.o:    $(LAYOUT)/neogeo.lh
 $(DRIVERS)/norautp.o:   $(LAYOUT)/noraut11.lh \
 			$(LAYOUT)/noraut12.lh
 
-$(DRIVERS)/nsm.o:   $(LAYOUT)/nsm.lh
+$(DRIVERS)/nsm.o:       $(LAYOUT)/nsm.lh
 
 $(DRIVERS)/omegrace.o:  $(LAYOUT)/omegrace.lh
 
@@ -2777,24 +2779,24 @@ $(DRIVERS)/roul.o:      $(LAYOUT)/roul.lh
 
 $(DRIVERS)/rowamet.o:   $(LAYOUT)/rowamet.lh
 
-$(DRIVERS)/s3.o:    $(LAYOUT)/s3.lh
+$(DRIVERS)/s3.o:        $(LAYOUT)/s3.lh
 
-$(DRIVERS)/s4.o:    $(LAYOUT)/s4.lh
+$(DRIVERS)/s4.o:        $(LAYOUT)/s4.lh
 
-$(DRIVERS)/s6.o:    $(LAYOUT)/s6.lh
+$(DRIVERS)/s6.o:        $(LAYOUT)/s6.lh
 
-$(DRIVERS)/s6a.o:   $(LAYOUT)/s6a.lh
+$(DRIVERS)/s6a.o:       $(LAYOUT)/s6a.lh
 
-$(DRIVERS)/s7.o:    $(LAYOUT)/s7.lh
+$(DRIVERS)/s7.o:        $(LAYOUT)/s7.lh
 
-$(DRIVERS)/s8.o:    $(LAYOUT)/s8.lh
+$(DRIVERS)/s8.o:        $(LAYOUT)/s8.lh
 
-$(DRIVERS)/s9.o:    $(LAYOUT)/s9.lh
+$(DRIVERS)/s9.o:        $(LAYOUT)/s9.lh
 
-$(DRIVERS)/s11.o:   $(LAYOUT)/s11.lh
-$(DRIVERS)/s11a.o:  $(LAYOUT)/s11a.lh
-$(DRIVERS)/s11b.o:  $(LAYOUT)/s11b.lh
-$(DRIVERS)/s11c.o:  $(LAYOUT)/s11c.lh
+$(DRIVERS)/s11.o:       $(LAYOUT)/s11.lh
+$(DRIVERS)/s11a.o:      $(LAYOUT)/s11a.lh
+$(DRIVERS)/s11b.o:      $(LAYOUT)/s11b.lh
+$(DRIVERS)/s11c.o:      $(LAYOUT)/s11c.lh
 
 $(DRIVERS)/sanremo.o:   $(LAYOUT)/sanremo.lh
 
@@ -2867,11 +2869,11 @@ $(DRIVERS)/thayers.o:   $(LAYOUT)/dlair.lh
 
 $(DRIVERS)/topspeed.o:  $(LAYOUT)/topspeed.lh
 
-$(DRIVERS)/turbo.o: $(LAYOUT)/turbo.lh \
+$(DRIVERS)/turbo.o:     $(LAYOUT)/turbo.lh \
 			$(LAYOUT)/subroc3d.lh \
 			$(LAYOUT)/buckrog.lh
 
-$(DRIVERS)/tx1.o:   $(LAYOUT)/buggybjr.lh \
+$(DRIVERS)/tx1.o:       $(LAYOUT)/buggybjr.lh \
 			$(LAYOUT)/buggyboy.lh \
 			$(LAYOUT)/tx1.lh
 
@@ -2879,7 +2881,7 @@ $(DRIVERS)/umipoker.o:  $(LAYOUT)/saiyukip.lh
 
 $(DRIVERS)/undrfire.o:  $(LAYOUT)/cbombers.lh
 
-$(DRIVERS)/vd.o:    $(LAYOUT)/vd.lh
+$(DRIVERS)/vd.o:        $(LAYOUT)/vd.lh
 
 $(DRIVERS)/vicdual.o:   $(LAYOUT)/depthch.lh
 
@@ -2899,13 +2901,13 @@ $(DRIVERS)/wpc_an.o:    $(LAYOUT)/wpc_an.lh
 
 $(DRIVERS)/wecleman.o:  $(LAYOUT)/wecleman.lh
 
-$(DRIVERS)/wico.o:  $(LAYOUT)/wico.lh
+$(DRIVERS)/wico.o:      $(LAYOUT)/wico.lh
 
 $(DRIVERS)/zac2650.o:   $(LAYOUT)/tinv2650.lh
 
-$(DRIVERS)/zac_1.o: $(LAYOUT)/zac_1.lh
+$(DRIVERS)/zac_1.o:     $(LAYOUT)/zac_1.lh
 
-$(DRIVERS)/zac_2.o: $(LAYOUT)/zac_2.lh
+$(DRIVERS)/zac_2.o:     $(LAYOUT)/zac_2.lh
 
 $(DRIVERS)/zac_proto.o: $(LAYOUT)/zac_proto.lh
 

@@ -1060,7 +1060,7 @@ static const UINT8 dither_matrix_2x2[16] =
 #define EXTRACT_332_TO_888(val, a, b, c)                    \
 	(a) = (((val) >> 0) & 0xe0) | (((val) >> 3) & 0x1c) | (((val) >> 6) & 0x03); \
 	(b) = (((val) << 3) & 0xe0) | (((val) >> 0) & 0x1c) | (((val) >> 3) & 0x03); \
-	(c) = (((val) << 6) & 0xc0) | (((val) << 4) & 0x30) | (((val) << 2) & 0xc0) | (((val) << 0) & 0x03);
+	(c) = (((val) << 6) & 0xc0) | (((val) << 4) & 0x30) | (((val) << 2) & 0x0c) | (((val) << 0) & 0x03);
 
 
 /*************************************
@@ -3400,10 +3400,10 @@ do                                                                              
 	/* add clocal or alocal to alpha */                                         \
 	if (FBZCP_CCA_ADD_ACLOCAL(FBZCOLORPATH))                                    \
 		a += c_local.rgb.a;                                                     \
-                                                                                \
+																				\
 	/* clamp */                                                                 \
 	CLAMP(a, 0x00, 0xff);                                                       \
-	                                                                            \
+																				\
 	/* invert */                                                                \
 	if (FBZCP_CCA_INVERT_OUTPUT(FBZCOLORPATH))                                  \
 		a ^= 0xff;                                                              \

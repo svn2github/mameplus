@@ -60,7 +60,7 @@ static const translation_info gcc_translate[] =
 	{ 0,        "-O0",                      "/Od" },
 	{ 0,        "-O1",                      "/O2 /Qfast_transcendentals" },
 	{ 0,        "-O2",                      "/O2 /Qfast_transcendentals" },
-	{ 0,        "-O3",                      "/O2 /Qfast_transcendentals" },
+	{ 0,        "-O3",                      "/Ox /Qfast_transcendentals" },
 	{ 0,        "-Os",                      "/O1" },
 //============================================================
 	{ 0,        "-Opgoc",                   "/O2 /GL" },

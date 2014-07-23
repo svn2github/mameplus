@@ -407,7 +407,11 @@ UINT64 m6502_device::get_cycle()
 
 void m6502_device::execute_run()
 {
+	// get_cycle() is currently unused, and this precalculation
+	// enormously slows down drivers with high interleave
+#if 0
 	end_cycles = machine().time().as_ticks(clock()) + icount;
+#endif
 	if(inst_substate)
 		do_exec_partial();
 

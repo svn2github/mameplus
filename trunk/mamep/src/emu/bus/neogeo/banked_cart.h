@@ -32,6 +32,7 @@ public:
 protected:
 	virtual void device_start();
 	virtual void device_reset();
+	void postload();
 
 
 
@@ -41,6 +42,3 @@ private:
 };
 
 #endif
-
-
-

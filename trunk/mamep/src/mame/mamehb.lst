@@ -47,24 +47,24 @@ vantris			// http://web.utanet.at/nkehrer
 #endif // !NCP
 
 // Neo Geo homebrew
-frogfest		// (c) 2005 Rastersoft
-poknight		// http://www.neobitz.com
-neodemo			// (c) 2002 Chaos
-neo2500			// (c) 2004 Blastar
-syscheck		// (c) 200? Blastar
-neonopon		// (c) 2002 Blastar
-neopong			// (c) 2002 Neodev
-neoponga		// (c) 2002 Neodev
-ngem2k			// (c) 2006 Blastar
-cnbe			// (c) 2006 Blastar
-ltorb1			// (c) 2005 Blastar
-beast			// http://www.neobitz.com
+frogfest                // (c) 2005 Rastersoft
+poknight                // http://www.neobitz.com
+neodemo                 // (c) 2002 Chaos
+neo2500                 // (c) 2004 Blastar
+syscheck                // (c) 200? Blastar
+neonopon                // (c) 2002 Blastar
+neopong                 // (c) 2002 Neodev
+neoponga                // (c) 2002 Neodev
+ngem2k                  // (c) 2006 Blastar
+cnbe                    // (c) 2006 Blastar
+ltorb1                  // (c) 2005 Blastar
+beast                   // http://www.neobitz.com
 
 // Neo Geo hack
 kof96cn
-kof96ae			// 2007 EGHT hack
-kof97cn			// 2007 EGHT hack
+kof96ae                 // 2007 EGHT hack
+kof97cn                 // 2007 EGHT hack
 kof97xt
-kof98ae			// 2009 EGHT hack
-kf2k2ps2		// 2007 EGHT hack
-columnsh		// http://www.neobitz.com
+kof98ae                 // 2009 EGHT hack
+kf2k2ps2                // 2007 EGHT hack
+columnsh                // http://www.neobitz.com

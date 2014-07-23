@@ -84,25 +84,25 @@ const rom_entry *c64_xl80_device::device_rom_region() const
 MC6845_UPDATE_ROW( c64_xl80_device::crtc_update_row )
 {
 	const pen_t *pen = m_palette->pens();
-	
+
 	for (int column = 0; column < x_count; column++)
 	{
 		UINT8 code = m_ram[((ma + column) & 0x7ff)];
 		UINT16 addr = (code << 3) | (ra & 0x07);
 		UINT8 data = m_char_rom->base()[addr & 0x7ff];
-		
+
 		if (column == cursor_x)
 		{
 			data = 0xff;
 		}
-		
+
 		for (int bit = 0; bit < 8; bit++)
 		{
 			int x = (column * 8) + bit;
 			int color = BIT(data, 7) && de;
-			
+
 			bitmap.pix32(vbp + y, hbp + x) = pen[color];
-			
+
 			data <<= 1;
 		}
 	}
@@ -126,13 +126,12 @@ static MACHINE_CONFIG_FRAGMENT( c64_xl80 )
 	MCFG_SCREEN_UPDATE_DEVICE(HD46505SP_TAG, h46505_device, screen_update)
 	MCFG_SCREEN_SIZE(80*8, 24*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 80*8-1, 0, 24*8-1)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_REFRESH_RATE(50)
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", c64_xl80)
 	MCFG_PALETTE_ADD_BLACK_AND_WHITE("palette")
 
-	MCFG_MC6845_ADD(HD46505SP_TAG, H46505, MC6845_SCREEN_TAG, XTAL_14_31818MHz)
+	MCFG_MC6845_ADD(HD46505SP_TAG, H46505, MC6845_SCREEN_TAG, XTAL_14_31818MHz / 8)
 	MCFG_MC6845_SHOW_BORDER_AREA(true)
 	MCFG_MC6845_CHAR_WIDTH(8)
 	MCFG_MC6845_UPDATE_ROW_CB(c64_xl80_device, crtc_update_row)

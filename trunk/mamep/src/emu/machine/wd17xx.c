@@ -1,6 +1,6 @@
 /***************************************************************************
 
-	!!! DEPRECATED, USE src/emu/wd_fdc.h FOR NEW DRIVERS !!!
+    !!! DEPRECATED, USE src/emu/wd_fdc.h FOR NEW DRIVERS !!!
 
     wd17xx.c
 
@@ -445,7 +445,7 @@ TIMER_CALLBACK_MEMBER( wd1770_device::wd17xx_data_callback )
 }
 
 
-void wd1770_device::wd17xx_set_busy(attotime duration)
+void wd1770_device::wd17xx_set_busy(const attotime &duration)
 {
 	m_status |= STA_1_BUSY;
 
@@ -2024,11 +2024,11 @@ void wd1770_device::device_reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (m_floppy_drive_tags[i]) 
+		if (m_floppy_drive_tags[i])
 		{
 			legacy_floppy_image_device *img = siblingdevice<legacy_floppy_image_device>(m_floppy_drive_tags[i]);
 
-			if (img) 
+			if (img)
 			{
 				img->floppy_drive_set_controller(this);
 				img->floppy_drive_set_index_pulse_callback(wd17xx_index_pulse_callback);

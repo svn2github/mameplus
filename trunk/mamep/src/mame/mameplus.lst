@@ -95,8 +95,10 @@ fr2ch       // 0098 hack - CD to MVS Conversion
 lhcdb
 
 #ifndef NCP
+
 // Konami "Nemesis hardware" games
 spclone     // GX587 (c) 1986 based
+
 bublcave    // hack, bublbobl.c 
 bublredux   // hack, bublbobl.c 
 ddonpacha   // hack, cave.c

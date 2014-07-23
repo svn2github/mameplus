@@ -265,7 +265,7 @@ void hd63450_device::dma_transfer_start(int channel)
 	logerror("DMA: Transfer begins: size=0x%08x\n",m_transfer_size[channel]);
 }
 
-void hd63450_device::set_timer(int channel, attotime tm)
+void hd63450_device::set_timer(int channel, const attotime &tm)
 {
 	m_our_clock[channel] = tm;
 	if(m_in_progress[channel] != 0)
@@ -489,7 +489,7 @@ WRITE_LINE_MEMBER(hd63450_device::drq0_w)
 {
 	bool ostate = m_drq_state[0];
 	m_drq_state[0] = state;
-	
+
 	if((m_reg[0].ocr & 2) && (state && !ostate))
 	{
 		// in cycle steal mode drq is supposed to be edge triggered
@@ -518,7 +518,7 @@ WRITE_LINE_MEMBER(hd63450_device::drq2_w)
 {
 	bool ostate = m_drq_state[2];
 	m_drq_state[2] = state;
-	
+
 	if((m_reg[2].ocr & 2) && (state && !ostate))
 	{
 		single_transfer(2);
@@ -532,7 +532,7 @@ WRITE_LINE_MEMBER(hd63450_device::drq3_w)
 {
 	bool ostate = m_drq_state[3];
 	m_drq_state[3] = state;
-	
+
 	if((m_reg[3].ocr & 2) && (state && !ostate))
 	{
 		single_transfer(3);

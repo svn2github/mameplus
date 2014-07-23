@@ -95,7 +95,7 @@ const device_type I8275 = &device_creator<i8275_device>;
 //-------------------------------------------------
 
 i8275_device::i8275_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-	device_t(mconfig, I8275, "I8275", tag, owner, clock, "i8275x", __FILE__),
+	device_t(mconfig, I8275, "I8275 CRTC", tag, owner, clock, "i8275x", __FILE__),
 	device_video_interface(mconfig, *this),
 	m_write_irq(*this),
 	m_write_drq(*this),
@@ -158,6 +158,21 @@ void i8275_device::device_start()
 	save_item(NAME(m_fifo_next));
 	save_item(NAME(m_buffer_dma));
 	save_item(NAME(m_lpen));
+	save_item(NAME(m_hlgt));
+	save_item(NAME(m_vsp));
+	save_item(NAME(m_gpa));
+	save_item(NAME(m_rvv));
+	save_item(NAME(m_lten));
+	save_item(NAME(m_scanline));
+	save_item(NAME(m_irq_scanline));
+	save_item(NAME(m_vrtc_scanline));
+	save_item(NAME(m_vrtc_drq_scanline));
+	save_item(NAME(m_du));
+	save_item(NAME(m_dma_stop));
+	save_item(NAME(m_end_of_screen));
+	save_item(NAME(m_cursor_blink));
+	save_item(NAME(m_char_blink));
+	save_item(NAME(m_stored_attr));
 }
 
 
@@ -209,7 +224,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 			//if (LOG) logerror("I8275 '%s' y %u x %u VRTC 0\n", tag(), y, x);
 			m_write_vrtc(0);
 		}
-		
+
 		if (m_scanline <= (m_vrtc_scanline - SCANLINES_PER_ROW))
 		{
 			if (lc == 0)
@@ -218,9 +233,9 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 				{
 					m_status |= ST_DU;
 					m_du = true;
-					
+
 					//if (LOG) logerror("I8275 '%s' y %u x %u DMA Underrun\n", tag(), y, x);
-					
+
 					m_write_drq(0);
 				}
 
@@ -239,7 +254,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 				}
 			}
 		}
-		
+
 		if (m_scanline == m_irq_scanline)
 		{
 			if (m_status & ST_IE)
@@ -249,7 +264,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 				m_write_irq(ASSERT_LINE);
 			}
 		}
-		
+
 		if (m_scanline == m_vrtc_scanline)
 		{
 			//if (LOG) logerror("I8275 '%s' y %u x %u VRTC 1\n", tag(), y, x);
@@ -273,7 +288,7 @@ void i8275_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 			m_char_blink &= 0x3f;
 			m_stored_attr = 0;
 		}
-		
+
 		if (m_scanline == m_vrtc_drq_scanline)
 		{
 			// swap line buffers
@@ -599,7 +614,7 @@ WRITE8_MEMBER( i8275_device::dack_w )
 			}
 			else
 			{
-				m_drq_on_timer->adjust(attotime::zero);	
+				m_drq_on_timer->adjust(attotime::zero);
 			}
 		}
 

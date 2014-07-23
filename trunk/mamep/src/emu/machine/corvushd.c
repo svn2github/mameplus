@@ -74,6 +74,7 @@ corvus_hdc_t::corvus_hdc_t(const machine_config &mconfig, const char *tag, devic
 	device_t(mconfig, CORVUS_HDC, "Corvus Flat Cable HDC", tag, owner, clock, "corvus_hdc", __FILE__),
 	m_status(0),
 	m_prep_mode(false),
+	m_prep_drv(0),
 	m_sectors_per_track(0),
 	m_tracks_per_cylinder(0),
 	m_cylinders_per_drive(0),
@@ -89,7 +90,7 @@ corvus_hdc_t::corvus_hdc_t(const machine_config &mconfig, const char *tag, devic
 
 #define VERBOSE 0
 #define VERBOSE_RESPONSES 0
-#define VERSION 1
+#define ROM_VERSION 1           // Controller ROM version
 #define MAX_COMMAND_SIZE 4096   // The maximum size of a command packet (the controller only has 5K of RAM...)
 #define SPARE_TRACKS 7          // This is a Rev B drive, so 7 it is
 #define CALLBACK_CTH_MODE 1     // Set to Controller-to-Host mode when callback fires
@@ -223,7 +224,7 @@ bool corvus_hdc_t::parse_hdc_command(UINT8 data) {
 			//
 			// Prep Commands
 			//
-			case PREP_MODE_SELECT:              // Apparently I need to be able to do this while in Prep mode
+			case PREP_MODE_SELECT:
 			case PREP_RESET_DRIVE:
 			case PREP_FORMAT_DRIVE:
 			case PREP_FILL_DRIVE_OMNI:
@@ -255,7 +256,7 @@ bool corvus_hdc_t::parse_hdc_command(UINT8 data) {
 // Write a variably-sized chunk of data to the CHD file
 //
 // Pass:
-//      drv:    Drive number to write to
+//      drv:    Corvus drive id (1..15)
 //      sector: Physical sector number to write to
 //      buffer: Buffer to write
 //      len:    Length of the buffer (amount of data to write)
@@ -323,7 +324,7 @@ UINT8 corvus_hdc_t::corvus_write_sector(UINT8 drv, UINT32 sector, UINT8 *buffer,
 //
 UINT8 corvus_hdc_t::corvus_write_logical_sector(dadr_t *dadr, UINT8 *buffer, int len) {
 	UINT8   status;             // Status returned from Physical Sector read
-	UINT8   drv;                // Drive number (1 - 15)
+	UINT8   drv;                // Corvus drive id (1..15)
 	UINT32  sector;             // Sector number on drive
 
 	//
@@ -334,13 +335,13 @@ UINT8 corvus_hdc_t::corvus_write_logical_sector(dadr_t *dadr, UINT8 *buffer, int
 	//
 	// For example: 0x23 would decode to Drive ID #3, high-order nibble: 0x02.
 	//
-	drv = (dadr->address_msn_and_drive & 0x0f) - 1;
+	drv = (dadr->address_msn_and_drive & 0x0f);
 	sector = (dadr->address_msn_and_drive & 0xf0 << 12) | (dadr->address_mid << 8) | dadr->address_lsb;
 
 	LOG(("corvus_write_logical_sector: Writing based on DADR: 0x%6.6x, logical sector: 0x%5.5x, drive: %d\n",
 		dadr->address_msn_and_drive << 16 | dadr->address_lsb << 8 | dadr->address_mid, sector, drv));
 
-	// Set up the global corvus_hdc so m_tracks_per_cylinder and m_sectors_per_track are valid
+	// Set m_tracks_per_cylinder and m_sectors_per_track
 	corvus_hdc_file(drv);
 
 	//
@@ -363,7 +364,7 @@ UINT8 corvus_hdc_t::corvus_write_logical_sector(dadr_t *dadr, UINT8 *buffer, int
 // Read a variably-sized chunk of data from the CHD file
 //
 // Pass:
-//      drv:    Drive number to read from
+//      drv:    Corvus drive id (1..15)
 //      sector: Physical sector number to read from
 //      buffer: Buffer to hold the data read from the disk
 //      len:    Length of the buffer
@@ -420,7 +421,7 @@ UINT8 corvus_hdc_t::corvus_read_sector(UINT8 drv, UINT32 sector, UINT8 *buffer, 
 //
 UINT8 corvus_hdc_t::corvus_read_logical_sector(dadr_t *dadr, UINT8 *buffer, int len) {
 	UINT8   status;                             // Status returned from Physical Sector read
-	UINT8   drv;                                // Drive number (1 - 15)
+	UINT8   drv;                                // Corvus drive id (1..15)
 	UINT32  sector;                             // Sector number on drive
 
 	//
@@ -431,13 +432,13 @@ UINT8 corvus_hdc_t::corvus_read_logical_sector(dadr_t *dadr, UINT8 *buffer, int 
 	//
 	// For example: 0x23 would decode to Drive ID #3, high-order nibble: 0x02.
 	//
-	drv = (dadr->address_msn_and_drive & 0x0f) - 1;
+	drv = (dadr->address_msn_and_drive & 0x0f);
 	sector = (dadr->address_msn_and_drive & 0xf0 << 12) | (dadr->address_mid << 8) | dadr->address_lsb;
 
 	LOG(("corvus_read_logical_sector: Reading based on DADR: 0x%6.6x, logical sector: 0x%5.5x, drive: %d\n",
 		dadr->address_msn_and_drive << 16 | dadr->address_lsb << 8 | dadr->address_mid, sector, drv));
 
-	// Set up the global corvus_hdc so m_tracks_per_cylinder and m_sectors_per_track are valid
+	// Set up m_tracks_per_cylinder and m_sectors_per_track
 	corvus_hdc_file(drv);
 
 	//
@@ -480,7 +481,7 @@ UINT8 corvus_hdc_t::corvus_lock_semaphore(UINT8 *name) {
 	//
 	// Read the semaphore table from the drive
 	//
-	status = corvus_read_sector(0, 7, semaphore_table.semaphore_block.semaphore_table, 256);
+	status = corvus_read_sector(1, 7, semaphore_table.semaphore_block.semaphore_table, 256);
 	if(status != STAT_SUCCESS) {
 		logerror("corvus_lock_semaphore: Error reading semaphore table, status: 0x%2.2x\n", status);
 		m_buffer.semaphore_locking_response.result = SEM_DISK_ERROR;
@@ -514,7 +515,7 @@ UINT8 corvus_hdc_t::corvus_lock_semaphore(UINT8 *name) {
 		} else {
 			m_buffer.semaphore_locking_response.result = SEM_PRIOR_STATE_NOT_SET;          // It wasn't there already
 			memcpy(&semaphore_table.semaphore_block.semaphore_entry[blank_offset], name, 8);// Stick it into the table
-			status = corvus_write_sector(0, 7, semaphore_table.semaphore_block.semaphore_table, 256);
+			status = corvus_write_sector(1, 7, semaphore_table.semaphore_block.semaphore_table, 256);
 			if(status != STAT_SUCCESS) {
 				logerror("corvus_lock_semaphore: Error updating semaphore table, status: 0x%2.2x\n", status);
 				m_buffer.semaphore_locking_response.result = SEM_DISK_ERROR;
@@ -554,7 +555,7 @@ UINT8 corvus_hdc_t::corvus_unlock_semaphore(UINT8 *name) {
 	//
 	// Read the semaphore table from the drive
 	//
-	status = corvus_read_sector(0, 7, semaphore_table.semaphore_block.semaphore_table, 256);
+	status = corvus_read_sector(1, 7, semaphore_table.semaphore_block.semaphore_table, 256);
 	if(status != STAT_SUCCESS) {
 		logerror("corvus_unlock_semaphore: Error reading semaphore table, status: 0x%2.2x\n", status);
 		m_buffer.semaphore_locking_response.result = SEM_DISK_ERROR;
@@ -584,7 +585,7 @@ UINT8 corvus_hdc_t::corvus_unlock_semaphore(UINT8 *name) {
 	} else {
 		m_buffer.semaphore_locking_response.result = SEM_PRIOR_STATE_SET;                  // It was there
 		memcpy(&semaphore_table.semaphore_block.semaphore_entry[offset], "        ", 8);    // Clear it
-		status = corvus_write_sector(0, 7, semaphore_table.semaphore_block.semaphore_table, 256);
+		status = corvus_write_sector(1, 7, semaphore_table.semaphore_block.semaphore_table, 256);
 		if(status != STAT_SUCCESS) {
 			logerror("corvus_unlock_semaphore: Error updating semaphore table, status: 0x%2.2x\n", status);
 			m_buffer.semaphore_locking_response.result = SEM_DISK_ERROR;
@@ -616,7 +617,7 @@ UINT8 corvus_hdc_t::corvus_init_semaphore_table() {
 
 	memset(semaphore_table.semaphore_block.semaphore_table, 0x20, 256);
 
-	status = corvus_write_sector(0, 7, semaphore_table.semaphore_block.semaphore_table, 256);
+	status = corvus_write_sector(1, 7, semaphore_table.semaphore_block.semaphore_table, 256);
 	if(status != STAT_SUCCESS) {
 		logerror("corvus_init_semaphore_table: Error updating semaphore table, status: 0x%2.2x\n", status);
 		return status;
@@ -633,7 +634,7 @@ UINT8 corvus_hdc_t::corvus_init_semaphore_table() {
 // Fills in the Drive Parameter packet based on the opened CHD file
 //
 // Pass:
-//      drv:    Drive number to get parameters from
+//      drv:    Corvus drive id (1..15)
 //
 // Returns:
 //      Status of command
@@ -658,8 +659,6 @@ UINT8 corvus_hdc_t::corvus_get_drive_parameters(UINT8 drv) {
 	//
 	// Make sure a valid drive is being accessed
 	//
-	drv -= 1;                                   // Internally, drives start at 0
-
 	if ( ! corvus_hdc_file( drv ) )
 	{
 		logerror("corvus_get_drive_parameters: Attempt to retrieve parameters from non-existant drive: %d\n", drv);
@@ -690,8 +689,18 @@ UINT8 corvus_hdc_t::corvus_get_drive_parameters(UINT8 drv) {
 	//
 	// Build up the parameter packet
 	//
-	strcpy((char *) m_buffer.drive_param_response.firmware, "V18.4AP   -- CONST II - 11/82  %");   // Pulled from some firmware...
-	m_buffer.drive_param_response.rom_version = VERSION;
+
+	// This firmware string and revision were taken from the Corvus firmware
+	// file CORVB184.CLR found on the SSE SoftBox distribution disk.
+	strcpy((char *) m_buffer.drive_param_response.firmware_desc, "V18.4     -- CONST II - 11/82  ");
+	m_buffer.drive_param_response.firmware_rev = 37;
+
+	// Controller ROM version
+	m_buffer.drive_param_response.rom_version = ROM_VERSION;
+
+	//
+	// Track information
+	//
 	m_buffer.drive_param_response.track_info.sectors_per_track = m_sectors_per_track;
 	m_buffer.drive_param_response.track_info.tracks_per_cylinder = m_tracks_per_cylinder;
 	m_buffer.drive_param_response.track_info.cylinders_per_drive.msb = (m_cylinders_per_drive & 0xff00) >> 8;
@@ -720,7 +729,7 @@ UINT8 corvus_hdc_t::corvus_get_drive_parameters(UINT8 drv) {
 	memcpy(m_buffer.drive_param_response.table_info.lsi11_vdo_table, raw_disk_parameter_block.dpb.lsi11_vdo_table, 8);
 	memcpy(m_buffer.drive_param_response.table_info.lsi11_spare_table, raw_disk_parameter_block.dpb.lsi11_spare_table, 8);
 
-	m_buffer.drive_param_response.drive_number = drv + 1;
+	m_buffer.drive_param_response.drive_number = drv;
 	m_buffer.drive_param_response.physical_capacity.msb = (raw_capacity & 0xff0000) >> 16;
 	m_buffer.drive_param_response.physical_capacity.midb = (raw_capacity & 0x00ff00) >> 8;
 	m_buffer.drive_param_response.physical_capacity.lsb = (raw_capacity & 0x0000ff);
@@ -747,14 +756,83 @@ UINT8 corvus_hdc_t::corvus_get_drive_parameters(UINT8 drv) {
 UINT8 corvus_hdc_t::corvus_read_boot_block(UINT8 block) {
 	LOG(("corvus_read_boot_block: Reading boot block: %d\n", block));
 
-	return corvus_read_sector(0, 25 + block, m_buffer.read_512_response.data, 512);
-
+	return corvus_read_sector(1, 25 + block, m_buffer.read_512_response.data, 512);
 }
 
 
 
 //
-// Corvus_Read_Firmware_Block
+// corvus_enter_prep_mode
+//
+// Enter prep mode.  In prep mode, only prep mode commands may be executed.
+//
+// A "prep block" is 512 bytes of machine code that the host sends to the
+// controller.  The controller will jump to this code after receiving it,
+// and it is what actually implements prep mode commands.  This HLE ignores
+// the prep block from the host.
+//
+// On the Rev B/H drives (which we emulate), a prep block is Z80 machine
+// code and only one prep block can be sent.  Sending the "put drive into
+// prep mode" command (0x11) when already in prep mode is an error.  The
+// prep block sent by the Corvus program DIAG.COM on the SSE SoftBox
+// distribution disk returns error 0x8f (unrecognized command) for this case.
+//
+// On the OmniDrive and Bank, a prep block is 6801 machine code.  These
+// controllers allow multiple prep blocks to be sent.  The first time the
+// "put drive into prep mode" command is sent puts the drive into prep mode.
+// The command can then be sent again up to 3 times with more prep blocks.
+// (Mass Storage GTI, pages 50-51)
+//
+// Pass:
+//      drv:        Corvus drive id (1..15) to be prepped
+//      prep_block: 512 bytes of machine code, contents ignored
+//
+// Returns:
+//      Status of command
+//
+UINT8 corvus_hdc_t::corvus_enter_prep_mode(UINT8 drv, UINT8 *prep_block) {
+	// on rev b/h drives, sending the "put drive into prep mode"
+	// command when already in prep mode is an error.
+	if (m_prep_mode) {
+		logerror("corvus_enter_prep_mode: Attempt to enter prep mode while in prep mode\n");
+		return STAT_FATAL_ERR | STAT_ILL_CMD_OP_CODE;
+	}
+
+	// check if drive is valid
+	if (!corvus_hdc_file(drv)) {
+		logerror("corvus_enter_prep_mode: Failure returned by corvus_hdc_file(%d)\n", drv);
+		return STAT_FATAL_ERR | STAT_DRIVE_NOT_ONLINE;
+	}
+
+	LOG(("corvus_enter_prep_mode: Prep mode entered for drive %d, prep block follows:\n", drv));
+	LOG_BUFFER(prep_block, 512);
+
+	m_prep_mode = true;
+	m_prep_drv = drv;
+	return STAT_SUCCESS;
+}
+
+
+
+//
+// corvus_exit_prep_mode (Prep Mode Only)
+//
+// Exit from prep mode and return to normal command mode.
+//
+// Returns:
+//      Status of command (always success)
+//
+UINT8 corvus_hdc_t::corvus_exit_prep_mode() {
+	LOG(("corvus_exit_prep_mode: Prep mode exited\n"));
+	m_prep_mode = false;
+	m_prep_drv = 0;
+	return STAT_SUCCESS;
+}
+
+
+
+//
+// Corvus_Read_Firmware_Block (Prep Mode Only)
 //
 // Reads firmware information from the first cylinder of the drive
 //
@@ -774,14 +852,14 @@ UINT8 corvus_hdc_t::corvus_read_firmware_block(UINT8 head, UINT8 sector) {
 	LOG(("corvus_read_firmware_block: Reading firmware head: 0x%2.2x, sector: 0x%2.2x, relative_sector: 0x%2.2x\n",
 		head, sector, relative_sector));
 
-	status = corvus_read_sector(0, relative_sector, m_buffer.read_512_response.data, 512);        // TODO: Which drive should Prep Mode talk to ???
+	status = corvus_read_sector(m_prep_drv, relative_sector, m_buffer.read_512_response.data, 512);
 	return status;
 }
 
 
 
 //
-// Corvus_Write_Firmware_Block
+// Corvus_Write_Firmware_Block (Prep Mode Only)
 //
 // Writes firmware information to the first cylinder of the drive
 //
@@ -802,14 +880,14 @@ UINT8 corvus_hdc_t::corvus_write_firmware_block(UINT8 head, UINT8 sector, UINT8 
 	LOG(("corvus_write_firmware_block: Writing firmware head: 0x%2.2x, sector: 0x%2.2x, relative_sector: 0x%2.2x\n",
 		head, sector, relative_sector));
 
-	status = corvus_write_sector(0, relative_sector, buffer, 512); // TODO: Which drive should Prep Mode talk to ???
+	status = corvus_write_sector(m_prep_drv, relative_sector, buffer, 512);
 	return status;
 }
 
 
 
 //
-// Corvus_Format_Drive
+// Corvus_Format_Drive (Prep Mode Only)
 //
 // Write the pattern provided across the entire disk
 //
@@ -825,8 +903,8 @@ UINT8 corvus_hdc_t::corvus_format_drive(UINT8 *pattern, UINT16 len) {
 	UINT8   status = 0;
 	UINT8   tbuffer[512];
 
-	// Set up the global corvus_hdc so m_tracks_per_cylinder and m_sectors_per_track are valid
-	corvus_hdc_file(0);
+	// Set up m_tracks_per_cylinder and m_sectors_per_track
+	corvus_hdc_file(m_prep_drv);
 
 	max_sector = m_sectors_per_track * m_tracks_per_cylinder * m_cylinders_per_drive;
 
@@ -838,11 +916,11 @@ UINT8 corvus_hdc_t::corvus_format_drive(UINT8 *pattern, UINT16 len) {
 		pattern = tbuffer;
 	}
 
-	LOG(("corvus_format_drive: Formatting drive with 0x%5.5x sectors, pattern buffer (passed length: %d)follows\n", max_sector, 512));
+	LOG(("corvus_format_drive: Formatting drive with 0x%5.5x sectors, pattern buffer (passed length: %d) follows\n", max_sector, 512));
 	LOG_BUFFER(pattern, 512);
 
 	for(sector = 0; sector <= max_sector; sector++) {
-		status = corvus_write_sector(0, sector, pattern, 512);
+		status = corvus_write_sector(m_prep_drv, sector, pattern, 512);
 		if(status != STAT_SUCCESS) {
 			logerror("corvus_format_drive: Error while formatting drive in corvus_write_sector--sector: 0x%5.5x, status: 0x%x2.2x\n",
 				sector, status);
@@ -861,23 +939,24 @@ UINT8 corvus_hdc_t::corvus_format_drive(UINT8 *pattern, UINT16 len) {
 // Returns a hard_disk_file object for a given virtual hard drive device in the concept
 //
 // Pass:
-//      id:     Drive number (1 - 15)
+//      drv:    Corvus drive id (1..15)
 //
 // Returns:
 //      hard_disk_file object
 //
-hard_disk_file *corvus_hdc_t::corvus_hdc_file(int id) {
+hard_disk_file *corvus_hdc_t::corvus_hdc_file(int drv) {
 	static const char *const tags[] = {
 		"harddisk1", "harddisk2", "harddisk3", "harddisk4"
 	};
 
 	// we only support 4 drives, as per the tags[] table, so prevent a crash
-	if (id > 3)
+	// Corvus drive id numbers are 1-based so we check 1..4 instead of 0..3
+	if (drv < 1 || drv > 4)
 	{
 		return NULL;
 	}
 
-	harddisk_image_device *img = siblingdevice<harddisk_image_device>(tags[id]);
+	harddisk_image_device *img = siblingdevice<harddisk_image_device>(tags[drv - 1]);
 
 	if ( !img )
 		return NULL;
@@ -892,7 +971,7 @@ hard_disk_file *corvus_hdc_t::corvus_hdc_file(int id) {
 	m_tracks_per_cylinder = info->heads;
 	m_cylinders_per_drive = info->cylinders;
 
-	LOG(("corvus_hdc_file: Attached to drive %u image: H:%d, C:%d, S:%d\n", id, info->heads, info->cylinders, info->sectors));
+	LOG(("corvus_hdc_file: Attached to drive %u image: H:%d, C:%d, S:%d\n", drv, info->heads, info->cylinders, info->sectors));
 
 	return file;
 }
@@ -929,8 +1008,8 @@ void corvus_hdc_t::corvus_process_command_packet(bool invalid_command_flag) {
 					break;
 				case READ_SECTOR_256:
 				case READ_CHUNK_256:
-					m_buffer.read_256_reponse.status =
-						corvus_read_logical_sector(&m_buffer.read_sector_command.dadr, m_buffer.read_256_reponse.data, 256);
+					m_buffer.read_256_response.status =
+						corvus_read_logical_sector(&m_buffer.read_sector_command.dadr, m_buffer.read_256_response.data, 256);
 					break;
 				case READ_CHUNK_512:
 					m_buffer.read_512_response.status =
@@ -969,7 +1048,7 @@ void corvus_hdc_t::corvus_process_command_packet(bool invalid_command_flag) {
 							break;
 						case SEMAPHORE_STATUS_MOD:
 							m_buffer.semaphore_status_response.status =
-								corvus_read_sector(0, 7, m_buffer.semaphore_status_response.table, 256);
+								corvus_read_sector(1, 7, m_buffer.semaphore_status_response.table, 256);
 							break;
 						default:
 							invalid_command_flag = true;
@@ -987,8 +1066,9 @@ void corvus_hdc_t::corvus_process_command_packet(bool invalid_command_flag) {
 						corvus_get_drive_parameters(m_buffer.get_drive_parameters_command.drive);
 					break;
 				case PREP_MODE_SELECT:
-					m_prep_mode = true;
-					m_buffer.single_byte_response.status = STAT_SUCCESS;
+					m_buffer.single_byte_response.status =
+						corvus_enter_prep_mode(m_buffer.prep_mode_command.drive,
+							m_buffer.prep_mode_command.prep_block);
 					break;
 				default:
 					m_xmit_bytes = 1;                      // Return a fatal status
@@ -999,12 +1079,15 @@ void corvus_hdc_t::corvus_process_command_packet(bool invalid_command_flag) {
 		} else {    // In Prep mode
 			switch(m_buffer.command.code) {
 				case PREP_MODE_SELECT:
-					m_prep_mode = true;
-					m_buffer.single_byte_response.status = STAT_SUCCESS;
+					// when already in prep mode, some drives allow this command to
+					// be sent again.  see corvus_enter_prep_mode() for details.
+					m_buffer.single_byte_response.status =
+						corvus_enter_prep_mode(m_buffer.prep_mode_command.drive,
+							m_buffer.prep_mode_command.prep_block);
 					break;
 				case PREP_RESET_DRIVE:
-					m_prep_mode = false;
-					m_buffer.single_byte_response.status = STAT_SUCCESS;
+					m_buffer.single_byte_response.status =
+						corvus_exit_prep_mode();
 					break;
 				case PREP_READ_FIRMWARE:
 					m_buffer.drive_param_response.status =
@@ -1019,6 +1102,10 @@ void corvus_hdc_t::corvus_process_command_packet(bool invalid_command_flag) {
 				case PREP_FORMAT_DRIVE:
 					m_buffer.drive_param_response.status =
 						corvus_format_drive(m_buffer.format_drive_revbh_command.pattern, m_offset - 512);
+					break;
+				case PREP_VERIFY:
+					m_buffer.verify_drive_response.status = STAT_SUCCESS;
+					m_buffer.verify_drive_response.bad_sectors = 0;
 					break;
 				default:
 					m_xmit_bytes = 1;
@@ -1241,7 +1328,7 @@ void corvus_hdc_t::device_start() {
 	corvus_prep_cmd[PREP_FILL_DRIVE_OMNI].recv_bytes = 3;
 	corvus_prep_cmd[PREP_FILL_DRIVE_OMNI].xmit_bytes = 1;
 	corvus_prep_cmd[PREP_VERIFY].recv_bytes = 1;
-	corvus_prep_cmd[PREP_VERIFY].xmit_bytes = 0;
+	corvus_prep_cmd[PREP_VERIFY].xmit_bytes = 2;
 	corvus_prep_cmd[PREP_READ_FIRMWARE].recv_bytes = 2;
 	corvus_prep_cmd[PREP_READ_FIRMWARE].xmit_bytes = 513;
 	corvus_prep_cmd[PREP_WRITE_FIRMWARE].recv_bytes = 514;

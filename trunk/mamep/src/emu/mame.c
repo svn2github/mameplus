@@ -103,7 +103,7 @@ machine_manager* machine_manager::instance(emu_options &options,osd_interface &o
 
 machine_manager* machine_manager::instance()
 {
-    return m_manager;
+	return m_manager;
 }
 
 //-------------------------------------------------
@@ -111,11 +111,11 @@ machine_manager* machine_manager::instance()
 //-------------------------------------------------
 
 machine_manager::machine_manager(emu_options &options,osd_interface &osd)
-       : m_osd(osd),
-	   m_options(options),
-	   m_web(options),
-	   m_new_driver_pending(NULL),
-	   m_machine(NULL)
+		: m_osd(osd),
+		m_options(options),
+		m_web(options),
+		m_new_driver_pending(NULL),
+		m_machine(NULL)
 {
 }
 
@@ -148,8 +148,8 @@ void machine_manager::schedule_new_driver(const game_driver &driver)
 /***************************************************************************
     CORE IMPLEMENTATION
 ***************************************************************************/
-void machine_manager::update_machine() 
-{ 	
+void machine_manager::update_machine()
+{
 	m_lua.set_machine(m_machine);
 	m_web.set_machine(m_machine);
 	if (m_machine!=NULL) m_web.push_message("update_machine");
@@ -170,8 +170,9 @@ int machine_manager::execute()
 	bool exit_pending = false;
 	int error = MAMERR_NONE;
 
+	m_lua.initialize();
 	if (m_options.console()) {
-		m_lua.initialize();
+		m_lua.start_console();
 	}
 	while (error == MAMERR_NONE && !exit_pending)
 	{
@@ -226,12 +227,12 @@ int machine_manager::execute()
 				m_options.set_value(OPTION_RAMSIZE, "", OPTION_PRIORITY_CMDLINE, error_string);
 			}
 			firstrun = true;
-		} 
-		else 
+		}
+		else
 		{
 			if (machine.exit_pending()) m_options.set_system_name("");
 		}
-		
+
 		if (machine.exit_pending() && (!started_empty || (system == &GAME_NAME(___empty))))
 			exit_pending = true;
 
