@@ -16,6 +16,7 @@ take Genesis for example:
 1.6.0
 added scale effects values (2xBRZ, 3xBRZ)
 updated for mame 0.154
+add game have/miss export(OrochiZ @ PPXClub)
 
 1.5.9
 fixed buffer overflow (mamep 0.153 need more fix)
