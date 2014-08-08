@@ -608,6 +608,7 @@ BUSES += ISA
 #BUSES += MACPDS
 #BUSES += MIDI
 #BUSES += MEGADRIVE
+BUSES += NEOGEO
 #BUSES += NES
 #BUSES += NUBUS
 #BUSES += ORICEXT
@@ -1544,6 +1545,7 @@ $(MAMEOBJ)/nasco.a: \
 
 $(MAMEOBJ)/neogeo.a: \
 	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
+	$(DRIVERS)/neogeo_noslot.o \
 	$(VIDEO)/neogeo_spr.o \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \

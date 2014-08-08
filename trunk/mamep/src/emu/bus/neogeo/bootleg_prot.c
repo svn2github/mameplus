@@ -240,6 +240,7 @@ void ngbootleg_prot_device::decrypt_kof10th(UINT8* cpurom, UINT32 cpurom_size)
 	int i, j;
 	dynamic_buffer dst(0x900000);
 	UINT8 *src = cpurom;
+	UINT16 *mem16 = (UINT16 *)cpurom;
 
 	memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
 	memcpy(dst + 0x100000, src + 0x000000, 0x800000);
@@ -257,6 +258,10 @@ void ngbootleg_prot_device::decrypt_kof10th(UINT8* cpurom, UINT32 cpurom_size)
 	((UINT16*)src)[0x8bf6/2] = 0x000d;
 	((UINT16*)src)[0x8bf8/2] = 0xf980;
 
+	// Thanks to IQ_132 for the patch
+	mem16[0x053162C/2] = 0x7425; // Fix System
+	mem16[0x053163A/2] = 0x8084; // Fix Region
+	mem16[0x0531648/2] = 0x3641; // Fix some dips
 }
 
 
@@ -286,6 +291,14 @@ void ngbootleg_prot_device::kf10thep_px_decrypt(UINT8* cpurom, UINT32 cpurom_siz
 		if (rom[i+0] == 0x4ef9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; // correct JMP in moved code
 	}
 	rom[0x00342/2] = 0x000f;
+
+	// Thanks to IQ_132 for the patch
+	rom[0x000126/2] = 0x0010; // Allow Region change
+	rom[0x000228/2] = 0x4E71; // Allow System change
+	rom[0x00022A/2] = 0x4E71;
+	rom[0x00022C/2] = 0x4E71;
+	rom[0x000234/2] = 0x4E71; // bne
+	rom[0x000236/2] = 0x4E71; // bne
 
 	memmove(&rom[0x100000/2], &rom[0x200000/2], 0x600000);
 }
@@ -333,9 +346,17 @@ void ngbootleg_prot_device::kf2k5uni_mx_decrypt(UINT8* audiorom, UINT32 audiorom
 
 void ngbootleg_prot_device::decrypt_kf2k5uni(UINT8* cpurom, UINT32 cpurom_size, UINT8* audiorom, UINT32 audiorom_size, UINT8* fixedrom, UINT32 fixedrom_size)
 {
+	UINT16 *mem16 = (UINT16 *)cpurom;
+
 	kf2k5uni_px_decrypt(cpurom, cpurom_size);
 	kf2k5uni_sx_decrypt(fixedrom, fixedrom_size);
 	kf2k5uni_mx_decrypt(audiorom, audiorom_size);
+
+	// Thanks to IQ_132 for the patch
+	mem16[0xDF6B0/2] = 0x4e71;
+	mem16[0xDF6BC/2] = 0x4e71;
+	mem16[0xDF6BE/2] = 0x4e71;
+	mem16[0xDF6CA/2] = 0x4e71;
 }
 
 
@@ -1128,3 +1149,68 @@ void ngbootleg_prot_device::matrimbl_decrypt(UINT8* sprrom, UINT32 sprrom_size, 
 	/* decrypt gfx */
 	cthd2003_c(sprrom,sprrom_size, 0 );
 }
+
+
+void ngbootleg_prot_device::kof96ep_px_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+{
+	int i,j;
+	UINT8 *rom = cpurom;
+	for ( i=0; i < 0x080000; i++ )
+	{
+		j=i+0x300000;
+		if (rom[j] - rom[i] == 8) rom[j]=rom[i];
+	}
+	memcpy(rom, rom+0x300000, 0x080000);
+}
+
+
+void ngbootleg_prot_device::kf2k1pa_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+{
+	UINT8 *rom = cpurom;
+	int i;
+
+	for (i = 0; i < 0x20000; i++)
+		rom[i] = BITSWAP8(rom[i], 3, 2, 4, 5, 1, 6, 0, 7);
+}
+
+
+void ngbootleg_prot_device::cthd2k3a_px_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+{
+	INT32 i;
+	UINT8 nBank[] = {
+		0x06, 0x02, 0x04, 0x05, 0x01, 0x03, 0x00, 0x07,
+		0x27, 0x0E, 0x1C, 0x15, 0x1B, 0x17, 0x0A, 0x0F,
+		0x16, 0x14, 0x23, 0x0B, 0x22, 0x26, 0x08, 0x24,
+		0x21, 0x13, 0x1A, 0x0C, 0x19, 0x1D, 0x25, 0x10,
+		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11
+	};
+
+	UINT8 *src = cpurom;
+	UINT8 *dst = (UINT8*)malloc(0x500000);
+
+	if (dst)
+	{
+		for (i = 0; i < 0x500000 / 0x20000; i++) 
+		{
+			memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
+		}
+		memcpy (src, dst, 0x500000);
+		free (dst);
+	}
+}
+
+
+void ngbootleg_prot_device::cthd2003_AES_protection(UINT8* cpurom, UINT32 cpurom_size)
+{
+	// Thanks to IQ_132 for the patch
+	UINT16 *mem16 = (UINT16 *)cpurom;
+
+	// Game sets itself to MVS & English mode, patch this out
+	mem16[0xED00E/2] = 0x4E71;
+	mem16[0xED394/2] = 0x4E71;
+
+	// Fix for AES mode (stop loop that triggers Watchdog)
+	mem16[0xA2B7E/2] = 0x4E71;
+}
+
+

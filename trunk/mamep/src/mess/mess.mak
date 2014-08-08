@@ -61,6 +61,7 @@ BUSES += SMS_CTRL
 BUSES += SMS_EXP
 BUSES += SNES
 BUSES += VCS
+BUSES += NEOGEO
 
 #-------------------------------------------------
 # this is the list of driver libraries that

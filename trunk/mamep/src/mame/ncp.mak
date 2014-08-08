@@ -86,6 +86,7 @@ MACHINES += I8255
 #-------------------------------------------------
 
 BUSES += SCSI
+BUSES += NEOGEO
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -140,6 +141,7 @@ $(MAMEOBJ)/igs.a: \
 
 $(MAMEOBJ)/neogeo.a: \
 	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
+	$(DRIVERS)/neogeo_noslot.o \
 	$(VIDEO)/neogeo_spr.o \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \

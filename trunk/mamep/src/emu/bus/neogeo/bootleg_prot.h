@@ -74,6 +74,11 @@ public:
 	void samsho5b_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 	void samsho5b_vx_decrypt(UINT8* ymsndrom, UINT32 ymsndrom_size);
 	void matrimbl_decrypt(UINT8* sprrom, UINT32 sprrom_size, UINT8* audiorom, UINT32 audiorom_size);
+	
+	void kof96ep_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void kf2k1pa_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void cthd2k3a_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void cthd2003_AES_protection(UINT8* cpurom, UINT32 cpurom_size);
 
 	UINT16 m_cartridge_ram[0x1000]; // bootlegs
 
