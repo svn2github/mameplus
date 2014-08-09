@@ -4987,7 +4987,8 @@ void ioport_manager::make_input_log()
 	/* loop over all the buttons */
 	if (normal_buttons > 0)
 	{
-		int is_neogeo = !core_stricmp(machine().system().source_file+17, "neogeo.c");
+		int is_neogeo = !core_stricmp(machine().system().source_file+17, "neogeo.c")
+						|| !core_stricmp(machine().system().source_file+17, "neogeo_noslot.c");
 		static UINT16 old_btn = 0;
 		static UINT16 now_btn;
 		int is_pressed = 0;

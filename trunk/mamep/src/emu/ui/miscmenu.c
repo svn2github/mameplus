@@ -2556,7 +2556,8 @@ void ui_menu_custom_button::populate()
 	ioport_field *field;
 	ioport_port *port;
 	int menu_items = 0;
-	int is_neogeo = !core_stricmp(machine().system().source_file+17, "neogeo.c");
+	int is_neogeo = !core_stricmp(machine().system().source_file+17, "neogeo.c")
+					|| !core_stricmp(machine().system().source_file+17, "neogeo_noslot.c");
 	int i;
 
 //	item_append(_("Press 1-9 to Config"), NULL, 0, NULL);
