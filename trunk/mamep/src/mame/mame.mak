@@ -1438,7 +1438,7 @@ $(MAMEOBJ)/meadows.a: \
 	$(DRIVERS)/warpsped.o
 
 $(MAMEOBJ)/merit.a: \
-	$(DRIVERS)/mpoker.o \
+	$(DRIVERS)/mgames.o \
 	$(DRIVERS)/merit.o \
 	$(DRIVERS)/meritm.o \
 
@@ -2548,6 +2548,9 @@ $(DRIVERS)/blockade.o:  $(LAYOUT)/blockade.lh
 
 $(DRIVERS)/buggychl.o:  $(LAYOUT)/buggychl.lh
 
+$(DRIVERS)/by17.o:      $(LAYOUT)/by17.lh
+$(DRIVERS)/by35.o:      $(LAYOUT)/by35.lh
+
 $(DRIVERS)/bzone.o:     $(LAYOUT)/bzone.lh \
 			$(LAYOUT)/redbaron.lh
 
@@ -2585,6 +2588,8 @@ $(DRIVERS)/copsnrob.o:  $(LAYOUT)/copsnrob.lh
 $(DRIVERS)/corona.o:    $(LAYOUT)/re800.lh \
 			$(LAYOUT)/luckyrlt.lh
 
+$(DRIVERS)/cps3.o:      $(LAYOUT)/sfiii2.lh
+
 $(DRIVERS)/darius.o:    $(LAYOUT)/darius.lh
 
 $(DRIVERS)/dblcrown.o:  $(LAYOUT)/dblcrown.lh
@@ -2621,6 +2626,7 @@ $(DRIVERS)/funworld.o:  $(LAYOUT)/jollycrd.lh \
 
 $(DRIVERS)/g627.o:      $(LAYOUT)/g627.lh
 $(DRIVERS)/gp_1.o:      $(LAYOUT)/gp_1.lh
+$(DRIVERS)/gp_2.o:      $(LAYOUT)/gp_2.lh
 
 $(DRIVERS)/galaxi.o:    $(LAYOUT)/galaxi.lh
 
@@ -2690,7 +2696,7 @@ $(DRIVERS)/mcr.o:       $(LAYOUT)/dpoker.lh
 $(DRIVERS)/mcr3.o:      $(LAYOUT)/spyhunt.lh \
 			$(LAYOUT)/turbotag.lh
 
-$(DRIVERS)/mpoker.o:    $(LAYOUT)/mpoker.lh
+$(DRIVERS)/mgames.o:    $(LAYOUT)/mgames.lh
 
 $(DRIVERS)/mpu3.o:      $(LAYOUT)/mpu3.lh
 
@@ -2705,6 +2711,8 @@ $(DRIVERS)/mpu4vid.o:   $(LAYOUT)/crmaze2p.lh \
 			$(LAYOUT)/crmaze4p.lh
 
 $(DRIVERS)/mpu4plasma.o:    $(LAYOUT)/mpu4plasma.lh \
+
+$(DRIVERS)/mpu5hw.o:  $(LAYOUT)/mpu5.lh
 
 $(DRIVERS)/mw18w.o:     $(LAYOUT)/18w.lh
 
@@ -2756,8 +2764,6 @@ $(DRIVERS)/nsm.o:       $(LAYOUT)/nsm.lh
 $(DRIVERS)/omegrace.o:  $(LAYOUT)/omegrace.lh
 
 $(DRIVERS)/overdriv.o:  $(LAYOUT)/overdriv.lh
-
-$(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
 $(DRIVERS)/peplus.o:    $(LAYOUT)/peplus.lh \
 			$(LAYOUT)/pe_schip.lh \
@@ -2837,6 +2843,9 @@ $(DRIVERS)/stactics.o:  $(LAYOUT)/stactics.lh
 $(DRIVERS)/sshot.o:     $(LAYOUT)/gunchamps.lh
 
 $(DRIVERS)/sstrangr.o:  $(LAYOUT)/sstrangr.lh
+
+$(DRIVERS)/st_mp100.o:  $(LAYOUT)/st_mp100.lh
+$(DRIVERS)/st_mp200.o:  $(LAYOUT)/st_mp200.lh
 
 $(DRIVERS)/subsino.o:   $(LAYOUT)/victor5.lh \
 			$(LAYOUT)/victor21.lh \

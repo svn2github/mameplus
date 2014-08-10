@@ -20,7 +20,7 @@ class neosprite_base_device : public device_t
 {
 public:
 	neosprite_base_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock,  device_type type);
-//	neosprite_base_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+//  neosprite_base_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 
 	virtual void optimize_sprite_data();
 	virtual void set_optimized_sprite_data(UINT8* sprdata, UINT32 mask);

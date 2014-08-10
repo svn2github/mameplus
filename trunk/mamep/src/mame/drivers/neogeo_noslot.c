@@ -1557,7 +1557,7 @@ ROM_START( roboarmy )
 ROM_END
 
 	/* Disabled for now, this looks like an emulation hack. Can someone confirm this set is real? */
-#if 0
+#if 1
 ROM_START( roboarma )
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "032-p1h.p1", 0x000000, 0x080000, CRC(27c773cb) SHA1(597ca73f142b1129cc7780540bb9cfacd47bc6ce) ) /* TC534200 */

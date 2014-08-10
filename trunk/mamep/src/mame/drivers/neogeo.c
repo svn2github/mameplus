@@ -805,7 +805,7 @@ WRITE16_MEMBER(neogeo_state::memcard_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		if (m_memcard->present() != -1)
-			 m_memcard->write(space, offset, data);
+			m_memcard->write(space, offset, data);
 	}
 }
 
@@ -851,9 +851,9 @@ CUSTOM_INPUT_MEMBER(neogeo_state::get_audio_result)
 void neogeo_state::neogeo_main_cpu_banking_init()
 {
 	/* create vector banks */
-//	m_bank_vectors->configure_entry(1, m_region_maincpu->base());
-//	m_bank_vectors->configure_entry(0, memregion("mainbios")->base());
-//	m_bank_vectors->set_entry(0);
+//  m_bank_vectors->configure_entry(1, m_region_maincpu->base());
+//  m_bank_vectors->configure_entry(0, memregion("mainbios")->base());
+//  m_bank_vectors->set_entry(0);
 	m_use_cart_vectors = 0;
 
 	if (m_type != NEOGEO_CD)
@@ -886,13 +886,16 @@ void neogeo_state::neogeo_audio_cpu_banking_init(int set_entry)
 	UINT8 *rgn;
 	UINT32 address_mask;
 
+	rgn = memregion("audiocpu")->base();
+
 	/* audio bios/cartridge selection */
 	m_bank_audio_main->configure_entry(1, memregion("audiocpu")->base());
 	if (memregion("audiobios"))
 		m_bank_audio_main->configure_entry(0, memregion("audiobios")->base());
 	else /* on hardware with no SM1 ROM, the cart ROM is always enabled */
 		m_bank_audio_main->configure_entry(0, memregion("audiocpu")->base());
-	if (set_entry) m_bank_audio_main->set_entry(0); // don't do this when changing slots
+
+	m_bank_audio_main->set_entry(m_use_cart_audio);
 
 	/* audio banking */
 	m_bank_audio_cart[0] = membank("audio_f000");
@@ -901,7 +904,7 @@ void neogeo_state::neogeo_audio_cpu_banking_init(int set_entry)
 	m_bank_audio_cart[3] = membank("audio_8000");
 
 	address_mask = (memregion("audiocpu")->bytes() - 0x10000 - 1) & 0x3ffff;
-	rgn = memregion("audiocpu")->base();
+
 
 	for (region = 0; region < 4; region++)
 	{
@@ -955,8 +958,9 @@ WRITE8_MEMBER(neogeo_state::system_control_w)
 		case 0x05:
 			if (m_type == NEOGEO_MVS)
 			{
+				m_use_cart_audio = bit;
 				m_sprgen->neogeo_set_fixed_layer_source(bit);
-				m_bank_audio_main->set_entry(bit);
+				m_bank_audio_main->set_entry(m_use_cart_audio);
 			}
 			break;
 
@@ -1052,7 +1056,7 @@ DRIVER_INIT_MEMBER(neogeo_state,neogeo)
 
 void neogeo_state::neogeo_postload()
 {
-	m_banked_cart->_set_main_cpu_bank_address();
+	m_bank_audio_main->set_entry(m_use_cart_audio);
 
 	if (m_type == NEOGEO_MVS) set_outputs();
 }
@@ -1101,6 +1105,9 @@ void neogeo_state::machine_start()
 	save_item(NAME(m_led1_value));
 	save_item(NAME(m_led2_value));
 
+	save_item(NAME(m_use_cart_vectors));
+	save_item(NAME(m_use_cart_audio));
+
 	machine().save().register_postload(save_prepost_delegate(FUNC(neogeo_state::neogeo_postload), this));
 
 
@@ -1110,12 +1117,12 @@ void neogeo_state::machine_start()
 	m_cartslots[3] = m_cartslot4;
 	m_cartslots[4] = m_cartslot5;
 	m_cartslots[5] = m_cartslot6;
-	
+
 
 	m_sprgen->set_screen(m_screen);
 	m_sprgen->set_sprite_region(m_region_sprites->base(), m_region_sprites->bytes());
 	m_sprgen->set_fixed_regions(m_region_fixed->base(), m_region_fixed->bytes(), m_region_fixedbios);
-	
+
 }
 
 
@@ -1131,7 +1138,7 @@ void neogeo_state::set_slot_number(int slot)
 	if (slot != m_currentslot)
 	{
 		m_currentslot = slot;
-		
+
 		address_space &space = m_maincpu->space(AS_PROGRAM);
 
 		// unmap old handlers, some carts will have installed overlays on them, we need them to be cleared
@@ -1156,14 +1163,19 @@ void neogeo_state::set_slot_number(int slot)
 		ym->reset();
 
 		m_cartslots[m_currentslot]->setup_memory_banks(machine()); // setup basic pointers
-		
+
 		ym->reset(); // reset it again to get the new pointers
+
+		// these could have changed, ensure the pointers are valid
+		m_region_maincpu.findit();
+		m_region_sprites.findit();
+		m_region_fixed.findit();
 
 		space.install_rom(0x000080, 0x0fffff, m_region_maincpu->base()+0x80); // reinstall the base program rom handler
 
 		m_cartslots[m_currentslot]->activate_cart(machine(), m_maincpu, m_region_maincpu->base(), m_region_maincpu->bytes(), m_cartslots[m_currentslot]->get_fixed_base(), m_cartslots[m_currentslot]->get_fixed_size());
 		//memcpy((UINT8*)m_cartslots[m_currentslot]->get_rom_base(),m_region_maincpu->base(), m_region_maincpu->bytes()); // hack- copy back any mods activate made (eh cthd2003)c
-		
+
 		neogeo_audio_cpu_banking_init(0); // should probably be responsibility of the cart
 		m_audiocpu->reset(); // or some games like svc have no sounnd if in higher slots?
 
@@ -1274,7 +1286,7 @@ static ADDRESS_MAP_START( main_map_slot, AS_PROGRAM, 16, neogeo_state )
 	AM_RANGE(0x000000, 0x00007f) AM_READ(neogeo_slot_rom_low_bectors_r)
 	AM_RANGE(0x000080, 0x0fffff) AM_READ(neogeo_slot_rom_low_r)
 	AM_RANGE(0x200000, 0x2fffff) AM_ROMBANK("cartridge")
-//	AM_RANGE(0x2ffff0, 0x2fffff) AM_WRITE(main_cpu_bank_select_w)
+//  AM_RANGE(0x2ffff0, 0x2fffff) AM_WRITE(main_cpu_bank_select_w)
 	AM_IMPORT_FROM( neogeo_main_map )
 ADDRESS_MAP_END
 
@@ -1392,7 +1404,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( neogeo_6slot )
 	PORT_INCLUDE( neogeo )
-	
+
 	PORT_MODIFY("TEST")
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )
 INPUT_PORTS_END
@@ -1435,7 +1447,7 @@ MACHINE_CONFIG_START( neogeo_base, neogeo_state )
 	MCFG_PALETTE_ADD_INIT_BLACK("palette", 4096*2*2)
 
 	MCFG_DEVICE_ADD("spritegen", NEOGEO_SPRITE_OPTIMZIED, 0)
-	
+
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1507,4 +1519,3 @@ ROM_END
 
 /*    YEAR  NAME        PARENT    COMPAT    MACHINE   INPUT     INIT    */
 CONS( 1990, neogeo,     0,        0,        mvs,      neogeo_6slot,   neogeo_state, mvs,  "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT | GAME_SUPPORTS_SAVE )
-

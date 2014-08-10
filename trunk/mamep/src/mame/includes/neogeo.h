@@ -45,6 +45,7 @@ public:
 		m_memcard(*this, "memcard"),
 		m_sprgen(*this, "spritegen"),
 		m_use_cart_vectors(0),
+		m_use_cart_audio(0),
 		m_cartslot1(*this, "cartslot1"),
 		m_cartslot2(*this, "cartslot2"),
 		m_cartslot3(*this, "cartslot3"),
@@ -154,7 +155,7 @@ protected:
 	required_device<screen_device> m_screen;
 	optional_device<palette_device> m_palette;
 	optional_device<ng_memcard_device> m_memcard;
-	
+
 	// configuration
 	enum {NEOGEO_MVS, NEOGEO_AES, NEOGEO_CD} m_type;
 
@@ -201,6 +202,7 @@ protected:
 
 
 	int m_use_cart_vectors;
+	int m_use_cart_audio;
 
 	// cart slots
 	optional_device<neogeo_cart_slot_device> m_cartslot1;
@@ -548,5 +550,3 @@ ADDRESS_MAP_EXTERN(neogeo_main_map,16);
 #define ROM_Y_ZOOM \
 	ROM_REGION( 0x20000, "zoomy", 0 ) \
 	ROM_LOAD( "000-lo.lo", 0x00000, 0x20000, CRC(5a86cff2) SHA1(5992277debadeb64d1c1c64b0a92d9293eaf7e4a) )
-
-

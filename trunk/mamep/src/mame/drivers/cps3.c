@@ -466,7 +466,7 @@ hardware modification to the security cart.....
 #include "bus/scsi/scsicd.h"
 #include "machine/wd33c93.h"
 
-#include "cps3.lh"
+#include "sfiii2.lh"
 
 #define MASTER_CLOCK    42954500
 
@@ -2703,7 +2703,7 @@ static MACHINE_CONFIG_START( cps3, cps3_state )
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
-	MCFG_DEFAULT_LAYOUT(layout_cps3)
+	MCFG_DEFAULT_LAYOUT(layout_sfiii2) // layout is for widescreen support
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

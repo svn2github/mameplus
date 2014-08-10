@@ -206,7 +206,7 @@ WRITE16_MEMBER(tecmosys_state::tecmosys_prot_data_w)
 			break;
 
 		case DS_SEND_CHKSUMS:
-			if( m_device_read_ptr >= 5 )
+			if( m_device_read_ptr >= 4 )
 			{
 				m_device_status = DS_DONE;
 				m_device_value = 0;

@@ -169,7 +169,7 @@ ROM_START( antiairc )
 ROM_END
 
 
-ROM_START( crshnscr )
+ROM_START( crashnsc )
 	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )
 
 	ROM_REGION( 0x0400, "gfx", ROMREGION_ERASE00 )
@@ -288,7 +288,7 @@ ROM_START( steeplec )
 ROM_END
 
 
-ROM_START( stntcycl )
+ROM_START( stuntcyc )
 	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )
 
 	ROM_REGION( 0x0200, "gfx", ROMREGION_ERASE00 )
@@ -416,15 +416,15 @@ ROM_END
 
 
 GAME(1975,  antiairc,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Anti-Aircraft [TTL]",    GAME_IS_SKELETON)
-GAME(1975,  crshnscr,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Crash 'n Score [TTL]",   GAME_IS_SKELETON)
+GAME(1975,  crashnsc,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Crash 'n Score [TTL]",   GAME_IS_SKELETON)
 GAME(1976,  indy4,     0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Indy 4 [TTL]",           GAME_IS_SKELETON)
 GAME(1975,  indy800,   0,         atarikee,   0,  driver_device, 0,  ROT90, "Atari/Kee",  "Indy 800 [TTL]",         GAME_IS_SKELETON)
-GAME(1975,  jetfight,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Jet Fighter (Set1) [TTL]",      GAME_IS_SKELETON)
-GAME(1975,  jetfighta, jetfight,  atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Jet Fighter (Set2) [TTL]",      GAME_IS_SKELETON)
+GAME(1975,  jetfight,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Jet Fighter (set 1) [TTL]",      GAME_IS_SKELETON)
+GAME(1975,  jetfighta, jetfight,  atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Jet Fighter (set 2) [TTL]",      GAME_IS_SKELETON)
 GAME(1976,  outlaw,    0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Outlaw [TTL]",           GAME_IS_SKELETON)
 GAME(1975,  sharkjaw,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari/Horror Games",  "Shark JAWS [TTL]",GAME_IS_SKELETON)
 GAME(1975,  steeplec,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Steeplechase [TTL]",     GAME_IS_SKELETON)
-GAME(1976,  stntcycl,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Stunt Cycle [TTL]",      GAME_IS_SKELETON)
+GAME(1976,  stuntcyc,  0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari",      "Stunt Cycle [TTL]",      GAME_IS_SKELETON)
 GAME(1974,  tank,      0,         atarikee,   0,  driver_device, 0,  ROT0,  "Atari/Kee",  "Tank/Tank II [TTL]",     GAME_IS_SKELETON)
 
 // MISSING ROM DUMPS

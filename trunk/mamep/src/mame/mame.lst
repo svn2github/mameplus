@@ -866,6 +866,7 @@ blazer          // (c) 1987 (Japan)
 quester         // (c) 1987 (Japan)
 questers        // (c) 1987 (Japan)
 pacmania        // (c) 1987
+pacmaniao       // (c) 1987
 pacmaniaj       // (c) 1987 (Japan)
 galaga88        // (c) 1987
 galaga88a       // (c) 1987
@@ -1249,9 +1250,11 @@ popeyeu         // (c) 1982
 popeyef         // (c) 1982
 popeyebl        // bootleg
 punchout        // (c) 1984
+punchouta       // (c) 1984
 punchoutj       // (c) 1984 (Japan)
 punchita        // bootleg
 spnchout        // (c) 1984
+spnchouta       // (c) 1984
 spnchoutj       // (c) 1984 (Japan)
 armwrest        // (c) 1985
 
@@ -3290,7 +3293,8 @@ armwaru         // 24/10/1994 (c) 1994 (USA)
 armwaru1        // 20/09/1994 (c) 1994 (USA)
 pgear           // 24/10/1994 (c) 1994 (Japan)
 pgearr1         // 16/09/1994 (c) 1994 (Japan)
-armwara         // 20/09/1994 (c) 1994 (Asia)
+armwara         // 24/10/1994 (c) 1994 (Asia)
+armwarar1       // 20/09/1994 (c) 1994 (Asia)
 xmcota          // 31/03/1995 (c) 1994 (Euro)
 xmcotar1        // 05/01/1995 (c) 1994 (Euro)
 xmcotau         // 05/01/1995 (c) 1994 (USA)
@@ -4773,7 +4777,7 @@ spidman         // 1991.?? Spiderman (World)
 spidmanu        // 1991.09 Spiderman (US)
 spidmanj	// 1991.09 Spiderman (Japan)
 f1en            // 1991.?? F-1 Exhaust Note (World)
-				// 1992.01 F-1 Exhaust Note (US)
+f1enu           // 1992.01 F-1 Exhaust Note (US)
 				// 1991.11 F-1 Exhaust Note (Japan)
 arabfgt         // 1992.?? Arabian Fight (World)
 arabfgtu        // 1992.03 Arabian Fight (US)
@@ -7237,8 +7241,10 @@ vcircle         // (proto)          (c) 1996
 a51site4        //     ??           (c) 1998
 a51site4a       // Sept.11,1998     (c) 1998
 
-// Atari Laserdisc
+// Atari/Nova Laserdisc
 cops            // (c) 1994
+copsuk          // (c) 1994 (Nova/Deith Leisure)
+revlatns        // (c) 199?
 
 // SNK / Rock-ola games
 sasuke          // [1980] Shin Nihon Kikaku (SNK)
@@ -10370,7 +10376,7 @@ bmcpokr         // (c) 1999 BMC
 popobear        // (c) 2000 BMC
 
 // Merit
-mpoker          // (c) 1983 Merit
+mgames          // (c) 1981 Merit
 pitboss         // (c) 1983 Merit
 pitbossa        // (c) 1983 Merit
 pitbossa1       // (c) 1983 Merit
@@ -11065,6 +11071,7 @@ pex0055pp       // (c) 1995 IGT - International Game Technology
 pex0055pq       // (c) 1995 IGT - International Game Technology
 pex0055pr       // (c) 1995 IGT - International Game Technology
 pex0060p        // (c) 1995 IGT - International Game Technology
+pex0124p        // (c) 1995 IGT - International Game Technology
 pex0150p        // (c) 1995 IGT - International Game Technology
 pex0158p        // (c) 1995 IGT - International Game Technology
 pex0171p        // (c) 1995 IGT - International Game Technology
@@ -11141,6 +11148,7 @@ pex2302p        // (c) 1995 IGT - International Game Technology
 pex2303p        // (c) 1995 IGT - International Game Technology
 pex2306p        // (c) 1995 IGT - International Game Technology
 pex2307p        // (c) 1995 IGT - International Game Technology
+pex2308p        // (c) 1995 IGT - International Game Technology
 pex2310p        // (c) 1995 IGT - International Game Technology
 pex2314p        // (c) 1995 IGT - International Game Technology
 pex2374p        // (c) 1995 IGT - International Game Technology
@@ -12594,16 +12602,16 @@ manohman        // 199?, Merkur.
 
 // Atari TTL logic games + roms
 antiairc        // (c) 1975 Atari
-crshnscr      // (c) 1975 Atari
+crashnsc        // (c) 1975 Atari
 indy4           // (c) 1976 Atari
-indy800      // (c) 1975 Atari / Kee
-jetfight         // (c) 1975 Atari
-jetfighta        // (c) 1975 Atari
-outlaw         // (c) 1976 Atari
-sharkjaw    // (c) 1975 Atari
-steeplec       // (c) 1975 Atari
-stntcycl       // (c) 1976 Atari
-tank             // (c) 1974 Atari
+indy800         // (c) 1975 Atari / Kee
+jetfight        // (c) 1975 Atari
+jetfighta       // (c) 1975 Atari
+outlaw          // (c) 1976 Atari
+sharkjaw        // (c) 1975 Atari
+steeplec        // (c) 1975 Atari
+stuntcyc        // (c) 1976 Atari
+tank            // (c) 1974 Atari
 
 // Atari TTL Missing Rom Dumps
 //astrotrf

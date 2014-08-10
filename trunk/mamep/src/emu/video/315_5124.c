@@ -633,10 +633,7 @@ WRITE8_MEMBER( sega315_5124_device::vram_write )
 
 WRITE8_MEMBER( sega315_5124_device::register_write )
 {
-	int reg_num;
-	int hpos = m_screen->hpos();
-
-	check_pending_flags();
+	int reg_num, hpos;
 
 	if (m_pending_reg_write == 0)
 	{
@@ -670,11 +667,15 @@ WRITE8_MEMBER( sega315_5124_device::register_write )
 			if (reg_num == 0 || reg_num == 1)
 				set_display_settings();
 
+			hpos = m_screen->hpos();
+
 			if (reg_num == 1 && hpos <= DISPLAY_DISABLED_HPOS)
 				m_display_disabled = !(m_reg[0x01] & 0x40);
 
 			if (reg_num == 8 && hpos <= X_SCROLL_HPOS)
 				m_reg8copy = m_reg[0x08];
+
+			check_pending_flags();
 
 			if ( ( reg_num == 0 && (m_status & STATUS_HINT) ) ||
 					( reg_num == 1 && (m_status & STATUS_VINT) ) )
@@ -1661,7 +1662,7 @@ void sega315_5124_device::update_palette()
 
 	for (i = 0; i < 32; i++)
 	{
-		m_current_palette[i] = m_CRAM->u8(i) & 0x3f;
+		m_current_palette[i] = m_CRAM[i] & 0x3f;
 	}
 }
 
@@ -1681,14 +1682,14 @@ void sega315_5378_device::update_palette()
 	{
 		for (i = 0; i < 32; i++)
 		{
-			m_current_palette[i] = ((m_CRAM->u8(i) & 0x30) << 6) | ((m_CRAM->u8(i) & 0x0c ) << 4) | ((m_CRAM->u8(i) & 0x03) << 2);
+			m_current_palette[i] = ((m_CRAM[i] & 0x30) << 6) | ((m_CRAM[i] & 0x0c ) << 4) | ((m_CRAM[i] & 0x03) << 2);
 		}
 	}
 	else
 	{
 		for (i = 0; i < 32; i++)
 		{
-			m_current_palette[i] = m_CRAM->u16(i) & 0x0fff;
+			m_current_palette[i] = (m_CRAM[2*i] | (m_CRAM[2*i+1] << 8)) & 0x0fff;
 		}
 	}
 }
@@ -1697,9 +1698,9 @@ void sega315_5378_device::update_palette()
 void sega315_5124_device::cram_write(UINT8 data)
 {
 	UINT16 address = m_addr & m_cram_mask;
-	if (data != m_CRAM->u8(address))
+	if (data != m_CRAM[address])
 	{
-		m_CRAM->u8(address) = data;
+		m_CRAM[address] = data;
 		m_cram_dirty = 1;
 	}
 }
@@ -1715,11 +1716,11 @@ void sega315_5378_device::cram_write(UINT8 data)
 	{
 		if (m_addr & 1)
 		{
-			UINT16 address = (m_addr & m_cram_mask) >> 1;
-			UINT16 dataw = (data << 8) | m_buffer;
-			if (dataw != m_CRAM->u16(address))
+			UINT16 address = (m_addr & m_cram_mask) & ~1;
+			if (m_buffer != m_CRAM[address] || data != m_CRAM[address + 1])
 			{
-				m_CRAM->u16(address) = dataw;
+				m_CRAM[address] = m_buffer;
+				m_CRAM[address + 1] = data;
 				m_cram_dirty = 1;
 			}
 		}
@@ -1782,7 +1783,6 @@ void sega315_5124_device::device_start()
 
 	/* Allocate video RAM */
 	astring tempstring;
-	m_CRAM = machine().memory().region_alloc(subtag(tempstring,"vdp_cram"), SEGA315_5378_CRAM_SIZE, 1, ENDIANNESS_LITTLE);
 	m_line_buffer = auto_alloc_array(machine(), int, 256 * 5);
 
 	m_frame_timing = (m_is_pal) ? pal_192 : ntsc_192;
@@ -1830,6 +1830,7 @@ void sega315_5124_device::device_start()
 	save_item(NAME(m_sprite_count));
 	save_item(NAME(m_sprite_height));
 	save_item(NAME(m_sprite_zoom));
+	save_item(NAME(m_CRAM));
 
 	machine().save().register_postload(save_prepost_delegate(FUNC(sega315_5124_device::vdp_postload), this));
 }
@@ -1870,7 +1871,7 @@ void sega315_5124_device::device_reset()
 	set_display_settings();
 
 	/* Clear RAM */
-	memset(m_CRAM->base(), 0, SEGA315_5378_CRAM_SIZE);
+	memset(m_CRAM, 0, sizeof(m_CRAM));
 	memset(m_line_buffer, 0, 256 * 5 * sizeof(int));
 }
 

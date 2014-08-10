@@ -273,5 +273,3 @@ WRITE16_MEMBER(neogeo_state::neogeo_video_register_w)
 		}
 	}
 }
-
-

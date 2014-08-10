@@ -412,6 +412,7 @@ BUSOBJS += $(BUSOBJ)/msx_cart/ascii.o
 BUSOBJS += $(BUSOBJ)/msx_cart/bm_012.o
 BUSOBJS += $(BUSOBJ)/msx_cart/cartridge.o
 BUSOBJS += $(BUSOBJ)/msx_cart/crossblaim.o
+BUSOBJS += $(BUSOBJ)/msx_cart/disk.o
 BUSOBJS += $(BUSOBJ)/msx_cart/dooly.o
 BUSOBJS += $(BUSOBJ)/msx_cart/fmpac.o
 BUSOBJS += $(BUSOBJ)/msx_cart/halnote.o
@@ -1063,6 +1064,7 @@ BUSOBJS += $(BUSOBJ)/cpc/cpc_rom.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_pds.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_rs232.o
 BUSOBJS += $(BUSOBJ)/cpc/mface2.o
+BUSOBJS += $(BUSOBJ)/cpc/symbfac2.o
 endif
 
 #-------------------------------------------------

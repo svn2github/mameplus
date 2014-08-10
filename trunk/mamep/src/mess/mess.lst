@@ -141,7 +141,7 @@ neocdzj   //
 //***************COMPUTERS**************************************************
 
 // ASCII & Microsoft
-msx       // 1983 MSX
+// MSX1
 ax170
 canonv10
 canonv20
@@ -218,9 +218,7 @@ yis503m
 yc64
 mx64
 bruc100
-
-
-msx2      // 1985 MSX2
+// MSX2
 ax350
 ax370
 hbf9p     // 1985 MSX2
@@ -282,8 +280,7 @@ cpc300e   // 1986 MSX2 Korea
 cpc400    // 1986 MSX2 Korea
 cpc400s   // 1986 MSX2 Korea
 expert20  // 1986 MSX2 Korea
-
-msx2p     // 1988 MSX2+ Japan
+// MSX2+
 expert3i
 expert3t
 expertac
@@ -298,7 +295,7 @@ phc70fd   // 1988 MSX2+ Japan
 phc70fd2  // 1988 MSX2+ Japan
 phc35j    // 1989 MSX2+ Japan
 hbf9sp
-
+// MSX Turbo-R
 fsa1gt
 fsa1st
 
