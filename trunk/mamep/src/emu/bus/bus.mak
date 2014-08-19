@@ -233,6 +233,21 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/dmv/dmv.h,BUSES += DMV
+#-------------------------------------------------
+
+ifneq ($(filter DMV,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/dmv
+BUSOBJS += $(BUSOBJ)/dmv/dmvbus.o
+BUSOBJS += $(BUSOBJ)/dmv/k220.o
+BUSOBJS += $(BUSOBJ)/dmv/k230.o
+BUSOBJS += $(BUSOBJ)/dmv/k806.o
+BUSOBJS += $(BUSOBJ)/dmv/ram.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/ecbbus/ecbbus.h,BUSES += ECBBUS
 #-------------------------------------------------
 
@@ -495,6 +510,7 @@ BUSOBJS += $(BUSOBJ)/pet/superpet.o
 BUSOBJS += $(BUSOBJ)/pet/user.o
 BUSOBJS += $(BUSOBJ)/pet/diag.o
 BUSOBJS += $(BUSOBJ)/pet/petuja.o
+BUSOBJS += $(BUSOBJ)/pet/cb2snd.o
 endif
 
 
@@ -702,6 +718,7 @@ BUSOBJS += $(BUSOBJ)/a2bus/a2corvus.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2diskiing.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2mcms.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2dx1.o
+BUSOBJS += $(BUSOBJ)/a2bus/timemasterho.o
 endif
 
 #-------------------------------------------------

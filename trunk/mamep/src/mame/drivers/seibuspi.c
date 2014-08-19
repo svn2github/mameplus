@@ -39,6 +39,7 @@
           0x28 China
           0x80 Europe / Germany
           0x82 Austria
+          0x90 Holland
           0x92 Italy
           0x9c Switzerland
           0x9e Australia
@@ -2462,16 +2463,16 @@ ROM_END
 
 ROM_START( viprp1k )
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
-	ROM_LOAD32_BYTE("(__viprp1k)seibu1.211", 0x000000, 0x80000, CRC(5495c930) SHA1(056237965aefa4c0ea7782e0ee5ba1b58a045d7a) )
-	ROM_LOAD32_BYTE("(__viprp1k)seibu2.212", 0x000001, 0x80000, CRC(e0ad22ae) SHA1(1911d17f0b462a9bada9efee85e531f2445e4ac6) )
-	ROM_LOAD32_BYTE("(__viprp1k)seibu3.210", 0x000002, 0x80000, CRC(db7bcb90) SHA1(45f0a44e24d7b4b996d833e579f405bcf7584563) )
-	ROM_LOAD32_BYTE("(__viprp1k)seibu4.29",  0x000003, 0x80000, CRC(c6188bf9) SHA1(746a205c428a080c36d0daf1d4f6b2b0f8efb977) )
+	ROM_LOAD32_BYTE("seibu1.211", 0x000000, 0x80000, CRC(5495c930) SHA1(056237965aefa4c0ea7782e0ee5ba1b58a045d7a) ) // sldh
+	ROM_LOAD32_BYTE("seibu2.212", 0x000001, 0x80000, CRC(e0ad22ae) SHA1(1911d17f0b462a9bada9efee85e531f2445e4ac6) ) // sldh
+	ROM_LOAD32_BYTE("seibu3.210", 0x000002, 0x80000, CRC(db7bcb90) SHA1(45f0a44e24d7b4b996d833e579f405bcf7584563) ) // sldh
+	ROM_LOAD32_BYTE("seibu4.29",  0x000003, 0x80000, CRC(c6188bf9) SHA1(746a205c428a080c36d0daf1d4f6b2b0f8efb977) ) // sldh
 
 	ROM_REGION( 0x40000, "audiocpu", ROMREGION_ERASE00 ) /* 256K RAM, ROM from Z80 point-of-view */
 
 	ROM_REGION( 0x30000, "gfx1", ROMREGION_ERASEFF ) /* text layer roms */
-	ROM_LOAD24_WORD("(__viprp1k)seibu5.u0413", 0x000000, 0x20000, CRC(1a35f2d8) SHA1(cd9b140f144a8c72756e18913eaef121963be341) )
-	ROM_LOAD24_BYTE("(__viprp1k)seibu6.u048",  0x000002, 0x10000, CRC(e88bf049) SHA1(62f35840dc90b505118ed81ac0d75397a689783b) )
+	ROM_LOAD24_WORD("seibu5.u0413", 0x000000, 0x20000, CRC(1a35f2d8) SHA1(cd9b140f144a8c72756e18913eaef121963be341) ) // sldh
+	ROM_LOAD24_BYTE("seibu6.u048",  0x000002, 0x10000, CRC(e88bf049) SHA1(62f35840dc90b505118ed81ac0d75397a689783b) ) // sldh
 
 	ROM_REGION( 0x600000, "gfx2", ROMREGION_ERASEFF ) /* background layer roms */
 	ROM_LOAD24_WORD("v_bg-11.415",  0x000000, 0x200000, CRC(6fc96736) SHA1(12df47d8af2c1febc1bce5bcf3218766447885bd) )
@@ -2618,6 +2619,38 @@ ROM_START( viprp1s )
 
 	ROM_REGION( 0x100000, "soundflash1", 0 ) /* on SPI motherboard */
 	ROM_LOAD("flash0_blank_region9c.u1053", 0x000000, 0x100000, CRC(d73d640c) SHA1(61a99af2a153de9d53e28872a2493e2ba797a325) )
+ROM_END
+
+ROM_START( viprp1h )
+	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
+	ROM_LOAD32_BYTE("viper_prg0_010995.u0211", 0x000000, 0x80000, CRC(e42fcc93) SHA1(5b2848a1da0e5d37e04ac646e67bbb84678c0292) ) /* same code as viprp1s, different region byte value */
+	ROM_LOAD32_BYTE("viper_prg1_010995.u0212", 0x000001, 0x80000, CRC(9d4d3486) SHA1(ded6fa32b973046e50c40c40c446590b5f6d0b76) )
+	ROM_LOAD32_BYTE("viper_prg2_010995.u0210", 0x000002, 0x80000, CRC(d7ea460b) SHA1(aed10adacd073f7d2b35f12ba4b7876e5c99d142) )
+	ROM_LOAD32_BYTE("viper_prg3_010995.u029",  0x000003, 0x80000, CRC(ca6df094) SHA1(921eec141ce2d449047172fa9cdf39d459b5cc7b) )
+
+	ROM_REGION( 0x40000, "audiocpu", ROMREGION_ERASE00 ) /* 256K RAM, ROM from Z80 point-of-view */
+
+	ROM_REGION( 0x30000, "gfx1", ROMREGION_ERASEFF ) /* text layer roms */
+	ROM_LOAD24_WORD("viper_fix_010995.u0413", 0x000000, 0x20000, CRC(5ece677c) SHA1(b782cf3296f866f79fafa69ff719211c9d4026df) )
+	ROM_LOAD24_BYTE("viper_fixp_010995.u048", 0x000002, 0x10000, CRC(44844ef8) SHA1(bcbe24d2ffb64f9165ba4ab7de27f44b99b5ff5a) )
+
+	ROM_REGION( 0x600000, "gfx2", ROMREGION_ERASEFF ) /* background layer roms */
+	ROM_LOAD24_WORD("v_bg-11.415",  0x000000, 0x200000, CRC(6fc96736) SHA1(12df47d8af2c1febc1bce5bcf3218766447885bd) )
+	ROM_LOAD24_BYTE("v_bg-12.415",  0x000002, 0x100000, CRC(d3c7281c) SHA1(340bca1f31486609b3c34dd7830362a216ff648e) )
+	ROM_LOAD24_WORD("v_bg-21.410",  0x300000, 0x100000, CRC(d65b4318) SHA1(6522970d95ffa7fa2f32e0b5b4f0eb69e0286b36) )
+	ROM_LOAD24_BYTE("v_bg-22.416",  0x300002, 0x080000, CRC(24a0a23a) SHA1(0b0330717620e3f3274a25845d9edaf8023b9db2) )
+
+	ROM_REGION( 0xc00000, "gfx3", 0 ) /* sprites */
+	ROM_LOAD("v_obj-1.322",  0x000000, 0x400000, CRC(3be5b631) SHA1(fd1064428d28ca166a9267b968c0ba846cfed656) )
+	ROM_LOAD("v_obj-2.324",  0x400000, 0x400000, CRC(924153b4) SHA1(db5dadcfb4cd5e6efe9d995085936ce4f4eb4254) )
+	ROM_LOAD("v_obj-3.323",  0x800000, 0x400000, CRC(e9fb9062) SHA1(18e97b4c5cced2b529e6e72d8041c6f78fcec76e) )
+
+	ROM_REGION32_LE( 0xa00000, "sound01", ROMREGION_ERASE00 ) /* sound roms */
+	ROM_LOAD32_BYTE("v_pcm.215",  0x000000, 0x080000, CRC(e3111b60) SHA1(f7a7747f29c392876e43efcb4e6c0741454082f2) )
+	ROM_CONTINUE(                 0x400000, 0x080000 )
+
+	ROM_REGION( 0x100000, "soundflash1", 0 ) /* on SPI motherboard */
+	ROM_LOAD("flash0_blank_region90.u1053", 0x000000, 0x100000, CRC(8da617a2) SHA1(29c6ee05ed1c9a428a89d625b72692296c38424b) )
 ROM_END
 
 ROM_START( viprp1hk )
@@ -3386,9 +3419,9 @@ ROM_END
 ROM_START( rfjeta ) /* SPI Cart, Asia */
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
 	ROM_LOAD32_BYTE("prg0a.u0211", 0x000000, 0x80000, CRC(3418d4f5) SHA1(f8766d7b3708a196de417ee757787220b2a9ced1) )
-	ROM_LOAD32_BYTE("prg1(__rfjeta).u0212",  0x000001, 0x80000, CRC(395e6da7) SHA1(736f777cb1b6bf5541832b8ea89594738ca6d829) )
-	ROM_LOAD32_BYTE("prg2(__rfjeta).u0221",  0x000002, 0x80000, CRC(82f7a57e) SHA1(5300015e25d5f2f82eda3ed54bc105d645518498) )
-	ROM_LOAD32_BYTE("prg3(__rfjeta).u0220",  0x000003, 0x80000, CRC(cbdf100d) SHA1(c9efd11103429f7f36c1652cadb5384d925cb767) )
+	ROM_LOAD32_BYTE("prg1.u0212",  0x000001, 0x80000, CRC(395e6da7) SHA1(736f777cb1b6bf5541832b8ea89594738ca6d829) ) // sldh
+	ROM_LOAD32_BYTE("prg2.u0221",  0x000002, 0x80000, CRC(82f7a57e) SHA1(5300015e25d5f2f82eda3ed54bc105d645518498) ) // sldh
+	ROM_LOAD32_BYTE("prg3.u0220",  0x000003, 0x80000, CRC(cbdf100d) SHA1(c9efd11103429f7f36c1652cadb5384d925cb767) ) // sldh
 
 	ROM_REGION( 0x40000, "audiocpu", ROMREGION_ERASE00 ) /* 256K RAM, ROM from Z80 point-of-view */
 
@@ -3419,10 +3452,10 @@ ROM_END
 
 ROM_START( rfjett ) /* SPI Cart, Taiwan */
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
-	ROM_LOAD32_BYTE( "prg0(__rfjett).u0211",   0x000000, 0x080000, CRC(a4734579) SHA1(dfbd8e2a3178c7cfd7bd3698999f14bc80f5212f) )
-	ROM_LOAD32_BYTE( "prg1(__rfjett).u0212",   0x000001, 0x080000, CRC(5e4ad3a4) SHA1(ff66e16f48978b88b298c78e21309208ccb3ff15) )
-	ROM_LOAD32_BYTE( "prg2(__rfjett).u0221",   0x000002, 0x080000, CRC(21c9942e) SHA1(ededa05a4b5dae2dec5c4409f22e9a66d2c8e98e) )
-	ROM_LOAD32_BYTE( "prg3(__rfjett).u0220",   0x000003, 0x080000, CRC(ea3657f4) SHA1(2291e31243af7d2e79ae727d9b5484e8d49cc7d9) )
+	ROM_LOAD32_BYTE( "prg0.u0211",   0x000000, 0x080000, CRC(a4734579) SHA1(dfbd8e2a3178c7cfd7bd3698999f14bc80f5212f) ) // sldh
+	ROM_LOAD32_BYTE( "prg1.u0212",   0x000001, 0x080000, CRC(5e4ad3a4) SHA1(ff66e16f48978b88b298c78e21309208ccb3ff15) ) // sldh
+	ROM_LOAD32_BYTE( "prg2.u0221",   0x000002, 0x080000, CRC(21c9942e) SHA1(ededa05a4b5dae2dec5c4409f22e9a66d2c8e98e) ) // sldh
+	ROM_LOAD32_BYTE( "prg3.u0220",   0x000003, 0x080000, CRC(ea3657f4) SHA1(2291e31243af7d2e79ae727d9b5484e8d49cc7d9) ) // sldh
 
 	ROM_REGION( 0x40000, "audiocpu", ROMREGION_ERASE00 ) /* 256K RAM, ROM from Z80 point-of-view */
 
@@ -3564,10 +3597,10 @@ ROM_END
 */
 ROM_START( rfjetsa ) /* Single board version SXX2G */
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
-	ROM_LOAD32_BYTE("rfj-06(__rfjetsa).u0259", 0x000000, 0x80000, CRC(b0c8d47e) SHA1(1dde30d25f9e8eaa301343ae1d272b5c0044bc1f) ) /* PRG0 */
-	ROM_LOAD32_BYTE("rfj-07(__rfjetsa).u0258", 0x000001, 0x80000, CRC(17189b39) SHA1(6471170ae770d762e15f1503ef9a6832c202da6c) ) /* PRG1 */
-	ROM_LOAD32_BYTE("rfj-08(__rfjetsa).u0265", 0x000002, 0x80000, CRC(ab6d724b) SHA1(ef7e42b1bf649a354fe22b0edd00475ced4151be) ) /* PRG2 */
-	ROM_LOAD32_BYTE("rfj-09(__rfjetsa).u0264", 0x000003, 0x80000, CRC(b119a67c) SHA1(4fa7dd0e86a3f7c6efa6ae9cf72991b652c877b9) ) /* PRG3 */
+	ROM_LOAD32_BYTE("rfj-06.u0259", 0x000000, 0x80000, CRC(b0c8d47e) SHA1(1dde30d25f9e8eaa301343ae1d272b5c0044bc1f) ) /* PRG0 */ // sldh
+	ROM_LOAD32_BYTE("rfj-07.u0258", 0x000001, 0x80000, CRC(17189b39) SHA1(6471170ae770d762e15f1503ef9a6832c202da6c) ) /* PRG1 */ // sldh
+	ROM_LOAD32_BYTE("rfj-08.u0265", 0x000002, 0x80000, CRC(ab6d724b) SHA1(ef7e42b1bf649a354fe22b0edd00475ced4151be) ) /* PRG2 */ // sldh
+	ROM_LOAD32_BYTE("rfj-09.u0264", 0x000003, 0x80000, CRC(b119a67c) SHA1(4fa7dd0e86a3f7c6efa6ae9cf72991b652c877b9) ) /* PRG3 */ // sldh
 
 	ROM_REGION( 0x40000, "audiocpu", 0 ) /* 256K ROM for the Z80 */
 	ROM_LOAD("rfj-05.u091", 0x000000, 0x40000, CRC(a55e8799) SHA1(5d4ca9ae920ab54e23ee3b1b33db72711e744516) ) /* ZPRG */
@@ -3719,6 +3752,7 @@ GAME( 1995, viprp1u,    viprp1,   spi,     spi_3button, seibuspi_state, viprp1o,
 GAME( 1995, viprp1ua,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1o,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Viper Phase 1 (New Version, US set 2)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* New version, "=U.S.A=" seems part of title */
 GAME( 1995, viprp1j,    viprp1,   spi,     spi_3button, seibuspi_state, viprp1,   ROT270, "Seibu Kaihatsu",                         "Viper Phase 1 (New Version, Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1995, viprp1s,    viprp1,   spi,     spi_3button, seibuspi_state, viprp1,   ROT270, "Seibu Kaihatsu",                         "Viper Phase 1 (New Version, Switzerland)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // counterintuitively this seems to be the oldest set of the game despite playing with the 'new version' rules, it has various typos not present in other sets eg. 'UPDATEING'
+GAME( 1995, viprp1h,    viprp1,   spi,     spi_3button, seibuspi_state, viprp1,   ROT270, "Seibu Kaihatsu",                         "Viper Phase 1 (New Version, Holland)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // Code is the same as the above Switzerland set, just different region byte
 
 GAME( 1995, viprp1ot,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1,   ROT270, "Seibu Kaihatsu (Tuning license)",        "Viper Phase 1 (Germany)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1995, viprp1oj,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1o,  ROT270, "Seibu Kaihatsu",                         "Viper Phase 1 (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

@@ -180,29 +180,29 @@ class bfm_sc2_state : public driver_device
 public:
 	bfm_sc2_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+			m_maincpu(*this, "maincpu"),
+			m_upd7759(*this, "upd"),
 			m_vfd0(*this, "vfd0"),
 			m_vfd1(*this, "vfd1"),
-			m_dm01(*this, "dm01"),
-			m_maincpu(*this, "maincpu"),
-			m_upd7759(*this, "upd") { }
-
+			m_dm01(*this, "dm01") { }
+	
+	required_device<cpu_device> m_maincpu;
+	required_device<upd7759_device> m_upd7759;
 	optional_device<bfm_bd1_t> m_vfd0;
 	optional_device<bfm_bd1_t> m_vfd1;
 	optional_device<bfmdm01_device> m_dm01;
 
-	int m_sc2gui_update_mmtr;
+	int m_sc2gui_update_mmtr; //not used?
 	UINT8 *m_nvram;
 	UINT8 m_key[8];
 	UINT8 m_e2ram[1024];
 	int m_mmtr_latch;
-	int m_triac_latch;
 	int m_irq_status;
 	int m_optic_pattern;
 	int m_uart1_data;
 	int m_uart2_data;
 	int m_data_to_uart1;
 	int m_data_to_uart2;
-	int m_locked;
 	int m_is_timer_enabled;
 	int m_reel_changed;
 	int m_coin_inhibits;
@@ -317,8 +317,7 @@ public:
 	void adder2_common_init();
 	void sc2awp_common_init(int reels, int decrypt);
 	void sc2awpdmd_common_init(int reels, int decrypt);
-	required_device<cpu_device> m_maincpu;
-	required_device<upd7759_device> m_upd7759;
+	void save_state();
 };
 
 
@@ -360,7 +359,6 @@ public:
 void bfm_sc2_state::on_scorpion2_reset()
 {
 	m_mmtr_latch        = 0;
-	m_triac_latch       = 0;
 	m_irq_status        = 0;
 	m_is_timer_enabled  = 1;
 	m_coin_inhibits     = 0;
@@ -402,8 +400,6 @@ void bfm_sc2_state::on_scorpion2_reset()
 		m_optic_pattern = pattern;
 
 	}
-
-	m_locked        = 0;
 
 	// make sure no inputs are overidden ////////////////////////////////////
 	memset(m_input_override, 0, sizeof(m_input_override));
@@ -1390,7 +1386,48 @@ READ8_MEMBER(bfm_sc2_state::direct_input_r)
 	return 0;
 }
 
-
+void bfm_sc2_state::save_state()
+{
+	/* TODO: Split between the different machine types */
+	
+	save_item(NAME(m_key));
+	save_item(NAME(m_mmtr_latch));
+	save_item(NAME(m_irq_status));
+	save_item(NAME(m_optic_pattern));
+	save_item(NAME(m_uart1_data));
+	save_item(NAME(m_uart2_data));
+	save_item(NAME(m_data_to_uart1));
+	save_item(NAME(m_data_to_uart2));
+	save_item(NAME(m_is_timer_enabled));
+	save_item(NAME(m_reel_changed));
+	save_item(NAME(m_coin_inhibits));
+	save_item(NAME(m_irq_timer_stat));
+	save_item(NAME(m_expansion_latch));
+	save_item(NAME(m_global_volume));
+	save_item(NAME(m_volume_override));
+	save_item(NAME(m_reel12_latch));
+	save_item(NAME(m_reel34_latch));
+	save_item(NAME(m_reel56_latch));
+	save_item(NAME(m_pay_latch));
+	save_item(NAME(m_slide_states));
+	save_item(NAME(m_slide_pay_sensor));
+	save_item(NAME(m_triac_select));
+	save_item(NAME(m_hopper_running));
+	save_item(NAME(m_hopper_coin_sense));
+	save_item(NAME(m_timercnt));
+	save_item(NAME(m_sc2_Inputs));
+	save_item(NAME(m_input_override));
+	save_item(NAME(m_e2reg));
+	save_item(NAME(m_e2state));
+	save_item(NAME(m_e2cnt));
+	save_item(NAME(m_e2data));
+	save_item(NAME(m_e2address));
+	save_item(NAME(m_e2rw));
+	save_item(NAME(m_e2data_pin));
+	save_item(NAME(m_e2dummywrite));
+	save_item(NAME(m_e2data_to_read));
+	save_item(NAME(m_codec_data));
+}
 
 
 static ADDRESS_MAP_START( sc2_basemap, AS_PROGRAM, 8, bfm_sc2_state )
@@ -1592,7 +1629,7 @@ static INPUT_PORTS_START( pyramid )
 	PORT_START("STROBE11")
 	PORT_DIPUNKNOWN_DIPLOC( 0x01, 0x00, "DIL:!12" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x02, 0x00, "DIL:!13" )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" ) PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" ) PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
 	PORT_DIPNAME( 0x18, 0x00, "Stake" ) PORT_DIPLOCATION("DIL:!15,!16")
@@ -1732,7 +1769,7 @@ static INPUT_PORTS_START( qntoond )
 	PORT_DIPNAME( 0x02, 0x00, "Clear credits on reset" )PORT_DIPLOCATION("DIL:!13")
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Yes  ) )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
 	PORT_DIPNAME( 0x08, 0x00, "Attract mode language" )PORT_DIPLOCATION("DIL:!15")
@@ -1839,7 +1876,7 @@ static INPUT_PORTS_START( slotsnl )
 	PORT_MODIFY("STROBE11")
 	PORT_DIPUNKNOWN_DIPLOC( 0x01, 0x00, "DIL:!12" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x02, 0x00, "DIL:!13" )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
 	PORT_DIPNAME( 0x18, 0x00, "Timebar speed" )PORT_DIPLOCATION("DIL:!15,!16")
@@ -1915,7 +1952,7 @@ static INPUT_PORTS_START( sltblgtk )
 	PORT_DIPNAME( 0x02, 0x00, "Clear credits" )PORT_DIPLOCATION("DIL:!13")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off  ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On   ) )
 	PORT_DIPNAME( 0x08, 0x00, "Show hints" )PORT_DIPLOCATION("DIL:!15")
@@ -2038,7 +2075,7 @@ static INPUT_PORTS_START( paradice )
 	PORT_DIPSETTING(    0x02, "7" )
 	PORT_DIPSETTING(    0x01, "8" )
 	PORT_DIPSETTING(    0x03, "9" )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
 	PORT_DIPNAME( 0x18, 0x00, "Timebar speed" )PORT_DIPLOCATION("DIL:!15,!16")
@@ -2090,7 +2127,7 @@ static INPUT_PORTS_START( pokio )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On  ) )
 	PORT_DIPUNKNOWN_DIPLOC( 0x02, 0x00, "DIL:!13" )
-	PORT_DIPNAME( 0x04, 0x00, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
+	PORT_DIPNAME( 0x04, 0x04, "Attract mode" )PORT_DIPLOCATION("DIL:!14")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
 	PORT_DIPNAME( 0x18, 0x00, "Timebar speed" )PORT_DIPLOCATION("DIL:!15,!16")
@@ -2110,6 +2147,8 @@ MACHINE_START_MEMBER(bfm_sc2_state,bfm_sc2)
 	nvram_device *e2ram = subdevice<nvram_device>("e2ram");
 	if (e2ram != NULL)
 		e2ram->set_base(m_e2ram, sizeof(m_e2ram));
+	
+	save_state();
 }
 
 static MACHINE_CONFIG_START( scorpion2_vid, bfm_sc2_state )
@@ -2624,155 +2663,6 @@ MACHINE_RESET_MEMBER(bfm_sc2_state,dm01_init)
 {
 	on_scorpion2_reset();
 }
-
-
-
-
-#ifdef UNREFERENCED_CODE
-static INPUT_PORTS_START( scorpion2 )
-	PORT_START("COINS")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN3 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN4 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN5 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN6 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN7 ) PORT_IMPULSE(3)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN8 ) PORT_IMPULSE(3)
-
-	PORT_START("STROBE0")
-	PORT_BIT( 0xFF, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE1")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1) PORT_NAME("I10")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2) PORT_NAME("I11")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3) PORT_NAME("I12")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON4) PORT_NAME("I13")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON5) PORT_NAME("I14")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
-
-	PORT_START("STROBE2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_NAME("I20")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON7 ) PORT_NAME("I21")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON8 ) PORT_NAME("I22")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON9 ) PORT_NAME("I23")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON10) PORT_NAME("I24")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED  )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED  )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED  )
-
-	PORT_START("STROBE3")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I30")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I31")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I32")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I33")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I34")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE4")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_INTERLOCK)  PORT_NAME("Cashbox Door") PORT_CODE(KEYCODE_Q) PORT_TOGGLE
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_INTERLOCK)  PORT_NAME("Front Door") PORT_CODE(KEYCODE_W) PORT_TOGGLE
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER )     PORT_NAME("Refill Key") PORT_CODE(KEYCODE_R) PORT_TOGGLE
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER )     PORT_NAME("I43")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER )     PORT_NAME("I44")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE5")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I50")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I51")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I52")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I53")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I54")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE6")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I60")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I61")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I62")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I63")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I64")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE7")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I70")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I71")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I72")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I73")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I74")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE8")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I80")
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I81")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I82")
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I83")
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("I84")
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)
-
-	PORT_START("STROBE9")
-	PORT_SERVICE_NO_TOGGLE(0x01,IP_ACTIVE_HIGH)
-	PORT_DIPNAME( 0x02, 0x00, "DIL02" ) PORT_DIPLOCATION("DIL:02")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x04, 0x00, "DIL03" ) PORT_DIPLOCATION("DIL:03")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x08, 0x00, "DIL04" ) PORT_DIPLOCATION("DIL:04")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x10, 0x00, "DIL05" ) PORT_DIPLOCATION("DIL:05")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On  ) )
-
-	PORT_START("STROBE10")
-	PORT_DIPNAME( 0x01, 0x00, "DIL06" ) PORT_DIPLOCATION("DIL:06")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x02, 0x00, "DIL07" ) PORT_DIPLOCATION("DIL:07")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x04, 0x00, "DIL08" ) PORT_DIPLOCATION("DIL:08")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x08, 0x00, "DIL10" ) PORT_DIPLOCATION("DIL:10")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x10, 0x00, "DIL11" ) PORT_DIPLOCATION("DIL:11")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On  ) )
-
-	PORT_START("STROBE11")
-	PORT_DIPNAME( 0x01, 0x00, "DIL12" ) PORT_DIPLOCATION("DIL:12")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x02, 0x00, "DIL13" ) PORT_DIPLOCATION("DIL:13")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x04, 0x00, "DIL14" ) PORT_DIPLOCATION("DIL:14")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x08, 0x00, "DIL15" ) PORT_DIPLOCATION("DIL:15")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On  ) )
-	PORT_DIPNAME( 0x10, 0x00, "DIL16" ) PORT_DIPLOCATION("DIL:16")
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On  ) )
-INPUT_PORTS_END
-#endif
 
 static INPUT_PORTS_START( bbrkfst )
 	PORT_START("COINS")
@@ -7017,7 +6907,7 @@ ROM_END
 
 ROM_START( sc2scshxstar )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "scxsp10(__star).bin", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) )
+	ROM_LOAD( "scxsp10.bin", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) ) // sldh
 	ROM_REGION( 0x200000, "altrevs", ROMREGION_ERASE00 )
 	ROM_LOAD( "scxspv1grn.bin", 0x0000, 0x010000, CRC(67f69bd4) SHA1(ee2dd0cd98c98a4727df8c7c721de9ac49b583ff) )
 	ROM_LOAD( "scxspv2grn.bin", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) )
@@ -7580,19 +7470,26 @@ ROM_END
 
 #define GAME_FLAGS GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL
 
-GAMEL( 1993, qntoondo, qntoond,   scorpion2_vid, qntoond, bfm_sc2_state,   adder_dutch,0,       "BFM/ELAM", "Quintoon (Dutch, Game Card 95-750-136)",       GAME_SUPPORTS_SAVE,layout_quintoon )
 GAMEL( 1993, quintoon, 0,         scorpion2_vid, quintoon, bfm_sc2_state,  quintoon,   0,       "BFM",      "Quintoon (UK, Game Card 95-750-206)",          GAME_SUPPORTS_SAVE|GAME_IMPERFECT_SOUND,layout_quintoon ) //Current samples need verification
 GAMEL( 1993, quintond, quintoon,  scorpion2_vid, quintoon, bfm_sc2_state,  quintoon,   0,       "BFM",      "Quintoon (UK, Game Card 95-751-206, Datapak)",GAME_SUPPORTS_SAVE|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING,layout_quintoon ) //Current samples need verification
 GAMEL( 1993, quintono, quintoon,  scorpion2_vid, quintoon, bfm_sc2_state,  quintoon,   0,       "BFM",      "Quintoon (UK, Game Card 95-750-203)",          GAME_SUPPORTS_SAVE|GAME_IMPERFECT_SOUND,layout_quintoon ) //Current samples need verification
+
 GAMEL( 1993, qntoond,  0,         scorpion2_vid, qntoond, bfm_sc2_state,   adder_dutch,0,       "BFM/ELAM", "Quintoon (Dutch, Game Card 95-750-243)",       GAME_SUPPORTS_SAVE,layout_quintoon )
+GAMEL( 1993, qntoondo, qntoond,   scorpion2_vid, qntoond, bfm_sc2_state,   adder_dutch,0,       "BFM/ELAM", "Quintoon (Dutch, Game Card 95-750-136)",       GAME_SUPPORTS_SAVE,layout_quintoon )
+
 GAMEL( 1994, pokio,    0,         scorpion2_vid, pokio, bfm_sc2_state,     adder_dutch,0,       "BFM/ELAM", "Pokio (Dutch, Game Card 95-750-278)",          GAME_SUPPORTS_SAVE,layout_pokio )
-GAMEL( 1995, slotsnl,  0,         scorpion2_vid, slotsnl, bfm_sc2_state,   adder_dutch,0,       "BFM/ELAM", "Slots (Dutch, Game Card 95-750-368)",          GAME_SUPPORTS_SAVE,layout_slots )
+
 GAMEL( 1995, paradice, 0,         scorpion2_vid, paradice, bfm_sc2_state,  adder_dutch,0,       "BFM/ELAM", "Paradice (Dutch, Game Card 95-750-615)",       GAME_SUPPORTS_SAVE,layout_paradice )
-GAMEL( 1996, pyramid,  0,         scorpion2_vid, pyramid, bfm_sc2_state,   pyramid, 0,       "BFM/ELAM", "Pyramid (Dutch, Game Card 95-750-898)",       GAME_SUPPORTS_SAVE,layout_pyramid )
+
+GAMEL( 1996, pyramid,  0,         scorpion2_vid, pyramid, bfm_sc2_state,   pyramid, 0,          "BFM/ELAM", "Pyramid (Dutch, Game Card 95-750-898)",       GAME_SUPPORTS_SAVE,layout_pyramid )
+
+GAMEL( 1995, slotsnl,  0,         scorpion2_vid, slotsnl, bfm_sc2_state,   adder_dutch,0,       "BFM/ELAM", "Slots (Dutch, Game Card 95-750-368)",          GAME_SUPPORTS_SAVE,layout_slots )
 
 GAMEL( 1996, sltblgtk, 0,         scorpion2_vid, sltblgtk, bfm_sc2_state,  sltsbelg,   0,       "BFM/ELAM", "Slots (Belgian Token, Game Card 95-750-943)",  GAME_SUPPORTS_SAVE,layout_sltblgtk )
+
 GAMEL( 1996, sltblgpo, 0,         scorpion2_vid, sltblgpo, bfm_sc2_state,  sltsbelg,   0,       "BFM/ELAM", "Slots (Belgian Cash, Game Card 95-750-938)",   GAME_SUPPORTS_SAVE,layout_sltblgpo )
 GAMEL( 1996, sltblgp1, sltblgpo,  scorpion2_vid, sltblgpo, bfm_sc2_state,  sltsbelg,   0,       "BFM/ELAM", "Slots (Belgian Cash, Game Card 95-752-008)",   GAME_SUPPORTS_SAVE,layout_sltblgpo )
+
 GAMEL( 1997, gldncrwn, 0,         scorpion2_vid, gldncrwn, bfm_sc2_state,  gldncrwn,   0,       "BFM/ELAM", "Golden Crown (Dutch, Game Card 95-752-011)",   GAME_SUPPORTS_SAVE,layout_gldncrwn )
 
 /* Non-Video */

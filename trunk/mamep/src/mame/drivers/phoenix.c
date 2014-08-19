@@ -609,6 +609,30 @@ ROM_START( phoenixb )
 	ROM_LOAD( "mmi6301.ic41",   0x0100, 0x0100, CRC(e176b768) SHA1(e2184dd495ed579f10b6da0b78379e02d7a6229f) )  /* palette high bits */
 ROM_END
 
+ROM_START( phoenixdal )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "dal.a1",         0x0000, 0x0800, CRC(5b8c55a8) SHA1(839c1ca9766f730ec3accd48db70f6429a9c3362) )
+	ROM_LOAD( "dal.a2",         0x0800, 0x0800, CRC(dbc942fa) SHA1(9fe224e6ced407289dfa571468259a021d942b7d) )
+	ROM_LOAD( "dal.a3",         0x1000, 0x0800, CRC(cbbb8839) SHA1(b7f449374cac111081559e39646f973e7e99fd64) )
+	ROM_LOAD( "dal.a4",         0x1800, 0x0800, CRC(228b76ad) SHA1(e1677b3f69ef842e27b2d74fd4e6f3520c4b6593) )
+	ROM_LOAD( "d2716,dal.a5",         0x2000, 0x0800, CRC(1a1ce0d0) SHA1(c2825eef5d461e16ca2172daff94b3751be2f4dc) )
+	ROM_LOAD( "h6-ic50.6a",   0x2800, 0x0800, CRC(ac5e9ec1) SHA1(0402e5241d99759d804291998efd43f37ce99917) ) // dal.a6
+	ROM_LOAD( "h7-ic51.7a",   0x3000, 0x0800, CRC(2eab35b4) SHA1(849bf8273317cc869bdd67e50c68399ee8ece81d) ) // dal.a7
+	ROM_LOAD( "dal.a8",   0x3800, 0x0800, CRC(0a0f92c0) SHA1(d28ce84ef86f852e1f10f5ea1e370dfd1751f477) )
+
+	ROM_REGION( 0x1000, "bgtiles", 0 )
+	ROM_LOAD( "ic23.3d",      0x0000, 0x0800, CRC(3c7e623f) SHA1(e7ff5fc371664af44785c079e92eeb2d8530187b) ) // dal.d3
+	ROM_LOAD( "ic24.4d",      0x0800, 0x0800, CRC(59916d3b) SHA1(71aec70a8e096ed1f0c2297b3ae7dca1b8ecc38d) ) // dal.d4
+
+	ROM_REGION( 0x1000, "fgtiles", 0 )
+	ROM_LOAD( "dal.b3",   0x0000, 0x0800, CRC(bb0525ed) SHA1(86db1c7584fb3846bfd47535e1585eeb7fbbb1fe) )
+	ROM_LOAD( "dal.b4",   0x0800, 0x0800, CRC(4178aa4f) SHA1(5350f8f62cc7c223c38008bc83140b7a19147d81) )
+
+	ROM_REGION( 0x0200, "proms", 0 )
+	ROM_LOAD( "mmi6301.ic40",   0x0000, 0x0100, CRC(79350b25) SHA1(57411be4c1d89677f7919ae295446da90612c8a8) )  /* palette low bits */
+	ROM_LOAD( "mmi6301.ic41",   0x0100, 0x0100, CRC(e176b768) SHA1(e2184dd495ed579f10b6da0b78379e02d7a6229f) )  /* palette high bits */
+ROM_END
+
 ROM_START( phoenixt )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "phoenix.45",   0x0000, 0x0800, CRC(5b8c55a8) SHA1(839c1ca9766f730ec3accd48db70f6429a9c3362) )
@@ -1055,14 +1079,14 @@ ROM_END
 
 ROM_START( pleiadsb2 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "ic47(__pleiadsb2).r1",      0x0000, 0x0800, CRC(fa98cb73) SHA1(d01138536e90a0a92d3e356fe354648e431a106c) )
+	ROM_LOAD( "ic47.r1",      0x0000, 0x0800, CRC(fa98cb73) SHA1(d01138536e90a0a92d3e356fe354648e431a106c) ) // sldh
 	ROM_LOAD( "ic48.r2",      0x0800, 0x0800, CRC(b254217c) SHA1(312a33cca09d5d2d18992f28eb051230a90db6e3) )
-	ROM_LOAD( "ic47(__pleiadsb2).bin",     0x1000, 0x0800, CRC(0951829e) SHA1(03c0598dfe248ce14683ff18e59adb2e72731336) )
-	ROM_LOAD( "ic48(__pleiadsb2).bin",     0x1800, 0x0800, CRC(4972f5ce) SHA1(9175cc924c335d01ee47f3771276cdc90028fcc5) )
+	ROM_LOAD( "ic47.bin",     0x1000, 0x0800, CRC(0951829e) SHA1(03c0598dfe248ce14683ff18e59adb2e72731336) ) // sldh
+	ROM_LOAD( "ic48.bin",     0x1800, 0x0800, CRC(4972f5ce) SHA1(9175cc924c335d01ee47f3771276cdc90028fcc5) ) // sldh
 	ROM_LOAD( "ic51.r5",      0x2000, 0x0800, CRC(49c629bc) SHA1(fd7937d0c114c8d9c1efaa9918ae3df2af41f032) )
 	ROM_LOAD( "ic50.bin",     0x2800, 0x0800, CRC(f1a8a00d) SHA1(5c183e3a73fa882ffec3cb9219fb5619e625591a) )
-	ROM_LOAD( "ic53(__pleiadsb2).r7",      0x3000, 0x0800, CRC(037b319c) SHA1(2ff7a7777a63326e2abca2d1881df33a8e3f8561) )
-	ROM_LOAD( "ic52(__pleiadsb2).bin",     0x3800, 0x0800, CRC(b3db08c2) SHA1(d5b1b77dcf2d76498f30d5f880635f5acfac7dfd) )
+	ROM_LOAD( "ic53.r7",      0x3000, 0x0800, CRC(037b319c) SHA1(2ff7a7777a63326e2abca2d1881df33a8e3f8561) ) // sldh
+	ROM_LOAD( "ic52.bin",     0x3800, 0x0800, CRC(b3db08c2) SHA1(d5b1b77dcf2d76498f30d5f880635f5acfac7dfd) ) // sldh
 
 	ROM_REGION( 0x1000, "bgtiles", 0 )
 	ROM_LOAD( "ic23.bin",     0x0000, 0x0800, CRC(4e30f9e7) SHA1(da023a94725dc40107cd97e4decfd4dc0f9f00ee) )
@@ -1237,10 +1261,11 @@ GAME( 1980, phoenixb, phoenix,  phoenix,  phoenixa, driver_device, 0,        ROT
 GAME( 1980, phoenixt, phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "Amstar (Taito license)", "Phoenix (Taito)", GAME_SUPPORTS_SAVE )
 GAME( 1980, phoenixj, phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "Amstar (Taito Japan license)", "Phoenix (Taito Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1980, phoenix3, phoenix,  phoenix,  phoenix3, driver_device, 0,        ROT90, "bootleg (T.P.N.)",   "Phoenix (T.P.N.)", GAME_SUPPORTS_SAVE )
+GAME( 1980, phoenixdal,phoenix, phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg", "Phoenix (D&L bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1981, phoenixc, phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg? (Irecsa / G.G.I Corp)", "Phoenix (Irecsa / G.G.I Corp, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1981, phoenixc2,phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg? (Irecsa / G.G.I Corp)", "Phoenix (Irecsa / G.G.I Corp, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1981, phoenixc3,phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg? (Irecsa / G.G.I Corp)", "Phoenix (Irecsa / G.G.I Corp, set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1981, phoenixc4,phoenix,  phoenix,  phoenix , driver_device, 0,        ROT90, "bootleg? (Irecsa / G.G.I Corp)", "Phoenix (Irecsa / G.G.I Corp, set 4)", GAME_SUPPORTS_SAVE )
+GAME( 1981, phoenixc4,phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg? (Irecsa / G.G.I Corp)", "Phoenix (Irecsa / G.G.I Corp, set 4)", GAME_SUPPORTS_SAVE )
 GAME( 1981, condor,   phoenix,  condor,   condor, phoenix_state,   condor,   ROT90, "bootleg", "Condor (bootleg of Phoenix)", GAME_SUPPORTS_SAVE )
 // the following 2 were common bootlegs in england & france respectively
 GAME( 1980, falcon,   phoenix,  phoenix,  phoenixt, driver_device, 0,        ROT90, "bootleg", "Falcon (bootleg of Phoenix) (8085A CPU)", GAME_SUPPORTS_SAVE )

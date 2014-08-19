@@ -685,6 +685,7 @@ phoenixb        // (c) 1980 Amstar + Centuri license
 phoenixt        // (c) 1980 Taito
 phoenixj        // (c) 1980 Taito
 phoenix3        // bootleg
+phoenixdal      // bootleg D&L (No copyright/title)
 phoenixc        // bootleg
 phoenixc2       // bootleg
 phoenixc3       // bootleg
@@ -1998,6 +1999,7 @@ fightrol        // (c) 1983 Taito
 rollace         // (c) 1983 Williams
 rollace2        // (c) 1983 Williams
 lgp             // (c) 1983 Taito
+lgpalt          // (c) 1983 Taito
 vsgongf         // (c) 1984 Kaneko
 ringfgt         // (c) 1984 Taito
 ringfgt2        // (c) 1984 Taito
@@ -2136,6 +2138,7 @@ volfiedjo       // C04 (c) 1989 Taito Corporation (Japan)
 bonzeadv        // B41 (c) 1988 Taito Corporation Japan (World)
 bonzeadvo       // B41 (c) 1988 Taito Corporation Japan (World)
 bonzeadvu       // B41 (c) 1988 Taito America Corporation (US)
+bonzeadvp
 jigkmgri        // B41 (c) 1988 Taito Corporation (Japan)
 asuka           // B68 (c) 1988 Taito Corporation (World)
 asukaj          // B68 (c) 1988 Taito Corporation (Japan)
@@ -2384,6 +2387,7 @@ majest12        // 1990.11 C64 (c) 1990 Taito Corporation (Japan)
 gunfront        // 1991.?? C71 (c) 1990 Taito Corporation Japan (World)
 gunfrontj       // 1991.01 C71 (c) 1990 Taito Corporation (Japan)
 growl           // 1991.?? C74 (c) 1990 Taito Corporation Japan (World)
+growla          // 1991.?? C74 (c) 1990 Taito Corporation Japan (World)
 growlu          // 1991.02 C74 (c) 1990 Taito America Corporation (US)
 runark          // 1991.02 C74 (c) 1990 Taito Corporation (Japan)
 growlp          // 1991.?? C74 (c) 1990 Taito Corporation Japan (World, prototype)
@@ -2589,6 +2593,7 @@ getstarb2       // GX-006 bootleg but (c) 1986 Taito Corporation
 mjsister        // (c) 1986 Toaplan
 fshark          // B02 / TP-007 (c) 1987 Taito Corporation (World)
 skyshark        // B02 / TP-007 (c) 1987 Taito America Corporation + Romstar license (US)
+skysharka       // B02 / TP-007 (c) 1987 Taito America Corporation + Romstar license (US)
 hishouza        // B02 / TP-007 (c) 1987 Taito Corporation (Japan)
 fsharkbt        // bootleg
 fnshark         // bootleg
@@ -3002,10 +3007,10 @@ blktigerb2      // bootleg
 blktigerb3      // bootleg?
 blkdrgon        //  8/1987 (c) 1987 (Japan)
 blkdrgonb       // bootleg, hacked to say Black Tiger
-sf              //  8/1987 (c) 1987 (World)
-sfu             //  8/1987 (c) 1987 (US)
+sf              //  8/1987 (c) 1987 (US)
 sfua            //  8/1987 (c) 1987 (US)
 sfj             //  8/1987 (c) 1987 (Japan)
+sfan            //  8/1987 (c) 1987 (World)
 sfp             //  8/1987 (c) 1987
 tigeroad        // 11/1987 (c) 1987 (US)
 tigeroadu       // 11/1987 (c) 1987 + Romstar (US)
@@ -3034,7 +3039,6 @@ ledstorm2       //  1988 (c) 1988 (US)
 // 10/1991 Block Block - see below among "Mitchell" games
 //  6/1995 Street Fighter - the Movie - see below among "Incredible Technologies" games
 #endif // !NCP
-
 
 // Capcom CPS1 games
 forgottn        //  7/1988 (c) 1988 (World)
@@ -4217,6 +4221,7 @@ dlair2_314      // (c) 1991 Leland
 dlair2_312      // (c) 1991 Leland
 dlair2_300      // (c) 1991 Leland
 dlair2_211      // (c) 1991 Leland
+dlair2_200      // (c) 1991 Leland
 spacea91        // (c) 1991 Leland
 spacea91_13e        // (c) 1991 Leland
 
@@ -7814,6 +7819,7 @@ greatgun        // (c) 1983
 // Other Stern
 cliffhgr        // (c) 1983
 cliffhgra       // (c) 1983
+cliffhgra2      // (c) 1983
 goaltogo        // (c) 1983
 
 // GamePlan games
@@ -8344,6 +8350,7 @@ viprp1k         // (c) 1995 Seibu Kaihatsu (Dream Island license)
 viprp1u         // (c) 1995 Seibu Kaihatsu (Fabtek license)
 viprp1ua        // (c) 1995 Seibu Kaihatsu (Fabtek license)
 viprp1j         // (c) 1995 Seibu Kaihatsu
+viprp1h         // (c) 1995 Seibu Kaihatsu
 viprp1s         // (c) 1995 Seibu Kaihatsu
 viprp1oj        // (c) 1995 Seibu Kaihatsu
 viprp1ot        // (c) 1995 Seibu Kaihatsu (Tuning License)
@@ -8982,6 +8989,7 @@ keithlcy        // (c) 1993 Visco
 drifto94        // (c) 1994 Visco
 janjans1        // (c) 1996 Visco
 stmblade        // (c) 1996 Visco
+stmbladej       // (c) 1996 Visco
 jsk             // (c) 1997 Visco
 koikois2        // (c) 1997 Visco
 mslider         // (c) 1997 Visco / Datt Japan
@@ -9308,7 +9316,8 @@ bombkicka       // (c) 1998 Yun Sung
 nmg5            // (c) 1998 Yun Sung
 nmg5a           // (c) 1998 Yun Sung
 nmg5e           // (c) 1998 Yun Sung
-searchey        // (c) 1999 Yun Sung
+searchey        // (c) 1999 Yun Sung (English, Korean, Japanese & Spanish)
+searcheya       // (c) 1999 Yun Sung (English & Korean only)
 searchp2        // (c) 1999 Yun Sung
 pclubys         // (c) 2000 Yun Sung
 pclubysa        // (c) 2000 Yun Sung
@@ -9981,18 +9990,27 @@ odeontw2        // (c) 1999
 alg_bios
 maddoga         // (c) 1990
 wsjr            // (c) 1991
-wsjr15          // (c) 1991
+wsjr_15         // (c) 1991
 maddog          // (c) 1990
+maddog_202      // (c) 1990
 maddog2         // (c) 1992
-maddog22        // (c) 1992
-maddog21        // (c) 1992
+maddog2_202     // (c) 1992
+maddog2_110     // (c) 1992
+maddog2_100     // (c) 1992
 spacepir        // (c) 1992
+spacepir_14     // (c) 1992
 gallgall        // (c) 1992
+gallgall_21     // (c) 1992
 crimepat        // (c) 1993
-crimep211       // (c) 1993
+crimepat_14     // (c) 1993
+crimepat_12     // (c) 1993
 crimep2         // (c) 1993
+crimep2_11      // (c) 1993
 lastbh          // (c) 1994
+lastbh_006      // (c) 1994
 fastdraw        // (c) 1995
+fastdraw_130    // (c) 1995
+
 aplatoon        // (c) 199? Nova?
 zortonbr        // (c) 1993 Web Picmatic
 
@@ -10059,6 +10077,7 @@ dlairc          // (c) 1983 Cinematronics
 dlairb          // (c) 1983 Cinematronics
 dlaira          // (c) 1983 Cinematronics
 dleuro          // (c) 1983 Atari
+dleuroalt       // (c) 1983 Atari
 dlital          // (c) 1983 Sidam
 spaceace        // (c) 1983 Cinematronics
 spaceacea2      // (c) 1983 Cinematronics
@@ -11876,7 +11895,8 @@ streetg2r5      // (c) 1993
 magtouch        // (c) 1995
 
 // Coinmaster-Gaming VGA based
-colorama        // (c) 2001 Coinmaster-Gaming, Ltd.
+colorama        // (c) 2000 Coinmaster-Gaming, Ltd.
+coloramas       // (c) 2000 Coinmaster-Gaming, Ltd.
 cmrltv75        // (c) 2001 Coinmaster-Gaming, Ltd.
 cmkenosp        // (c) 2000 Coinmaster-Gaming, Ltd.
 cmkenospa       // (c) 2000 Coinmaster-Gaming, Ltd.

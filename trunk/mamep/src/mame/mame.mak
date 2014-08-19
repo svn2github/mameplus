@@ -1534,6 +1534,7 @@ $(MAMEOBJ)/namco.a: \
 	$(MACHINE)/namco62.o \
 	$(AUDIO)/namco52.o \
 	$(AUDIO)/namco54.o \
+	$(VIDEO)/c116.o \
 	$(VIDEO)/c45.o \
 	$(VIDEO)/bosco.o \
 	$(VIDEO)/digdug.o \
@@ -2477,6 +2478,8 @@ $(DRIVERS)/aces1.o:     $(LAYOUT)/aces1.lh
 
 $(DRIVERS)/acefruit.o:  $(LAYOUT)/sidewndr.lh
 
+$(DRIVERS)/allied.o:    $(LAYOUT)/allied.lh
+
 $(DRIVERS)/amaticmg.o:  $(LAYOUT)/suprstar.lh
 
 $(DRIVERS)/ampoker2.o:  $(LAYOUT)/ampoker2.lh \
@@ -2651,6 +2654,8 @@ $(DRIVERS)/grchamp.o:   $(LAYOUT)/grchamp.lh
 
 $(DRIVERS)/highvdeo.o:  $(LAYOUT)/fashion.lh
 
+$(DRIVERS)/hankin.o:    $(LAYOUT)/hankin.lh
+
 $(DRIVERS)/hitme.o:     $(LAYOUT)/barricad.lh
 
 $(DRIVERS)/icecold.o:   $(LAYOUT)/icecold.lh
@@ -2677,6 +2682,8 @@ $(DRIVERS)/kungfur.o:   $(LAYOUT)/kungfur.lh
 
 $(DRIVERS)/lazercmd.o:  $(LAYOUT)/lazercmd.lh \
 			$(LAYOUT)/medlanes.lh
+
+$(DRIVERS)/ltd.o:       $(LAYOUT)/ltd.lh
 
 $(DRIVERS)/luckgrln.o:  $(LAYOUT)/luckgrln.lh
 
