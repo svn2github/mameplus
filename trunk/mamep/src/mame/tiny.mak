@@ -190,8 +190,6 @@ $(DRIVERS)/circus.o:    $(LAYOUT)/circus.lh \
 
 $(DRIVERS)/cave.o:      $(LAYOUT)/ppsatan.lh
 
-$(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
-
 #-------------------------------------------------
 # mamep: driver list dependencies
 #-------------------------------------------------

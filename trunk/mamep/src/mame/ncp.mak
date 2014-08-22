@@ -154,9 +154,7 @@ $(MAMEOBJ)/neogeo.a: \
 
 $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
-$(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
-
-$(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
+$(DRIVERS)/cps3.o:	$(LAYOUT)/sfiii2.lh
 
 $(DRIVERS)/kenseim.o:   $(LAYOUT)/kenseim.lh
 
