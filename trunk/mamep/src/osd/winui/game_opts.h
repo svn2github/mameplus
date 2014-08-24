@@ -23,6 +23,13 @@ public:
 	// construction/destruction
 	game_options()
 	{
+		// mamep:initialize later
+		m_total = 0;
+		m_list.reserve(m_total);
+	}
+
+	void init()
+	{
 		m_total = driver_list::total();
 		m_list.reserve(m_total);
 
@@ -70,6 +77,8 @@ public:
 		entry[0].defvalue    = "-1,-1,-1";
 		entry[0].flags       = OPTION_STRING;
 		entry[0].description = NULL;
+
+		init();
 
 		for (int i = 0; i < m_total; i++)
 		{
