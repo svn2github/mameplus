@@ -382,6 +382,9 @@ void SetCommentDir(const WCHAR *path);
 const WCHAR *GetFolderDir(void);
 void SetFolderDir(const WCHAR *path);
 
+const WCHAR *GetUIDir(void);
+void SetUIDir(const WCHAR *path);
+
 const WCHAR* GetFontDir(void);
 void  SetFontDir(const WCHAR* paths);
 
@@ -530,8 +533,9 @@ int GetDriverCacheBiosIndex(int driver_index);
 void SetDriverCacheBiosIndex(int driver_index, int val);
 int GetDriverCacheUsesController(int driver_index);
 void SetDriverCacheUsesController(int driver_index, int val);
-BOOL RequiredDriverCache(void);
-
+BOOL RequiredDriverCache(int check_only = 0);
+void SetRequiredDriverCacheStatus(void);
+BOOL GetRequiredDriverCacheStatus(void);
 
 /***************************************************************************
     MAME Plus! specific code

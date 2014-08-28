@@ -152,6 +152,220 @@ static BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder);
     public functions
  ***************************************************************************/
 
+static struct FOLDER_DATA {
+	TCHAR*	name;
+	int		count;
+	int		malloc_count;
+	const char	**buf;
+} *extra_folders = 0;
+static int extra_folder_count = 0;
+
+static BOOL NeedToUpdateIni(void)
+{
+	return GetRequiredDriverCacheStatus();
+}
+
+static int CompareFunc( const void* a , const void* b )
+{
+	return wcsicmp(*(LPWSTR*)a, *(LPWSTR*)b);
+}
+
+static int dataCompareFunc( const void* a , const void* b )
+{
+	return wcsicmp(((struct FOLDER_DATA *)a)->name, ((struct FOLDER_DATA *)b)->name);
+}
+
+static void dataAddGame(struct FOLDER_DATA *x, int n)
+{
+	if (++x->count > x->malloc_count)
+	{
+		const char **p = x->buf;
+		x->malloc_count += 500;
+		p = (const char**)malloc(x->malloc_count * sizeof(char*));
+		assert(p);
+		if (x->buf)
+		{
+			memcpy(p, x->buf, (x->malloc_count - 500) * sizeof(char*));
+			free(x->buf);
+		}
+		x->buf = p;
+	}
+	x->buf[x->count - 1] = driver_list::driver(n).name;
+}
+
+static void InitExtraFolderData(int n)
+{
+	extra_folder_count = 0;
+	extra_folders = (struct FOLDER_DATA *)malloc(n * sizeof(struct FOLDER_DATA));
+	assert(extra_folders);
+	memset(extra_folders, 0, n * sizeof(struct FOLDER_DATA));
+}
+static void FreeExtraFolderData(void)
+{
+	int i;
+
+	for (i = 0; i < extra_folder_count; i++)
+	{
+		osd_free(extra_folders[i].name);
+		if (extra_folders[i].buf)
+			free(extra_folders[i].buf);
+	}
+	free(extra_folders);
+	extra_folders = NULL;
+	extra_folder_count = 0;
+}
+
+static void OutputIniAndFreeExtraFolderData(const TCHAR *fname)
+{
+	int i, j;
+	struct stat st;
+	if (stat(_String(GetUIDir()), &st) != 0 && _wmkdir(GetUIDir()) != 0)
+	{
+		FreeExtraFolderData();
+		return;
+	}
+
+	FILE *fp;
+	TCHAR filename[MAX_PATH];
+
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, fname);
+	fp = _wfopen(filename, TEXT("w"));
+	fprintf(fp, "[ROOT_FOLDER]\n");
+
+	if (extra_folder_count != 0)
+	{
+		qsort(extra_folders, extra_folder_count, sizeof(extra_folders[0]), dataCompareFunc);
+		for (i = 0; i < extra_folder_count; i++)
+		{
+			// folder
+			fwprintf(fp, TEXT("\n[%s]\n"), extra_folders[i].name);
+			if (extra_folders[i].count > 0)
+			{
+				// game
+				qsort(extra_folders[i].buf, extra_folders[i].count, sizeof(extra_folders[i].buf[0]), CompareFunc);
+				for (j = 0; j < extra_folders[i].count; j++)
+					fprintf(fp, "%s\n", extra_folders[i].buf[j]);
+			}
+		}
+
+		FreeExtraFolderData();
+	}
+	fclose(fp);
+}
+
+static void LoadExternalFolders(int parent_index, const TCHAR *fname, int id)
+{
+    FILE*   fp = NULL;
+    char    readbuf[256];
+    char*   p;
+    char*   name;
+    int     current_id;
+    LPTREEFOLDER lpTemp = NULL;
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	current_id = lpFolder->m_nFolderId;
+
+    fp = wfopen(fname, TEXT("r"));
+ 
+	if (fp == NULL)
+		return;
+
+	while (fgets(readbuf, 256, fp))
+	{
+		/* do we have [...] ? */
+
+		if (readbuf[0] == '[')
+		{
+			p = strchr(readbuf, ']');
+			if (p == NULL)
+			{
+				continue;
+			}
+
+			*p = '\0';
+			name = &readbuf[1];
+
+			/* is it [FOLDER_SETTINGS]? */
+
+			if (strcmp(name, "FOLDER_SETTINGS") == 0)
+			{
+				current_id = -1;
+				continue;
+			}
+			else
+			{
+				/* drop DBCS folder */
+				for (p = name; *p; p++)
+					if (*p & 0x80)
+						break;
+
+				if (*p)
+				{
+					current_id = -1;
+					continue;
+				}
+
+				/* it it [ROOT_FOLDER]? */
+
+				if (!strcmp(name, "ROOT_FOLDER"))
+				{
+					current_id = lpFolder->m_nFolderId;
+					lpTemp = lpFolder;
+
+				}
+				else
+				{
+					/* must be [folder name] */
+					TCHAR *foldername = _Unicode(name);
+
+					current_id = next_folder_id++;
+					/* create a new folder with this name,
+					   and the flags for this folder as read from the registry */
+					lpTemp = NewFolder(foldername, 0, TRUE, current_id, parent_index, id);
+
+					//lpTemp->m_dwFlags |= F_CUSTOM;
+
+					AddFolder(lpTemp);
+				}
+			}
+		}
+		else if (current_id != -1)
+		{
+			/* string on a line by itself -- game name */
+
+			name = strtok(readbuf, " \t\r\n");
+			if (name == NULL)
+			{
+				current_id = -1;
+				continue;
+			}
+
+			/* IMPORTANT: This assumes that all driver names are lowercase! */
+			strlwr(name);
+
+			if (lpTemp == NULL)
+			{
+				ErrorMsg("Error parsing %s: missing [folder name] or [ROOT_FOLDER]",
+						 fname);
+				current_id = lpFolder->m_nFolderId;
+				lpTemp = lpFolder;
+			}
+			AddGame(lpTemp, GetGameNameIndex(name));
+        }
+    }
+
+    if ( fp )
+    {
+        fclose( fp );
+    }
+
+    return;
+}
+
 #ifdef UNUSED_FUNCTION
 /**************************************************************************
  *      ci_strncmp - case insensitive character array compare
@@ -489,46 +703,57 @@ void CreateSourceFolders(int parent_index)
 	}
 }
 
-void CreateScreenFolders(int parent_index)
+void GenerateScreenFoldersIni(const TCHAR *ini_name)
 {
-	int i,jj;
-	int nGames =  GetNumGames();
-	int start_folder = numFolders;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER lpTemp;
+	int i, j;
+	struct FOLDER_DATA *folder;
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-	for (jj = 0; jj < nGames; jj++)
+	InitExtraFolderData(16);
+
+	for (i = 0; i < driver_list::total(); i++)
 	{
-		int screens = DriverNumScreens(jj);
+		int screens = DriverNumScreens(i);
 		TCHAR s[2];
 		swprintf(s, TEXT("%d"), screens);
 
 		// look for an existant screens treefolder for this game
 		// (likely to be the previous one, so start at the end)
-		for (i=numFolders-1;i>=start_folder;i--)
+		folder = NULL;
+		for (j = 0; j < extra_folder_count; j++)
 		{
-			if (wcscmp(treeFolders[i]->m_lpTitle,s) == 0)
+			if (!wcscmp(s, extra_folders[j].name))
 			{
-				AddGame(treeFolders[i],jj);
+				folder = &extra_folders[j];
 				break;
 			}
 		}
-		if (i == start_folder-1)
+		if (folder == NULL)
 		{
-			// nope, it's a screen file we haven't seen before, make it.
-			lpTemp = NewFolder(s, 0, FALSE, next_folder_id, parent_index, IDI_FOLDER);
+				// record that we found this folder
+				extra_folders[extra_folder_count].name = win_tstring_strdup(s);
 
-			// Increment next_folder_id here in case code is added above
-			next_folder_id++;
+				folder = &extra_folders[extra_folder_count];
 
-			AddFolder(lpTemp);
-			AddGame(lpTemp,jj);
+				extra_folder_count++;
 		}
+		dataAddGame(folder, i);
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
 }
 
+void CreateScreenFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\screen.ini");
+
+	if (NeedToUpdateIni())
+		GenerateScreenFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_FOLDER);
+}
 
 void CreateManufacturerFolders(int parent_index)
 {
@@ -903,13 +1128,12 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 	return strTemp2;
 }
 
-void CreateCPUFolders(int parent_index)
+static void GenerateCPUFoldersIni(const TCHAR *ini_name)
 {
-	int i, j, device_folder_count = 0;
-	LPTREEFOLDER device_folders[512];
-	LPTREEFOLDER folder;
-	LPTREEFOLDER lpTemp;
-	int nFolder = numFolders;
+	int i, j;
+	struct FOLDER_DATA *folder;
+
+	InitExtraFolderData(512);
 
 	for (i = 0; i < driver_list::total(); i++)
 	{
@@ -924,11 +1148,11 @@ void CreateCPUFolders(int parent_index)
 
 			// do we have a folder for this device?
 			folder = NULL;
-			for (j = 0; j < device_folder_count; j++)
+			for (j = 0; j < extra_folder_count; j++)
 			{
-				if (!wcscmp(dev_name, device_folders[j]->m_lpTitle))
+				if (!wcscmp(dev_name, extra_folders[j].name))
 				{
-					folder = device_folders[j];
+					folder = &extra_folders[j];
 					break;
 				}
 			}
@@ -936,32 +1160,41 @@ void CreateCPUFolders(int parent_index)
 			// are we forced to create a folder?
 			if (folder == NULL)
 			{
-				lpTemp = NewFolder(_Unicode(device->device().name()), 0, FALSE, next_folder_id, parent_index, IDI_CPU);
-
-				// Increment next_folder_id here in case code is added above
-				next_folder_id++;
-
-				AddFolder(lpTemp);
-				folder = treeFolders[nFolder++];
-
 				// record that we found this folder
-				device_folders[device_folder_count++] = folder;
+				extra_folders[extra_folder_count].name = win_tstring_strdup(_Unicode(device->device().name()));
+
+				folder = &extra_folders[extra_folder_count];
+
+				extra_folder_count++;
 			}
 
 			// cpu type #'s are one-based
-			AddGame(folder, i);
+			dataAddGame(folder, i);
 		}
 	}
 
+	OutputIniAndFreeExtraFolderData(ini_name);
 }
 
-void CreateSoundFolders(int parent_index)
+void CreateCPUFolders(int parent_index)
 {
-	int i, j, device_folder_count = 0;
-	LPTREEFOLDER device_folders[512];
-	LPTREEFOLDER folder;
-	LPTREEFOLDER lpTemp;
-	int nFolder = numFolders;
+	const TCHAR *ini_name = TEXT("\\cpu.ini");
+
+	if (NeedToUpdateIni())
+		GenerateCPUFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_CPU);
+}
+
+void GenerateSoundFoldersIni(const TCHAR *ini_name)
+{
+	int i, j;
+	struct FOLDER_DATA *folder;
+
+	InitExtraFolderData(512);
 
 	for (i = 0; i < driver_list::total(); i++)
 	{
@@ -977,11 +1210,11 @@ void CreateSoundFolders(int parent_index)
 
 			// do we have a folder for this device?
 			folder = NULL;
-			for (j = 0; j < device_folder_count; j++)
+			for (j = 0; j < extra_folder_count; j++)
 			{
-				if (!wcscmp(dev_name, device_folders[j]->m_lpTitle))
+				if (!wcscmp(dev_name, extra_folders[j].name))
 				{
-					folder = device_folders[j];
+					folder = &extra_folders[j];
 					break;
 				}
 			}
@@ -989,22 +1222,34 @@ void CreateSoundFolders(int parent_index)
 			// are we forced to create a folder?
 			if (folder == NULL)
 			{
-				lpTemp = NewFolder(_Unicode(device->device().name()), 0, FALSE, next_folder_id, parent_index, IDI_SND);
-
-				// Increment next_folder_id here in case code is added above
-				next_folder_id++;
-
-				AddFolder(lpTemp);
-				folder = treeFolders[nFolder++];
-
 				// record that we found this folder
-				device_folders[device_folder_count++] = folder;
+				extra_folders[extra_folder_count].name = win_tstring_strdup(_Unicode(device->device().name()));
+
+				folder = &extra_folders[extra_folder_count];
+
+				extra_folder_count++;
 			}
 
 			// cpu type #'s are one-based
-			AddGame(folder, i);
+			dataAddGame(folder, i);
 		}
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
+}
+
+void CreateSoundFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\sound.ini");
+
+	if (NeedToUpdateIni())
+		GenerateSoundFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_SND);
+
 }
 
 // mamep: updated mameui's horrible version
@@ -1063,27 +1308,24 @@ void CreateDeficiencyFolders(int parent_index)
 	}
 }
 
-void CreateDumpingFolders(int parent_index)
+void GenerateDumpingFoldersIni(const TCHAR *ini_name)
 {
 	int jj;
 	BOOL bBadDump  = FALSE;
 	BOOL bNoDump = FALSE;
-	int nGames = GetNumGames();
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER lpBad, lpNo;
 	const rom_entry *region, *rom;
 	const game_driver *gamedrv;
+	struct FOLDER_DATA *folder_bad, *folder_no;
+
+	InitExtraFolderData(2);
 
 	// create our two subfolders
-	lpBad = NewFolder(TEXT("Bad Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER);
-	lpNo = NewFolder(TEXT("No Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER);
-	AddFolder(lpBad);
-	AddFolder(lpNo);
+	extra_folders[extra_folder_count].name = win_tstring_strdup(TEXT("Bad Dump"));
+	folder_bad = &extra_folders[extra_folder_count++];
+	extra_folders[extra_folder_count].name = win_tstring_strdup(TEXT("No Dump"));
+	folder_no = &extra_folders[extra_folder_count++];
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (jj = 0; jj < nGames; jj++)
+	for (jj = 0; jj < driver_list::total(); jj++)
 	{
 		gamedrv = &driver_list::driver(jj);
 
@@ -1115,15 +1357,29 @@ void CreateDumpingFolders(int parent_index)
 		}
 		if (bBadDump)
 		{
-			AddGame(lpBad,jj);
+			dataAddGame(folder_bad, jj);
 		}
 		if (bNoDump)
 		{
-			AddGame(lpNo,jj);
+			dataAddGame(folder_no, jj);
 		}
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
 }
 
+void CreateDumpingFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\dumping.ini");
+
+	if (NeedToUpdateIni())
+		GenerateDumpingFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_FOLDER);
+}
 
 void CreateYearFolders(int parent_index)
 {
@@ -1168,18 +1424,14 @@ void CreateYearFolders(int parent_index)
 	}
 }
 
-void CreateBIOSFolders(int parent_index)
+void GenerateBIOSFoldersIni(const TCHAR *ini_name)
 {
 	int i,jj;
 	int nGames = GetNumGames();
-	int start_folder = numFolders;
 	const game_driver *drv;
 	int nParentIndex = -1;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER lpTemp;
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+	InitExtraFolderData(512);
 
 	for (jj = 0; jj < nGames; jj++)
 	{
@@ -1196,44 +1448,56 @@ void CreateBIOSFolders(int parent_index)
 		if (nParentIndex < 0 || !driver_list::driver(nParentIndex).description)
 			continue;
 
-		for (i = numFolders-1; i >= start_folder; i--)
+		for (i = 0; i < extra_folder_count; i++)
 		{
-			if (wcscmp(treeFolders[i]->m_lpTitle, driversw[nParentIndex]->description) == 0)
+			if (wcscmp(extra_folders[i].name, driversw[nParentIndex]->description) == 0)
 			{
-				AddGame(treeFolders[i],jj);
+				dataAddGame(&extra_folders[i], jj);
 				break;
 			}
 		}
 
-		if (i == start_folder-1)
+		if (i >= extra_folder_count)
 		{
-			lpTemp = NewFolder(driversw[nParentIndex]->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS);
-			AddFolder(lpTemp);
-			AddGame(lpTemp,jj);
+			// record that we found this folder
+			extra_folders[extra_folder_count].name = win_tstring_strdup(driversw[nParentIndex]->description);
+			dataAddGame(&extra_folders[extra_folder_count], jj);
+
+			extra_folder_count++;
 		}
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
 }
 
-void CreateResolutionFolders(int parent_index)
+void CreateBIOSFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\bios.ini");
+
+	if (NeedToUpdateIni())
+		GenerateBIOSFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_BIOS);
+}
+
+void GenerateResolutionFoldersIni(const TCHAR *ini_name)
 {
 	int i,jj;
-	int nGames = GetNumGames();
-	int start_folder = numFolders;
 	TCHAR Resolution[20];
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER lpVectorV, lpVectorH;
-	LPTREEFOLDER lpTemp;
+	struct FOLDER_DATA *folder, *folder_V, *folder_H;
+
+	InitExtraFolderData(512);
 
 	// create our two subfolders
-	lpVectorV = NewFolder(TEXT("Vector (V)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
-	lpVectorH = NewFolder(TEXT("Vector (H)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
-	AddFolder(lpVectorV);
-	AddFolder(lpVectorH);
+	extra_folders[extra_folder_count].name = win_tstring_strdup(TEXT("Vector (V)"));
+	folder_V = &extra_folders[extra_folder_count++];
+	extra_folders[extra_folder_count].name = win_tstring_strdup(TEXT("Vector (H)"));
+	folder_H = &extra_folders[extra_folder_count++];
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (jj = 0; jj < nGames; jj++)
+	for (jj = 0; jj < driver_list::total(); jj++)
 	{
 		machine_config config(driver_list::driver(jj), MameUIGlobal());
 		const screen_device *screen;
@@ -1246,11 +1510,11 @@ void CreateResolutionFolders(int parent_index)
 			{
 				if (driver_list::driver(jj).flags & ORIENTATION_SWAP_XY)
 				{
-					AddGame(lpVectorV,jj);
+					dataAddGame(folder_V, jj);
 				}
 				else
 				{
-					AddGame(lpVectorH,jj);
+					dataAddGame(folder_H, jj);
 				}
 			}
 			else
@@ -1267,39 +1531,49 @@ void CreateResolutionFolders(int parent_index)
 					visarea.max_y - visarea.min_y + 1);
 			}
 
-			for (i=numFolders-1;i>=start_folder;i--)
+			folder = NULL;
+			for (i = 0; i < extra_folder_count; i++)
 			{
-				if (wcscmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
+				if (wcscmp(extra_folders[i].name, Resolution) == 0)
 				{
-					AddGame(treeFolders[i],jj);
+					folder = &extra_folders[i];
 					break;
 				}
 			}
-			if (i == start_folder-1)
+			if (folder == NULL)
 			{
-				lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
-				AddFolder(lpTemp);
-				AddGame(lpTemp,jj);
+				extra_folders[extra_folder_count].name = win_tstring_strdup(Resolution);
+				folder = &extra_folders[extra_folder_count];
+				extra_folder_count++;
 			}
+			dataAddGame(folder, jj);
 		}
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
 }
 
-void CreateFPSFolders(int parent_index)
+void CreateResolutionFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\resolution.ini");
+
+	if (NeedToUpdateIni())
+		GenerateResolutionFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_FOLDER);
+}
+
+void GenerateFPSFoldersIni(const TCHAR *ini_name)
 {
 	int i,jj;
-	int nGames = GetNumGames();
-	int nFolder = numFolders;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[256];
-	LPTREEFOLDER lpTemp;
 	float fps[256];
-	int nFPS = 0;
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+	InitExtraFolderData(256);
 
-	for (i = 0; i < nGames; i++)
+	for (i = 0; i < driver_list::total(); i++)
 	{
 		float f;
 		machine_config config(driver_list::driver(i), MameUIGlobal());
@@ -1309,28 +1583,43 @@ void CreateFPSFolders(int parent_index)
 		{
 			f = ATTOSECONDS_TO_HZ(screen->refresh_attoseconds());
 
-			for (jj = 0; jj < nFPS; jj++)
+			for (jj = 0; jj < extra_folder_count; jj++)
 				if (fps[jj] == f)
 					break;
 
-			if (nFPS == jj)
+			if (extra_folder_count == jj)
 			{
 				TCHAR buf[50];
 
-				assert(nFPS + 1 < ARRAY_LENGTH(fps));
-				assert(nFPS + 1 < ARRAY_LENGTH(map));
+				assert(extra_folder_count + 1 < ARRAY_LENGTH(fps));
 
 				swprintf(buf, TEXT("%f Hz"), f);
 
-				lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
-				AddFolder(lpTemp);
-				map[nFPS] = treeFolders[nFolder++];
-				fps[nFPS++] = f;
+				// record that we found this folder
+				extra_folders[extra_folder_count].name = win_tstring_strdup(buf);
+				fps[extra_folder_count] = f;
+
+				extra_folder_count++;
 			}
 
-			AddGame(map[jj],i);
+			dataAddGame(&extra_folders[jj], i);
 		}
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
+}
+
+void CreateFPSFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\fps.ini");
+
+	if (NeedToUpdateIni())
+		GenerateFPSFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_FOLDER);
 }
 
 #ifdef USE_MORE_FOLDER_INFO
@@ -1363,7 +1652,7 @@ void CreateSaveStateFolders(int parent_index)
 	}
 }
 
-void CreateControlFolders(int parent_index)
+void GenerateControlFoldersIni(const TCHAR *ini_name)
 {
 	enum {
 		FOLDER_JOY2WAY, FOLDER_JOY4WAY, FOLDER_JOY8WAY, FOLDER_JOY16WAY,
@@ -1415,24 +1704,14 @@ void CreateControlFolders(int parent_index)
 		TEXT("Buttons 10")
 	};
 
-	int i;
-	int nGames = GetNumGames();
-	int nFolder = numFolders;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[FOLDER_MAX];
-	LPTREEFOLDER lpTemp;
+	InitExtraFolderData(FOLDER_MAX);
 
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+	int i;
 
 	for (i = 0; i < FOLDER_MAX; i++)
-	{
-		lpTemp = NewFolder(ctrl_names[i], 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
-		AddFolder(lpTemp);
-		map[i] = treeFolders[nFolder++];
-	}
+		extra_folders[extra_folder_count++].name = win_tstring_strdup(ctrl_names[i]);
 
-	for (i = 0; i < nGames; i++)
+	for (i = 0; i < driver_list::total(); i++)
 	{
 		int p = DriverNumPlayers(i);
 		int b = DriverNumButtons(i);
@@ -1440,13 +1719,28 @@ void CreateControlFolders(int parent_index)
 
 		for (j = 0; j < CONTROLLER_MAX; j++)
 			if (DriverUsesController(i, j))
-				AddGame(map[j], i);
+				dataAddGame(&extra_folders[j], i);
 
 		if (p)
-			AddGame(map[FOLDER_PLAYER1 + p - 1], i);
+			dataAddGame(&extra_folders[FOLDER_PLAYER1 + p - 1], i);
 		if (b)
-			AddGame(map[FOLDER_BUTTON1 + b - 1], i);
+			dataAddGame(&extra_folders[FOLDER_BUTTON1 + b - 1], i);
 	}
+
+	OutputIniAndFreeExtraFolderData(ini_name);
+}
+
+void CreateControlFolders(int parent_index)
+{
+	const TCHAR *ini_name = TEXT("\\control.ini");
+
+	if (NeedToUpdateIni())
+		GenerateControlFoldersIni(ini_name);
+
+	TCHAR filename[MAX_PATH];
+	wcscpy(filename, GetUIDir());
+	wcscat(filename, ini_name);
+	LoadExternalFolders(parent_index, filename, IDI_FOLDER);
 }
 #endif /* USE_MORE_FOLDER_INFO */
 

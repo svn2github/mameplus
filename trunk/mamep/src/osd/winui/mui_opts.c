@@ -172,6 +172,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_ICONS_DIRECTORY			"icons_directory"
 #define MUIOPTION_BACKGROUND_DIRECTORY			"background_directory"
 #define MUIOPTION_FOLDER_DIRECTORY			"folder_directory"
+#define MUIOPTION_UI_DIRECTORY			"ui_directory"
 #define MUIOPTION_UI_KEY_UP				"ui_key_up"
 #define MUIOPTION_UI_KEY_DOWN				"ui_key_down"
 #define MUIOPTION_UI_KEY_LEFT				"ui_key_left"
@@ -344,7 +345,7 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_EXEC_COMMAND,                         "",                           OPTION_STRING,     NULL },
 	{ MUIOPTION_EXEC_WAIT,                            "0",                          OPTION_INTEGER,    NULL },
 #ifdef USE_SHOW_SPLASH_SCREEN
-	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,                "0",                          OPTION_BOOLEAN,    NULL },
+	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,                "1",                          OPTION_BOOLEAN,    NULL },
 #endif /* USE_SHOW_SPLASH_SCREEN */
 #ifdef TREE_SHEET
 	{ MUIOPTION_SHOW_TREE_SHEET,                      "1",                          OPTION_BOOLEAN,    NULL },
@@ -362,6 +363,7 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_PCB_DIRECTORY,                        "pcb",                        OPTION_STRING,     NULL },
 	{ MUIOPTION_BACKGROUND_DIRECTORY,                 "bkground",                   OPTION_STRING,     NULL },
 	{ MUIOPTION_FOLDER_DIRECTORY,                     "folders",                    OPTION_STRING,     NULL },
+	{ MUIOPTION_UI_DIRECTORY,                         "ui",                         OPTION_STRING,     NULL },
 	{ MUIOPTION_ICONS_DIRECTORY,                      "icons",                      OPTION_STRING,     NULL },
 #ifdef USE_VIEW_PCBINFO
 	{ MUIOPTION_PCBINFO_DIRECTORY,                    "pcbinfo",                    OPTION_STRING,     NULL },
@@ -1563,6 +1565,16 @@ const WCHAR* GetFolderDir(void)
 void SetFolderDir(const WCHAR* path)
 {
 	options_set_wstring(settings, MUIOPTION_FOLDER_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+}
+
+const WCHAR* GetUIDir(void)
+{
+	return options_get_wstring(settings, MUIOPTION_UI_DIRECTORY);
+}
+
+void SetUIDir(const WCHAR* path)
+{
+	options_set_wstring(settings, MUIOPTION_UI_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 
 const WCHAR* GetCheatDir(void)
@@ -3406,7 +3418,27 @@ void SetDriverCacheUsesController(int driver_index, int val)
 	game_opts.uses_controler(driver_index, val);
 }
 
-BOOL RequiredDriverCache(void)
+
+static BOOL RequiredDriverCacheStatus = FALSE;
+void SetRequiredDriverCacheStatus(void)
+{
+	static bool bFirst = true;
+
+	if (bFirst)
+	{
+		RequiredDriverCacheStatus = RequiredDriverCache(1);
+
+		bFirst = false;
+	}
+}
+BOOL GetRequiredDriverCacheStatus(void)
+{
+	SetRequiredDriverCacheStatus();
+
+	return RequiredDriverCacheStatus;
+}
+
+BOOL RequiredDriverCache(int check_only)
 {
 	bool ret = false;
 
@@ -3430,17 +3462,19 @@ BOOL RequiredDriverCache(void)
 		ret = true;
 #endif /* DRIVER_SWITCH */
 
-	astring error_string;
-	settings.set_value(MUIOPTION_EXE_NAME, utf8_filename, OPTION_PRIORITY_CMDLINE,error_string);
-	assert(!error_string);
-	settings.set_value(MUIOPTION_VERSION, GetVersionString(), OPTION_PRIORITY_CMDLINE,error_string);
-	assert(!error_string);
+	if (!check_only) {
+		astring error_string;
+		settings.set_value(MUIOPTION_EXE_NAME, utf8_filename, OPTION_PRIORITY_CMDLINE,error_string);
+		assert(!error_string);
+		settings.set_value(MUIOPTION_VERSION, GetVersionString(), OPTION_PRIORITY_CMDLINE,error_string);
+		assert(!error_string);
 #ifdef DRIVER_SWITCH
-	settings.set_value(OPTION_DRIVER_CONFIG, global.value(OPTION_DRIVER_CONFIG), OPTION_PRIORITY_CMDLINE,error_string);
-	assert(!error_string);
-	settings.set_value(OPTION_DISABLE_MECHANICAL_DRIVER, global.value(OPTION_DISABLE_MECHANICAL_DRIVER), OPTION_PRIORITY_CMDLINE,error_string);
-	assert(!error_string);
+		settings.set_value(OPTION_DRIVER_CONFIG, global.value(OPTION_DRIVER_CONFIG), OPTION_PRIORITY_CMDLINE,error_string);
+		assert(!error_string);
+		settings.set_value(OPTION_DISABLE_MECHANICAL_DRIVER, global.value(OPTION_DISABLE_MECHANICAL_DRIVER), OPTION_PRIORITY_CMDLINE,error_string);
+		assert(!error_string);
 #endif /* DRIVER_SWITCH */
+	}
 
 	osd_free(utf8_filename);
 

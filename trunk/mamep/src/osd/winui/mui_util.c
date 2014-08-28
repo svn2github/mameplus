@@ -719,6 +719,8 @@ static int InitDriversCache(void)
 	int ndriver;
 	int i;
 
+	SetRequiredDriverCacheStatus();
+
 	if (RequiredDriverCache())
 	{
 		InitDriversInfo();
