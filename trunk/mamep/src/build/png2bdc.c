@@ -60,6 +60,8 @@
 #define CACHED_CHAR_SIZE        12
 #define CACHED_HEADER_SIZE      16
 
+dynamic_buffer m_chartable(65536 * CACHED_CHAR_SIZE + 1);
+int total_numchars = 0;
 
 
 //**************************************************************************
@@ -126,6 +128,21 @@ static void write_data(core_file &file, UINT8 *base, UINT8 *end)
 //  data out to the file
 //-------------------------------------------------
 
+static bool render_font_create_temporaryfile(render_font &font, const char *filename)
+{
+	total_numchars = 0;
+	m_chartable.clear();
+
+	core_file *file;
+	astring tmp_filename(filename, ".tmp");
+	file_error filerr = core_fopen(tmp_filename.cstr(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	if (filerr != FILERR_NONE)
+		return true;
+	core_fclose(file);
+
+	return false;
+}
+
 static bool render_font_save_cached(render_font &font, const char *filename, UINT32 hash)
 {
 	// attempt to open the file
@@ -133,6 +150,12 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 	file_error filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	if (filerr != FILERR_NONE)
 		return true;
+	core_file *tmp_file;
+	astring tmp_filename(filename, ".tmp");
+	filerr = core_fopen(tmp_filename.cstr(), OPEN_FLAG_WRITE | OPEN_FLAG_READ, &tmp_file);
+	if (filerr != FILERR_NONE)
+		return true;
+	core_fseek(tmp_file, 0, SEEK_END);
 
 	try
 	{
@@ -141,6 +164,7 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 		for (int chnum = 0; chnum < 65536; chnum++)
 			if (font.chars[chnum].width > 0)
 				numchars++;
+		total_numchars += numchars;
 
 		// write the header
 		dynamic_buffer tempbuffer(65536);
@@ -157,18 +181,18 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 		*dest++ = font.height & 0xff;
 		*dest++ = font.yoffs >> 8;
 		*dest++ = font.yoffs & 0xff;
-		*dest++ = numchars >> 24;
-		*dest++ = numchars >> 16;
-		*dest++ = numchars >> 8;
-		*dest++ = numchars & 0xff;
+		*dest++ = total_numchars >> 24;
+		*dest++ = total_numchars >> 16;
+		*dest++ = total_numchars >> 8;
+		*dest++ = total_numchars & 0xff;
 		write_data(*file, tempbuffer, dest);
 
 		// write the empty table to the beginning of the file
-		dynamic_buffer chartable(numchars * CACHED_CHAR_SIZE + 1, 0);
-		write_data(*file, &chartable[0], &chartable[numchars * CACHED_CHAR_SIZE]);
+		//m_chartable.resize_keep(total_numchars * CACHED_CHAR_SIZE + 1);
+		//write_data(*file, &m_chartable[0], &m_chartable[total_numchars * CACHED_CHAR_SIZE]);
 
 		// loop over all characters
-		int tableindex = 0;
+		int tableindex = total_numchars - numchars;
 		for (int chnum = 0; chnum < 65536; chnum++)
 		{
 			render_font_char &ch = font.chars[chnum];
@@ -205,7 +229,7 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 						*dest++ = accum;
 
 					// write the data
-					write_data(*file, tempbuffer, dest);
+					write_data(*tmp_file, tempbuffer, dest);
 
 					// free the bitmap and texture
 					global_free(ch.bitmap);
@@ -213,7 +237,7 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 				}
 
 				// compute the table entry
-				dest = &chartable[tableindex++ * CACHED_CHAR_SIZE];
+				dest = &m_chartable[tableindex++ * CACHED_CHAR_SIZE];
 				*dest++ = chnum >> 8;
 				*dest++ = chnum & 0xff;
 				*dest++ = ch.width >> 8;
@@ -226,21 +250,34 @@ static bool render_font_save_cached(render_font &font, const char *filename, UIN
 				*dest++ = ch.bmwidth & 0xff;
 				*dest++ = ch.bmheight >> 8;
 				*dest++ = ch.bmheight & 0xff;
+
+				ch.width = 0;
 			}
 		}
 
 		// seek back to the beginning and rewrite the table
 		core_fseek(file, CACHED_HEADER_SIZE, SEEK_SET);
-		write_data(*file, &chartable[0], &chartable[numchars * CACHED_CHAR_SIZE]);
+		write_data(*file, &m_chartable[0], &m_chartable[total_numchars * CACHED_CHAR_SIZE]);
+
+		// mamep:copy from temporary file
+		UINT32 filesize = (UINT32)core_fsize(tmp_file);
+		tempbuffer.resize(filesize);
+		tempbuffer.clear();
+		core_fseek(tmp_file, 0, SEEK_SET);
+		core_fread(tmp_file, tempbuffer, filesize);
+		core_fwrite(file, tempbuffer, filesize);
 
 		// all done
 		core_fclose(file);
+		core_fclose(tmp_file);
 		return false;
 	}
 	catch (...)
 	{
 		core_fclose(file);
+		core_fclose(tmp_file);
 		osd_rmfile(filename);
+		osd_rmfile(tmp_filename.cstr());
 		return true;
 	}
 }
@@ -388,6 +425,8 @@ int main(int argc, char *argv[])
 	// iterate over input files
 	static render_font font;
 	bool error = false;
+	// create font temporary file
+	error = render_font_create_temporaryfile(font, bdcname);
 	for (int curarg = 1; curarg < argc - 1; curarg++)
 	{
 		// load the png file
@@ -415,11 +454,12 @@ int main(int argc, char *argv[])
 		error = bitmap_to_chars(bitmap, font);
 		if (error)
 			break;
-	}
 
-	// write out the resulting font
-	if (!error)
+		// write out the resulting font
 		error = render_font_save_cached(font, bdcname, 0);
+		if (error)
+			break;
+	}
 
 	// cleanup after ourselves
 	return error ? 1 : 0;
