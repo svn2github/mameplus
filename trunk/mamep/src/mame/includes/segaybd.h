@@ -25,6 +25,7 @@ public:
 			m_subx(*this, "subx"),
 			m_suby(*this, "suby"),
 			m_soundcpu(*this, "soundcpu"),
+			m_linkcpu(*this, "linkcpu"),
 			m_bsprites(*this, "bsprites"),
 			m_ysprites(*this, "ysprites"),
 			m_segaic16vid(*this, "segaic16vid"),
@@ -51,6 +52,14 @@ public:
 
 	// sound Z80 CPU read/write handlers
 	DECLARE_READ8_MEMBER( sound_data_r );
+
+	// linked cabinet specific handlers
+	DECLARE_WRITE_LINE_MEMBER( mb8421_intl );
+	DECLARE_WRITE_LINE_MEMBER( mb8421_intr );
+	DECLARE_READ16_MEMBER( link_r );
+	DECLARE_READ16_MEMBER( link2_r );
+	DECLARE_WRITE16_MEMBER( link2_w );
+	DECLARE_READ8_MEMBER( link_portc0_r );
 
 	// game-specific output handlers
 	void gforce2_output_cb2(UINT16 data);
@@ -96,6 +105,7 @@ protected:
 	required_device<m68000_device> m_subx;
 	required_device<m68000_device> m_suby;
 	required_device<z80_device> m_soundcpu;
+	optional_device<z80_device> m_linkcpu;
 	required_device<sega_sys16b_sprite_device> m_bsprites;
 	required_device<sega_yboard_sprite_device> m_ysprites;
 	required_device<segaic16_video_device> m_segaic16vid;

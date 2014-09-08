@@ -947,7 +947,6 @@ UINT64 debug_read_opcode(address_space &space, offs_t address, int size, int arg
 
 		default:
 			fatalerror("debug_read_opcode: unknown type = %d\n", space.data_width() / 8 * 10 + size);
-			break;
 	}
 
 	/* turn on debugger access */
@@ -1931,6 +1930,8 @@ void device_debug::instruction_hook(offs_t curpc)
 			// flush any pending updates before waiting again
 			machine.debug_view().flush_osd_updates();
 
+			machine.manager().web()->serve();
+			
 			// clear the memory modified flag and wait
 			global->memory_modified = false;
 			if (machine.debug_flags & DEBUG_FLAG_OSD_ENABLED)

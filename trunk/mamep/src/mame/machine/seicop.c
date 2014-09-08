@@ -2279,8 +2279,8 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 			break;
 
 		/* triggered before 0x6200 in Seibu Cup, looks like an angle value ... */
-		case (0x01c/2): m_cop_angle_compare = INT8(m_cop_mcu_ram[0x1c/2]);  break;
-		case (0x01e/2): m_cop_angle_mod_val = INT8(m_cop_mcu_ram[0x1e/2]); break;
+		case (0x01c/2): m_cop_angle_compare = UINT16(m_cop_mcu_ram[0x1c/2]);  break;
+		case (0x01e/2): m_cop_angle_mod_val = UINT16(m_cop_mcu_ram[0x1e/2]); break;
 
 		/* BCD Protection */
 		case (0x020/2):
@@ -2479,19 +2479,22 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 			  Surprisingly atan maths are nowhere to be found from the roms.
 			*/
 
-			/* "automatic" movement */
+			/* "automatic" movement, 0205 */
 			if(COP_CMD(0x188,0x282,0x082,0xb8e,0x98e,0x000,0x000,0x000,6,0xffeb))
 			{
 				UINT8 offs;
 
 				offs = (offset & 3) * 4;
+				int ppos = space.read_dword(m_cop_register[0] + 4 + offs);
+				int npos = ppos + space.read_dword(m_cop_register[0] + 0x10 + offs);
+				int delta = (npos >> 16) - (ppos >> 16);
 
-				space.write_dword(m_cop_register[0] + 0x04 + offs, space.read_dword(m_cop_register[0] + 0x04 + offs) + space.read_dword(m_cop_register[0] + 0x10 + offs));
-				space.write_dword(m_cop_register[0] + 0x1c + offs, space.read_dword(m_cop_register[0] + 0x10 + offs) + space.read_dword(m_cop_register[0] + 0x1c + offs));
+				space.write_dword(m_cop_register[0] + 4 + offs, npos);
+				space.write_word(m_cop_register[0] + 0x1c + offs, space.read_word(m_cop_register[0] + 0x1c + offs) + delta);
 				return;
 			}
 
-			/* "automatic" movement, for arcs in Legionnaire / Zero Team (expression adjustment) */
+			/* "automatic" movement, for arcs in Legionnaire / Zero Team (expression adjustment) 0905 */
 			if(COP_CMD(0x194,0x288,0x088,0x000,0x000,0x000,0x000,0x000,6,0xfbfb))
 			{
 				UINT8 offs;
@@ -2787,6 +2790,12 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 				/* 8 + [4] */
 				/* 4 + [6] */
 
+				// these two are obvious ...
+				// 0xf x 16 = 240
+				// 0x14 x 16 = 320
+				// what are these two instead? scale factor? offsets?
+				// 0xfc69 ?
+				// 0x7f4 ?
 				//printf("%08x %08x %08x %08x %08x %08x %08x\n",m_cop_register[0],m_cop_register[1],m_cop_register[2],m_cop_register[3],m_cop_register[4],m_cop_register[5],m_cop_register[6]);
 
 				offs = (offset & 3) * 4;
@@ -2804,7 +2813,8 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 			//(cupsoc)   | 8 | f3e7 | 6200 | 3a0 3a6 380 aa0 2a6
 			if(COP_CMD(0x3a0,0x3a6,0x380,0xaa0,0x2a6,0x000,0x000,0x000,8,0xf3e7))
 			{
-				INT8 cur_angle;
+				UINT8 cur_angle;
+				UINT16 flags;
 
 				/* 0 [1] */
 				/* 0xc [1] */
@@ -2813,27 +2823,40 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 				/* 0xc [1] */
 
 				cur_angle = space.read_byte(m_cop_register[1] + (0xc ^ 3));
+				flags = space.read_word(m_cop_register[1]);
 				//space.write_byte(m_cop_register[1] + (0^3),space.read_byte(m_cop_register[1] + (0^3)) & 0xfb); //correct?
 
-				if(cur_angle >= m_cop_angle_compare)
+				m_cop_angle_compare &= 0xff;
+				m_cop_angle_mod_val &= 0xff;
+				flags &= ~0x0004;
+
+				int delta = cur_angle - m_cop_angle_compare;
+				if(delta >= 128)
+					delta -= 256;
+				else if(delta < -128)
+					delta += 256;
+				if(delta < 0)
 				{
-					cur_angle -= m_cop_angle_mod_val;
-					if(cur_angle <= m_cop_angle_compare)
+					if(delta >= -m_cop_angle_mod_val)
 					{
 						cur_angle = m_cop_angle_compare;
-						//space.write_byte(m_cop_register[1] + (0^3),space.read_byte(m_cop_register[1] + (0^3)) | 2);
-					}
+						flags |= 0x0004;
+					} 
+					else
+						cur_angle += m_cop_angle_mod_val;
 				}
-				else if(cur_angle <= m_cop_angle_compare)
+				else
 				{
-					cur_angle += m_cop_angle_mod_val;
-					if(cur_angle >= m_cop_angle_compare)
+					if(delta <= m_cop_angle_mod_val)
 					{
 						cur_angle = m_cop_angle_compare;
-						//space.write_byte(m_cop_register[1] + (0^3),space.read_byte(m_cop_register[1] + (0^3)) | 2);
+						flags |= 0x0004;
 					}
+					else
+						cur_angle -= m_cop_angle_mod_val;
 				}
 
+				space.write_byte(m_cop_register[1] + (0 ^ 2),flags);
 				space.write_byte(m_cop_register[1] + (0xc ^ 3),cur_angle);
 				return;
 			}
@@ -2843,37 +2866,45 @@ WRITE16_MEMBER( seibu_cop_legacy_device::generic_cop_w )
 			/* FIXME: still doesn't work ... */
 			if(COP_CMD(0x380,0x39a,0x380,0xa80,0x29a,0x000,0x000,0x000,8,0xf3e7))
 			{
-				INT8 cur_angle;
+				UINT8 cur_angle;
+				UINT16 flags;
 
-				cur_angle = INT8(space.read_byte(m_cop_register[0] + (0x34 ^ 3)));
-				//space.write_byte(m_cop_register[0] + (0^3),space.read_byte(m_cop_register[0] + (0^3)) & 0xfb); //correct?
-				/*
-				0x00      0x00          0x60            0x00
-				0x00      0x20          0x60            0x20
-				0x00      0x40          0x60            0x60
-				0x00      0x60          0x60            0x60
-				0x00      0x80          0x60            0xa0
-				0x00      0xa0          0x60            0xa0
-				0x00      0xc0          0x60            0xc0
-				0x00      0xe0          0x60            0xe0
-				*/
+				cur_angle = space.read_byte(m_cop_register[0] + (0x34 ^ 3));
+				flags = space.read_word(m_cop_register[0] + (0 ^ 2));
+				//space.write_byte(m_cop_register[1] + (0^3),space.read_byte(m_cop_register[1] + (0^3)) & 0xfb); //correct?
 
-				if(cur_angle > m_cop_angle_compare)
+				m_cop_angle_compare &= 0xff;
+				m_cop_angle_mod_val &= 0xff;
+				flags &= ~0x0004;
+
+				int delta = cur_angle - m_cop_angle_compare;
+				if(delta >= 128)
+					delta -= 256;
+				else if(delta < -128)
+					delta += 256;
+				if(delta < 0)
 				{
-					cur_angle -= m_cop_angle_mod_val;
-
-					if(cur_angle < m_cop_angle_compare)
+					if(delta >= -m_cop_angle_mod_val)
+					{
 						cur_angle = m_cop_angle_compare;
-				}
-				else if(cur_angle < m_cop_angle_compare)
+						flags |= 0x0004;
+					}
+					else
+						cur_angle += m_cop_angle_mod_val;
+				} 
+				else
 				{
-					cur_angle += m_cop_angle_mod_val;
-
-					if(cur_angle > m_cop_angle_compare)
+					if(delta <= m_cop_angle_mod_val)
+					{
 						cur_angle = m_cop_angle_compare;
+						flags |= 0x0004;
+					} 
+					else
+						cur_angle -= m_cop_angle_mod_val;
 				}
 
-				space.write_byte(m_cop_register[0] + (0x34 ^ 3),cur_angle);
+				space.write_byte(m_cop_register[0] + (0 ^ 3),flags);
+				space.write_word(m_cop_register[0] + (0x34 ^ 3),cur_angle);
 				return;
 			}
 

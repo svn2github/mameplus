@@ -16,6 +16,35 @@ BUSOBJ = $(EMUOBJ)/bus
 
 #-------------------------------------------------
 #
+#@src/emu/bus/a7800/a78_slot.h,BUSES += A7800
+#-------------------------------------------------
+
+ifneq ($(filter A7800,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/a7800
+BUSOBJS += $(BUSOBJ)/a7800/a78_slot.o
+BUSOBJS += $(BUSOBJ)/a7800/rom.o
+BUSOBJS += $(BUSOBJ)/a7800/hiscore.o
+BUSOBJS += $(BUSOBJ)/a7800/xboard.o
+BUSOBJS += $(BUSOBJ)/a7800/cpuwiz.o
+endif
+
+
+#-------------------------------------------------
+#
+#@src/emu/bus/a800/a800_slot.h,BUSES += A800
+#-------------------------------------------------
+
+ifneq ($(filter A800,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/a800
+BUSOBJS += $(BUSOBJ)/a800/a800_slot.o
+BUSOBJS += $(BUSOBJ)/a800/rom.o
+BUSOBJS += $(BUSOBJ)/a800/oss.o
+BUSOBJS += $(BUSOBJ)/a800/sparta.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/abcbus/abcbus.h,BUSES += ABCBUS
 #-------------------------------------------------
 
@@ -388,6 +417,7 @@ BUSOBJS += $(BUSOBJ)/isa/xsu_cards.o
 BUSOBJS += $(BUSOBJ)/isa/sc499.o
 BUSOBJS += $(BUSOBJ)/isa/3c505.o
 BUSOBJS += $(BUSOBJ)/isa/aga.o
+BUSOBJS += $(BUSOBJ)/isa/svga_trident.o
 endif
 
 #-------------------------------------------------
@@ -562,18 +592,33 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/bus/vcs/ctrl.h,BUSES += VCS
+#@src/emu/bus/vcs/vcs_slot.h,BUSES += VCS
 #-------------------------------------------------
 
 ifneq ($(filter VCS,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/vcs
-BUSOBJS += $(BUSOBJ)/vcs/ctrl.o
-BUSOBJS += $(BUSOBJ)/vcs/joystick.o
-BUSOBJS += $(BUSOBJ)/vcs/joybooster.o
-BUSOBJS += $(BUSOBJ)/vcs/keypad.o
-BUSOBJS += $(BUSOBJ)/vcs/lightpen.o
-BUSOBJS += $(BUSOBJ)/vcs/paddles.o
-BUSOBJS += $(BUSOBJ)/vcs/wheel.o
+BUSOBJS += $(BUSOBJ)/vcs/vcs_slot.o
+BUSOBJS += $(BUSOBJ)/vcs/rom.o
+BUSOBJS += $(BUSOBJ)/vcs/compumat.o
+BUSOBJS += $(BUSOBJ)/vcs/dpc.o
+BUSOBJS += $(BUSOBJ)/vcs/scharger.o
+endif
+
+
+#-------------------------------------------------
+#
+#@src/emu/bus/vcs/ctrl.h,BUSES += VCS_CTRL
+#-------------------------------------------------
+
+ifneq ($(filter VCS_CTRL,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vcs_ctrl
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/ctrl.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/joystick.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/joybooster.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/keypad.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/lightpen.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/paddles.o
+BUSOBJS += $(BUSOBJ)/vcs_ctrl/wheel.o
 endif
 
 
@@ -719,6 +764,7 @@ BUSOBJS += $(BUSOBJ)/a2bus/a2diskiing.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2mcms.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2dx1.o
 BUSOBJS += $(BUSOBJ)/a2bus/timemasterho.o
+BUSOBJS += $(BUSOBJ)/a2bus/mouse.o
 endif
 
 #-------------------------------------------------
@@ -761,6 +807,7 @@ BUSOBJS += $(BUSOBJ)/centronics/dsjoy.o
 BUSOBJS += $(BUSOBJ)/centronics/epson_ex800.o
 BUSOBJS += $(BUSOBJ)/centronics/epson_lx800.o
 BUSOBJS += $(BUSOBJ)/centronics/printer.o
+BUSOBJS += $(BUSOBJ)/centronics/digiblst.o
 $(BUSOBJ)/centronics/epson_ex800.o:    $(EMUOBJ)/layout/ex800.lh
 $(BUSOBJ)/centronics/epson_lx800.o:    $(EMUOBJ)/layout/lx800.lh
 endif
@@ -900,6 +947,7 @@ OBJDIRS += $(BUSOBJ)/megadrive
 BUSOBJS += $(BUSOBJ)/megadrive/md_slot.o
 BUSOBJS += $(BUSOBJ)/megadrive/md_carts.o
 BUSOBJS += $(BUSOBJ)/megadrive/eeprom.o
+BUSOBJS += $(BUSOBJ)/megadrive/ggenie.o
 BUSOBJS += $(BUSOBJ)/megadrive/jcart.o
 BUSOBJS += $(BUSOBJ)/megadrive/rom.o
 BUSOBJS += $(BUSOBJ)/megadrive/sk.o
@@ -1082,6 +1130,7 @@ BUSOBJS += $(BUSOBJ)/cpc/cpc_pds.o
 BUSOBJS += $(BUSOBJ)/cpc/cpc_rs232.o
 BUSOBJS += $(BUSOBJ)/cpc/mface2.o
 BUSOBJS += $(BUSOBJ)/cpc/symbfac2.o
+BUSOBJS += $(BUSOBJ)/cpc/amdrum.o
 endif
 
 #-------------------------------------------------

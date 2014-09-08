@@ -151,6 +151,7 @@ public:
 	UINT32 screen_update_subroc3d(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_buckrog(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(delayed_i8255_w);
+	TIMER_CALLBACK_MEMBER(update_sound_a);
 	DECLARE_WRITE8_MEMBER(turbo_sound_a_w);
 	DECLARE_WRITE8_MEMBER(turbo_sound_b_w);
 	DECLARE_WRITE8_MEMBER(turbo_sound_c_w);
@@ -167,6 +168,9 @@ public:
 	void buckrog_prepare_sprites(UINT8 y, sprite_info *info);
 	UINT32 buckrog_get_sprite_bits(const UINT8 *sprite_gfxdata, sprite_info *sprinfo, UINT8 *plb);
 	void turbo_rom_decode();
+	void turbo_update_samples();
+	inline void subroc3d_update_volume(int leftchan, UINT8 dis, UINT8 dir);
+	void buckrog_update_samples();
 };
 
 

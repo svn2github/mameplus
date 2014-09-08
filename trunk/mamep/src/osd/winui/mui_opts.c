@@ -172,7 +172,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_ICONS_DIRECTORY			"icons_directory"
 #define MUIOPTION_BACKGROUND_DIRECTORY			"background_directory"
 #define MUIOPTION_FOLDER_DIRECTORY			"folder_directory"
-#define MUIOPTION_UI_DIRECTORY			"ui_directory"
+#define MUIOPTION_UI_DIRECTORY				"ui_directory"
 #define MUIOPTION_UI_KEY_UP				"ui_key_up"
 #define MUIOPTION_UI_KEY_DOWN				"ui_key_down"
 #define MUIOPTION_UI_KEY_LEFT				"ui_key_left"

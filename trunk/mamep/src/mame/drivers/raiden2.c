@@ -24,6 +24,7 @@ raiden 2 board test note 17/04/08 (based on test by dox)
   value of 0x80 puts 0x00000-0x1ffff at 0x20000 - 0x3ffff
   value of 0x00 puts 0x20000-0x3ffff at 0x20000 - 0x3ffff
 
+===
 
 ===========================================================================================================
 
@@ -127,26 +128,35 @@ Protection Notes:
  to be the actual MCU which is probably internal to one of the Seibu
  customs.
 
- The games in legionna.c use the same protection chips.
+ The games in legionna.c use (almost?) the same protection chips.
 
 Current Problem(s) - in order of priority
 
  High Priority
 
- ROM banking - we don't know where the ROM bank registers are, this causes
- serious problems as it's hard to see which glitches are caused by
- protection, and which are caused by a lack of ROM banking.
+ Protection 
+ - zeroteam has bogus collision detection;
+ - raiden2 has a weird movement after that the ship completes animation from the aircraft. Probably 42c2 should be floating point rounded ...
+ - (and probably more)
+ 
+ Unemulated 0-0x3ffff ROM banking for raidendx, but it's unknown if/where it's used (hopefully NOT on getting perfect on Alpha course).
 
- Protection - it isn't emulated, until it is the games will never work.
-
- Video emulation - used to be more complete than it is now, tile banking is
- currently broken.
+ zeroteam - sort-DMA doesn't seem to work too well, sprite-sprite priorities are broken as per now
+ 
+ xsedae - do an "8-liner"-style scroll during attract, doesn't work too well.
+ 
+ sprite chip is the same as seibuspi.c and feversoc.c, needs device-ification and merging.
+ 
+ sprite chip also uses first entry for "something" that isn't sprite, some of them looks clipping 
+ regions (150 - ff in zeroteam, 150 - 0 and 150 - 80 in raiden2). Latter probably do double buffering
+ on odd/even frames, by updating only top or bottom part of screen.
 
  Low Priority
 
 ********************************************************************************************************/
 
 #include "emu.h"
+#include "debugger.h"
 #include "cpu/nec/nec.h"
 #include "cpu/z80/z80.h"
 #include "machine/eepromser.h"
@@ -163,6 +173,8 @@ UINT16 raiden2_state::rpc()
 {
 	return m_maincpu->state_int(NEC_IP);
 }
+
+int cnt=0, ccol = -1;
 
 WRITE16_MEMBER(raiden2_state::cop_pgm_data_w)
 {
@@ -477,6 +489,16 @@ WRITE16_MEMBER(raiden2_state::cop_scale_w)
 	cop_scale &= 3;
 }
 
+WRITE16_MEMBER(raiden2_state::cop_angle_target_w)
+{
+	COMBINE_DATA(&cop_angle_target);
+}
+
+WRITE16_MEMBER(raiden2_state::cop_angle_step_w)
+{
+	COMBINE_DATA(&cop_angle_step);
+}
+
 READ16_MEMBER(raiden2_state::cop_reg_high_r)
 {
 	return cop_regs[offset] >> 16;
@@ -497,43 +519,54 @@ WRITE16_MEMBER(raiden2_state::cop_reg_low_w)
 	cop_regs[offset] = (cop_regs[offset] & ~UINT32(mem_mask)) | (data & mem_mask);
 }
 
-void raiden2_state::cop_take_hit_box_params(UINT8 offs)
+WRITE16_MEMBER(raiden2_state::cop_hitbox_baseadr_w)
 {
-	INT16 start_x,start_y,end_x,end_y;
-
-	start_x = INT8(cop_collision_info[offs].hitbox_x);
-	start_y = INT8(cop_collision_info[offs].hitbox_y);
-
-	end_x = INT8(cop_collision_info[offs].hitbox_x >> 8);
-	end_y = INT8(cop_collision_info[offs].hitbox_y >> 8);
-
-	cop_collision_info[offs].min_x = start_x + (cop_collision_info[offs].x >> 16);
-	cop_collision_info[offs].min_y = start_y + (cop_collision_info[offs].y >> 16);
-	cop_collision_info[offs].max_x = end_x + (cop_collision_info[offs].x >> 16);
-	cop_collision_info[offs].max_y = end_y + (cop_collision_info[offs].y >> 16);
+	COMBINE_DATA(&cop_hit_baseadr);
 }
 
-
-UINT8 raiden2_state::cop_calculate_collsion_detection()
+void raiden2_state::cop_collision_read_xy(address_space &space, int slot, UINT32 spradr)
 {
-	static UINT8 res;
+	cop_collision_info[slot].x = space.read_dword(spradr+4);
+	cop_collision_info[slot].y = space.read_dword(spradr+8);
+	cop_collision_info[slot].z = space.read_dword(spradr+12);
+}
 
-	res = 3;
+void raiden2_state::cop_collision_update_hitbox(address_space &space, int slot, UINT32 hitadr)
+{
+	UINT32 hitadr2 = space.read_word(hitadr) | (cop_hit_baseadr << 16);
+
+	INT8 hx = space.read_byte(hitadr2++);
+	UINT8 hw = space.read_byte(hitadr2++);
+	INT8 hy = space.read_byte(hitadr2++);
+	UINT8 hh = space.read_byte(hitadr2++);
+	INT8 hz = space.read_byte(hitadr2++);
+	UINT8 hd = space.read_byte(hitadr2++);
+
+	cop_collision_info[slot].min_x = (cop_collision_info[slot].x >> 16) + hx;
+	cop_collision_info[slot].min_y = (cop_collision_info[slot].y >> 16) + hy;
+	cop_collision_info[slot].min_z = (cop_collision_info[slot].z >> 16) + hz;
+	cop_collision_info[slot].max_x = cop_collision_info[slot].min_x + hw;
+	cop_collision_info[slot].max_y = cop_collision_info[slot].min_y + hh;
+	cop_collision_info[slot].max_z = cop_collision_info[slot].min_z + hd;
+
+	cop_hit_status = 7;
 
 	/* outbound X check */
 	if(cop_collision_info[0].max_x >= cop_collision_info[1].min_x && cop_collision_info[0].min_x <= cop_collision_info[1].max_x)
-		res &= ~2;
+		cop_hit_status &= ~1;
 
 	/* outbound Y check */
 	if(cop_collision_info[0].max_y >= cop_collision_info[1].min_y && cop_collision_info[0].min_y <= cop_collision_info[1].max_y)
-		res &= ~1;
+		cop_hit_status &= ~2;
+
+	/* outbound Z check */
+	if(cop_collision_info[0].max_z >= cop_collision_info[1].min_z && cop_collision_info[0].min_z <= cop_collision_info[1].max_z)
+		cop_hit_status &= ~4;
 
 	cop_hit_val_x = (cop_collision_info[0].x - cop_collision_info[1].x) >> 16;
 	cop_hit_val_y = (cop_collision_info[0].y - cop_collision_info[1].y) >> 16;
-	cop_hit_val_z = 1;
-	cop_hit_val_unk = res; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
-
-	return res;
+	cop_hit_val_z = (cop_collision_info[0].z - cop_collision_info[1].z) >> 16;
+	cop_hit_val_unk = cop_hit_status; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
 }
 
 WRITE16_MEMBER(raiden2_state::cop_cmd_w)
@@ -541,22 +574,30 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 	cop_status &= 0x7fff;
 
 	switch(data) {
-	case 0x0205:   // 0205 0006 ffeb 0000 - 0188 0282 0082 0b8e 098e 0000 0000 0000
-		space.write_dword(cop_regs[0] + 4 + offset*4, space.read_dword(cop_regs[0] + 4 + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
-		/* TODO: check the following, makes Zero Team to crash as soon as this command is triggered (see above). */
-		space.write_dword(cop_regs[0] + 0x1c + offset*4, space.read_dword(cop_regs[0] + 0x1c + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
+	case 0x0205: {  // 0205 0006 ffeb 0000 - 0188 0282 0082 0b8e 098e 0000 0000 0000
+		int ppos = space.read_dword(cop_regs[0] + 4 + offset*4);
+		int npos = ppos + space.read_dword(cop_regs[0] + 0x10 + offset*4);
+		int delta = (npos >> 16) - (ppos >> 16);
+		space.write_dword(cop_regs[0] + 4 + offset*4, npos);
+
+		/* TODO: check the following, makes Zero Team to crash as soon
+		   as this command is triggered (see above) --- or not, since
+		   it was just changed */
+		space.write_word(cop_regs[0] + 0x1e + offset*4, space.read_word(cop_regs[0] + 0x1e + offset*4) + delta);
 		break;
+	}
 
 	case 0x0904: { /* X Se Dae and Zero Team uses this variant */
 		space.write_dword(cop_regs[0] + 16 + offset*4, space.read_dword(cop_regs[0] + 16 + offset*4) - space.read_dword(cop_regs[0] + 0x28 + offset*4));
 		break;
 	}
-	case 0x0905: // 194 288 088
+	case 0x0905: //  0905 0006 fbfb 0008 - 0194 0288 0088 0000 0000 0000 0000 0000
 		space.write_dword(cop_regs[0] + 16 + offset*4, space.read_dword(cop_regs[0] + 16 + offset*4) + space.read_dword(cop_regs[0] + 0x28 + offset*4));
 		break;
 
-	case 0x130e:
-	case 0x138e: { // 130e 0005 bf7f 0010 - 0984 0aa4 0d82 0aa2 039b 0b9a 0b9a 0a9a
+	case 0x130e:   // 130e 0005 bf7f 0010 - 0984 0aa4 0d82 0aa2 039b 0b9a 0b9a 0a9a
+	case 0x138e:
+	case 0x338e: { // 338e 0005 bf7f 0030 - 0984 0aa4 0d82 0aa2 039c 0b9c 0b9c 0a9a
 		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
 		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
 
@@ -575,50 +616,101 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 		break;
 	}
 
+	case 0x2208:
+	case 0x2288: { // 2208 0005 f5df 0020 - 0f8a 0b8a 0388 0b9a 0b9a 0a9a 0000 0000
+		int dx = space.read_word(cop_regs[0]+0x12);
+		int dy = space.read_word(cop_regs[0]+0x16);
+
+		if(!dy) {
+			cop_status |= 0x8000;
+			cop_angle = 0;
+		} else {
+			cop_angle = atan(double(dx)/double(dy)) * 128 / M_PI;
+			if(dy<0)
+				cop_angle += 0x80;
+		}
+
+		if(data & 0x0080) {
+			space.write_byte(cop_regs[0]+0x34, cop_angle);
+		}
+		break;
+	}
+
+	case 0x2a05: { // 2a05 0006 ebeb 0028 - 09af 0a82 0082 0a8f 018e 0000 0000 0000
+		int delta = space.read_word(cop_regs[1] + 0x1e + offset*4);
+		space.write_dword(cop_regs[0] + 4+2  + offset*4, space.read_word(cop_regs[0] + 4+2  + offset*4) + delta);
+		space.write_dword(cop_regs[0] + 0x1e + offset*4, space.read_word(cop_regs[0] + 0x1e + offset*4) + delta);
+		break;
+	}
+
+	case 0x39b0:
 	case 0x3b30:
 	case 0x3bb0: { // 3bb0 0004 007f 0038 - 0f9c 0b9c 0b9c 0b9c 0b9c 0b9c 0b9c 099c
 		/* TODO: these are actually internally loaded via 0x130e command */
-		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
-		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
+		int dx,dy;
 
+		dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
+		dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
+		
 		dx = dx >> 16;
 		dy = dy >> 16;
 		cop_dist = sqrt((double)(dx*dx+dy*dy));
 
 		if(data & 0x0080)
-			space.write_word(cop_regs[0]+0x38, cop_dist);
+			space.write_word(cop_regs[0]+(data & 0x200 ? 0x3a : 0x38), cop_dist);
 		break;
 	}
 
 	case 0x42c2: { // 42c2 0005 fcdd 0040 - 0f9a 0b9a 0b9c 0b9c 0b9c 029c 0000 0000
-		/* TODO: these are actually internally loaded via 0x130e command */
-		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
-		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
 		int div = space.read_word(cop_regs[0]+(0x36));
-		int res;
-		int cop_dist_raw;
-
 		if(!div)
-		{
-			printf("divide by zero?\n");
 			div = 1;
-		}
-
-		/* TODO: calculation of this one should occur at 0x3b30/0x3bb0 I *think* */
-		/* TODO: recheck if cop_scale still masks at 3 with this command */
-		dx >>= 11 + cop_scale;
-		dy >>= 11 + cop_scale;
-		cop_dist_raw = sqrt((double)(dx*dx+dy*dy));
-
-		res = cop_dist_raw;
-		res /= div;
-
-		cop_dist = (1 << (5 - cop_scale)) / div;
 
 		/* TODO: bits 5-6-15 */
 		cop_status = 7;
 
-		space.write_word(cop_regs[0]+(0x38), res);
+		space.write_word(cop_regs[0]+(0x38), (cop_dist << (5 - cop_scale)) / div);
+		break;
+	}
+
+	case 0x4aa0: { // 4aa0 0005 fcdd 0048 - 0f9a 0b9a 0b9c 0b9c 0b9c 099b 0000 0000
+		int div = space.read_word(cop_regs[0]+(0x38));
+		if(!div)
+			div = 1;
+
+		/* TODO: bits 5-6-15 */
+		cop_status = 7;
+
+		space.write_word(cop_regs[0]+(0x36), (cop_dist << (5 - cop_scale)) / div);
+		break;
+	}
+
+	case 0x6200: {
+		UINT8 angle = space.read_byte(cop_regs[0]+0x34);
+		UINT16 flags = space.read_word(cop_regs[0]);
+		cop_angle_target &= 0xff;
+		cop_angle_step &= 0xff;
+		flags &= ~0x0004;
+		int delta = angle - cop_angle_target;
+		if(delta >= 128)
+			delta -= 256;
+		else if(delta < -128)
+			delta += 256;
+		if(delta < 0) {
+			if(delta >= -cop_angle_step) {
+				angle = cop_angle_target;
+				flags |= 0x0004;
+			} else
+				angle += cop_angle_step;
+		} else {
+			if(delta <= cop_angle_step) {
+				angle = cop_angle_target;
+				flags |= 0x0004;
+			} else
+				angle -= cop_angle_step;
+		}
+		space.write_word(cop_regs[0], flags);
+		space.write_byte(cop_regs[0]+0x34, angle);
 		break;
 	}
 
@@ -665,51 +757,31 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 
 		// raidendx only
 	case 0x7e05:
-		space.write_dword(0x470, (space.read_dword(cop_regs[4]) & 0x30) << 6);
-		// Actually, wherever the bank selection actually is
-		// And probably 8 bytes too, but they zero all the rest
+		space.write_byte(0x470, space.read_byte(cop_regs[4]));
 		break;
 
 	case 0xa100:
 	case 0xa180:
-		cop_collision_info[0].y = (space.read_dword(cop_regs[0]+4));
-		cop_collision_info[0].x = (space.read_dword(cop_regs[0]+8));
+		cop_collision_read_xy(space, 0, cop_regs[0]);
 		break;
 
 	case 0xa900:
 	case 0xa980:
-		cop_collision_info[1].y = (space.read_dword(cop_regs[1]+4));
-		cop_collision_info[1].x = (space.read_dword(cop_regs[1]+8));
+		cop_collision_read_xy(space, 1, cop_regs[1]);
 		break;
 
 	case 0xb100:
-		cop_collision_info[0].hitbox = space.read_word(cop_regs[2]);
-		cop_collision_info[0].hitbox_y = space.read_word((cop_regs[2]&0xffff0000)|(cop_collision_info[0].hitbox));
-		cop_collision_info[0].hitbox_x = space.read_word(((cop_regs[2]&0xffff0000)|(cop_collision_info[0].hitbox))+2);
-
-		/* do the math */
-		cop_take_hit_box_params(0);
-		cop_hit_status = cop_calculate_collsion_detection();
+		cop_collision_update_hitbox(space, 0, cop_regs[2]);
 		break;
 
 	case 0xb900:
-		cop_collision_info[1].hitbox = space.read_word(cop_regs[3]);
-		cop_collision_info[1].hitbox_y = space.read_word((cop_regs[3]&0xffff0000)|(cop_collision_info[1].hitbox));
-		cop_collision_info[1].hitbox_x = space.read_word(((cop_regs[3]&0xffff0000)|(cop_collision_info[1].hitbox))+2);
-
-		/* do the math */
-		cop_take_hit_box_params(1);
-		cop_hit_status = cop_calculate_collsion_detection();
+		cop_collision_update_hitbox(space, 1, cop_regs[3]);
 		break;
 
 	default:
 		logerror("pcall %04x (%04x:%04x) [%x %x %x %x]\n", data, rps(), rpc(), cop_regs[0], cop_regs[1], cop_regs[2], cop_regs[3]);
 	}
 }
-
-//  case 0x6ca:
-//      logerror("select bank %d %04x\n", (data >> 15) & 1, data);
-//      space.membank("bank1")->set_entry((data >> 15) & 1);
 
 
 void raiden2_state::combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_mask)
@@ -722,35 +794,21 @@ void raiden2_state::combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_m
 
 /* SPRITE DRAWING (move to video file) */
 
-void raiden2_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect ,int pri_mask )
+void raiden2_state::draw_sprites(const rectangle &cliprect)
 {
-	UINT16 *source = sprites + sprites_cur_start/2 - 4;
+	UINT16 *source = sprites + sprites_cur_start/2;
+	sprite_buffer.fill(0xf, cliprect);
 
 	gfx_element *gfx = m_gfxdecode->gfx(2);
 
-//  static int ytlim = 1;
-//  static int xtlim = 1;
-
-//  if ( machine.input().code_pressed_once(KEYCODE_Q) ) ytlim--;
-//  if ( machine.input().code_pressed_once(KEYCODE_W) ) ytlim++;
-
-//  if ( machine.input().code_pressed_once(KEYCODE_A) ) xtlim--;
-//  if ( machine.input().code_pressed_once(KEYCODE_S) ) xtlim++;
-
-
-	/*00 ???? ????  (colour / priority?)
-	  01 fhhh Fwww   h = height f=flipy w = width F = flipx
-	  02 nnnn nnnn   n = tileno
-	  03 nnnn nnnn   n = tile no
-	  04 xxxx xxxx   x = xpos
-	  05 xxxx xxxx   x = xpos
-	  06 yyyy yyyy   y = ypos
-	  07 yyyy yyyy   y = ypos
-
+	/*
+	  00 fhhh Fwww ppcc cccc   h = height f=flipy w = width F = flipx p = priority c = color
+	  02 nnnn nnnn nnnn nnnn   n = tileno
+	  04 xxxx xxxx xxxx xxxx   x = xpos
+	  06 yyyy yyyy yyyy yyyy   y = ypos
 	 */
 
-
-	while( source>sprites ){
+	while( source >= sprites ){
 		int tile_number = source[1];
 		int sx = source[2];
 		int sy = source[3];
@@ -759,15 +817,19 @@ void raiden2_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect
 		int ytlim, xtlim;
 		int xflip, yflip;
 		int xstep, ystep;
-
+		int pri;
 
 		ytlim = (source[0] >> 12) & 0x7;
-		xtlim = (source[0] >> 8) & 0x7;
+		xtlim = (source[0] >> 8 ) & 0x7;
 
 		xflip = (source[0] >> 15) & 0x1;
 		yflip = (source[0] >> 11) & 0x1;
 
 		colr = source[0] & 0x3f;
+
+		pri = (source[0] >> 6) & 3;
+
+		colr |= pri << (14-4);
 
 		ytlim += 1;
 		xtlim += 1;
@@ -799,46 +861,46 @@ void raiden2_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect
 
 
 						gfx->transpen(
-						bitmap,
+						sprite_buffer,
 						cliprect,
 						tile_number,
 						colr,
 						yflip,xflip,
-						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y,15);
+						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y, 15);
 
 
 						gfx->transpen(
-						bitmap,
+						sprite_buffer,
 						cliprect,
 						tile_number,
 						colr,
 						yflip,xflip,
-						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y,15);
+						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y, 15);
 
 
 						gfx->transpen(
-						bitmap,
+						sprite_buffer,
 						cliprect,
 						tile_number,
 						colr,
 						yflip,xflip,
-						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200,15);
+						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200, 15);
 
 
 						gfx->transpen(
-						bitmap,
+						sprite_buffer,
 						cliprect,
 						tile_number,
 						colr,
 						yflip,xflip,
-						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200,15);
+						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200, 15);
 
 
 				tile_number++;
 			}
 		}
 
-		source-=4;
+		source -= 4;
 	}
 
 }
@@ -931,17 +993,16 @@ WRITE16_MEMBER(raiden2_state::raidendx_cop_bank_2_w)
 {
 	COMBINE_DATA(&cop_bank);
 
-	if(ACCESSING_BITS_8_15) {
-		int new_bank = 4 | ((cop_bank >> 10) & 3);
-		if(new_bank != fg_bank) {
-			fg_bank = new_bank;
-			foreground_layer->mark_all_dirty();
-		}
-
-		/* probably bit 3 is from 6c9 */
-		/* TODO: this doesn't work! */
-		membank("mainbank")->set_entry(8 | (cop_bank & 0x7000) >> 12);
+	int new_bank = 4 | ((cop_bank >> 4) & 3);
+	if(new_bank != fg_bank) {
+		fg_bank = new_bank;
+		foreground_layer->mark_all_dirty();
 	}
+
+	/* mainbank2 coming from 6c9 ? */
+	int bb = cop_bank >> 12;
+	membank("mainbank1")->set_entry(bb + 16);
+	membank("mainbank2")->set_entry(3);
 }
 
 
@@ -997,47 +1058,98 @@ VIDEO_START_MEMBER(raiden2_state,raiden2)
 	background_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(raiden2_state::get_back_tile_info),this), TILEMAP_SCAN_ROWS, 16,16, 32,32 );
 	midground_layer  = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(raiden2_state::get_mid_tile_info),this),  TILEMAP_SCAN_ROWS, 16,16, 32,32 );
 	foreground_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(raiden2_state::get_fore_tile_info),this), TILEMAP_SCAN_ROWS, 16,16, 32,32 );
-
-	midground_layer->set_transparent_pen(15);
-	foreground_layer->set_transparent_pen(15);
-	text_layer->set_transparent_pen(15);
 }
 
 /* screen_update_raiden2 (move to video file) */
 
-UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+void raiden2_state::blend_layer(bitmap_rgb32 &bitmap, const rectangle &cliprect, bitmap_ind16 &source, int layer)
 {
+	if(layer == -1)
+		return;
+
+	// Tuned for raiden2
+	const UINT8 alpha_active[0x20] = { // MSB first
+		//00    08    10    18    20    28    30    38    40    48    50    58    60    68    70    78
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x3f, 0x73, 0xff, 0x7c, 0xff, 0xff, 0x4f
+	};
+
+	const pen_t *pens = &m_palette->pen(0);
+	layer <<= 14;
+	for(int y = cliprect.min_y; y <= cliprect.max_y; y++) {
+		const UINT16 *src = &source.pix16(y, cliprect.min_x);
+		UINT32 *dst = &bitmap.pix32(y, cliprect.min_x);
+		for(int x = cliprect.min_x; x <= cliprect.max_x; x++) {
+			UINT16 val = *src++;
+			if((val & 0xc000) == layer && (val & 0x000f) != 0x000f) {
+				val &= 0x07ff;
+				int page = val >> 4;
+				bool active = false;
+				if((val & 0x8) == 0x8 && (alpha_active[page >> 3] & (0x80 >> (page & 7))))
+					active = true;
+
+				if(page == ccol)
+					active = !active;
+
+				if(active)
+					*dst = alpha_blend_r32(*dst, pens[val], 0x7f);
+				else
+					*dst = pens[val];
+			}
+			dst++;
+		}
+	}
+}
+
+void raiden2_state::tilemap_draw_and_blend(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, tilemap_t *tilemap)
+{
+	tilemap->draw(screen, tile_buffer, cliprect, 0, 0);
+	blend_layer(bitmap, cliprect, tile_buffer, 0);
+}
+
+UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
+{
+	cnt++;
+	int ocol = ccol;
+
+	if((cnt & 3) == 0) {
+		if (machine().input().code_pressed(KEYCODE_Q))
+			ccol--;
+		if (machine().input().code_pressed(KEYCODE_W))
+			ccol++;
+	}
+	if(ccol == 0x80)
+		ccol = -1;
+	if(ccol == -2)
+		ccol = 0x7f;
+
+	if(ccol != ocol)
+		popmessage("%02x", ccol);
+
 	bitmap.fill(m_palette->black_pen(), cliprect);
+	draw_sprites(cliprect);
 
-	//if (!machine().input().code_pressed(KEYCODE_Q))
-	{
-		if (!(raiden2_tilemap_enable & 1))
-			background_layer->draw(screen, bitmap, cliprect, 0, 0);
-	}
+	blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[0]);
 
-	//if (!machine().input().code_pressed(KEYCODE_W))
-	{
-		if (!(raiden2_tilemap_enable & 2))
-			midground_layer->draw(screen, bitmap, cliprect, 0, 0);
-	}
+	if (!(raiden2_tilemap_enable & 1))
+		tilemap_draw_and_blend(screen, bitmap, cliprect, background_layer);
 
-	//if (!machine().input().code_pressed(KEYCODE_E))
-	{
-		if (!(raiden2_tilemap_enable & 4))
-			foreground_layer->draw(screen, bitmap, cliprect, 0, 0);
-	}
+	blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[1]);
 
-	//if (!machine().input().code_pressed(KEYCODE_S))
-	{
-		if (!(raiden2_tilemap_enable & 0x10))
-			draw_sprites(bitmap, cliprect, 0);
-	}
+	if (!(raiden2_tilemap_enable & 2))
+		tilemap_draw_and_blend(screen, bitmap, cliprect, midground_layer);
 
-	//if (!machine().input().code_pressed(KEYCODE_A))
-	{
-		if (!(raiden2_tilemap_enable & 8))
-			text_layer->draw(screen, bitmap, cliprect, 0, 0);
-	}
+	blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[2]);
+
+	if (!(raiden2_tilemap_enable & 4))
+		tilemap_draw_and_blend(screen, bitmap, cliprect, foreground_layer);
+
+	blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[3]);
+
+	if (!(raiden2_tilemap_enable & 8))
+		tilemap_draw_and_blend(screen, bitmap, cliprect, text_layer);
+
+	blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[4]);
+
 
 	return 0;
 }
@@ -1178,7 +1290,8 @@ MACHINE_RESET_MEMBER(raiden2_state,raiden2)
 	common_reset();
 	sprcpt_init();
 
-	membank("mainbank")->set_entry(1);
+	membank("mainbank1")->set_entry(2);
+	membank("mainbank2")->set_entry(3);
 
 	prg_bank = 0;
 	//cop_init();
@@ -1189,7 +1302,8 @@ MACHINE_RESET_MEMBER(raiden2_state,raidendx)
 	common_reset();
 	sprcpt_init();
 
-	membank("mainbank")->set_entry(8);
+	membank("mainbank1")->set_entry(16);
+	membank("mainbank2")->set_entry(3);
 
 	prg_bank = 0x08;
 
@@ -1203,7 +1317,8 @@ MACHINE_RESET_MEMBER(raiden2_state,zeroteam)
 	mid_bank = 1;
 	sprcpt_init();
 
-	membank("mainbank")->set_entry(1);
+	membank("mainbank1")->set_entry(2);
+	membank("mainbank2")->set_entry(3);
 
 	prg_bank = 0;
 	//cop_init();
@@ -1215,10 +1330,6 @@ MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 	fg_bank = 2;
 	mid_bank = 1;
 	sprcpt_init();
-
-	//membank("mainbank")->set_entry(1);
-
-	//cop_init();
 }
 
 READ16_MEMBER(raiden2_state::raiden2_sound_comms_r)
@@ -1234,8 +1345,10 @@ WRITE16_MEMBER(raiden2_state::raiden2_sound_comms_w)
 WRITE16_MEMBER(raiden2_state::raiden2_bank_w)
 {
 	if(ACCESSING_BITS_8_15) {
+		int bb = (~data >> 15) & 1;
 		logerror("select bank %d %04x\n", (data >> 15) & 1, data);
-		membank("mainbank")->set_entry(!((data >> 15) & 1));
+		membank("mainbank1")->set_entry(bb*2);
+		membank("mainbank2")->set_entry(bb*2+1);
 		prg_bank = ((data >> 15) & 1);
 	}
 }
@@ -1248,13 +1361,13 @@ READ16_MEMBER(raiden2_state::cop_collision_status_r)
 WRITE16_MEMBER(raiden2_state::sprite_prot_x_w)
 {
 	sprite_prot_x = data;
-	popmessage("%04x %04x",sprite_prot_x,sprite_prot_y);
+	//popmessage("%04x %04x",sprite_prot_x,sprite_prot_y);
 }
 
 WRITE16_MEMBER(raiden2_state::sprite_prot_y_w)
 {
 	sprite_prot_y = data;
-	popmessage("%04x %04x",sprite_prot_x,sprite_prot_y);
+	//popmessage("%04x %04x",sprite_prot_x,sprite_prot_y);
 }
 
 WRITE16_MEMBER(raiden2_state::sprite_prot_src_seg_w)
@@ -1262,21 +1375,41 @@ WRITE16_MEMBER(raiden2_state::sprite_prot_src_seg_w)
 	sprite_prot_src_addr[0] = data;
 }
 
+READ16_MEMBER(raiden2_state::sprite_prot_src_seg_r)
+{
+	return sprite_prot_src_addr[0];
+}
+
 WRITE16_MEMBER(raiden2_state::sprite_prot_src_w)
 {
-	int dx;
-	int dy;
-	UINT32 src;
-
 	sprite_prot_src_addr[1] = data;
-	src = (sprite_prot_src_addr[0]<<4)+sprite_prot_src_addr[1];
+	UINT32 src = (sprite_prot_src_addr[0]<<4)+sprite_prot_src_addr[1];
 
-	dx = ((space.read_dword(src+0x08) >> 16) - (sprite_prot_x)) & 0xffff;
-	dy = ((space.read_dword(src+0x04) >> 16) - (sprite_prot_y)) & 0xffff;
+	int x = ((space.read_dword(src+0x08) >> 16) - (sprite_prot_x)) & 0xffff;
+	int y = ((space.read_dword(src+0x04) >> 16) - (sprite_prot_y)) & 0xffff;
 
-	space.write_word(src,(dx < 0x140 && dy < 256) ? 0x0001 : 0x0000);
+	UINT16 head1 = space.read_word(src+cop_spr_off);
+	UINT16 head2 = space.read_word(src+cop_spr_off+2);
 
+	int w = (((head1 >> 8 ) & 7) + 1) << 3;
+	int h = (((head1 >> 12) & 7) + 1) << 3;
+
+	UINT16 flag = x-w > -w && x-w < cop_spr_maxx+w && y-h > -h && y-h < 240+h ? 1 : 0;
+	
+	flag = (space.read_word(src) & 0xfffe) | flag;
+	space.write_word(src, flag);
+
+	if(flag & 1)
+	{
+		space.write_word(dst1,   head1);
+		space.write_word(dst1+2, head2);
+		space.write_word(dst1+4, x-w);
+		space.write_word(dst1+6, y-h);
+
+		dst1 += 8;
+	}
 	//printf("[%08x] %08x %08x %04x %04x\n",src,dx,dy,dst1,dst2);
+	//	debugger_break(machine());
 }
 
 READ16_MEMBER(raiden2_state::sprite_prot_dst1_r)
@@ -1284,9 +1417,14 @@ READ16_MEMBER(raiden2_state::sprite_prot_dst1_r)
 	return dst1;
 }
 
-READ16_MEMBER(raiden2_state::sprite_prot_dst2_r)
+READ16_MEMBER(raiden2_state::sprite_prot_maxx_r)
 {
-	return dst2;
+	return cop_spr_maxx;
+}
+
+READ16_MEMBER(raiden2_state::sprite_prot_off_r)
+{
+	return cop_spr_off;
 }
 
 WRITE16_MEMBER(raiden2_state::sprite_prot_dst1_w)
@@ -1294,9 +1432,14 @@ WRITE16_MEMBER(raiden2_state::sprite_prot_dst1_w)
 	dst1 = data;
 }
 
-WRITE16_MEMBER(raiden2_state::sprite_prot_dst2_w)
+WRITE16_MEMBER(raiden2_state::sprite_prot_maxx_w)
 {
-	dst2 = data;
+	cop_spr_maxx = data;
+}
+
+WRITE16_MEMBER(raiden2_state::sprite_prot_off_w)
+{
+	cop_spr_off = data;
 }
 
 READ16_MEMBER(raiden2_state::cop_collision_status_y_r)
@@ -1393,8 +1536,8 @@ WRITE16_MEMBER(raiden2_state::cop_sort_dma_trig_w)
 
 /* MEMORY MAPS */
 static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
-//  AM_RANGE(0x0041c, 0x0041d) AM_WRITENOP // angle compare (for 0x6200 COP macro)
-//  AM_RANGE(0x0041e, 0x0041f) AM_WRITENOP // angle mod value (for 0x6200 COP macro)
+	AM_RANGE(0x0041c, 0x0041d) AM_WRITE(cop_angle_target_w) // angle target (for 0x6200 COP macro)
+	AM_RANGE(0x0041e, 0x0041f) AM_WRITE(cop_angle_step_w)   // angle step   (for 0x6200 COP macro)
 	AM_RANGE(0x00420, 0x00421) AM_WRITE(cop_itoa_low_w)
 	AM_RANGE(0x00422, 0x00423) AM_WRITE(cop_itoa_high_w)
 	AM_RANGE(0x00424, 0x00425) AM_WRITE(cop_itoa_digit_count_w)
@@ -1402,6 +1545,7 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x0042a, 0x0042b) AM_WRITE(cop_dma_v2_w)
 	AM_RANGE(0x00432, 0x00433) AM_WRITE(cop_pgm_data_w)
 	AM_RANGE(0x00434, 0x00435) AM_WRITE(cop_pgm_addr_w)
+	AM_RANGE(0x00436, 0x00437) AM_WRITE(cop_hitbox_baseadr_w)
 	AM_RANGE(0x00438, 0x00439) AM_WRITE(cop_pgm_value_w)
 	AM_RANGE(0x0043a, 0x0043b) AM_WRITE(cop_pgm_mask_w)
 	AM_RANGE(0x0043c, 0x0043d) AM_WRITE(cop_pgm_trigger_w)
@@ -1444,14 +1588,15 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x006b4, 0x006b7) AM_WRITE(sprcpt_data_2_w)
 	AM_RANGE(0x006b8, 0x006bb) AM_WRITE(sprcpt_val_2_w)
 	AM_RANGE(0x006bc, 0x006bf) AM_WRITE(sprcpt_adr_w)
-	AM_RANGE(0x006c2, 0x006c3) AM_WRITE(sprite_prot_src_seg_w)
+	AM_RANGE(0x006c0, 0x006c1) AM_READWRITE(sprite_prot_off_r, sprite_prot_off_w)
+	AM_RANGE(0x006c2, 0x006c3) AM_READWRITE(sprite_prot_src_seg_r, sprite_prot_src_seg_w)
 	AM_RANGE(0x006c6, 0x006c7) AM_WRITE(sprite_prot_dst1_w)
 	AM_RANGE(0x006ca, 0x006cb) AM_WRITE(raiden2_bank_w)
 	AM_RANGE(0x006cc, 0x006cd) AM_WRITE(tile_bank_01_w)
 	AM_RANGE(0x006ce, 0x006cf) AM_WRITE(sprcpt_flags_2_w)
 	AM_RANGE(0x006d8, 0x006d9) AM_WRITE(sprite_prot_x_w)
 	AM_RANGE(0x006da, 0x006db) AM_WRITE(sprite_prot_y_w)
-	AM_RANGE(0x006dc, 0x006dd) AM_READ(sprite_prot_dst2_r) AM_WRITE(sprite_prot_dst2_w)
+	AM_RANGE(0x006dc, 0x006dd) AM_READWRITE(sprite_prot_maxx_r, sprite_prot_maxx_w)
 	AM_RANGE(0x006de, 0x006df) AM_WRITE(sprite_prot_src_w)
 	AM_RANGE(0x006fc, 0x006fd) AM_WRITE(cop_dma_trigger_w)
 	AM_RANGE(0x006fe, 0x006ff) AM_WRITE(cop_sort_dma_trig_w) // sort-DMA trigger
@@ -1484,7 +1629,8 @@ static ADDRESS_MAP_START( raiden2_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x10000, 0x1efff) AM_RAM
 	AM_RANGE(0x1f000, 0x1ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
-	AM_RANGE(0x20000, 0x3ffff) AM_ROMBANK("mainbank")
+	AM_RANGE(0x20000, 0x2ffff) AM_ROMBANK("mainbank1")
+	AM_RANGE(0x30000, 0x3ffff) AM_ROMBANK("mainbank2")
 	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_REGION("mainprg", 0x40000)
 ADDRESS_MAP_END
 
@@ -1522,7 +1668,8 @@ static ADDRESS_MAP_START( zeroteam_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x0f000, 0x0ffff) AM_RAM AM_SHARE("sprites")
 	AM_RANGE(0x10000, 0x1ffff) AM_RAM
 
-	AM_RANGE(0x20000, 0x3ffff) AM_ROMBANK("mainbank")
+	AM_RANGE(0x20000, 0x2ffff) AM_ROMBANK("mainbank1")
+	AM_RANGE(0x30000, 0x3ffff) AM_ROMBANK("mainbank2")
 	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_REGION("mainprg", 0x40000)
 ADDRESS_MAP_END
 
@@ -1855,7 +2002,7 @@ static const gfx_layout raiden2_spritelayout =
 static GFXDECODE_START( raiden2 )
 	GFXDECODE_ENTRY( "gfx1", 0x00000, raiden2_charlayout,   0x700, 128 )
 	GFXDECODE_ENTRY( "gfx2", 0x00000, raiden2_tilelayout,   0x400, 128 )
-	GFXDECODE_ENTRY( "gfx3", 0x00000, raiden2_spritelayout, 0x000, 128 )
+	GFXDECODE_ENTRY( "gfx3", 0x00000, raiden2_spritelayout, 0x000, 4096 ) // really 128, but using the top bits for priority
 GFXDECODE_END
 
 
@@ -1877,10 +2024,9 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(55.47)    /* verified on pcb */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate *//2)
-	MCFG_SCREEN_SIZE(64*8, 64*8)
+	MCFG_SCREEN_SIZE(44*8, 34*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", raiden2)
 	MCFG_PALETTE_ADD("palette", 2048)
@@ -1938,7 +2084,6 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 //  MCFG_SCREEN_REFRESH_RATE(55.47)    /* verified on pcb */
 	MCFG_SCREEN_RAW_PARAMS(XTAL_32MHz/4,546,0,40*8,264,0,32*8) /* hand-tuned to match ~55.47 */
 	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_GFXDECODE_ADD("gfxdecode", "palette", raiden2)
 	MCFG_PALETTE_ADD("palette", 2048)
@@ -2861,7 +3006,7 @@ ROM_START( zeroteam ) // Fabtek, US licensee, displays 'USA' under zero team log
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -2898,7 +3043,7 @@ ROM_START( zeroteama ) // No licensee, original japan?
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -2942,7 +3087,7 @@ ROM_START( zeroteamb ) // No licensee, later japan?
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -2979,7 +3124,7 @@ ROM_START( zeroteamc ) // Liang Hwa, Taiwan licensee, no special word under logo
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -3017,7 +3162,7 @@ ROM_START( zeroteamd ) // Dream Soft, Korea licensee, no special word under logo
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -3055,7 +3200,7 @@ ROM_START( zeroteams ) // No license, displays 'Selection' under logo
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -3104,7 +3249,7 @@ ROM_START( zeroteamsr )
 	ROM_LOAD( "musha_back-1.u075.4s",   0x000000, 0x100000, CRC(8b7f9219) SHA1(3412b6f8a4fe245e521ddcf185a53f2f4520eb57) )
 	ROM_LOAD( "musha_back-2.u0714.2s",   0x100000, 0x080000, CRC(ce61c952) SHA1(52a843c8ba428b121fab933dd3b313b2894d80ac) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (encrypted) (diff encrypt to raiden2? ) */
 	ROM_LOAD32_WORD( "musha_obj-1.u0811.6f",  0x000000, 0x200000, CRC(45be8029) SHA1(adc164f9dede9a86b96a4d709e9cba7d2ad0e564) )
 	ROM_LOAD32_WORD( "musha_obj-2.u082.5f",  0x000002, 0x200000, CRC(cb61c19d) SHA1(151a2ce9c32f3321a974819e9b165dddc31c8153) )
 
@@ -3180,7 +3325,7 @@ ROM_START( xsedae )
 	ROM_LOAD( "bg-1.u075",   0x000000, 0x100000, CRC(ac087560) SHA1(b6473b20c55ec090961cfc46a024b3c5b707ec25) )
 	ROM_LOAD( "7.u0714",     0x100000, 0x080000, CRC(296105dc) SHA1(c2b80d681646f504b03c2dde13e37b1d820f82d2) )
 
-	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (not encrypted) */
+	ROM_REGION( 0x800000, "gfx3", ROMREGION_ERASEFF ) /* sprite gfx (not encrypted) */
 	ROM_LOAD32_WORD( "obj-1.u0811",  0x000000, 0x200000, CRC(6ae993eb) SHA1(d9713c79eacb4b3ce5e82dd3ce39003e3a433d8f) )
 	ROM_LOAD32_WORD( "obj-2.u082",   0x000002, 0x200000, CRC(26c806ee) SHA1(899a76a1b3f933c6f5cb6b5dcdf5b58e1b7e49c6) )
 
@@ -3192,25 +3337,35 @@ ROM_END
 
 DRIVER_INIT_MEMBER(raiden2_state,raiden2)
 {
-	membank("mainbank")->configure_entries(0, 2, memregion("mainprg")->base(), 0x20000);
+	static const int spri[5] = { 0, 1, 2, 3, -1 };
+	cur_spri = spri;
+	membank("mainbank1")->configure_entries(0, 4, memregion("mainprg")->base(), 0x10000);
+	membank("mainbank2")->configure_entries(0, 4, memregion("mainprg")->base(), 0x10000);
 	raiden2_decrypt_sprites(machine());
 }
 
 DRIVER_INIT_MEMBER(raiden2_state,raidendx)
 {
-	membank("mainbank")->configure_entries(0, 0x10, memregion("mainprg")->base(), 0x20000);
+	static const int spri[5] = { 0, 1, 2, 3, -1 };
+	cur_spri = spri;
+	membank("mainbank1")->configure_entries(0, 0x20, memregion("mainprg")->base(), 0x10000);
+	membank("mainbank2")->configure_entries(0, 0x20, memregion("mainprg")->base(), 0x10000);
 	raiden2_decrypt_sprites(machine());
 }
 
 DRIVER_INIT_MEMBER(raiden2_state,xsedae)
 {
+	static const int spri[5] = { 0, 1, 2, 3, -1 };
+	cur_spri = spri;
 	/* doesn't have banking */
-	//membank("mainbank")->configure_entries(0, 2, memregion("mainprg")->base(), 0x20000);
 }
 
 DRIVER_INIT_MEMBER(raiden2_state,zeroteam)
 {
-	membank("mainbank")->configure_entries(0, 2, memregion("mainprg")->base(), 0x20000);
+	static const int spri[5] = { -1, 0, 1, 2, 3 };
+	cur_spri = spri;
+	membank("mainbank1")->configure_entries(0, 4, memregion("mainprg")->base(), 0x10000);
+	membank("mainbank2")->configure_entries(0, 4, memregion("mainprg")->base(), 0x10000);
 	zeroteam_decrypt_sprites(machine());
 }
 

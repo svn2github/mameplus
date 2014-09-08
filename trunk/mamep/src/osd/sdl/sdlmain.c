@@ -13,7 +13,7 @@
 #ifdef SDLMAME_UNIX
 #if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_EMSCRIPTEN))
 #if (SDLMAME_SDL2)
-//#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #else
 #include <SDL/SDL_ttf.h>
 #endif
@@ -291,12 +291,10 @@ int main(int argc, char *argv[])
 	#ifdef SDLMAME_UNIX
 	sdl_entered_debugger = 0;
 	#if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_HAIKU)) && (!defined(SDLMAME_EMSCRIPTEN))
-#if !(SDLMAME_SDL2)
 	if (TTF_Init() == -1)
 	{
 		printf("SDL_ttf failed: %s\n", TTF_GetError());
 	}
-#endif
 	FcInit();
 	#endif
 	#endif
@@ -344,9 +342,7 @@ int main(int argc, char *argv[])
 
 	#ifdef SDLMAME_UNIX
 	#if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_HAIKU)) && (!defined(SDLMAME_EMSCRIPTEN))
-#if !(SDLMAME_SDL2)
 	TTF_Quit();
-#endif
 	if (!sdl_entered_debugger)
 	{
 		FcFini();
@@ -355,8 +351,6 @@ int main(int argc, char *argv[])
 	#endif
 
 	exit(res);
-
-	return res;
 }
 
 
@@ -680,10 +674,8 @@ void sdl_osd_interface::init(running_machine &machine)
 	/* now setup watchdog */
 
 	int watchdog_timeout = options.watchdog();
-	int str = options.seconds_to_run();
 
-	/* only enable watchdog if seconds_to_run is enabled *and* relatively short (time taken from ui.c) */
-	if ((watchdog_timeout != 0) && (str > 0) && (str < 60*5 ))
+	if (watchdog_timeout != 0)
 	{
 		m_watchdog = auto_alloc(machine, watchdog);
 		m_watchdog->setTimeout(watchdog_timeout);
@@ -856,7 +848,6 @@ bool sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, bitma
 }
 #else // UNIX but not OSX
 
-#if !(SDLMAME_SDL2)
 static TTF_Font * TTF_OpenFont_Magic(astring name, int fsize)
 {
 	emu_file file(OPEN_FLAG_READ);
@@ -996,7 +987,6 @@ static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool u
 	return font;
 }
 #endif
-#endif
 
 //-------------------------------------------------
 //  font_open - attempt to "open" a handle to the
@@ -1005,7 +995,6 @@ static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool u
 
 osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 {
-#if !(SDLMAME_SDL2)
 	TTF_Font *font = (TTF_Font *)NULL;
 	bool bakedstyles = false;
 	int style = 0;
@@ -1077,9 +1066,6 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 	height = TTF_FontLineSkip(font);
 
 	return (osd_font)font;
-#else
-	return (osd_font)NULL;
-#endif
 }
 
 //-------------------------------------------------
@@ -1089,13 +1075,11 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 
 void sdl_osd_interface::font_close(osd_font font)
 {
-#if !(SDLMAME_SDL2)
 	TTF_Font *ttffont;
 
 	ttffont = (TTF_Font *)font;
 
 	TTF_CloseFont(ttffont);
-#endif
 }
 
 //-------------------------------------------------
@@ -1108,7 +1092,6 @@ void sdl_osd_interface::font_close(osd_font font)
 
 bool sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, bitmap_argb32 &bitmap, INT32 &width, INT32 &xoffs, INT32 &yoffs)
 {
-#if !(SDLMAME_SDL2)
 	TTF_Font *ttffont;
 	SDL_Surface *drawsurf;
 	SDL_Color fcol = { 0xff, 0xff, 0xff };
@@ -1148,9 +1131,6 @@ bool sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, bitma
 	}
 
 	return bitmap.valid();
-#else
-	return false;
-#endif
 }
 #endif  // not OSX
 #else   // not UNIX

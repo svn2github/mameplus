@@ -48,11 +48,14 @@ MACHINES += YM2148
 # specify available bus cores
 #-------------------------------------------------
 
+BUSES += A7800
+BUSES += A800
 BUSES += GAMEBOY
 BUSES += GBA
 BUSES += MIDI
 BUSES += MEGADRIVE
 BUSES += MSX_SLOT
+BUSES += NEOGEO
 BUSES += NES
 BUSES += PCE
 BUSES += SATURN
@@ -61,7 +64,7 @@ BUSES += SMS_CTRL
 BUSES += SMS_EXP
 BUSES += SNES
 BUSES += VCS
-BUSES += NEOGEO
+BUSES += VCS_CTRL
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -122,9 +125,8 @@ $(MESSOBJ)/ascii.a:             \
 $(MESSOBJ)/atari.a:             \
 	$(MESS_MACHINE)/atarifdc.o  \
 	$(MESS_DRIVERS)/atari400.o  \
-	$(MESS_MACHINE)/a7800.o     \
 	$(MESS_DRIVERS)/a7800.o     \
-	$(MESS_VIDEO)/a7800.o       \
+	$(MESS_VIDEO)/maria.o       \
 	$(MESS_DRIVERS)/a2600.o     \
 
 $(MESSOBJ)/bandai.a:            \

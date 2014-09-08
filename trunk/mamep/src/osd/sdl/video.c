@@ -2,7 +2,7 @@
 //
 //  video.c - SDL video handling
 //
-//  Copyright (c) 1996-2010, Nicola Salmoria and the MAME Team.
+//  Copyright (c) 1996-2014, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 //  SDLMAME by Olivier Galibert and R. Belmont
@@ -109,7 +109,7 @@ bool sdl_osd_interface::video_init()
 	video_config.beamwidth = machine().options().beam();
 
 	// initialize the window system so we can make windows
-	if (sdlwindow_init(machine()))
+	if (!window_init())
 		return false;
 
 	// create the windows
@@ -133,6 +133,8 @@ bool sdl_osd_interface::video_init()
 
 void sdl_osd_interface::video_exit()
 {
+	window_exit();
+	
 	// free all of our monitor information
 	while (sdl_monitor_list != NULL)
 	{
@@ -485,12 +487,17 @@ static void init_monitors(void)
 static sdl_monitor_info *pick_monitor(sdl_options &options, int index)
 {
 	sdl_monitor_info *monitor;
-	const char *scrname;
+	const char *scrname, *scrname2;
 	int moncount = 0;
 	float aspect;
 
 	// get the screen option
-	scrname = options.screen(index);
+	scrname = options.screen();
+	scrname2 = options.screen(index);
+
+	// decide which one we want to use
+	if (strcmp(scrname2, "auto") != 0)
+		scrname = scrname2;
 
 	// get the aspect ratio
 	aspect = get_aspect(options.aspect(), options.aspect(index), TRUE);
@@ -643,15 +650,9 @@ static void extract_video_config(running_machine &machine)
 	}
 	else if (USE_OPENGL && (strcmp(stemp, SDLOPTVAL_OPENGL) == 0))
 		video_config.mode = VIDEO_MODE_OPENGL;
-	else if (USE_OPENGL && (strcmp(stemp, SDLOPTVAL_OPENGL16) == 0))
+	else if (SDLMAME_SDL2 && (strcmp(stemp, SDLOPTVAL_SDL2ACCEL) == 0))
 	{
-		video_config.mode = VIDEO_MODE_OPENGL;
-		video_config.prefer16bpp_tex = 1;
-	}
-	else if (SDLMAME_SDL2 && (strcmp(stemp, SDLOPTVAL_SDL13) == 0))
-	{
-		video_config.mode = VIDEO_MODE_SDL13;
-		video_config.prefer16bpp_tex = 1;
+		video_config.mode = VIDEO_MODE_SDL2ACCEL;
 	}
 	else
 	{
@@ -682,7 +683,6 @@ static void extract_video_config(running_machine &machine)
 			video_config.prescale = 1;
 		}
 		// default to working video please
-		video_config.prefer16bpp_tex = 0;
 		video_config.forcepow2texture = options.gl_force_pow2_texture();
 		video_config.allowtexturerect = !(options.gl_no_texture_rect());
 		video_config.vbo         = options.gl_vbo();

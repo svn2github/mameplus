@@ -5,15 +5,18 @@ class raiden2_state : public driver_device
 public:
 	raiden2_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			back_data(*this, "back_data"),
-			fore_data(*this, "fore_data"),
-			mid_data(*this, "mid_data"),
-			text_data(*this, "text_data"),
-			sprites(*this, "sprites") ,
-		m_maincpu(*this, "maincpu"),
-		m_seibu_sound(*this, "seibu_sound"),
-		m_gfxdecode(*this, "gfxdecode"),
-		m_palette(*this, "palette") { }
+		  back_data(*this, "back_data"),
+		  fore_data(*this, "fore_data"),
+		  mid_data(*this, "mid_data"),
+		  text_data(*this, "text_data"),
+		  sprites(*this, "sprites") ,
+		  m_maincpu(*this, "maincpu"),
+		  m_seibu_sound(*this, "seibu_sound"),
+		  m_gfxdecode(*this, "gfxdecode"),
+		  m_palette(*this, "palette"),
+		  tile_buffer(320, 256),
+		  sprite_buffer(320, 256)
+	{ }
 
 	required_shared_ptr<UINT16> back_data,fore_data,mid_data, text_data, sprites;
 	required_device<cpu_device> m_maincpu;
@@ -27,6 +30,8 @@ public:
 	DECLARE_WRITE16_MEMBER( cop_dma_v1_w );
 	DECLARE_WRITE16_MEMBER( cop_dma_v2_w );
 	DECLARE_WRITE16_MEMBER( cop_scale_w );
+	DECLARE_WRITE16_MEMBER( cop_angle_target_w );
+	DECLARE_WRITE16_MEMBER( cop_angle_step_w );
 	DECLARE_WRITE16_MEMBER( cop_dma_adr_rel_w );
 	DECLARE_WRITE16_MEMBER( cop_dma_src_w );
 	DECLARE_WRITE16_MEMBER( cop_dma_size_w );
@@ -108,36 +113,40 @@ public:
 	UINT16 cop_func_mask[0x100/8];          /* function mask (?) */
 	UINT16 cop_program[0x100];              /* program "code" */
 	UINT16 cop_latch_addr, cop_latch_trigger, cop_latch_value, cop_latch_mask;
-	INT8 cop_angle_compare;
-	UINT8 cop_angle_mod_val;
+	UINT16 cop_angle_target;
+	UINT16 cop_angle_step;
+
+	bitmap_ind16 tile_buffer, sprite_buffer;
 
 	DECLARE_WRITE16_MEMBER( sprite_prot_x_w );
 	DECLARE_WRITE16_MEMBER( sprite_prot_y_w );
 	DECLARE_WRITE16_MEMBER( sprite_prot_src_seg_w );
 	DECLARE_WRITE16_MEMBER( sprite_prot_src_w );
+	DECLARE_READ16_MEMBER( sprite_prot_src_seg_r );
 	DECLARE_READ16_MEMBER ( sprite_prot_dst1_r );
-	DECLARE_READ16_MEMBER( sprite_prot_dst2_r );
+	DECLARE_READ16_MEMBER( sprite_prot_maxx_r );
+	DECLARE_READ16_MEMBER( sprite_prot_off_r );
 	DECLARE_WRITE16_MEMBER( sprite_prot_dst1_w );
-	DECLARE_WRITE16_MEMBER( sprite_prot_dst2_w );
+	DECLARE_WRITE16_MEMBER( sprite_prot_maxx_w );
+	DECLARE_WRITE16_MEMBER( sprite_prot_off_w );
 
-	UINT16 sprite_prot_x,sprite_prot_y,dst1,dst2;
+	UINT16 sprite_prot_x,sprite_prot_y,dst1,cop_spr_maxx,cop_spr_off;
 	UINT16 sprite_prot_src_addr[2];
 
-	struct
-	{
-		int x,y;
-		int min_x,min_y,max_x,max_y;
-		UINT16 hitbox;
-		UINT16 hitbox_x,hitbox_y;
-	}cop_collision_info[2];
+	struct {
+		int x, y, z;
+		int min_x, min_y, min_z, max_x, max_y, max_z;
+	} cop_collision_info[2];
 
-	UINT16 cop_hit_status;
-	INT16 cop_hit_val_x,cop_hit_val_y,cop_hit_val_z,cop_hit_val_unk;
+	UINT16 cop_hit_status, cop_hit_baseadr;
+	INT16 cop_hit_val_x, cop_hit_val_y, cop_hit_val_z, cop_hit_val_unk;
 
-	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect ,int pri_mask );
-	UINT8 cop_calculate_collsion_detection();
-	void cop_take_hit_box_params(UINT8 offs);
+	void draw_sprites(const rectangle &cliprect);
 
+	void cop_collision_read_xy(address_space &space, int slot, UINT32 spradr);
+	void cop_collision_update_hitbox(address_space &space, int slot, UINT32 hitadr);
+
+	DECLARE_WRITE16_MEMBER(cop_hitbox_baseadr_w);
 	DECLARE_WRITE16_MEMBER(cop_sort_lookup_hi_w);
 	DECLARE_WRITE16_MEMBER(cop_sort_lookup_lo_w);
 	DECLARE_WRITE16_MEMBER(cop_sort_ram_addr_hi_w);
@@ -147,6 +156,7 @@ public:
 
 	UINT32 cop_sort_ram_addr, cop_sort_lookup;
 	UINT16 cop_sort_param;
+	const int *cur_spri;
 
 	DECLARE_DRIVER_INIT(raidendx);
 	DECLARE_DRIVER_INIT(xsedae);
@@ -161,13 +171,17 @@ public:
 	DECLARE_MACHINE_RESET(zeroteam);
 	DECLARE_MACHINE_RESET(xsedae);
 	DECLARE_MACHINE_RESET(raidendx);
-	UINT32 screen_update_raiden2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_raiden2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(raiden2_interrupt);
 	UINT16 rps();
 	UINT16 rpc();
 	const UINT8 fade_table(int v);
 	void combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_mask);
 	void sprcpt_init(void);
+
+	void blend_layer(bitmap_rgb32 &bitmap, const rectangle &cliprect, bitmap_ind16 &source, int layer);
+	void tilemap_draw_and_blend(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, tilemap_t *tilemap);
+
 };
 
 /*----------- defined in machine/r2crypt.c -----------*/

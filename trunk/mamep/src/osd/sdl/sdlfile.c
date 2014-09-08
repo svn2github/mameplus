@@ -1,13 +1,18 @@
 //============================================================
 //
-//  fileio.c - SDL file access functions
+//  sdlfile.c - SDL file access functions
 //
-//  Copyright (c) 1996-2010, Nicola Salmoria and the MAME Team.
+//  Copyright (c) 1996-2014, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 //  SDLMAME by Olivier Galibert and R. Belmont
 //
 //============================================================
+
+#ifdef SDLMAME_WIN32
+#include "../windows/winfile.c"
+#include "../windows/winutil.c"
+#else
 
 #ifndef _LARGEFILE64_SOURCE
 #define _LARGEFILE64_SOURCE
@@ -16,6 +21,11 @@
 #ifdef SDLMAME_LINUX
 #define __USE_LARGEFILE64
 #endif
+
+#ifdef SDLMAME_WIN32
+#define _FILE_OFFSET_BITS 64
+#endif
+
 #ifndef SDLMAME_BSD
 #ifdef _XOPEN_SOURCE
 #undef _XOPEN_SOURCE
@@ -254,7 +264,6 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 
 	*filesize = (UINT64)st.st_size;
 
-
 error:
 	// cleanup
 	if (filerr != FILERR_NONE && *file != NULL)
@@ -298,15 +307,12 @@ file_error osd_read(osd_file *file, void *buffer, UINT64 offset, UINT32 count, U
 			*actual = result;
 
 			return FILERR_NONE;
-			break;
 
 		case SDLFILE_SOCKET:
 			return sdl_read_socket(file, buffer, offset, count, actual);
-			break;
 
 		case SDLFILE_PTTY:
 			return sdl_read_ptty(file, buffer, offset, count, actual);
-			break;
 
 		default:
 			return FILERR_FAILURE;
@@ -343,15 +349,12 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 c
 			if (actual != NULL)
 			*actual = result;
 			return FILERR_NONE;
-			break;
 
 		case SDLFILE_SOCKET:
 			return sdl_write_socket(file, buffer, offset, count, actual);
-			break;
 
 		case SDLFILE_PTTY:
 			return sdl_write_ptty(file, buffer, offset, count, actual);
-			break;
 
 		default:
 			return FILERR_FAILURE;
@@ -374,7 +377,6 @@ file_error osd_truncate(osd_file *file, UINT64 offset)
 			if (!result)
 				return error_to_file_error(errno);
 			return FILERR_NONE;
-			break;
 
 		default:
 			return FILERR_FAILURE;
@@ -395,15 +397,12 @@ file_error osd_close(osd_file *file)
 			close(file->handle);
 			osd_free(file);
 			return FILERR_NONE;
-			break;
 
 		case SDLFILE_SOCKET:
 			return sdl_close_socket(file);
-			break;
 
 		case SDLFILE_PTTY:
 			return sdl_close_ptty(file);
-			break;
 
 		default:
 			return FILERR_FAILURE;
@@ -500,3 +499,4 @@ int osd_is_absolute_path(const char *path)
 
 	return result;
 }
+#endif

@@ -452,6 +452,7 @@ MACHINES += M6M80011AP
 MACHINES += MATSUCD
 MACHINES += MB14241
 MACHINES += MB3773
+MACHINES += MB8421
 MACHINES += MB87078
 #MACHINES += MB8795
 #MACHINES += MB89352
@@ -2664,7 +2665,11 @@ $(DRIVERS)/igspoker.o:  $(LAYOUT)/igspoker.lh
 
 $(DRIVERS)/imolagp.o:   $(LAYOUT)/imolagp.lh
 
+$(DRIVERS)/inder.o:     $(LAYOUT)/inder.lh
+
 $(DRIVERS)/jankenmn.o:  $(LAYOUT)/jankenmn.lh
+
+$(DRIVERS)/jeutel.o:    $(LAYOUT)/jeutel.lh
 
 $(DRIVERS)/jpmimpct.o:  $(LAYOUT)/jpmimpct.lh
 
@@ -2866,6 +2871,8 @@ $(DRIVERS)/subsino.o:   $(LAYOUT)/victor5.lh \
 $(DRIVERS)/superchs.o:  $(LAYOUT)/superchs.lh
 
 $(DRIVERS)/sfbonus.o:   $(LAYOUT)/pirpok2.lh
+
+$(DRIVERS)/taito.o:     $(LAYOUT)/taito.lh
 
 $(DRIVERS)/taito_z.o:   $(LAYOUT)/contcirc.lh \
 			$(LAYOUT)/dblaxle.lh

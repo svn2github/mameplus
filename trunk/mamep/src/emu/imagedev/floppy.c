@@ -614,7 +614,7 @@ UINT32 floppy_image_device::find_position(attotime &base, const attotime &when)
 		base -= rev_time;
 	}
 
-	return (delta*floppy_ratio_1 + attotime::from_nsec(500)).as_ticks(1000000000/1000);
+	return (delta*floppy_ratio_1).as_ticks(1000000000/1000);
 }
 
 attotime floppy_image_device::get_next_transition(const attotime &from_when)
@@ -807,10 +807,12 @@ void floppy_image_device::write_zone(UINT32 *buf, int &cells, int &index, UINT32
 
 void floppy_image_device::set_write_splice(const attotime &when)
 {
-	image_dirty = true;
-	attotime base;
-	int splice_pos = find_position(base, when);
-	image->set_write_splice_position(cyl, ss, splice_pos);
+	if(image) {
+		image_dirty = true;
+		attotime base;
+		int splice_pos = find_position(base, when);
+		image->set_write_splice_position(cyl, ss, splice_pos);
+	}
 }
 
 UINT32 floppy_image_device::get_form_factor() const

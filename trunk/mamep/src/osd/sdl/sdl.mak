@@ -272,8 +272,13 @@ DEBUGOBJS = $(OSDOBJ)/modules/debugger/debugosx.o
 endif
 
 SYNC_IMPLEMENTATION = ntc
+
+# SDLMain_tmpl isn't necessary for SDL2
+ifneq ($(SDL_LIBVER),sdl2)
 SDLMAIN = $(SDLOBJ)/SDLMain_tmpl.o
 SDLUTILMAIN = $(SDLOBJ)/SDLMain_tmpl.o
+endif
+
 SDL_NETWORK = pcap
 MAINLDFLAGS = -Xlinker -all_load
 NO_X11 = 1
@@ -477,7 +482,11 @@ SDLOS_TARGETOS = macosx
 
 ifndef MACOSX_USE_LIBSDL
 # Compile using framework (compile using libSDL is the exception)
+ifeq ($(SDL_LIBVER),sdl2)
+LIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL2 -framework Cocoa -framework OpenGL -lpthread
+else
 LIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL -framework Cocoa -framework OpenGL -lpthread
+endif
 INCPATH += -F$(SDL_FRAMEWORK_PATH)
 else
 # Compile using installed libSDL (Fink or MacPorts):
@@ -549,7 +558,7 @@ endif
 LIBS += `pkg-config --libs fontconfig`
 
 ifeq ($(SDL_LIBVER),sdl2)
-#LIBS += -lSDL2_ttf
+LIBS += -lSDL2_ttf
 else
 LIBS += -lSDL_ttf
 endif
@@ -622,7 +631,11 @@ ifndef NO_USE_QTDEBUG
 MOC = @moc
 endif
 
-LIBS += -lSDL.dll
+ifeq ($(SDL_LIBVER),sdl2)
+LIBS += -lSDL2 -lImm32 -lversion -lole32 -loleaut32 -static
+else
+LIBS += -lSDL -static
+endif
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
 endif   # Win32

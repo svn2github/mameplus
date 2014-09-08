@@ -521,7 +521,7 @@ static void winui_output_error(delegate_late_bind *param, const char *format, va
 		winwindow_toggle_full_screen();
 
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
-	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
+	win_message_box_utf8(win_window_list ? win_window_list->m_hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
 }
 
 
@@ -576,7 +576,7 @@ void windows_osd_interface::sound_register()
 	sound_options_add("dsound", OSD_SOUND_DIRECT_SOUND);
 #if (USE_SDL)
 	sound_options_add("sdl", OSD_SOUND_SDL);
-#endif	
+#endif
 	sound_options_add("auto", OSD_SOUND_DIRECT_SOUND); // making Direct Sound audio default one
 }
 
@@ -649,14 +649,14 @@ void windows_osd_interface::init(running_machine &machine)
 
 	// initialize the subsystems
 	osd_interface::init_subsystems();
-	
+
 	// notify listeners of screen configuration
 	astring tempstring;
-	for (win_window_info *info = win_window_list; info != NULL; info = info->next)
+	for (win_window_info *info = win_window_list; info != NULL; info = info->m_next)
 	{
-		char *tmp = utf8_from_tstring(info->monitor->info.szDevice);
+		char *tmp = utf8_from_tstring(info->m_monitor->info.szDevice);
 		tempstring.printf("Orientation(%s)", tmp);
-		output_set_value(tempstring, info->targetorient);
+		output_set_value(tempstring, info->m_targetorient);
 		osd_free(tmp);
 	}
 

@@ -2352,6 +2352,33 @@ ROM_START( finalttr )
 	ROM_LOAD( "9.1h",     0xc0000, 0x40000, CRC(2ebd316d) SHA1(2f1249ebd2a0bb0cc15259f7187201576a365fa6) )
 ROM_END
 
+
+
+ROM_START( suhosong )
+	ROM_REGION( 0x100000, "maincpu", 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "su_ho_sung.uh12",  0x00001, 0x20000, CRC(6bd8bd08) SHA1(668398c9c77cc4cc52858daefd3cb13fbaf29a37) )
+	ROM_LOAD16_BYTE( "su_ho_sung.ui12",  0x00000, 0x20000, CRC(79a4806e) SHA1(a4080ea70fa588ada384ffa9877f5cf965fb68df) )
+
+	ROM_LOAD( "fakecode",     0x3fe00, 0x200, CRC(2849b78a) SHA1(a1aec7510de9476c23b3f65ffc465a32dfa70718) ) // temphack: this is extracted from puzzle break ram at runtime
+
+	ROM_REGION( 0x10000, "soundcpu", 0 ) /* Z80 Code */
+	ROM_LOAD( "su_ho_sung.u1", 0x00000, 0x10000 ,  CRC(509ce74e) SHA1(a93add5ab674671078b55128281dcf9b0db46617) )
+
+	ROM_REGION( 0x10000, "cpu2", 0 ) /* Intel 87C52 MCU Code */
+	ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped */
+
+	ROM_REGION16_BE( 0x200, "user1", ROMREGION_ERASE00 ) /* Data from Shared RAM */
+//	ROM_LOAD16_WORD( "protdata.bin", 0x00000, 0x200 , CRC(1) SHA1(1) )
+
+	ROM_REGION( 0x040000, "oki", 0 ) /* Samples */
+	ROM_LOAD( "su_ho_sung.uj15", 0x00000, 0x40000, CRC(266fcae8) SHA1(0f15f880bde0c12b5c663ed387f9353c13b731b6) )
+
+	ROM_REGION( 0x180000, "gfx1", 0 ) /* Sprites */
+	ROM_LOAD( "su_ho_sung.ua4", 0x000000, 0x80000, CRC(bc83a944) SHA1(fbd46648107c66f328b0a61c74b6b82c718e6f4b) )
+	ROM_LOAD( "su_ho_sung.ua5", 0x080000, 0x80000, CRC(a1907ea4) SHA1(e21c29d12e50cce1434dbaff0929c207bfd33344) )
+	ROM_LOAD( "su_ho_sung.ua6", 0x100000, 0x80000, CRC(92fea02c) SHA1(946c7bf55354875a1581ce484cb185b640f74166) )
+ROM_END
+
 READ16_MEMBER(snowbros_state::moremorp_0a_read)
 {
 	return 0x000a;
@@ -2788,6 +2815,19 @@ DRIVER_INIT_MEMBER(snowbros_state,pzlbreak)
 	m_pandora->set_bg_pen(0xc0);
 }
 
+DRIVER_INIT_MEMBER(snowbros_state,suhosong)
+{
+	UINT16 *HCROM = (UINT16*)memregion("maincpu")->base();
+
+	// replace jump to ram with jump to fake code we load in rom region
+	HCROM[0x580/2] = 0x0003;
+	HCROM[0x582/2] = 0xfe04;
+
+	// disable checksum check fail
+	HCROM[0x41e/2] = 0x4e71;
+	HCROM[0x420/2] = 0x4e71;
+}
+
 GAME( 1990, snowbros,  0,        snowbros, snowbros, driver_device, 0, ROT0, "Toaplan", "Snow Bros. - Nick & Tom (set 1)", 0 )
 GAME( 1990, snowbrosa, snowbros, snowbros, snowbros, driver_device, 0, ROT0, "Toaplan", "Snow Bros. - Nick & Tom (set 2)", 0 )
 GAME( 1990, snowbrosb, snowbros, snowbros, snowbros, driver_device, 0, ROT0, "Toaplan", "Snow Bros. - Nick & Tom (set 3)", 0 )
@@ -2813,9 +2853,11 @@ GAME( 1997, pzlbreak, 0,        semiprot, pzlbreak, snowbros_state, pzlbreak, RO
 GAME( 1999, moremore, 0,        semiprot, moremore, snowbros_state, moremorp, ROT0, "SemiCom / Exit", "More More", 0 )
 GAME( 1999, moremorp, 0,        semiprot, moremore, snowbros_state, moremorp, ROT0, "SemiCom / Exit", "More More Plus", 0 )
 GAME( 2002, 4in1boot, 0,        _4in1,    4in1boot, snowbros_state, 4in1boot, ROT0, "K1 Soft", "Puzzle King (includes bootleg of Snow Bros.)" , 0)
+GAME( 1997, suhosong, 0,        semiprot, cookbib3, snowbros_state, suhosong, ROT0, "SemiCom", "Su Ho Seong", GAME_NOT_WORKING )
 
 // The Korean games database shows an earlier version of this called Ball Boy with a different title screen to the version of Ball Boy we have
 // http://mamedev.emulab.it/undumped/images/Ballboy.jpg
 // it is possible this 'ball boy' is the original bootleg, with snwobro3 being a hack of that, and the ballboy set we have a further hack of that
+// there is also a later 2004 version with 3 player support
 GAME( 2002, snowbro3, 0,        snowbro3, snowbroj, snowbros_state, snowbro3, ROT0, "Syrmex", "Snow Brothers 3 - Magical Adventure", GAME_IMPERFECT_SOUND ) // hacked from SnowBros code but released as an original game
 GAME( 2003, ballboy,  snowbro3, snowbro3, snowbroj, snowbros_state, snowbro3, ROT0, "bootleg", "Ball Boy", GAME_IMPERFECT_SOUND )

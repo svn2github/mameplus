@@ -720,14 +720,14 @@ static INPUT_PORTS_START( denjinmk )
 	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( On ) )
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Language ) ) //it actually skips the story entirely, so just remain JP as default
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Language ) ) // it actually skips the story entirely, so just remain JP as default
 	PORT_DIPSETTING(      0x0080, DEF_STR( Japanese ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( English ) )
 	PORT_DIPNAME( 0x0f00, 0x0f00, DEF_STR( Coin_A ) )
@@ -1228,7 +1228,7 @@ static MACHINE_CONFIG_START( cupsoc, legionna_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(42*8, 36*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 32*8-1)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(legionna_state, screen_update_grainbow)
 	MCFG_SCREEN_PALETTE("palette")
 
@@ -1268,7 +1268,7 @@ static MACHINE_CONFIG_START( cupsocbl, legionna_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(42*8, 36*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 32*8-1)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(legionna_state, screen_update_grainbow)
 	MCFG_SCREEN_PALETTE("palette")
 
@@ -2387,18 +2387,55 @@ ROM_START( cupsocsb3 )
 ROM_END
 
 
+
+/* Does the COP or something else on the PCB provide a rom overlay for the last part of ROM?
+
+   In Seibu Cup Soccer Selection the only way I've found to not display debug text is by changing this
+   area, and for Olympic Soccer '92 it appears to be the only way to get the Olympic Soccer '92 titles
+   to be used instead of the reagular Seibu Cup Soccer one (and AFAIK both dumps are confirmed to show
+   that on hardware, as are all early versions with the advertising boards of dubious legality)
+
+   You can also enable other debug menus by patching this area of ROM, but some initial tests appear to
+   show those menus are still inaccessible with a patched rom on real hardware, again indicating there
+   could be a rom overlay causing the patches to be ignored.
+
+*/
+
+
+// if this is 1 then P1 Button 3 during gameplay enters the 'Game Master' debug menu, with extensive
+// debugging features.
 #define CUPSOC_DEBUG_MODE 0
+
+DRIVER_INIT_MEMBER(legionna_state, cupsoc_debug)
+{
+#if CUPSOC_DEBUG_MODE
+	UINT16 *ROM = (UINT16 *)memregion("maincpu")->base();
+	ROM[0xffffa/2]  = 0x0000;
+	ROM[0xffff6/2] ^= 0x00ff;
+#endif
+}
+
+DRIVER_INIT_MEMBER(legionna_state, olysoc92)
+{
+	UINT16 *ROM = (UINT16 *)memregion("maincpu")->base();
+	ROM[0xffffe/2] ^= 0x0003; // show Olympic Soccer '92 title
+
+	DRIVER_INIT_CALL(cupsoc_debug);
+}
+
+DRIVER_INIT_MEMBER(legionna_state, cupsocs)
+{
+	UINT16 *ROM = (UINT16 *)memregion("maincpu")->base();
+	ROM[0xffffa/2] = 0x00ff; // disable debug text (this is already 0x00ff in the bootleg sets for the same reason)
+
+	DRIVER_INIT_CALL(cupsoc_debug);
+}
 
 DRIVER_INIT_MEMBER(legionna_state,cupsoc)
 {
-	#if CUPSOC_DEBUG_MODE
-	UINT16 *ROM = (UINT16 *)memregion("maincpu")->base();
-
-	/*Press p1 button 3 to enter into debug mode during gameplay*/
-	ROM[0xffffb/2] = 0x0000;
-	ROM[0xffff7/2] = 0x0000;
-	#endif
+	DRIVER_INIT_CALL(cupsoc_debug);
 }
+
 
 
 DRIVER_INIT_MEMBER(legionna_state,denjinmk)
@@ -2422,19 +2459,19 @@ GAME( 1992, heatbrl,  0,        heatbrl,  heatbrl, driver_device,  0,         RO
 GAME( 1992, heatbrl2, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (World version 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, heatbrlo, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (World old version)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, heatbrlu, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (US)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, heatbrle, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (Electronic Devices license)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, heatbrle, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation (Electronic Devices license)", "Heated Barrel (Electronic Devices license)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 
 GAME( 1993, godzilla, 0,        godzilla, godzilla, driver_device, 0,         ROT0, "Banpresto", "Godzilla (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1993, grainbow, 0,        grainbow, grainbow, driver_device, 0,         ROT0, "Banpresto", "SD Gundam Sangokushi Rainbow Tairiku Senki", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1993, denjinmk, 0,        denjinmk, denjinmk, legionna_state, denjinmk,  ROT0, "Banpresto", "Denjin Makai", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, denjinmk, 0,        denjinmk, denjinmk, legionna_state,denjinmk,  ROT0, "Winkysoft (Banpresto license)", "Denjin Makai", GAME_IMPERFECT_GRAPHICS )
 
-GAME( 1992, cupsoc,   0,        cupsoc,   cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, cupsoca,  cupsoc,   cupsoc,   cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, cupsocb,  cupsoc,   cupsoc,   cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 3)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, cupsocs,  cupsoc,   cupsocs,  cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer :Selection: (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, cupsocs2, cupsoc,   cupsocs,  cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer :Selection: (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, cupsoc,   0,        cupsoc,   cupsoc, legionna_state,  cupsoc,    ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, cupsoca,  cupsoc,   cupsoc,   cupsoc, legionna_state,  cupsoc,    ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, cupsocb,  cupsoc,   cupsoc,   cupsoc, legionna_state,  cupsocs,   ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer (set 3)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, cupsocs,  cupsoc,   cupsocs,  cupsoc, legionna_state,  cupsocs,   ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer :Selection: (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, cupsocs2, cupsoc,   cupsocs,  cupsoc, legionna_state,  cupsocs,   ROT0, "Seibu Kaihatsu", "Seibu Cup Soccer :Selection: (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, cupsocsb, cupsoc,   cupsocbl, cupsoc, legionna_state,  cupsoc,    ROT0, "bootleg", "Seibu Cup Soccer :Selection: (bootleg, set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, cupsocsb2,cupsoc,   cupsocbl, cupsoc, legionna_state,  cupsoc,    ROT0, "bootleg", "Seibu Cup Soccer :Selection: (bootleg, set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, cupsocsb3,cupsoc,   cupsocbl, cupsoc, legionna_state,  cupsoc,    ROT0, "bootleg", "Seibu Cup Soccer :Selection: (bootleg, set 3)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, olysoc92, cupsoc,   cupsoc,   cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Olympic Soccer '92 (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, olysoc92a,cupsoc,   cupsoc,   cupsoc, driver_device,   0,         ROT0, "Seibu Kaihatsu", "Olympic Soccer '92 (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, olysoc92, cupsoc,   cupsoc,   cupsoc, legionna_state,  olysoc92,  ROT0, "Seibu Kaihatsu", "Olympic Soccer '92 (set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, olysoc92a,cupsoc,   cupsoc,   cupsoc, legionna_state,  olysoc92,  ROT0, "Seibu Kaihatsu", "Olympic Soccer '92 (set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )

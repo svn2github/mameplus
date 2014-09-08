@@ -82,9 +82,8 @@
 #define SDLOPTVAL_AUTO                  "auto"
 
 #define SDLOPTVAL_OPENGL                "opengl"
-#define SDLOPTVAL_OPENGL16              "opengl16"
 #define SDLOPTVAL_SOFT                  "soft"
-#define SDLOPTVAL_SDL13                 "sdl13"
+#define SDLOPTVAL_SDL2ACCEL		"accel"
 
 #define SDLMAME_LED(x)                  "led" #x
 
@@ -201,6 +200,7 @@ public:
 	virtual void debugger_register();
 
 	virtual bool video_init();
+	virtual bool window_init();
 	virtual bool input_init();
 	virtual void input_pause();
 	virtual void input_resume();
@@ -210,6 +210,7 @@ public:
 	#endif
 
 	virtual void video_exit();
+	virtual void window_exit();
 	virtual void input_exit();
 	virtual void output_exit();
 	#ifdef USE_NETWORK

@@ -2,7 +2,7 @@
 //
 //  window.h - SDL window handling
 //
-//  Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+//  Copyright (c) 1996-2014, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 //  SDLMAME by Olivier Galibert and R. Belmont
@@ -119,9 +119,6 @@ extern sdl_window_info *sdl_window_list;
 //  PROTOTYPES
 //============================================================
 
-// core initialization
-int sdlwindow_init(running_machine &machine);
-
 // creation/deletion of windows
 int sdlwindow_video_window_create(running_machine &machine, int index, sdl_monitor_info *monitor, const sdl_window_config *config);
 void sdlwindow_video_window_update(running_machine &machine, sdl_window_info *window);
@@ -150,6 +147,6 @@ int drawogl_init(running_machine &machine, sdl_draw_info *callbacks);
 // PROTOTYPES - draw13.c
 //============================================================
 
-int draw13_init(running_machine &machine, sdl_draw_info *callbacks);
+int drawsdl2_init(running_machine &machine, sdl_draw_info *callbacks);
 
 #endif /* __SDLWINDOW__ */

@@ -1144,7 +1144,7 @@ static HICON FormatICOInMemoryToHICON(PBYTE ptrBuffer, UINT nBufferSize)
 		return NULL;
 	}
 
-	/* Was it 'reserved' ?	 (ie 0) */
+	/* Was it 'reserved' ?   (ie 0) */
 	if ((WORD)(ptrBuffer[nBufferIndex]) != 0)
 	{
 		return NULL;
@@ -2072,7 +2072,7 @@ static void winui_output_error(delegate_late_bind *__dummy, const char *format, 
 		winwindow_toggle_full_screen();
 
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
-	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
+	win_message_box_utf8(win_window_list ? win_window_list->m_hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
 }
 
 static void memory_error(const char *message)

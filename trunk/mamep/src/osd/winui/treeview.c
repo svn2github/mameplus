@@ -727,14 +727,15 @@ void GenerateScreenFoldersIni(const TCHAR *ini_name)
 				break;
 			}
 		}
+
 		if (folder == NULL)
 		{
-				// record that we found this folder
-				extra_folders[extra_folder_count].name = win_tstring_strdup(s);
+			// record that we found this folder
+			extra_folders[extra_folder_count].name = win_tstring_strdup(s);
 
-				folder = &extra_folders[extra_folder_count];
+			folder = &extra_folders[extra_folder_count];
 
-				extra_folder_count++;
+			extra_folder_count++;
 		}
 		dataAddGame(folder, i);
 	}

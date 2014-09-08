@@ -588,7 +588,7 @@ INPUT_PORTS_START( theglad )
 	PORT_CONFNAME( 0x00ff, 0x00ff, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Taiwan ) )
-	//PORT_CONFSETTING(      0x0002, DEF_STR( Japan ) ) // it doesn't appear that carts of the Japanese version were released, the PCB has an extra sample ROM used in Japanese mode for the music
+	PORT_CONFSETTING(      0x0002, DEF_STR( Japan ) ) // it doesn't appear that carts of the Japanese version were released, the PCB has an extra sample ROM used in Japanese mode for the music
 	PORT_CONFSETTING(      0x0003, DEF_STR( Korea ) )
 	PORT_CONFSETTING(      0x0004, DEF_STR( Hong_Kong ) )
 	PORT_CONFSETTING(      0x0005, "Spanish Territories" )
