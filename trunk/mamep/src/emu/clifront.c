@@ -295,6 +295,11 @@ int cli_frontend::execute(int argc, char **argv)
 		osd_printf_error(_("Caught unhandled emulator exception\n"));
 		m_result = MAMERR_FATALERROR;
 	}
+	catch (add_exception &aex)
+	{
+		osd_printf_error(_("Tag '%s' already exists in tagged_list\n"), aex.tag());
+		m_result = MAMERR_FATALERROR;
+	}
 	catch (std::exception &ex)
 	{
 		osd_printf_error(_("Caught unhandled %s exception: %s\n"), typeid(ex).name(), ex.what());
