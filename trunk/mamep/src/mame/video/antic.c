@@ -19,64 +19,6 @@
 
 #define LOG(x)  do { if (VERBOSE) logerror x; } while (0)
 
-// declaration of renderer functions
-#define ANTIC_RENDERER(name) void name(address_space &space, VIDEO *video)
-
-static ANTIC_RENDERER( antic_mode_0_xx );
-static ANTIC_RENDERER( antic_mode_2_32 );
-static ANTIC_RENDERER( antic_mode_2_40 );
-static ANTIC_RENDERER( antic_mode_2_48 );
-static ANTIC_RENDERER( antic_mode_3_32 );
-static ANTIC_RENDERER( antic_mode_3_40 );
-static ANTIC_RENDERER( antic_mode_3_48 );
-static ANTIC_RENDERER( antic_mode_4_32 );
-static ANTIC_RENDERER( antic_mode_4_40 );
-static ANTIC_RENDERER( antic_mode_4_48 );
-static ANTIC_RENDERER( antic_mode_5_32 );
-static ANTIC_RENDERER( antic_mode_5_40 );
-static ANTIC_RENDERER( antic_mode_5_48 );
-static ANTIC_RENDERER( antic_mode_6_32 );
-static ANTIC_RENDERER( antic_mode_6_40 );
-static ANTIC_RENDERER( antic_mode_6_48 );
-static ANTIC_RENDERER( antic_mode_7_32 );
-static ANTIC_RENDERER( antic_mode_7_40 );
-static ANTIC_RENDERER( antic_mode_7_48 );
-static ANTIC_RENDERER( antic_mode_8_32 );
-static ANTIC_RENDERER( antic_mode_8_40 );
-static ANTIC_RENDERER( antic_mode_8_48 );
-static ANTIC_RENDERER( antic_mode_9_32 );
-static ANTIC_RENDERER( antic_mode_9_40 );
-static ANTIC_RENDERER( antic_mode_9_48 );
-static ANTIC_RENDERER( antic_mode_a_32 );
-static ANTIC_RENDERER( antic_mode_a_40 );
-static ANTIC_RENDERER( antic_mode_a_48 );
-static ANTIC_RENDERER( antic_mode_b_32 );
-static ANTIC_RENDERER( antic_mode_b_40 );
-static ANTIC_RENDERER( antic_mode_b_48 );
-static ANTIC_RENDERER( antic_mode_c_32 );
-static ANTIC_RENDERER( antic_mode_c_40 );
-static ANTIC_RENDERER( antic_mode_c_48 );
-static ANTIC_RENDERER( antic_mode_d_32 );
-static ANTIC_RENDERER( antic_mode_d_40 );
-static ANTIC_RENDERER( antic_mode_d_48 );
-static ANTIC_RENDERER( antic_mode_e_32 );
-static ANTIC_RENDERER( antic_mode_e_40 );
-static ANTIC_RENDERER( antic_mode_e_48 );
-static ANTIC_RENDERER( antic_mode_f_32 );
-static ANTIC_RENDERER( antic_mode_f_40 );
-static ANTIC_RENDERER( antic_mode_f_48 );
-static ANTIC_RENDERER( gtia_mode_1_32 );
-static ANTIC_RENDERER( gtia_mode_1_40 );
-static ANTIC_RENDERER( gtia_mode_1_48 );
-static ANTIC_RENDERER( gtia_mode_2_32 );
-static ANTIC_RENDERER( gtia_mode_2_40 );
-static ANTIC_RENDERER( gtia_mode_2_48 );
-static ANTIC_RENDERER( gtia_mode_3_32 );
-static ANTIC_RENDERER( gtia_mode_3_40 );
-static ANTIC_RENDERER( gtia_mode_3_48 );
-
-
-
 /*************************************************************************
  * The priority tables tell which playfield, player or missile colors
  * have precedence about the others, depending on the contents of the
@@ -1031,65 +973,10 @@ WRITE8_MEMBER ( atari_common_state::atari_antic_w )
 	}
 }
 
-
-static const atari_renderer_func renderer[2][19][5] = {
-	/*   no playfield    narrow          normal          wide         */
-	{
-		{antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx},
-		{antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx},
-		{antic_mode_0_xx,antic_mode_2_32,antic_mode_2_40,antic_mode_2_48},
-		{antic_mode_0_xx,antic_mode_3_32,antic_mode_3_40,antic_mode_3_48},
-		{antic_mode_0_xx,antic_mode_4_32,antic_mode_4_40,antic_mode_4_48},
-		{antic_mode_0_xx,antic_mode_5_32,antic_mode_5_40,antic_mode_5_48},
-		{antic_mode_0_xx,antic_mode_6_32,antic_mode_6_40,antic_mode_6_48},
-		{antic_mode_0_xx,antic_mode_7_32,antic_mode_7_40,antic_mode_7_48},
-		{antic_mode_0_xx,antic_mode_8_32,antic_mode_8_40,antic_mode_8_48},
-		{antic_mode_0_xx,antic_mode_9_32,antic_mode_9_40,antic_mode_9_48},
-		{antic_mode_0_xx,antic_mode_a_32,antic_mode_a_40,antic_mode_a_48},
-		{antic_mode_0_xx,antic_mode_b_32,antic_mode_b_40,antic_mode_b_48},
-		{antic_mode_0_xx,antic_mode_c_32,antic_mode_c_40,antic_mode_c_48},
-		{antic_mode_0_xx,antic_mode_d_32,antic_mode_d_40,antic_mode_d_48},
-		{antic_mode_0_xx,antic_mode_e_32,antic_mode_e_40,antic_mode_e_48},
-		{antic_mode_0_xx,antic_mode_f_32,antic_mode_f_40,antic_mode_f_48},
-		{antic_mode_0_xx, gtia_mode_1_32, gtia_mode_1_40, gtia_mode_1_48},
-		{antic_mode_0_xx, gtia_mode_2_32, gtia_mode_2_40, gtia_mode_2_48},
-		{antic_mode_0_xx, gtia_mode_3_32, gtia_mode_3_40, gtia_mode_3_48},
-	},
-	/*   with hscrol enabled playfield width is +32 color clocks      */
-	/*   no playfield    narrow->normal  normal->wide    wide->wide   */
-	{
-		{antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx},
-		{antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx,antic_mode_0_xx},
-		{antic_mode_0_xx,antic_mode_2_40,antic_mode_2_48,antic_mode_2_48},
-		{antic_mode_0_xx,antic_mode_3_40,antic_mode_3_48,antic_mode_3_48},
-		{antic_mode_0_xx,antic_mode_4_40,antic_mode_4_48,antic_mode_4_48},
-		{antic_mode_0_xx,antic_mode_5_40,antic_mode_5_48,antic_mode_5_48},
-		{antic_mode_0_xx,antic_mode_6_40,antic_mode_6_48,antic_mode_6_48},
-		{antic_mode_0_xx,antic_mode_7_40,antic_mode_7_48,antic_mode_7_48},
-		{antic_mode_0_xx,antic_mode_8_40,antic_mode_8_48,antic_mode_8_48},
-		{antic_mode_0_xx,antic_mode_9_40,antic_mode_9_48,antic_mode_9_48},
-		{antic_mode_0_xx,antic_mode_a_40,antic_mode_a_48,antic_mode_a_48},
-		{antic_mode_0_xx,antic_mode_b_40,antic_mode_b_48,antic_mode_b_48},
-		{antic_mode_0_xx,antic_mode_c_40,antic_mode_c_48,antic_mode_c_48},
-		{antic_mode_0_xx,antic_mode_d_40,antic_mode_d_48,antic_mode_d_48},
-		{antic_mode_0_xx,antic_mode_e_40,antic_mode_e_48,antic_mode_e_48},
-		{antic_mode_0_xx,antic_mode_f_40,antic_mode_f_48,antic_mode_f_48},
-		{antic_mode_0_xx, gtia_mode_1_40, gtia_mode_1_48, gtia_mode_1_48},
-		{antic_mode_0_xx, gtia_mode_2_40, gtia_mode_2_48, gtia_mode_2_48},
-		{antic_mode_0_xx, gtia_mode_3_40, gtia_mode_3_48, gtia_mode_3_48},
-	}
-};
-
-void antic_render(address_space &space, int param1, int param2, int param3)
-{
-	VIDEO *video = antic.video[antic.scanline];
-	(*renderer[param1][param2][param3])(space, video);
-}
-
 /*************  ANTIC mode 00: *********************************
  * generate 1-8 empty scanlines
  ***************************************************************/
-static ANTIC_RENDERER( antic_mode_0_xx )
+static inline void antic_mode_0_xx(address_space &space, VIDEO *video)
 {
 	PREPARE();
 	memset(dst, PBK, HWIDTH*4);
@@ -1106,23 +993,13 @@ static ANTIC_RENDERER( antic_mode_0_xx )
  ***************************************************************/
 #define MODE2(s) COPY4(dst, antic.pf_21[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_2_32 )
+static inline void antic_mode_2(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT2(space, 32);
-	REP32(MODE2);
-	POST_TXT(32);
-}
-static ANTIC_RENDERER( antic_mode_2_40 )
-{
-	PREPARE_TXT2(space, 40);
-	REP40(MODE2);
-	POST_TXT(40);
-}
-static ANTIC_RENDERER( antic_mode_2_48 )
-{
-	PREPARE_TXT2(space, 48);
-	REP48(MODE2);
-	POST_TXT(48);
+	PREPARE_TXT2(space, bytes);
+	ERASE(erase);
+	REP(MODE2, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 03: *********************************
@@ -1130,23 +1007,13 @@ static ANTIC_RENDERER( antic_mode_2_48 )
  ***************************************************************/
 #define MODE3(s) COPY4(dst, antic.pf_21[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_3_32 )
+static inline void antic_mode_3(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT3(space, 32);
-	REP32(MODE3);
-	POST_TXT(32);
-}
-static ANTIC_RENDERER( antic_mode_3_40 )
-{
-	PREPARE_TXT3(space, 40);
-	REP40(MODE3);
-	POST_TXT(40);
-}
-static ANTIC_RENDERER( antic_mode_3_48 )
-{
-	PREPARE_TXT3(space, 48);
-	REP48(MODE3);
-	POST_TXT(48);
+	PREPARE_TXT3(space, bytes);
+	ERASE(erase);
+	REP(MODE3, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 04: *********************************
@@ -1154,23 +1021,13 @@ static ANTIC_RENDERER( antic_mode_3_48 )
  ***************************************************************/
 #define MODE4(s) COPY4(dst, antic.pf_x10b[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_4_32 )
+static inline void antic_mode_4(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT45(space, 32,0);
-	REP32(MODE4);
-	POST_TXT(32);
-}
-static ANTIC_RENDERER( antic_mode_4_40 )
-{
-	PREPARE_TXT45(space, 40,0);
-	REP40(MODE4);
-	POST_TXT(40);
-}
-static ANTIC_RENDERER( antic_mode_4_48 )
-{
-	PREPARE_TXT45(space, 48,0);
-	REP48(MODE4);
-	POST_TXT(48);
+	PREPARE_TXT45(space, bytes, 0);
+	ERASE(erase);
+	REP(MODE4, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 05: *********************************
@@ -1178,23 +1035,13 @@ static ANTIC_RENDERER( antic_mode_4_48 )
  ***************************************************************/
 #define MODE5(s) COPY4(dst, antic.pf_x10b[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_5_32 )
+static inline void antic_mode_5(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT45(space, 32,1);
-	REP32(MODE5);
-	POST_TXT(32);
-}
-static ANTIC_RENDERER( antic_mode_5_40 )
-{
-	PREPARE_TXT45(space, 40,1);
-	REP40(MODE5);
-	POST_TXT(40);
-}
-static ANTIC_RENDERER( antic_mode_5_48 )
-{
-	PREPARE_TXT45(space, 48,1);
-	REP48(MODE5);
-	POST_TXT(48);
+	PREPARE_TXT45(space, bytes, 1);
+	ERASE(erase);
+	REP(MODE5, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 06: *********************************
@@ -1202,23 +1049,13 @@ static ANTIC_RENDERER( antic_mode_5_48 )
  ***************************************************************/
 #define MODE6(s) COPY8(dst, antic.pf_3210b2[video->data[s]], antic.pf_3210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_6_32 )
+static inline void antic_mode_6(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT67(space, 16,0);
-	REP16(MODE6);
-	POST_TXT(16);
-}
-static ANTIC_RENDERER( antic_mode_6_40 )
-{
-	PREPARE_TXT67(space, 20,0);
-	REP20(MODE6);
-	POST_TXT(20);
-}
-static ANTIC_RENDERER( antic_mode_6_48 )
-{
-	PREPARE_TXT67(space, 24,0);
-	REP24(MODE6);
-	POST_TXT(24);
+	PREPARE_TXT67(space, bytes, 0);
+	ERASE(erase);
+	REP(MODE6, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 07: *********************************
@@ -1226,23 +1063,13 @@ static ANTIC_RENDERER( antic_mode_6_48 )
  ***************************************************************/
 #define MODE7(s) COPY8(dst, antic.pf_3210b2[video->data[s]], antic.pf_3210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_7_32 )
+static inline void antic_mode_7(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_TXT67(space, 16,1);
-	REP16(MODE7);
-	POST_TXT(16);
-}
-static ANTIC_RENDERER( antic_mode_7_40 )
-{
-	PREPARE_TXT67(space, 20,1);
-	REP20(MODE7);
-	POST_TXT(20);
-}
-static ANTIC_RENDERER( antic_mode_7_48 )
-{
-	PREPARE_TXT67(space, 24,1);
-	REP24(MODE7);
-	POST_TXT(24);
+	PREPARE_TXT67(space, bytes, 1);
+	ERASE(erase);
+	REP(MODE7, bytes);
+	ERASE(erase);
+	POST_TXT(bytes);
 }
 
 /*************  ANTIC mode 08: *********************************
@@ -1250,23 +1077,13 @@ static ANTIC_RENDERER( antic_mode_7_48 )
  ***************************************************************/
 #define MODE8(s) COPY16(dst, antic.pf_210b4[video->data[s]],antic.pf_210b4[video->data[s]+1],antic.pf_210b4[video->data[s]+2],antic.pf_210b4[video->data[s]+3])
 
-static ANTIC_RENDERER( antic_mode_8_32 )
+static inline void antic_mode_8(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFX8(space, 8);
-	REP08(MODE8);
-	POST_GFX(8);
-}
-static ANTIC_RENDERER( antic_mode_8_40 )
-{
-	PREPARE_GFX8(space, 10);
-	REP10(MODE8);
-	POST_GFX(10);
-}
-static ANTIC_RENDERER( antic_mode_8_48 )
-{
-	PREPARE_GFX8(space, 12);
-	REP12(MODE8);
-	POST_GFX(12);
+	PREPARE_GFX8(space, bytes);
+	ERASE(erase);
+	REP(MODE8, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 09: *********************************
@@ -1274,23 +1091,13 @@ static ANTIC_RENDERER( antic_mode_8_48 )
  ***************************************************************/
 #define MODE9(s) COPY8(dst, antic.pf_3210b2[video->data[s]], antic.pf_3210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_9_32 )
+static inline void antic_mode_9(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFX9BC(space, 16);
-	REP16(MODE9);
-	POST_GFX(16);
-}
-static ANTIC_RENDERER( antic_mode_9_40 )
-{
-	PREPARE_GFX9BC(space, 20);
-	REP20(MODE9);
-	POST_GFX(20);
-}
-static ANTIC_RENDERER( antic_mode_9_48 )
-{
-	PREPARE_GFX9BC(space, 24);
-	REP24(MODE9);
-	POST_GFX(24);
+	PREPARE_GFX9BC(space, bytes);
+	ERASE(erase);
+	REP(MODE9, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0A: *********************************
@@ -1298,23 +1105,13 @@ static ANTIC_RENDERER( antic_mode_9_48 )
  ***************************************************************/
 #define MODEA(s) COPY8(dst, antic.pf_210b2[video->data[s]], antic.pf_210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_a_32 )
+static inline void antic_mode_a(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXA(space, 16);
-	REP16(MODEA);
-	POST_GFX(16);
-}
-static ANTIC_RENDERER( antic_mode_a_40 )
-{
-	PREPARE_GFXA(space, 20);
-	REP20(MODEA);
-	POST_GFX(20);
-}
-static ANTIC_RENDERER( antic_mode_a_48 )
-{
-	PREPARE_GFXA(space, 24);
-	REP24(MODEA);
-	POST_GFX(24);
+	PREPARE_GFXA(space, bytes);
+	ERASE(erase);
+	REP(MODEA, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0B: *********************************
@@ -1322,23 +1119,13 @@ static ANTIC_RENDERER( antic_mode_a_48 )
  ***************************************************************/
 #define MODEB(s) COPY8(dst, antic.pf_3210b2[video->data[s]], antic.pf_3210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_b_32 )
+static inline void antic_mode_b(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFX9BC(space, 16);
-	REP16(MODEB);
-	POST_GFX(16);
-}
-static ANTIC_RENDERER( antic_mode_b_40 )
-{
-	PREPARE_GFX9BC(space, 20);
-	REP20(MODEB);
-	POST_GFX(20);
-}
-static ANTIC_RENDERER( antic_mode_b_48 )
-{
-	PREPARE_GFX9BC(space, 24);
-	REP24(MODEB);
-	POST_GFX(24);
+	PREPARE_GFX9BC(space, bytes);
+	ERASE(erase);
+	REP(MODEB, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0C: *********************************
@@ -1346,23 +1133,13 @@ static ANTIC_RENDERER( antic_mode_b_48 )
  ***************************************************************/
 #define MODEC(s) COPY8(dst, antic.pf_3210b2[video->data[s]], antic.pf_3210b2[video->data[s]+1])
 
-static ANTIC_RENDERER( antic_mode_c_32 )
+static inline void antic_mode_c(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFX9BC(space, 16);
-	REP16(MODEC);
-	POST_GFX(16);
-}
-static ANTIC_RENDERER( antic_mode_c_40 )
-{
-	PREPARE_GFX9BC(space, 20);
-	REP20(MODEC);
-	POST_GFX(20);
-}
-static ANTIC_RENDERER( antic_mode_c_48 )
-{
-	PREPARE_GFX9BC(space, 24);
-	REP24(MODEC);
-	POST_GFX(24);
+	PREPARE_GFX9BC(space, bytes);
+	ERASE(erase);
+	REP(MODEC, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0D: *********************************
@@ -1370,23 +1147,13 @@ static ANTIC_RENDERER( antic_mode_c_48 )
  ***************************************************************/
 #define MODED(s) COPY4(dst, antic.pf_x10b[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_d_32 )
+static inline void antic_mode_d(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXDE(space, 32);
-	REP32(MODED);
-	POST_GFX(32);
-}
-static ANTIC_RENDERER( antic_mode_d_40 )
-{
-	PREPARE_GFXDE(space, 40);
-	REP40(MODED);
-	POST_GFX(40);
-}
-static ANTIC_RENDERER( antic_mode_d_48 )
-{
-	PREPARE_GFXDE(space, 48);
-	REP48(MODED);
-	POST_GFX(48);
+	PREPARE_GFXDE(space, bytes);
+	ERASE(erase);
+	REP(MODED, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0E: *********************************
@@ -1394,23 +1161,13 @@ static ANTIC_RENDERER( antic_mode_d_48 )
  ***************************************************************/
 #define MODEE(s) COPY4(dst, antic.pf_x10b[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_e_32 )
+static inline void antic_mode_e(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXDE(space, 32);
-	REP32(MODEE);
-	POST_GFX(32);
-}
-static ANTIC_RENDERER( antic_mode_e_40 )
-{
-	PREPARE_GFXDE(space, 40);
-	REP40(MODEE);
-	POST_GFX(40);
-}
-static ANTIC_RENDERER( antic_mode_e_48 )
-{
-	PREPARE_GFXDE(space, 48);
-	REP48(MODEE);
-	POST_GFX(48);
+	PREPARE_GFXDE(space, bytes);
+	ERASE(erase);
+	REP(MODEE, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0F: *********************************
@@ -1418,23 +1175,13 @@ static ANTIC_RENDERER( antic_mode_e_48 )
  ***************************************************************/
 #define MODEF(s) COPY4(dst, antic.pf_1b[video->data[s]])
 
-static ANTIC_RENDERER( antic_mode_f_32 )
+static inline void antic_mode_f(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXF(space, 32);
-	REP32(MODEF);
-	POST_GFX(32);
-}
-static ANTIC_RENDERER( antic_mode_f_40 )
-{
-	PREPARE_GFXF(space, 40);
-	REP40(MODEF);
-	POST_GFX(40);
-}
-static ANTIC_RENDERER( antic_mode_f_48 )
-{
-	PREPARE_GFXF(space, 48);
-	REP48(MODEF);
-	POST_GFX(48);
+	PREPARE_GFXF(space, bytes);
+	ERASE(erase);
+	REP(MODEF, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0F : GTIA mode 1 ********************
@@ -1442,23 +1189,13 @@ static ANTIC_RENDERER( antic_mode_f_48 )
  ***************************************************************/
 #define GTIA1(s) COPY4(dst, antic.pf_gtia1[video->data[s]])
 
-static ANTIC_RENDERER( gtia_mode_1_32 )
+static inline void antic_mode_gtia1(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXG1(space, 32);
-	REP32(GTIA1);
-	POST_GFX(32);
-}
-static ANTIC_RENDERER( gtia_mode_1_40 )
-{
-	PREPARE_GFXG1(space, 40);
-	REP40(GTIA1);
-	POST_GFX(40);
-}
-static ANTIC_RENDERER( gtia_mode_1_48 )
-{
-	PREPARE_GFXG1(space, 48);
-	REP48(GTIA1);
-	POST_GFX(48);
+	PREPARE_GFXG1(space, bytes);
+	ERASE(erase);
+	REP(GTIA1, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0F : GTIA mode 2 ********************
@@ -1466,23 +1203,13 @@ static ANTIC_RENDERER( gtia_mode_1_48 )
  ***************************************************************/
 #define GTIA2(s) COPY4(dst, antic.pf_gtia2[video->data[s]])
 
-static ANTIC_RENDERER( gtia_mode_2_32 )
+static inline void antic_mode_gtia2(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXG2(space, 32);
-	REP32(GTIA2);
-	POST_GFX(32);
-}
-static ANTIC_RENDERER( gtia_mode_2_40 )
-{
-	PREPARE_GFXG2(space, 40);
-	REP40(GTIA2);
-	POST_GFX(40);
-}
-static ANTIC_RENDERER( gtia_mode_2_48 )
-{
-	PREPARE_GFXG2(space, 48);
-	REP48(GTIA2);
-	POST_GFX(48);
+	PREPARE_GFXG2(space, bytes);
+	ERASE(erase);
+	REP(GTIA2, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
 
 /*************  ANTIC mode 0F : GTIA mode 3 ********************
@@ -1490,24 +1217,107 @@ static ANTIC_RENDERER( gtia_mode_2_48 )
  ***************************************************************/
 #define GTIA3(s) COPY4(dst, antic.pf_gtia3[video->data[s]])
 
-static ANTIC_RENDERER( gtia_mode_3_32 )
+static inline void antic_mode_gtia3(address_space &space, VIDEO *video, int bytes, int erase)
 {
-	PREPARE_GFXG3(space, 32);
-	REP32(GTIA3);
-	POST_GFX(32);
+	PREPARE_GFXG3(space, bytes);
+	ERASE(erase);
+	REP(GTIA3, bytes);
+	ERASE(erase);
+	POST_GFX(bytes);
 }
-static ANTIC_RENDERER( gtia_mode_3_40 )
+
+
+/*************  ANTIC render ********************/
+
+void antic_render(address_space &space, int param1, int param2, int param3)
 {
-	PREPARE_GFXG3(space, 40);
-	REP40(GTIA3);
-	POST_GFX(40);
+	VIDEO *video = antic.video[antic.scanline];
+	int add_bytes = 0, erase = 0;
+	
+	if (param3 == 0 || param2 <= 1)
+	{
+		antic_mode_0_xx(space, video);
+		return;
+	}
+	
+	if ((param3 == 1 || param3 == 2) && param1)
+		param3++;
+	
+	switch (param3)
+	{
+		case 1:
+			add_bytes = 32;
+			erase = 8;
+			break;
+		case 2:
+			add_bytes = 40;
+			erase = 4;
+			break;
+		case 3:
+			add_bytes = 48;
+			erase = 0;
+			break;
+	}
+	
+	switch (param2)
+	{
+		case 0x02:
+			antic_mode_2(space, video, add_bytes, erase);
+			return;
+		case 0x03:
+			antic_mode_3(space, video, add_bytes, erase);
+			return;
+		case 0x04:
+			antic_mode_4(space, video, add_bytes, erase);
+			return;
+		case 0x05:
+			antic_mode_5(space, video, add_bytes, erase);
+			return;
+		case 0x06:
+			antic_mode_6(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x07:
+			antic_mode_7(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x08:
+			antic_mode_8(space, video, add_bytes >> 2, erase);
+			return;
+		case 0x09:
+			antic_mode_9(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x0a:
+			antic_mode_a(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x0b:
+			antic_mode_b(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x0c:
+			antic_mode_c(space, video, add_bytes >> 1, erase);
+			return;
+		case 0x0d:
+			antic_mode_d(space, video, add_bytes, erase);
+			return;
+		case 0x0e:
+			antic_mode_e(space, video, add_bytes, erase);
+			return;
+		case 0x0f:
+			antic_mode_f(space, video, add_bytes, erase);
+			return;
+		case 0x10:
+			antic_mode_gtia1(space, video, add_bytes, erase);
+			return;
+		case 0x11:
+			antic_mode_gtia2(space, video, add_bytes, erase);
+			return;
+		case 0x12:
+			antic_mode_gtia3(space, video, add_bytes, erase);
+			return;
+		default:
+			return;
+	}
 }
-static ANTIC_RENDERER( gtia_mode_3_48 )
-{
-	PREPARE_GFXG3(space, 48);
-	REP48(GTIA3);
-	POST_GFX(48);
-}
+
+
 
 /************************************************************************
  * atari_vh_screenrefresh

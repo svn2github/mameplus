@@ -115,7 +115,7 @@ static void extract_help_ids(const char *buffer, FILE *fp)
 	int num_help_id = 0;
 	int i;
 
-	memset(help_ids, '\0', sizeof(help_ids));
+	memset(help_ids, '\0', sizeof(*help_ids));
 
 	while(*ptr) {
 		if (strncmp("HIDC_", ptr, 5) == 0) {

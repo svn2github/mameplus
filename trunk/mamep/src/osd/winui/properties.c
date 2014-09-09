@@ -1517,7 +1517,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					// combo box
 					if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
 					{
-							changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
+						changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
 					}
 				}
 				else if (!wcscmp(szClass, WC_BUTTON) && (GetWindowLong(hWndCtrl, GWL_STYLE) & BS_CHECKBOX))
