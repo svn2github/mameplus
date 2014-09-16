@@ -391,7 +391,6 @@ READ8_MEMBER(gottlieb_state::laserdisc_status_r)
 		m_laserdisc_audio_address %= AUDIORAM_SIZE;
 		return result;
 	}
-	return 0;
 }
 
 

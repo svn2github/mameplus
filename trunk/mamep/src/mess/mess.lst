@@ -49,7 +49,8 @@ a7800p    // Atari 7800 PAL
 nes       // Nintendo Entertainment System
 nespal    // Nintendo Entertainment System PAL
 m82       // Nintendo M82 Display Unit
-famicom   // Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
+famicom   // Nintendo Family Computer (a.k.a. Famicom)
+fds       // Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
 famitwin  // Sharp Famicom Twin System
 drpcjr    // Bung Doctor PC Jr
 dendy     // Dendy (Classic russian famiclone)

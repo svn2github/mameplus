@@ -20,8 +20,13 @@ public:
 	virtual WRITE8_MEMBER(port_03c0_w);
 	virtual READ8_MEMBER(port_03d0_r);
 	virtual WRITE8_MEMBER(port_03d0_w);
+	DECLARE_READ8_MEMBER(port_83c6_r);
+	DECLARE_WRITE8_MEMBER(port_83c6_w);
+	DECLARE_READ8_MEMBER(vram_r) { if (svga.rgb8_en || svga.rgb15_en || svga.rgb16_en || svga.rgb32_en) return vga.memory[offset % vga.svga_intf.vram_size]; else return 0xff; }
+	DECLARE_WRITE8_MEMBER(vram_w) { if (svga.rgb8_en || svga.rgb15_en || svga.rgb16_en || svga.rgb32_en) vga.memory[offset % vga.svga_intf.vram_size] = data; }
 	virtual READ8_MEMBER(mem_r);
 	virtual WRITE8_MEMBER(mem_w);
+	virtual UINT16 offset();
 protected:
 	virtual void device_start();
 	virtual void device_reset();
@@ -35,11 +40,24 @@ protected:
 		UINT8 sr0f;
 		UINT8 gc0e;
 		UINT8 gc0f;
+		UINT8 gc2f;
+		UINT8 cr1e;
 		UINT8 cr1f;
+		UINT8 cr21;
+		UINT8 cr29;
+		UINT8 cr39;
+		UINT8 cr50;
+		UINT8 dac;
 		bool new_mode;
 		bool port_3c3;
 		UINT8 clock;
 		UINT8 pixel_depth;
+		UINT8 revision;
+		bool dac_active;
+		UINT8 dac_count;
+		UINT32 linear_address;
+		bool linear_active;
+		bool mmio_active;
 	} tri;
 private:
 	UINT8 trident_seq_reg_read(UINT8 index);

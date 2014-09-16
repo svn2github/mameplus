@@ -3343,7 +3343,8 @@ sfzh            // 18/07/1995 (c) 1995 (Hispanic)
 sfzhr1          // 27/06/1995 (c) 1995 (Hispanic)
 sfzb            // 09/11/1995 (c) 1995 (Brazil)
 sfzbr1          // 27/07/1995 (c) 1995 (Brazil)
-mmancp2u        // 06/10/1995 (c) 1995 (Japan)
+mmancp2u        // 06/10/1995 (c) 1995 (USA)
+mmancp2ur1      // 26/09/1995 (c) 1995 (USA)
 rmancp2j        // 22/09/1995 (c) 1995 (Japan)
 msh             // 24/10/1995 (c) 1995 (Euro)
 mshu            // 24/10/1995 (c) 1995 (USA)
@@ -6340,6 +6341,7 @@ esckidsj        // GX975 (c) 1991 (Japan)
 vendetta        // GX081 (c) 1991 (World)
 vendettar       // GX081 (c) 1991 (World)
 vendetta2p      // GX081 (c) 1991 (World)
+vendetta2peba	// GX081 (c) 1991 (World)
 vendetta2pu     // GX081 (c) 1991 (Asia)
 vendetta2pd     // GX081 (c) 1991 (Asia)
 vendettaj       // GX081 (c) 1991 (Japan)
@@ -7913,6 +7915,7 @@ bigbang         // UPL-93091 (c) 1993 NMK
 tdragon         // (c) 1991 NMK / Tecmo
 tdragon1        // (c) 1991 NMK / Tecmo
 hachamf         // (c) 1991 NMK
+hachamfb        // bootleg
 macross         // (c) 1992 Banpresto
 riot            // (c) 1992 NMK
 gunnail         // (c) 1993 NMK / Tecmo
@@ -9028,6 +9031,7 @@ koikois         // (c) 1995 Seta
 nratechu        // (c) 1996 Seta
 dcrown          // 199? unknown
 dcrowna         // 199? unknown
+gostop          // 2001 Visco
 // R3000 + ST-0016
 srmp5           // (c) 199? Seta
 speglsht        // (c) 1994 Seta
@@ -29931,7 +29935,6 @@ dinoeggs
    Atari Generation/System 1
 */
 atarians
-//atarianb
 time2000
 aavenger
 midearth

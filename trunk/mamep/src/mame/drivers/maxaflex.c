@@ -27,9 +27,15 @@ class maxaflex_state : public atari_common_state
 public:
 	maxaflex_state(const machine_config &mconfig, device_type type, const char *tag)
 		: atari_common_state(mconfig, type, tag),
-		m_maincpu(*this, "maincpu"),
 		m_mcu(*this, "mcu"),
-		m_speaker(*this, "speaker") { }
+		m_speaker(*this, "speaker"),
+		m_region_maincpu(*this, "maincpu"),
+		m_dsw(*this, "dsw"),
+		m_coin(*this, "coin"),
+		m_console(*this, "console"),
+		m_joy01(*this, "djoy_0_1"),
+		m_joy23(*this, "djoy_2_3")
+	{ }
 
 	UINT8 m_portA_in;
 	UINT8 m_portA_out;
@@ -63,13 +69,19 @@ public:
 	DECLARE_READ8_MEMBER(pia_pb_r);
 	WRITE8_MEMBER(pia_pb_w) { mmu(data); }
 	WRITE_LINE_MEMBER(pia_cb2_w) { }  // This is used by Floppy drive on Atari 8bits Home Computers
+	TIMER_DEVICE_CALLBACK_MEMBER(mf_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(mcu_timer_proc);
 	int atari_input_disabled();
-	virtual void machine_start();
 	virtual void machine_reset();
-	required_device<cpu_device> m_maincpu;
+	//required_device<cpu_device> m_maincpu;	// maincpu is already contained in atari_common_state
 	required_device<cpu_device> m_mcu;
 	required_device<speaker_sound_device> m_speaker;
+	required_memory_region m_region_maincpu;
+	required_ioport m_dsw;
+	required_ioport m_coin;
+	required_ioport m_console;
+	required_ioport m_joy01;
+	required_ioport m_joy23;
 };
 
 
@@ -79,14 +91,14 @@ void maxaflex_state::mmu(UINT8 new_mmu)
 	if (new_mmu & 0x80)
 	{
 		logerror("%s MMU SELFTEST RAM\n", machine().system().name);
-		machine().device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite(0x5000, 0x57ff);
+		m_maincpu->space(AS_PROGRAM).nop_readwrite(0x5000, 0x57ff);
 	}
 	else
 	{
 		logerror("%s MMU SELFTEST ROM\n", machine().system().name);
-		machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5000, 0x57ff, "bank2");
-		machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x5000, 0x57ff);
-		machine().root_device().membank("bank2")->set_base(machine().root_device().memregion("maincpu")->base() + 0xd000);
+		m_maincpu->space(AS_PROGRAM).install_read_bank(0x5000, 0x57ff, "bank2");
+		m_maincpu->space(AS_PROGRAM).unmap_write(0x5000, 0x57ff);
+		machine().root_device().membank("bank2")->set_base(m_region_maincpu->base() + 0xd000);
 	}
 }
 
@@ -107,7 +119,7 @@ void maxaflex_state::mmu(UINT8 new_mmu)
 
 READ8_MEMBER(maxaflex_state::mcu_portA_r)
 {
-	m_portA_in = ioport("dsw")->read() | (ioport("coin")->read() << 4) | (ioport("console")->read() << 5);
+	m_portA_in = m_dsw->read() | (m_coin->read() << 4) | (m_console->read() << 5);
 	return (m_portA_in & ~m_ddrA) | (m_portA_out & m_ddrA);
 }
 
@@ -289,7 +301,7 @@ static ADDRESS_MAP_START(a600xl_mem, AS_PROGRAM, 8, maxaflex_state )
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_ROM /* OS */
 ADDRESS_MAP_END
@@ -376,26 +388,19 @@ INPUT_PORTS_END
 
 READ8_MEMBER(maxaflex_state::pia_pa_r)
 {
-	return atari_input_disabled() ? 0xff : ioport("djoy_0_1")->read_safe(0);
+	return atari_input_disabled() ? 0xff : m_joy01->read_safe(0);
 }
 
 READ8_MEMBER(maxaflex_state::pia_pb_r)
 {
-	return atari_input_disabled() ? 0xff : ioport("djoy_2_3")->read_safe(0);
+	return atari_input_disabled() ? 0xff : m_joy23->read_safe(0);
 }
 
-
-void maxaflex_state::machine_start()
-{
-	/* ANTIC */
-	antic_start(machine());
-}
 
 void maxaflex_state::machine_reset()
 {
 	pokey_device *pokey = machine().device<pokey_device>("pokey");
 	pokey->write(15,0);
-	antic_reset();
 
 	// Supervisor board reset
 	m_portA_in = m_portA_out = m_ddrA = 0;
@@ -413,18 +418,25 @@ void maxaflex_state::machine_reset()
 	output_set_digit_value(2, 0x00);
 }
 
+TIMER_DEVICE_CALLBACK_MEMBER( maxaflex_state::mf_interrupt )
+{
+	m_antic->generic_interrupt(2);
+}
 
 static MACHINE_CONFIG_START( maxaflex, maxaflex_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, FREQ_17_EXACT)
 	MCFG_CPU_PROGRAM_MAP(a600xl_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a800xl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", maxaflex_state, mf_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("mcu", M68705, 3579545)
 	MCFG_CPU_PROGRAM_MAP(mcu_mem)
 
 	MCFG_DEVICE_ADD("gtia", ATARI_GTIA, 0)
 	MCFG_GTIA_READ_CB(IOPORT("console"))
+
+	MCFG_DEVICE_ADD("antic", ATARI_ANTIC, 0)
+	MCFG_ANTIC_GTIA("gtia")
 
 	MCFG_DEVICE_ADD("pia", PIA6821, 0)
 	MCFG_PIA_READPA_HANDLER(READ8(maxaflex_state, pia_pa_r))
@@ -440,7 +452,7 @@ static MACHINE_CONFIG_START( maxaflex, maxaflex_state )
 	MCFG_SCREEN_VISIBLE_AREA(MIN_X, MAX_X, MIN_Y, MAX_Y)
 	MCFG_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MCFG_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
-	MCFG_SCREEN_UPDATE_DRIVER(atari_common_state, screen_update_atari)
+	MCFG_SCREEN_UPDATE_DEVICE("antic", antic_device, screen_update)
 	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD("palette", 256)

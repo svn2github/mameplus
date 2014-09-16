@@ -46,7 +46,6 @@
 #include "sound/pokey.h"
 #include "includes/atari.h"
 #include "machine/atarifdc.h"
-#include "video/gtia.h"
 #include "bus/a800/a800_slot.h"
 #include "bus/a800/a800_carts.h"
 
@@ -245,9 +244,9 @@ class a400_state : public atari_common_state
 public:
 	a400_state(const machine_config &mconfig, device_type type, const char *tag)
 		: atari_common_state(mconfig, type, tag),
-		m_maincpu(*this, "maincpu"),
 		m_ram(*this, RAM_TAG),
 		m_pia(*this, "pia"),
+		m_dac(*this, "dac"),
 		m_region_maincpu(*this, "maincpu"),
 		m_0000(*this, "0000"),
 		m_8000(*this, "8000"),
@@ -263,13 +262,10 @@ public:
 
 	DECLARE_MACHINE_RESET(a400);
 
-	DECLARE_WRITE8_MEMBER(gtia_write);
+	DECLARE_WRITE8_MEMBER(gtia_cb);
 
 	DECLARE_WRITE8_MEMBER(a600xl_pia_pb_w);
 	DECLARE_WRITE8_MEMBER(a800xl_pia_pb_w);
-	
-	DECLARE_READ8_MEMBER(atari_pia_pa_r);
-	DECLARE_READ8_MEMBER(atari_pia_pb_r);
 
 	DECLARE_READ8_MEMBER(read_d5xx);	// at least one cart type can enable/disable roms when reading
 	DECLARE_WRITE8_MEMBER(disable_cart);
@@ -287,10 +283,15 @@ public:
 	DECLARE_READ8_MEMBER(xegs_high_r);
 	DECLARE_WRITE8_MEMBER(xegs_high_w);
 	
+	TIMER_DEVICE_CALLBACK_MEMBER(a400_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(a800xl_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(a5200_interrupt);
+	
 protected:
-	required_device<cpu_device> m_maincpu;
+	//required_device<cpu_device> m_maincpu;	// maincpu is already contained in atari_common_state
 	required_device<ram_device> m_ram;
 	required_device<pia6821_device> m_pia;
+	optional_device<dac_device> m_dac;
 	required_memory_region m_region_maincpu;
 	optional_memory_bank m_0000;
 	optional_memory_bank m_8000;
@@ -304,10 +305,6 @@ protected:
 	
 	void setup_ram(int bank,UINT32 size);
 	void setup_cart(a800_cart_slot_device *slot);
-
-	// start helper (until GTIA & ANTIC are device-fied)
-	void common_start();
-	void a5200_start();
 };
 
 
@@ -535,7 +532,7 @@ static ADDRESS_MAP_START(a400_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -550,7 +547,7 @@ static ADDRESS_MAP_START(a600xl_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_ROM // OS
 ADDRESS_MAP_END
@@ -562,7 +559,7 @@ static ADDRESS_MAP_START(a1200xl_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_READWRITE(a800xl_high_r, a800xl_high_w)
 ADDRESS_MAP_END
@@ -574,7 +571,7 @@ static ADDRESS_MAP_START(a800xl_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_READWRITE(a800xl_high_r, a800xl_high_w)
 ADDRESS_MAP_END
@@ -586,7 +583,7 @@ static ADDRESS_MAP_START(a130xe_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_READWRITE(a800xl_high_r, a800xl_high_w)
 ADDRESS_MAP_END
@@ -598,7 +595,7 @@ static ADDRESS_MAP_START(xegs_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0xd100, 0xd1ff) AM_NOP
 	AM_RANGE(0xd200, 0xd2ff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xd300, 0xd3ff) AM_DEVREADWRITE("pia", pia6821_device, read_alt, write_alt)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	AM_RANGE(0xd500, 0xd7ff) AM_NOP
 	AM_RANGE(0xd800, 0xffff) AM_READWRITE(a800xl_high_r, a800xl_high_w)
 ADDRESS_MAP_END
@@ -608,7 +605,7 @@ static ADDRESS_MAP_START(a5200_mem, AS_PROGRAM, 8, a400_state)
 	AM_RANGE(0x0000, 0x3fff) AM_RAM
 	AM_RANGE(0x4000, 0xbfff) AM_NOP // ROM installed at machine start
 	AM_RANGE(0xc000, 0xcfff) AM_DEVREADWRITE("gtia", gtia_device, read, write)
-	AM_RANGE(0xd400, 0xdfff) AM_READWRITE(atari_antic_r, atari_antic_w)
+	AM_RANGE(0xd400, 0xdfff) AM_DEVREADWRITE("antic", antic_device, read, write)
 	// 0xe000-0xe7ff - Expansion?
 	AM_RANGE(0xe800, 0xefff) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0xf000, 0xffff) AM_ROM
@@ -667,11 +664,11 @@ static INPUT_PORTS_START( atari_digital_joystick2 )
 
 	PORT_START("djoy_b")
 	PORT_BIT(0x01, 0x01, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(1)
-	PORT_BIT(0x02, 0x02, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(2)
+	PORT_BIT(0x02, 0x02, IPT_BUTTON1) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(2)
 	PORT_BIT(0x04, 0x04, IPT_UNUSED)
 	PORT_BIT(0x08, 0x08, IPT_UNUSED)
-	PORT_BIT(0x10, 0x10, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(1)
-	PORT_BIT(0x20, 0x20, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(2)
+	PORT_BIT(0x10, 0x10, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(1)
+	PORT_BIT(0x20, 0x20, IPT_BUTTON2) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(2)
 	PORT_BIT(0x40, 0x40, IPT_UNUSED)
 	PORT_BIT(0x80, 0x80, IPT_UNUSED)
 INPUT_PORTS_END
@@ -701,13 +698,13 @@ static INPUT_PORTS_START( atari_digital_joystick4 )
 
 	PORT_START("djoy_b")
 	PORT_BIT(0x01, 0x01, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(1)
-	PORT_BIT(0x02, 0x02, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(2)
-	PORT_BIT(0x04, 0x04, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON3) PORT_PLAYER(3)
-	PORT_BIT(0x08, 0x08, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON4) PORT_PLAYER(4)
-	PORT_BIT(0x10, 0x10, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(1)
+	PORT_BIT(0x02, 0x02, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(2)
+	PORT_BIT(0x04, 0x04, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(3)
+	PORT_BIT(0x08, 0x08, IPT_BUTTON1) PORT_CODE(KEYCODE_0_PAD) PORT_CODE(JOYCODE_BUTTON1) PORT_PLAYER(4)
+	PORT_BIT(0x10, 0x10, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(1)
 	PORT_BIT(0x20, 0x20, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(2)
-	PORT_BIT(0x40, 0x40, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON3) PORT_PLAYER(3)
-	PORT_BIT(0x80, 0x80, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON4) PORT_PLAYER(4)
+	PORT_BIT(0x40, 0x40, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(3)
+	PORT_BIT(0x80, 0x80, IPT_BUTTON2) PORT_CODE(KEYCODE_DEL_PAD) PORT_CODE(JOYCODE_BUTTON2) PORT_PLAYER(4)
 INPUT_PORTS_END
 
 
@@ -719,7 +716,7 @@ Small note about natural keyboard support: currently,
 - "Atari" is mapped to 'F3'                         */
 
 static INPUT_PORTS_START( atari_keyboard )
-	PORT_START("keyboard_0")
+	PORT_START("keyboard.0")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_L) PORT_CHAR('l') PORT_CHAR('L')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_J) PORT_CHAR('j') PORT_CHAR('J')
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_COLON) PORT_CHAR(';') PORT_CHAR(':')
@@ -729,7 +726,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_QUOTE) PORT_CHAR('+') PORT_CHAR('\\')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_BACKSLASH) PORT_CHAR('*') PORT_CHAR('^')
 
-	PORT_START("keyboard_1")
+	PORT_START("keyboard.1")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_O) PORT_CHAR('o') PORT_CHAR('O')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYBOARD) // None!
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_P) PORT_CHAR('p') PORT_CHAR('P')
@@ -739,7 +736,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_OPENBRACE) PORT_CHAR('-') PORT_CHAR('_')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_CLOSEBRACE) PORT_CHAR('=') PORT_CHAR('|')
 
-	PORT_START("keyboard_2")
+	PORT_START("keyboard.2")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_V) PORT_CHAR('v') PORT_CHAR('V')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_UNUSED)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_C) PORT_CHAR('c') PORT_CHAR('C')
@@ -749,7 +746,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_X) PORT_CHAR('x') PORT_CHAR('X')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_Z) PORT_CHAR('z') PORT_CHAR('Z')
 
-	PORT_START("keyboard_3")
+	PORT_START("keyboard.3")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_4) PORT_CHAR('4') PORT_CHAR('$')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_UNUSED)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_3) PORT_CHAR('3') PORT_CHAR('#')
@@ -759,7 +756,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_2) PORT_CHAR('2') PORT_CHAR('\"')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_1) PORT_CHAR('1') PORT_CHAR('!')
 
-	PORT_START("keyboard_4")
+	PORT_START("keyboard.4")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_COMMA) PORT_CHAR(',') PORT_CHAR('[')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_SPACE) PORT_CHAR(' ')
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_STOP) PORT_CHAR('.') PORT_CHAR(']')
@@ -769,7 +766,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_SLASH) PORT_CHAR('/') PORT_CHAR('?')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_NAME("Atari") PORT_CODE(KEYCODE_RCONTROL) PORT_CHAR(UCHAR_MAMEKEY(F3))
 
-	PORT_START("keyboard_5")
+	PORT_START("keyboard.5")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_R) PORT_CHAR('r') PORT_CHAR('R')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_UNUSED)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_E) PORT_CHAR('e') PORT_CHAR('E')
@@ -779,7 +776,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_W) PORT_CHAR('w') PORT_CHAR('W')
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_Q) PORT_CHAR('q') PORT_CHAR('Q')
 
-	PORT_START("keyboard_6")
+	PORT_START("keyboard.6")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_9) PORT_CHAR('9') PORT_CHAR('(')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_UNUSED)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_0) PORT_CHAR('0') PORT_CHAR(')')
@@ -789,7 +786,7 @@ static INPUT_PORTS_START( atari_keyboard )
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_NAME("<  Clear") PORT_CODE(KEYCODE_MINUS) PORT_CHAR('<') PORT_CHAR(UCHAR_MAMEKEY(F2))
 	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_NAME(">  Insert") PORT_CODE(KEYCODE_EQUALS) PORT_CHAR('>') PORT_CHAR(UCHAR_MAMEKEY(INSERT))
 
-	PORT_START("keyboard_7")
+	PORT_START("keyboard.7")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_F) PORT_CHAR('f') PORT_CHAR('F')
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_H) PORT_CHAR('h') PORT_CHAR('H')
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD) PORT_CODE(KEYCODE_D) PORT_CHAR('d') PORT_CHAR('D')
@@ -866,28 +863,28 @@ static INPUT_PORTS_START( a5200 )
 	PORT_BIT(0x40, 0x40, IPT_BUTTON2) PORT_PLAYER(3)
 	PORT_BIT(0x80, 0x80, IPT_BUTTON2) PORT_PLAYER(4)
 
-	PORT_START("keypad_0")
+	PORT_START("keypad.0")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("(Break)") PORT_CODE(KEYCODE_PAUSE)    // is this correct?
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[#]") PORT_CODE(KEYCODE_ENTER_PAD)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[0]") PORT_CODE(KEYCODE_0_PAD)
 	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[*]") PORT_CODE(KEYCODE_PLUS_PAD)
 	PORT_BIT(0xf0, IP_ACTIVE_HIGH, IPT_UNUSED)
 
-	PORT_START("keypad_1")
+	PORT_START("keypad.1")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("Reset") PORT_CODE(KEYCODE_F3)
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[9]") PORT_CODE(KEYCODE_9_PAD)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[8]") PORT_CODE(KEYCODE_8_PAD)
 	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[7]") PORT_CODE(KEYCODE_7_PAD)
 	PORT_BIT(0xf0, IP_ACTIVE_HIGH, IPT_UNUSED)
 
-	PORT_START("keypad_2")
+	PORT_START("keypad.2")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME(DEF_STR(Pause)) PORT_CODE(KEYCODE_F2)
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[6]") PORT_CODE(KEYCODE_6_PAD)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[5]") PORT_CODE(KEYCODE_5_PAD)
 	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[4]") PORT_CODE(KEYCODE_4_PAD)
 	PORT_BIT(0xf0, IP_ACTIVE_HIGH, IPT_UNUSED)
 
-	PORT_START("keypad_3")
+	PORT_START("keypad.3")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_START)    PORT_NAME("Start")
 	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[3]") PORT_CODE(KEYCODE_3_PAD)
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_KEYPAD) PORT_NAME("[2]") PORT_CODE(KEYCODE_2_PAD)
@@ -1931,29 +1928,30 @@ void a400_state::setup_cart(a800_cart_slot_device *slot)
 }
 
 
-void a400_state::common_start()
-{	
-	/* ANTIC */
-	antic_start(machine());
+TIMER_DEVICE_CALLBACK_MEMBER( a400_state::a400_interrupt )
+{
+	m_antic->generic_interrupt(4);
 }
 
-void a400_state::a5200_start()
+TIMER_DEVICE_CALLBACK_MEMBER( a400_state::a800xl_interrupt )
 {
-	/* ANTIC */
-	antic_start(machine());
+	m_antic->generic_interrupt(2);
+}
+
+TIMER_DEVICE_CALLBACK_MEMBER( a400_state::a5200_interrupt )
+{
+	m_antic->generic_interrupt(4);
 }
 
 MACHINE_RESET_MEMBER( a400_state, a400 )
 {
 	pokey_device *pokey = machine().device<pokey_device>("pokey");
 	pokey->write(15,0);
-	antic_reset();
 }
 
 
 MACHINE_START_MEMBER( a400_state, a400 )
 {
-	common_start();
 	setup_ram(0, m_ram->size());
 	setup_ram(1, m_ram->size());
 	setup_ram(2, m_ram->size());
@@ -1966,7 +1964,6 @@ MACHINE_START_MEMBER( a400_state, a400 )
 
 MACHINE_START_MEMBER( a400_state, a800 )
 {
-	common_start();
 	setup_ram(0, m_ram->size());
 	setup_ram(1, m_ram->size());
 	setup_ram(2, m_ram->size());
@@ -1981,7 +1978,6 @@ MACHINE_START_MEMBER( a400_state, a800xl )
 {
 	m_mmu = 0xfd;
 	m_ext_bank = 0x03;	// only used by a130xe
-	common_start();
 	setup_cart(m_cartslot);
 
 	save_item(NAME(m_cart_disabled));
@@ -1993,7 +1989,6 @@ MACHINE_START_MEMBER( a400_state, a800xl )
 
 MACHINE_START_MEMBER( a400_state, a5200 )
 {
-	a5200_start();
 	setup_cart(m_cartslot);
 
 	save_item(NAME(m_cart_disabled));
@@ -2007,13 +2002,12 @@ MACHINE_START_MEMBER( a400_state, a5200 )
  *
  **************************************************************/
 
-WRITE8_MEMBER(a400_state::gtia_write)
+WRITE8_MEMBER(a400_state::gtia_cb)
 {
-	dac_device *dac = machine().device<dac_device>("dac");
 	if (data & 0x08)
-		dac->write_unsigned8((UINT8)-120);
+		m_dac->write_unsigned8((UINT8)-120);
 	else
-		dac->write_unsigned8(+120);
+		m_dac->write_unsigned8(+120);
 }
 
 /**************************************************************
@@ -2036,16 +2030,6 @@ WRITE8_MEMBER(a400_state::a800xl_pia_pb_w)
 	}
 }
 
-READ8_MEMBER(a400_state::atari_pia_pa_r)
-{
-	return ioport("djoy_0_1")->read_safe(0);
-}
-
-READ8_MEMBER(a400_state::atari_pia_pb_r)
-{
-	return ioport("djoy_2_3")->read_safe(0);
-}
-
 /**************************************************************
  *
  * Machine drivers
@@ -2062,7 +2046,7 @@ static MACHINE_CONFIG_START( atari_common_nodac, a400_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1))
 	MCFG_SCREEN_VISIBLE_AREA(MIN_X, MAX_X, MIN_Y, MAX_Y)
-	MCFG_SCREEN_UPDATE_DRIVER(atari_common_state, screen_update_atari)
+	MCFG_SCREEN_UPDATE_DEVICE("antic", antic_device, screen_update)
 	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD("palette", sizeof(atari_palette) / 3)
@@ -2102,7 +2086,10 @@ static MACHINE_CONFIG_DERIVED( atari_common, atari_common_nodac )
 
 	MCFG_DEVICE_ADD("gtia", ATARI_GTIA, 0)
 	MCFG_GTIA_READ_CB(IOPORT("console"))
-	MCFG_GTIA_WRITE_CB(WRITE8(a400_state, gtia_write))
+	MCFG_GTIA_WRITE_CB(WRITE8(a400_state, gtia_cb))
+
+	MCFG_DEVICE_ADD("antic", ATARI_ANTIC, 0)
+	MCFG_ANTIC_GTIA("gtia")
 
 	/* devices */
 	MCFG_DEVICE_ADD("fdc", ATARI_FDC, 0)
@@ -2121,7 +2108,7 @@ static MACHINE_CONFIG_DERIVED( a400, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a400_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a400_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a400_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE( a400_state, a400 )
 
@@ -2136,7 +2123,7 @@ static MACHINE_CONFIG_DERIVED( a400pal, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a400_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a400_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a400_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE( a400_state, a400 )
 
@@ -2151,7 +2138,7 @@ static MACHINE_CONFIG_DERIVED( a800, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a400_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a800_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a400_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE( a400_state, a800 )
 
@@ -2168,7 +2155,7 @@ static MACHINE_CONFIG_DERIVED( a800pal, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a400_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a800_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a400_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE( a400_state, a800 )
 
@@ -2185,7 +2172,7 @@ static MACHINE_CONFIG_DERIVED( a600xl, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a600xl_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a800xl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a800xl_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_MODIFY("pia")
 	MCFG_PIA_WRITEPB_HANDLER(WRITE8(a400_state, a600xl_pia_pb_w))
@@ -2206,7 +2193,7 @@ static MACHINE_CONFIG_DERIVED( a800xl, atari_common )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a800xl_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a800xl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a800xl_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_MODIFY("pia")
 	MCFG_PIA_WRITEPB_HANDLER(WRITE8(a400_state, a800xl_pia_pb_w))
@@ -2277,7 +2264,7 @@ static MACHINE_CONFIG_DERIVED( a5200, atari_common_nodac )
 
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a5200_mem)
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", atari_common_state, a5200_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", a400_state, a5200_interrupt, "screen", 0, 1)
 
 	// FIXME: should there be anything connected where other system have the fdc?
 	MCFG_SOUND_MODIFY("pokey")
@@ -2289,6 +2276,9 @@ static MACHINE_CONFIG_DERIVED( a5200, atari_common_nodac )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
 	MCFG_DEVICE_ADD("gtia", ATARI_GTIA, 0)
+
+	MCFG_DEVICE_ADD("antic", ATARI_ANTIC, 0)
+	MCFG_ANTIC_GTIA("gtia")
 
 	MCFG_DEVICE_MODIFY("pia")
 	MCFG_PIA_READPA_HANDLER(NULL) // FIXME: is there anything connected here

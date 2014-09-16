@@ -3751,7 +3751,7 @@ enum
  * add and delete may be slow - the focus is on access!
  */
 
- // TODO: replace with dynamic_array from utils
+	// TODO: replace with dynamic_array from utils
 template<class _ElementType> struct dynamic_array_t
 {
 public:
@@ -4264,7 +4264,6 @@ public:
 
 #define MCFG_DISCRETE_INTF(_intf) \
 	discrete_device::static_set_intf(*device, (const discrete_block *)&(_intf##_discrete_interface));
-#define MCFG_SOUND_CONFIG_DISCRETE(name) MCFG_SOUND_CONFIG(name##_discrete_interface)
 
 //**************************************************************************
 //  TYPE DEFINITIONS

@@ -1787,7 +1787,6 @@ READ32_MEMBER(cps3_state::cps3_eeprom_r)
 	//  if(DEBUG_PRINTF) printf("unk read eeprom addr %04x, mask %08x\n", addr, mem_mask);
 		return 0x00000000;
 	}
-	return 0x00000000;
 }
 
 WRITE32_MEMBER(cps3_state::cps3_eeprom_w)

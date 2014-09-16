@@ -504,12 +504,14 @@ static sdl_monitor_info *pick_monitor(sdl_options &options, int index)
 
 	// look for a match in the name first
 	if (scrname != NULL)
+	{
 		for (monitor = sdl_monitor_list; monitor != NULL; monitor = monitor->next)
 		{
 			moncount++;
 			if (strcmp(scrname, monitor->monitor_device) == 0)
 				goto finishit;
 		}
+	}
 
 	// didn't find it; alternate monitors until we hit the jackpot
 	index %= moncount;

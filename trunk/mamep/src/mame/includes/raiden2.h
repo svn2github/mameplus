@@ -1,24 +1,29 @@
 #include "audio/seibu.h"
+#include "machine/raiden2cop.h"
 
 class raiden2_state : public driver_device
 {
 public:
 	raiden2_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+		/*
 		  back_data(*this, "back_data"),
 		  fore_data(*this, "fore_data"),
 		  mid_data(*this, "mid_data"),
 		  text_data(*this, "text_data"),
+		  */
 		  sprites(*this, "sprites") ,
 		  m_maincpu(*this, "maincpu"),
 		  m_seibu_sound(*this, "seibu_sound"),
 		  m_gfxdecode(*this, "gfxdecode"),
 		  m_palette(*this, "palette"),
 		  tile_buffer(320, 256),
-		  sprite_buffer(320, 256)
+		  sprite_buffer(320, 256),
+		  m_raiden2cop(*this, "raiden2cop")
 	{ }
 
-	required_shared_ptr<UINT16> back_data,fore_data,mid_data, text_data, sprites;
+	UINT16 *back_data, *fore_data, *mid_data, *text_data;
+	required_shared_ptr<UINT16> sprites;
 	required_device<cpu_device> m_maincpu;
 	required_device<seibu_sound_device> m_seibu_sound;
 	required_device<gfxdecode_device> m_gfxdecode;
@@ -27,18 +32,10 @@ public:
 	DECLARE_WRITE16_MEMBER( cop_itoa_low_w );
 	DECLARE_WRITE16_MEMBER( cop_itoa_high_w );
 	DECLARE_WRITE16_MEMBER( cop_itoa_digit_count_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_v1_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_v2_w );
 	DECLARE_WRITE16_MEMBER( cop_scale_w );
 	DECLARE_WRITE16_MEMBER( cop_angle_target_w );
 	DECLARE_WRITE16_MEMBER( cop_angle_step_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_adr_rel_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_src_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_size_w );
-	DECLARE_WRITE16_MEMBER( cop_dma_dst_w );
-	DECLARE_READ16_MEMBER( cop_dma_mode_r );
-	DECLARE_WRITE16_MEMBER( cop_dma_mode_w );
-	DECLARE_WRITE16_MEMBER( cop_pal_brightness_val_w );
+
 	DECLARE_READ16_MEMBER ( cop_reg_high_r );
 	DECLARE_WRITE16_MEMBER( cop_reg_high_w );
 	DECLARE_READ16_MEMBER ( cop_reg_low_r );
@@ -62,7 +59,6 @@ public:
 	DECLARE_WRITE16_MEMBER( cop_angle_compare_w );
 	DECLARE_WRITE16_MEMBER( cop_angle_mod_val_w );
 
-	DECLARE_WRITE16_MEMBER ( cop_dma_trigger_w );
 	DECLARE_WRITE16_MEMBER ( raiden2_bank_w );
 	DECLARE_READ16_MEMBER ( cop_tile_bank_2_r );
 	DECLARE_WRITE16_MEMBER ( cop_tile_bank_2_w );
@@ -74,6 +70,7 @@ public:
 	DECLARE_WRITE16_MEMBER ( raiden2_foreground_w );
 	DECLARE_WRITE16_MEMBER ( raiden2_midground_w );
 	DECLARE_WRITE16_MEMBER ( raiden2_text_w );
+	DECLARE_WRITE16_MEMBER ( m_videoram_private_w );
 
 	DECLARE_WRITE16_MEMBER( sprcpt_val_1_w );
 	DECLARE_WRITE16_MEMBER( sprcpt_val_2_w );
@@ -94,6 +91,12 @@ public:
 
 	void common_reset();
 
+	static UINT16 const raiden_blended_colors[];
+	static UINT16 const xsedae_blended_colors[];
+	static UINT16 const zeroteam_blended_colors[];
+
+	bool blend_active[0x800];
+
 	tilemap_t *background_layer,*midground_layer,*foreground_layer,*text_layer;
 	int bg_bank, fg_bank, mid_bank;
 	UINT16 raiden2_tilemap_enable;
@@ -104,9 +107,6 @@ public:
 	UINT32 cop_regs[8], cop_itoa;
 	UINT16 cop_status, cop_scale, cop_itoa_digit_count, cop_angle, cop_dist;
 	UINT8 cop_itoa_digits[10];
-	UINT16 cop_dma_mode, cop_dma_src[0x200], cop_dma_dst[0x200], cop_dma_size[0x200], cop_dma_v1, cop_dma_v2, cop_dma_adr_rel;
-	UINT16 sprites_cur_start;
-	UINT16 pal_brightness_val;
 
 	UINT16 cop_func_trigger[0x100/8];       /* function trigger */
 	UINT16 cop_func_value[0x100/8];         /* function value (?) */
@@ -175,12 +175,16 @@ public:
 	INTERRUPT_GEN_MEMBER(raiden2_interrupt);
 	UINT16 rps();
 	UINT16 rpc();
-	const UINT8 fade_table(int v);
 	void combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_mask);
 	void sprcpt_init(void);
 
 	void blend_layer(bitmap_rgb32 &bitmap, const rectangle &cliprect, bitmap_ind16 &source, int layer);
 	void tilemap_draw_and_blend(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, tilemap_t *tilemap);
+
+	void init_blending(const UINT16 *table);
+
+	required_device<raiden2cop_device> m_raiden2cop;
+
 
 };
 

@@ -41,7 +41,7 @@
     27C128        - EPROM 16K x 8
 
     Author: Michael Zapf
-    June 2014: Rewritten for modern floppy implementation
+    September 2014: Rewritten for modern floppy implementation
 
     WORK IN PROGRESS
 
@@ -80,6 +80,7 @@
 #define TRACE_LINES 0
 #define TRACE_MOTOR 0
 #define TRACE_DMA 0
+#define TRACE_INT 0
 
 // =========================================================================
 
@@ -93,15 +94,19 @@ myarc_hfdc_device::myarc_hfdc_device(const machine_config &mconfig, const char *
 {
 }
 
-
 SETADDRESS_DBIN_MEMBER( myarc_hfdc_device::setaddress_dbin )
 {
+	// Do not allow setaddress for the debugger. It will mess up the
+	// setaddress/memory access pairs when the CPU enters wait states.
+	if (space.debugger_access()) return;
+
 	// Selection login in the PAL and some circuits on the board
 
 	// Is the card being selected?
 	// Area = 4000-5fff
 	// 010x xxxx xxxx xxxx
 	m_address = offset;
+
 	m_inDsrArea = ((m_address & m_select_mask)==m_select_value);
 
 	if (!m_inDsrArea) return;
@@ -134,6 +139,41 @@ SETADDRESS_DBIN_MEMBER( myarc_hfdc_device::setaddress_dbin )
 }
 
 /*
+    Access for debugger. This is a stripped-down version of the
+    main methods below. We only allow ROM and RAM access.
+*/
+void myarc_hfdc_device::debug_read(offs_t offset, UINT8* value)
+{
+	if (((offset & m_select_mask)==m_select_value) && m_selected)
+	{
+		if ((offset & 0x1000)==RAM_ADDR)
+		{
+			int bank = (offset & 0x0c00) >> 10;
+			*value = m_buffer_ram[(m_ram_page[bank]<<10) | (offset & 0x03ff)];
+		}
+		else
+		{
+			if ((offset & 0x0fc0)!=0x0fc0)
+			{
+				*value = m_dsrrom[(m_rom_page << 12) | (offset & 0x0fff)];
+			}
+		}
+	}
+}
+
+void myarc_hfdc_device::debug_write(offs_t offset, UINT8 data)
+{
+	if (((offset & m_select_mask)==m_select_value) && m_selected)
+	{
+		if ((offset & 0x1000)==RAM_ADDR)
+		{
+			int bank = (offset & 0x0c00) >> 10;
+			m_buffer_ram[(m_ram_page[bank]<<10) | (m_address & 0x03ff)] = data;
+		}
+	}
+}
+
+/*
     Read a byte from the memory address space of the HFDC
 
     0x4000 - 0x4fbf one of four possible ROM pages
@@ -150,6 +190,12 @@ SETADDRESS_DBIN_MEMBER( myarc_hfdc_device::setaddress_dbin )
 */
 READ8Z_MEMBER(myarc_hfdc_device::readz)
 {
+	if (space.debugger_access())
+	{
+		debug_read(offset, value);
+		return;
+	}
+
 	if (m_inDsrArea && m_selected)
 	{
 		if (m_tapesel)
@@ -160,14 +206,14 @@ READ8Z_MEMBER(myarc_hfdc_device::readz)
 
 		if (m_HDCsel)
 		{
-			if (!space.debugger_access()) *value = m_hdc9234->read(space, (m_address>>2)&1, 0xff);
+			*value = m_hdc9234->read(space, (m_address>>2)&1, 0xff);
 			if (TRACE_COMP) logerror("%s: %04x[HDC] -> %02x\n", tag(), m_address & 0xffff, *value);
 			return;
 		}
 
 		if (m_RTCsel)
 		{
-			if (!space.debugger_access()) *value = m_clock->read(space, (m_address & 0x001e) >> 1);
+			*value = m_clock->read(space, (m_address & 0x001e) >> 1);
 			if (TRACE_COMP) logerror("%s: %04x[CLK] -> %02x\n", tag(), m_address & 0xffff, *value);
 			return;
 		}
@@ -221,6 +267,12 @@ READ8Z_MEMBER(myarc_hfdc_device::readz)
 */
 WRITE8_MEMBER( myarc_hfdc_device::write )
 {
+	if (space.debugger_access())
+	{
+		debug_write(offset, data);
+		return;
+	}
+
 	if (m_inDsrArea && m_selected)
 	{
 		if (m_tapesel)
@@ -232,14 +284,14 @@ WRITE8_MEMBER( myarc_hfdc_device::write )
 		if (m_HDCsel)
 		{
 			if (TRACE_COMP) logerror("%s: %04x[HDC] <- %02x\n", tag(), m_address & 0xffff, data);
-			if (!space.debugger_access()) m_hdc9234->write(space, (m_address>>2)&1, data, 0xff);
+			m_hdc9234->write(space, (m_address>>2)&1, data, 0xff);
 			return;
 		}
 
 		if (m_RTCsel)
 		{
 			if (TRACE_COMP) logerror("%s: %04x[CLK] <- %02x\n", tag(), m_address & 0xffff, data);
-			if (!space.debugger_access()) m_clock->write(space, (m_address & 0x001e) >> 1, data);
+			m_clock->write(space, (m_address & 0x001e) >> 1, data);
 			return;
 		}
 
@@ -543,14 +595,15 @@ WRITE8_MEMBER( myarc_hfdc_device::auxbus_out )
 		}
 		else
 		{
-			// HD selected
 			index = slog2((data>>4) & 0x0f);
 			if (index == -1)
 			{
-				if (TRACE_LINES) logerror("%s: Unselect all drives\n", tag());
+				if (TRACE_LINES) logerror("%s: Unselect all HD drives\n", tag());
+				connect_floppy_unit(index);
 			}
 			else
 			{
+				// HD selected
 				if (TRACE_LINES) logerror("%s: Select hard disk WDS%d\n", tag(), index);
 				//          if (index>=0) m_hdc9234->connect_hard_drive(m_harddisk_unit[index-1]);
 			}
@@ -576,6 +629,7 @@ WRITE8_MEMBER( myarc_hfdc_device::auxbus_out )
 		// Output the step pulse to the selected floppy drive
 		if (m_current_floppy != NULL)
 		{
+			m_current_floppy->ss_w(data & 0x01);
 			m_current_floppy->dir_w((data & 0x20)==0);
 			m_current_floppy->stp_w((data & 0x10)==0);
 		}
@@ -670,7 +724,7 @@ void myarc_hfdc_device::set_floppy_motors_running(bool run)
 WRITE_LINE_MEMBER( myarc_hfdc_device::intrq_w )
 {
 	m_irq = (line_state)state;
-	if (TRACE_LINES) logerror("%s: INT pin from controller = %d, propagating to INTA*\n", tag(), state);
+	if (TRACE_INT) logerror("%s: INT pin from controller = %d, propagating to INTA*\n", tag(), state);
 
 	// Set INTA*
 	// Signal from SMC is active high, INTA* is active low; board inverts signal
@@ -684,7 +738,7 @@ WRITE_LINE_MEMBER( myarc_hfdc_device::intrq_w )
 */
 WRITE_LINE_MEMBER( myarc_hfdc_device::dmarq_w )
 {
-	if (TRACE_LINES) logerror("%s: DMARQ pin from controller = %d\n", tag(), state);
+	if (TRACE_DMA) logerror("%s: DMARQ pin from controller = %d\n", tag(), state);
 	if (state == ASSERT_LINE)
 	{
 		m_hdc9234->dmaack(ASSERT_LINE);
@@ -704,7 +758,7 @@ WRITE_LINE_MEMBER( myarc_hfdc_device::dip_w )
 */
 READ8_MEMBER( myarc_hfdc_device::read_buffer )
 {
-	logerror("%s: Read access to onboard SRAM at %04x\n", tag(), m_dma_address);
+	if (TRACE_DMA) logerror("%s: Read access to onboard SRAM at %04x\n", tag(), m_dma_address);
 	UINT8 value = m_buffer_ram[m_dma_address & 0x7fff];
 	m_dma_address = (m_dma_address+1) & 0x7fff;
 	return value;
