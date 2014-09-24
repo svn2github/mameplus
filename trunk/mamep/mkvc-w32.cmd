@@ -6,7 +6,7 @@ set SUFFIX=""
 set COMMONFLAGS=SUBTARGET=%SUBTARGET% MSVC_BUILD=1 MAXOPT= PREFIX= SUFFIX=%SUFFIX% WINUI= NOWERROR=1
 
 set MINGW_ROOT=..\mingw\mingw64-w32
-set PATH=%MINGW_ROOT%\bin;%PATH%
+set PATH=%MINGW_ROOT%\bin;%MINGW_ROOT%\opt\bin;%PATH%
 
 set PSDK_DIR=%ProgramFiles%\Microsoft SDKs\Windows\v7.0A
 set PATH=%PSDK_DIR%\bin\;%PATH%

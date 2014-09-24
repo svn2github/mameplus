@@ -25,7 +25,7 @@ table {border:0; background-color: #EEEEEE}
 <h1>I. Preparing compile utilities</h1> 
 <ul>
   <li>create a root directory for compile utilities; generally, this is called <em>mingw</em></li>
-  <li>extract official MAME Development Tools <a href="http://www.mamedev.org/tools/">mingw-mame-20100102.exe</a> into your <em>mingw</em> directory</li>
+  <li>extract official MAME Development Tools <a href="http://www.mamedev.org/tools/">mingw-mame-20140905.exe</a> into your <em>mingw</em> directory</li>
 </ul>
 <h1>II. Preparing official MAME source</h1> 
 <ul>
@@ -87,7 +87,7 @@ table {border:0; background-color: #EEEEEE}
 <li>32-bit<br><br>
   Edit "mkgcc-w32.cmd" file, modify PATH to your <em>mingw</em> directory:
 <div class="doscmd" style="background-color:#000080;">
-set PATH=D:\MinGW\mingw64-w32\bin;%PATH%</div>
+set PATH=D:\MinGW\mingw64-w32\bin;D:\MinGW\mingw64-w32\opt\bin;%PATH%</div>
 
   Run "mkgcc-w32.cmd" file to compile. warnings are expected:
 <div class="doscmd" style="background-color:#000000;">
@@ -99,7 +99,7 @@ D:\mamesrc&gt;make
 <li>64-bit<br><br>
   Edit "mkgcc-w64.cmd" file, modify PATH to your <em>mingw</em> directory:
 <div class="doscmd" style="background-color:#000080;">
-set PATH=D:\MinGW\mingw64-w64\bin;%PATH%</div>
+set PATH=D:\MinGW\mingw64-w64\bin;D:\MinGW\mingw64-w64\opt\bin;%PATH%</div>
 
   Run "mkgcc-w64.cmd" file to compile. warnings are expected:
 <div class="doscmd" style="background-color:#000000;">
