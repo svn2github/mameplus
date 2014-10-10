@@ -212,7 +212,7 @@ READ8_MEMBER(nes_disksys_device::read_m)
 void nes_disksys_device::hblank_irq(int scanline, int vblank, int blanked)
 {	
 	if (m_irq_transfer)
-		machine().device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(nes_disksys_device::write_ex)
@@ -378,7 +378,7 @@ void nes_disksys_device::device_timer(emu_timer &timer, device_timer_id id, int 
 			m_irq_count--;
 			if (!m_irq_count)
 			{
-				machine().device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+				m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 				m_irq_enable = 0;
 				m_fds_status0 |= 0x01;
 				m_irq_count_latch = 0;	// used in Kaettekita Mario Bros

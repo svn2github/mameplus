@@ -20,6 +20,16 @@
 #define FINDER_DUMMY_TAG "finder_dummy_tag"
 
 //**************************************************************************
+//  IOPORT ARRAY MACROS
+//**************************************************************************
+
+// these macros can be used to initialize an ioport_array with
+// individual port names, instead of a base name + numeric suffix
+
+#define IOPORT_ARRAY_MEMBER(name) const char * const name[] =
+#define DECLARE_IOPORT_ARRAY(name) static const char * const name[]
+
+//**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
 
@@ -215,6 +225,9 @@ public:
 
 	// make reference use transparent as well
 	operator ioport_port &() { assert(object_finder_base<ioport_port>::m_target != NULL); return *object_finder_base<ioport_port>::m_target; }
+
+	// allow dereference even when target is NULL so read_safe() can be used
+	ioport_port *operator->() const { return object_finder_base<ioport_port>::m_target; }
 
 	// finder
 	virtual bool findit(bool isvalidation = false)

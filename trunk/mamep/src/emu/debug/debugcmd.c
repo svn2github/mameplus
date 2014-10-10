@@ -1995,14 +1995,14 @@ static void execute_cheatinit(running_machine &machine, int ref, int params, con
 		{
 			cheat_region[region_count].offset = space->address_to_byte(entry->m_addrstart) & space->bytemask();
 			cheat_region[region_count].endoffset = space->address_to_byte(entry->m_addrend) & space->bytemask();
-			cheat_region[region_count].share = entry->m_sharetag;
+			cheat_region[region_count].share = entry->m_share;
 			cheat_region[region_count].disabled = (entry->m_write.m_type == AMH_RAM) ? FALSE : TRUE;
 
 			/* disable double share regions */
-			if (entry->m_sharetag != NULL)
+			if (entry->m_share != NULL)
 				for (i = 0; i < region_count; i++)
 					if (cheat_region[i].share != NULL)
-						if (strcmp(cheat_region[i].share, entry->m_sharetag) == 0)
+						if (strcmp(cheat_region[i].share, entry->m_share) == 0)
 							cheat_region[region_count].disabled = TRUE;
 
 			region_count++;
@@ -2074,7 +2074,10 @@ static void execute_cheatinit(running_machine &machine, int ref, int params, con
 					active_cheat++;
 				}
 
-	debug_console_printf(machine, "%u cheat initialized\n", active_cheat);
+	/* give a detailed init message to avoid searches being mistakingly carried out on the wrong CPU */
+	device_t *cpu = NULL;
+	debug_command_parameter_cpu(machine, cheat.cpu, &cpu);
+	debug_console_printf(machine, "%u cheat initialized for CPU index %s ( aka %s )\n", active_cheat, cheat.cpu, cpu->tag());
 }
 
 

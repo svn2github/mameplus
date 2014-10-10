@@ -901,7 +901,7 @@ void i386_device::i386_trap(int irq, int irq_gate, int trap_level)
 				newESP = i386_get_stack_ptr(DPL);
 				if(type & 0x08) // 32-bit gate
 				{
-					if(newESP < (V8086_MODE?36:20))
+					if(((newESP < (V8086_MODE?36:20)) && !(stack.flags & 0x4)) || ((~stack.limit < (~(newESP - 1) + (V8086_MODE?36:20))) && (stack.flags & 0x4)))
 					{
 						logerror("IRQ: New stack has no space for return addresses.\n");
 						FAULT_EXP(FAULT_SS,0)
@@ -910,7 +910,7 @@ void i386_device::i386_trap(int irq, int irq_gate, int trap_level)
 				else // 16-bit gate
 				{
 					newESP &= 0xffff;
-					if(newESP < (V8086_MODE?18:10))
+					if(((newESP < (V8086_MODE?18:10)) && !(stack.flags & 0x4)) || ((~stack.limit < (~(newESP - 1) + (V8086_MODE?18:10))) && (stack.flags & 0x4)))
 					{
 						logerror("IRQ: New stack has no space for return addresses.\n");
 						FAULT_EXP(FAULT_SS,0)
@@ -977,7 +977,7 @@ void i386_device::i386_trap(int irq, int irq_gate, int trap_level)
 				if((desc.flags & 0x0004) || (DPL == CPL))
 				{
 					/* IRQ to same privilege */
-					if(V8086_MODE)
+					if(V8086_MODE && !m_ext)
 					{
 						logerror("IRQ: Gate to same privilege from VM86 mode.\n");
 						FAULT_EXP(FAULT_GP,segment & ~0x03);
@@ -1183,7 +1183,7 @@ void i386_device::i286_task_switch(UINT16 selector, UINT8 nested)
 	}
 	CHANGE_PC(m_eip);
 
-	m_CPL = m_sreg[CS].selector & 0x03;
+	m_CPL = (m_sreg[SS].flags >> 5) & 3;
 //  printf("286 Task Switch from selector %04x to %04x\n",old_task,selector);
 }
 
@@ -1301,7 +1301,7 @@ void i386_device::i386_task_switch(UINT16 selector, UINT8 nested)
 
 	CHANGE_PC(m_eip);
 
-	m_CPL = m_sreg[CS].selector & 0x03;
+	m_CPL = (m_sreg[SS].flags >> 5) & 3;
 //  printf("386 Task Switch from selector %04x to %04x\n",old_task,selector);
 }
 
@@ -3517,6 +3517,7 @@ void i386_device::device_reset()
 	m_sreg[CS].selector = 0xf000;
 	m_sreg[CS].base     = 0xffff0000;
 	m_sreg[CS].limit    = 0xffff;
+	m_sreg[CS].flags    = 0x9b;
 	m_sreg[CS].valid    = true;
 
 	m_sreg[DS].base = m_sreg[ES].base = m_sreg[FS].base = m_sreg[GS].base = m_sreg[SS].base = 0x00000000;

@@ -155,11 +155,17 @@ public:
 
 	INT8 *m_shared_ram;
 	UINT8 m_cnt;
+	INT8 *m_shared_ram2;
 	DECLARE_READ8_MEMBER(sharedram_r);
 	DECLARE_WRITE8_MEMBER(sharedram_w);
 	DECLARE_READ8_MEMBER(sb2b_75bd37_r);
 	DECLARE_READ8_MEMBER(sb2b_6a6xxx_r);
 	DECLARE_READ8_MEMBER(sb2b_7xxx_r);
+	DECLARE_READ8_MEMBER(endless_580xxx_r);
+	DECLARE_READ8_MEMBER(endless_624b7f_r);
+	DECLARE_READ8_MEMBER(endless_800b_r);
+	DECLARE_READ8_MEMBER(sharedram2_r);
+	DECLARE_WRITE8_MEMBER(sharedram2_w);
 	DECLARE_READ8_MEMBER(snesb_dsw1_r);
 	DECLARE_READ8_MEMBER(snesb_dsw2_r);
 	DECLARE_READ8_MEMBER(snesb_coin_r);
@@ -216,6 +222,50 @@ READ8_MEMBER(snesb_state::sb2b_7xxx_r)
 	return space.read_byte(0xc07000 + offset);
 }
 
+
+/* Endless Duel */
+READ8_MEMBER(snesb_state::endless_580xxx_r)
+{
+	/* protection checks */
+	switch(offset)
+	{
+		case 0x2bc: return 0xb4;
+		case 0x36a: return 0x8a;
+		case 0x7c1: return 0xd9;
+		case 0x956: return 0xa5;
+		case 0xe83: return 0x6b;
+	}
+
+	logerror("Unknown protection read read %x @ %x\n",offset, space.device().safe_pc());
+
+	return 0;
+}
+
+READ8_MEMBER(snesb_state::endless_624b7f_r)
+{
+	/* protection check */
+	return ++m_cnt;
+}
+
+READ8_MEMBER(snesb_state::endless_800b_r)
+{
+	if (!offset)
+	{
+		return 0x50;
+	}
+
+	return 0xe8;
+}
+
+READ8_MEMBER(snesb_state::sharedram2_r)
+{
+	return m_shared_ram2[offset];
+}
+
+WRITE8_MEMBER(snesb_state::sharedram2_w)
+{
+	m_shared_ram2[offset]=data;
+}
 
 /* Generic read handlers for Dip Switches and coins inputs */
 READ8_MEMBER(snesb_state::snesb_dsw1_r)
@@ -588,25 +638,40 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( endless )
 	PORT_INCLUDE(snes_common)
 
-	PORT_START("DSW1")
-	PORT_DIPUNKNOWN( 0x01, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x02, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x04, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x08, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x10, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x20, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x40, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x80, IP_ACTIVE_LOW )
+    PORT_START("DSW1")
+    PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+    PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
+    PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+    PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
+    PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )            /* duplicate setting */
+    PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+    PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+    PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+    PORT_DIPNAME( 0x38, 0x38, DEF_STR( Difficulty ) )       /* "LEVEL" */
+    PORT_DIPSETTING(    0x38, "0 (Easiest)" )               /* "EASY" */
+    PORT_DIPSETTING(    0x30, "1" )                         /* "NORMAL" */
+    PORT_DIPSETTING(    0x28, "2" )                         /* "HARD" */
+    PORT_DIPSETTING(    0x20, "3" )                         /* undefined */
+    PORT_DIPSETTING(    0x18, "4" )                         /* undefined */
+    PORT_DIPSETTING(    0x10, "5" )                         /* undefined */
+    PORT_DIPSETTING(    0x08, "6" )                         /* undefined */
+    PORT_DIPSETTING(    0x00, "7 (Hardest)" )               /* undefined */
+    PORT_DIPNAME( 0xc0, 0xc0, "Time" )                      /* "TIME" */
+    PORT_DIPSETTING(    0xc0, "99" )                        /* "LIMIT" */
+    PORT_DIPSETTING(    0x80, "60" )                        /* undefined */
+    PORT_DIPSETTING(    0x40, "30" )                        /* undefined */
+    PORT_DIPSETTING(    0x00, "Infinite" )                  /* "NO LIMIT" */
 
-	PORT_START("DSW2")
-	PORT_DIPUNKNOWN( 0x01, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x02, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x04, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x08, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x10, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x20, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x40, IP_ACTIVE_LOW )
-	PORT_DIPUNKNOWN( 0x80, IP_ACTIVE_LOW )
+    PORT_START("DSW2")
+    PORT_DIPUNUSED( 0x01, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x02, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x04, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x08, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x10, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x20, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x40, IP_ACTIVE_LOW )
+    PORT_DIPUNUSED( 0x80, IP_ACTIVE_LOW )
 
 	PORT_START("COIN")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -892,6 +957,27 @@ DRIVER_INIT_MEMBER(snesb_state,endless)
 		}
 	}
 
+	/*  boot vector */
+	dst[0x7ffc] = 0x00;
+	dst[0x7ffd] = 0x80;
+
+	/* protection checks */
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x580000, 0x580fff, read8_delegate(FUNC(snesb_state::endless_580xxx_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x624b7f, 0x624b7f, read8_delegate(FUNC(snesb_state::endless_624b7f_r),this));
+
+	/* work around missing content */
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x800b, 0x800c, read8_delegate(FUNC(snesb_state::endless_800b_r),this));
+
+	m_shared_ram = auto_alloc_array(machine(), INT8, 0x22);
+	m_shared_ram2 = auto_alloc_array(machine(), INT8, 0x22);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x781000, 0x781021, read8_delegate(FUNC(snesb_state::sharedram_r),this), write8_delegate(FUNC(snesb_state::sharedram_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x781200, 0x781221, read8_delegate(FUNC(snesb_state::sharedram2_r),this), write8_delegate(FUNC(snesb_state::sharedram2_w),this));
+
+	/* extra inputs */
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x770071, 0x770071, read8_delegate(FUNC(snesb_state::snesb_dsw1_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x770073, 0x770073, read8_delegate(FUNC(snesb_state::snesb_dsw2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x770079, 0x770079, read8_delegate(FUNC(snesb_state::snesb_coin_r),this));
+
 	DRIVER_INIT_CALL(snes);
 }
 
@@ -1014,4 +1100,4 @@ GAME( 1996, ffight2b,     0,     ffight2b,       ffight2b, snesb_state,  ffight2
 GAME( 1996, iron,         0,     kinstb,         iron, snesb_state,      iron,         ROT0, "bootleg",  "Iron (SNES bootleg)",                            GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, denseib,      0,     kinstb,         denseib, snesb_state,   denseib,      ROT0, "bootleg",  "Ghost Chaser Densei (SNES bootleg)",             GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sblast2b,     0,     kinstb,         sblast2b, snesb_state,  sblast2b,     ROT0, "bootleg",  "Sonic Blast Man 2 Special Turbo (SNES bootleg)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS)
-GAME( 1996, endless,      0,     kinstb,         endless, snesb_state,   endless,      ROT0, "bootleg",  "Gundam Wing: Endless Duel (SNES bootleg)",       GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, endless,      0,     kinstb,         endless, snesb_state,   endless,      ROT0, "bootleg",  "Gundam Wing: Endless Duel (SNES bootleg)",       GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )

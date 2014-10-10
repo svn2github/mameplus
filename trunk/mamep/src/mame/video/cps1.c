@@ -1450,6 +1450,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2ed",       CPS_B_05,     mapper_STF29,  0x36 },
 	{"sf2ee",       CPS_B_18,     mapper_STF29,  0x3c },
 	{"sf2ebbl",     CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
+	{"sf2ebbl2",    CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
+	{"sf2ebbl3",    CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
 	{"sf2stt",      CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
 	{"sf2rk",       CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
 	{"sf2ua",       CPS_B_17,     mapper_STF29,  0x36 },
@@ -1527,6 +1529,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m6",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m8",       HACK_B_1,     mapper_S9263B, 0,    0, 0, 2 },
+	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2dongb",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m10",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1539,6 +1542,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2mdt",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdtb",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2mdtc",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlona",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",       CPS_B_04,     mapper_VA63B },   /* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */  // wrong, this set uses VA24B, dumped but equations still not added
@@ -1711,10 +1715,9 @@ MACHINE_RESET_MEMBER(cps_state,cps)
 }
 
 
-INLINE UINT16 *cps1_base( running_machine &machine, int offset, int boundary )
+inline UINT16 *cps_state::cps1_base( int offset, int boundary )
 {
-	cps_state *state = machine.driver_data<cps_state>();
-	int base = state->m_cps_a_regs[offset] * 256;
+	int base = m_cps_a_regs[offset] * 256;
 
 	/*
 	The scroll RAM must start on a 0x4000 boundary.
@@ -1725,7 +1728,7 @@ INLINE UINT16 *cps1_base( running_machine &machine, int offset, int boundary )
 	Mask out the irrelevant bits.
 	*/
 	base &= ~(boundary - 1);
-	return &state->m_gfxram[(base & 0x3ffff) / 2];
+	return &m_gfxram[(base & 0x3ffff) / 2];
 }
 
 
@@ -1743,7 +1746,7 @@ WRITE16_MEMBER(cps_state::cps1_cps_a_w)
 	fixes glitches in the ghouls intro, but it might happen at next vblank.
 	*/
 	if (offset == CPS1_PALETTE_BASE)
-		cps1_build_palette(cps1_base(machine(), CPS1_PALETTE_BASE, m_palette_align));
+		cps1_build_palette(cps1_base(CPS1_PALETTE_BASE, m_palette_align));
 
 	// pzloop2 write to register 24 on startup. This is probably just a bug.
 	if (offset == 0x24 / 2 && m_cps_version == 2)
@@ -1929,19 +1932,19 @@ void cps_state::cps1_get_video_base()
 	int layercontrol=0, videocontrol=0, scroll1xoff=0, scroll2xoff=0, scroll3xoff=0;
 
 	/* Re-calculate the VIDEO RAM base */
-	if (m_scroll1 != cps1_base(machine(), CPS1_SCROLL1_BASE, m_scroll_size))
+	if (m_scroll1 != cps1_base(CPS1_SCROLL1_BASE, m_scroll_size))
 	{
-		m_scroll1 = cps1_base(machine(), CPS1_SCROLL1_BASE, m_scroll_size);
+		m_scroll1 = cps1_base(CPS1_SCROLL1_BASE, m_scroll_size);
 		m_bg_tilemap[0]->mark_all_dirty();
 	}
-	if (m_scroll2 != cps1_base(machine(), CPS1_SCROLL2_BASE, m_scroll_size))
+	if (m_scroll2 != cps1_base(CPS1_SCROLL2_BASE, m_scroll_size))
 	{
-		m_scroll2 = cps1_base(machine(), CPS1_SCROLL2_BASE, m_scroll_size);
+		m_scroll2 = cps1_base(CPS1_SCROLL2_BASE, m_scroll_size);
 		m_bg_tilemap[1]->mark_all_dirty();
 	}
-	if (m_scroll3 != cps1_base(machine(), CPS1_SCROLL3_BASE, m_scroll_size))
+	if (m_scroll3 != cps1_base(CPS1_SCROLL3_BASE, m_scroll_size))
 	{
-		m_scroll3 = cps1_base(machine(), CPS1_SCROLL3_BASE, m_scroll_size);
+		m_scroll3 = cps1_base(CPS1_SCROLL3_BASE, m_scroll_size);
 		m_bg_tilemap[2]->mark_all_dirty();
 	}
 
@@ -1970,21 +1973,21 @@ void cps_state::cps1_get_video_base()
 	}
 	else if (m_game_config->bootleg_kludge == 5)
 	{
-		m_obj = cps1_base(machine(), CPS1_OBJ_BASE, m_obj_size);
+		m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
 	}
 	else if (m_game_config->bootleg_kludge == 6)
 	{
-		m_obj = cps1_base(machine(), CPS1_OBJ_BASE, m_obj_size);
+		m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
 		scroll1xoff = -0x10;
 		scroll2xoff = -0x10;
 		scroll3xoff = -0x10;
 	}
 
-	m_obj = cps1_base(machine(), CPS1_OBJ_BASE, m_obj_size);
-	m_other = cps1_base(machine(), CPS1_OTHER_BASE, m_other_size);
+	m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
+	m_other = cps1_base(CPS1_OTHER_BASE, m_other_size);
 
 	/* Get scroll values */
 	m_scroll1x = m_cps_a_regs[CPS1_SCROLL1_SCROLLX] + scroll1xoff;

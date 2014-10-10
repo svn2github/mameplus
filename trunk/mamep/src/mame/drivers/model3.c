@@ -1591,6 +1591,21 @@ READ64_MEMBER(model3_state::real3d_status_r)
 }
 
 /* SCSP interface */
+READ8_MEMBER(model3_state::model3_sound_r)
+{
+	switch (offset)
+	{
+		case 4:
+		{
+			UINT8 res = 0;
+			res |= 1;
+			res |= 0x2;		// magtruck country check
+			return res;
+		}
+	}
+	return 0;
+}
+
 WRITE8_MEMBER(model3_state::model3_sound_w)
 {
 	switch (offset)
@@ -1785,7 +1800,7 @@ READ64_MEMBER(model3_state::model3_security_r)
 			}
 			else
 			{
-				return U64(0xffffffffffffffff);
+				return 0;
 			}
 		}
 	}
@@ -1812,7 +1827,7 @@ static ADDRESS_MAP_START( model3_mem, AS_PROGRAM, 64, model3_state )
 	AM_RANGE(0x98000000, 0x980fffff) AM_WRITE(real3d_polygon_ram_w )
 
 	AM_RANGE(0xf0040000, 0xf004003f) AM_MIRROR(0x0e000000) AM_READWRITE(model3_ctrl_r, model3_ctrl_w )
-	AM_RANGE(0xf0080000, 0xf008ffff) AM_MIRROR(0x0e000000) AM_WRITE8(model3_sound_w, U64(0xffffffffffffffff) )
+	AM_RANGE(0xf0080000, 0xf008ffff) AM_MIRROR(0x0e000000) AM_READWRITE8(model3_sound_r, model3_sound_w, U64(0xffffffffffffffff) )
 	AM_RANGE(0xf00c0000, 0xf00dffff) AM_MIRROR(0x0e000000) AM_RAM AM_SHARE("backup")    /* backup SRAM */
 	AM_RANGE(0xf0100000, 0xf010003f) AM_MIRROR(0x0e000000) AM_READWRITE(model3_sys_r, model3_sys_w )
 	AM_RANGE(0xf0140000, 0xf014003f) AM_MIRROR(0x0e000000) AM_READWRITE(model3_rtc_r, model3_rtc_w )
@@ -5376,7 +5391,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(model3_state::model3_interrupt)
 
 	if (scanline == 384)
 		set_irq_line(0x02, ASSERT_LINE);
-	else if(scanline == 0)
+	else
 		set_irq_line(0x0d, ASSERT_LINE);
 }
 
@@ -5403,9 +5418,9 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -5448,9 +5463,9 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -5499,9 +5514,9 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -5537,10 +5552,9 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
-	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
@@ -5971,9 +5985,9 @@ DRIVER_INIT_MEMBER(model3_state,eca)
 	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
+	
+	rom[(0x535560^4)/4] = 0x60000000;
 	rom[(0x535580^4)/4] = 0x60000000;
-	rom[(0x5023b4^4)/4] = 0x60000000;
-	rom[(0x5023d4^4)/4] = 0x60000000;
 }
 
 DRIVER_INIT_MEMBER(model3_state,skichamp)
@@ -5993,6 +6007,11 @@ DRIVER_INIT_MEMBER(model3_state,oceanhun)
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x57995c^4)/4] = 0x60000000;   // decrementer
+}
+
+DRIVER_INIT_MEMBER(model3_state,magtruck)
+{
+	DRIVER_INIT_CALL(model3_20);
 }
 
 
@@ -6043,7 +6062,7 @@ GAME( 1998, swtrilgy,         0, model3_21, swtrilgy, model3_state, swtrilgy, RO
 GAME( 1998, swtrilgya, swtrilgy, model3_21, swtrilgy, model3_state, swtrilga, ROT0, "Sega / LucasArts", "Star Wars Trilogy", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, spikeout,         0, model3_21, model3, model3_state,   spikeout, ROT0, "Sega", "Spikeout (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, spikeofe,         0, model3_21, model3, model3_state,   spikeofe, ROT0, "Sega", "Spikeout Final Edition", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, magtruck,         0, model3_21, model3, model3_state,        eca, ROT0, "Sega", "Magical Truck Adventure", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, magtruck,         0, model3_21, eca, model3_state,      magtruck, ROT0, "Sega", "Magical Truck Adventure", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, eca,              0, model3_21, eca, model3_state,           eca, ROT0, "Sega", "Emergency Call Ambulance", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, ecax,           eca, model3_21, eca, model3_state,           eca, ROT0, "Sega", "Emergency Call Ambulance (Export)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, ecap,           eca, model3_21, eca, model3_state,           eca, ROT0, "Sega", "Emergency Call Ambulance (US location test?)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

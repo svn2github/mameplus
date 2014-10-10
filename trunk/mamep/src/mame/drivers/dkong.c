@@ -1,5 +1,9 @@
 /***************************************************************************
 
+  Nintendo Donkey Kong hardware
+
+****************************************************************************
+
 TODO:
 
 - write a shootgal palette_init
@@ -101,12 +105,13 @@ Done:
   For both of these boards [dkong, dkongjr], only the jump sound
   is distinguishable. I don't hear the pound of walk sound.
 
+****************************************************************************
+
 Donkey Kong and Donkey Kong Jr. memory map (preliminary) (DKong 3 follows)
 
 0000-3fff ROM (Donkey Kong Jr.and Donkey Kong 3: 0000-5fff)
 6000-6fff RAM
-6900-6a7f sprites
-7000-73ff ?
+7000-73ff sprites
 7400-77ff Video RAM
 8000-9fff ROM (DK3 only)
 
@@ -375,21 +380,8 @@ INTERRUPT_GEN_MEMBER(dkong_state::s2650_interrupt)
  *
  *************************************/
 
-void dkong_state::dkong_init_device_driver_data(  )
-{
-#if 0
-	dkong_state *state = machine.driver_data<dkong_state>();
-
-	state->m_dev_n2a03a = machine.device("n2a03a");
-	state->m_dev_n2a03b = machine.device("n2a03b");
-	state->m_dev_6h = machine.device("ls259.6h");
-	state->m_dev_vp2 = machine.device("virtual_p2");
-#endif
-}
-
 MACHINE_START_MEMBER(dkong_state,dkong2b)
 {
-	dkong_init_device_driver_data();
 	m_hardware_type = HARDWARE_TKG04;
 
 	m_snd_rom = memregion("soundcpu")->base();
@@ -447,7 +439,6 @@ MACHINE_START_MEMBER(dkong_state,radarscp1)
 
 MACHINE_START_MEMBER(dkong_state,dkong3)
 {
-	dkong_init_device_driver_data();
 	m_hardware_type = HARDWARE_TKG04;
 }
 
@@ -1007,9 +998,10 @@ static INPUT_PORTS_START( dkongf )
 	PORT_DIPSETTING(    0x60, DEF_STR( 1C_4C ) )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( dkongx )  /* Supposedly the physical DIPS are read as defaults for the NVRAM when it's initially created.
-                                           The settings here match those from the default DSW0 settings.  Beyond the initial NVRAM
-                                           creation, DIPS (other than CABINET) can only be adjusted from the Service Mode */
+static INPUT_PORTS_START( dkongx )
+	/* Supposedly the physical DIPS are read as defaults for the NVRAM when it's initially created.
+		The settings here match those from the default DSW0 settings.  Beyond the initial NVRAM
+		creation, DIPS (other than CABINET) can only be adjusted from the Service Mode */
 	PORT_INCLUDE( dkong )
 
 	PORT_MODIFY("DSW0")
@@ -1616,7 +1608,7 @@ INTERRUPT_GEN_MEMBER(dkong_state::vblank_irq)
 
 WRITE_LINE_MEMBER(dkong_state::busreq_w )
 {
-// since our Z80 has no support for BUSACK, we assume it is granted immediately
+	// since our Z80 has no support for BUSACK, we assume it is granted immediately
 	m_maincpu->set_input_line(Z80_INPUT_LINE_BUSRQ, state);
 	m_maincpu->set_input_line(INPUT_LINE_HALT, state); // do we need this?
 	if(m_z80dma)
@@ -3237,9 +3229,10 @@ GAME( 1981, dkongo,    dkong,    dkong2b,   dkong,    driver_device, 0,        R
 GAME( 1981, dkongj,    dkong,    dkong2b,   dkong,    driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong (Japan set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1981, dkongjo,   dkong,    dkong2b,   dkong,    driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong (Japan set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1981, dkongjo1,  dkong,    dkong2b,   dkong,    driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong (Japan set 3)", GAME_SUPPORTS_SAVE )
+
 GAME( 2004, dkongf,    dkong,    dkong2b,   dkongf,   driver_device, 0,        ROT90,  "hack (Jeff Kulczycki)", "Donkey Kong Foundry (hack)", GAME_SUPPORTS_SAVE ) /* from Jeff's Romhack */
-GAME( 2006, dkongx,    dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II - Jumpman Returns (V1.2) (hack)", GAME_SUPPORTS_SAVE )
-GAME( 2006, dkongx11,  dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II - Jumpman Returns (V1.1) (hack)", GAME_SUPPORTS_SAVE )
+GAME( 2006, dkongx,    dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II: Jumpman Returns (hack, V1.2)", GAME_SUPPORTS_SAVE )
+GAME( 2006, dkongx11,  dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II: Jumpman Returns (hack, V1.1)", GAME_SUPPORTS_SAVE )
 
 GAME( 1982, dkongjr,   0,        dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo of America", "Donkey Kong Junior (US set F-2)", GAME_SUPPORTS_SAVE )
 GAME( 1982, dkongjrj,  dkongjr,  dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong Jr. (Japan)", GAME_SUPPORTS_SAVE )

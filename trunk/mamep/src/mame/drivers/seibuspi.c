@@ -1860,6 +1860,12 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( ejanhs, spi )
+
+	/* video hardware */
+	MCFG_VIDEO_START_OVERRIDE(seibuspi_state, ejanhs)
+MACHINE_CONFIG_END
+
 
 /* single boards */
 
@@ -3757,7 +3763,7 @@ GAME( 1995, viprp1ot,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1, 
 GAME( 1995, viprp1oj,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1o,  ROT270, "Seibu Kaihatsu",                         "Viper Phase 1 (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1995, viprp1hk,   viprp1,   spi,     spi_3button, seibuspi_state, viprp1,   ROT270, "Seibu Kaihatsu (Metrotainment license)", "Viper Phase 1 (Hong Kong)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* "=HONG KONG=" seems part of title */
 
-GAME( 1996, ejanhs,     0,        spi,     spi_ejanhs,  seibuspi_state, ejanhs,   ROT0,   "Seibu Kaihatsu",                         "E-Jan High School (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
+GAME( 1996, ejanhs,     0,        ejanhs,  spi_ejanhs,  seibuspi_state, ejanhs,   ROT0,   "Seibu Kaihatsu",                         "E-Jan High School (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 
 GAME( 1996, rdft,       0,        spi,     spi_3button, seibuspi_state, rdft,     ROT270, "Seibu Kaihatsu",                         "Raiden Fighters (Japan set 1)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1996, rdftj,      rdft,     spi,     spi_3button, seibuspi_state, rdft,     ROT270, "Seibu Kaihatsu",                         "Raiden Fighters (Japan set 2)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
@@ -3798,5 +3804,5 @@ GAME( 2000, rdft22kc,   rdft2,    sys386i, sys386i,     seibuspi_state, rdft2,  
 GAME( 2000, rfjet2kc,   rfjet,    sys386i, sys386i,     seibuspi_state, rfjet,    ROT270, "Seibu Kaihatsu", "Raiden Fighters Jet 2000 (China, SYS386I)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
 
 /* SYS386F */
-GAME( 1999, ejsakura,   0,        sys386f, sys386f,     seibuspi_state, sys386f,  ROT0,   "Seibu Kaihatsu", "E-Jan Sakurasou (Japan, SYS386F V2.0)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, ejsakura12, ejsakura, sys386f, sys386f,     seibuspi_state, sys386f,  ROT0,   "Seibu Kaihatsu", "E-Jan Sakurasou (Japan, SYS386F V1.2)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, ejsakura,   0,        sys386f, sys386f,     seibuspi_state, sys386f,  ROT0,   "Seibu Kaihatsu", "E-Jan Sakurasou (Japan, SYS386F V2.0)", GAME_SUPPORTS_SAVE )
+GAME( 1999, ejsakura12, ejsakura, sys386f, sys386f,     seibuspi_state, sys386f,  ROT0,   "Seibu Kaihatsu", "E-Jan Sakurasou (Japan, SYS386F V1.2)", GAME_SUPPORTS_SAVE )

@@ -267,8 +267,11 @@ BUILD_MIDILIB = 1
 # uncomment next line to enable networking
 # USE_NETWORK = 1
 
-# uncomment to enable SSE2 optimized code and SSE2 code generation
-# SSE2 = 1
+# uncomment to enable SSE2 optimized code and SSE2 code generation (implicitly enabled by 64-bit compilers)
+SSE2 = 1
+
+# uncomment to enable OpenMP optimized code
+# OPENMP = 1
 
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
@@ -625,6 +628,13 @@ endif
 
 ifdef SSE2
 CCOMFLAGS += -msse2
+endif
+
+ifdef OPENMP
+DEFS += -DHAS_OPENMP
+CCOMFLAGS += -fopenmp
+else
+CCOMFLAGS += -Wno-unknown-pragmas
 endif
 
 # add a basic set of warnings

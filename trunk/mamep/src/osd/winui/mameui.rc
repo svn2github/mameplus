@@ -12,7 +12,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "windows.h"
+#include <windows.h>
 #include "commctrl.h"
 
 /////////////////////////////////////////////////////////////////////////////

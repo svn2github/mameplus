@@ -66,6 +66,7 @@ BUSES += SMS_EXP
 BUSES += SNES
 BUSES += VCS
 BUSES += VCS_CTRL
+BUSES += WSWAN
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -124,17 +125,12 @@ $(MESSOBJ)/ascii.a:             \
 	$(MESS_MACHINE)/msx_systemflags.o \
 
 $(MESSOBJ)/atari.a:             \
-	$(MESS_MACHINE)/atarifdc.o  \
-	$(MESS_DRIVERS)/atari400.o  \
-	$(MESS_DRIVERS)/a7800.o     \
-	$(MESS_VIDEO)/maria.o       \
 	$(MESS_DRIVERS)/a2600.o     \
+	$(MESS_DRIVERS)/a7800.o $(MESS_VIDEO)/maria.o \
+	$(MESS_DRIVERS)/atari400.o $(MESS_MACHINE)/atarifdc.o \
 
 $(MESSOBJ)/bandai.a:            \
-	$(MESS_DRIVERS)/wswan.o     \
-	$(MESS_MACHINE)/wswan.o     \
-	$(MESS_VIDEO)/wswan.o       \
-	$(MESS_AUDIO)/wswan.o       \
+	$(MESS_DRIVERS)/wswan.o $(MESS_AUDIO)/wswan.o $(MESS_MACHINE)/wswan.o $(MESS_VIDEO)/wswan.o \
 
 $(MESSOBJ)/funtech.a:           \
 	$(MESS_DRIVERS)/supracan.o  \
@@ -172,6 +168,7 @@ $(MESSOBJ)/snk.a:               \
 	$(MAME_MACHINE)/neocrypt.o  \
 	$(MAME_MACHINE)/neoprot.o   \
 	$(MAME_MACHINE)/neoboot.o   \
+	$(MAME_VIDEO)/neogeo_spr.o  \
 	$(MAME_DRIVERS)/neogeo.o    \
 	$(MESS_DRIVERS)/ngp.o       \
 	$(MESS_VIDEO)/k1ge.o        \

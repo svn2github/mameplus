@@ -36,6 +36,8 @@ const device_type MEGADUCK_CART_SLOT = &device_creator<megaduck_cart_slot_device
 
 device_gb_cart_interface::device_gb_cart_interface(const machine_config &mconfig, device_t &device)
 	: device_slot_card_interface(mconfig, device),
+		m_rom(NULL),
+		m_rom_size(0),
 		has_rumble(false),
 		has_timer(false),
 		has_battery(false)
@@ -55,10 +57,15 @@ device_gb_cart_interface::~device_gb_cart_interface()
 //  rom_alloc - alloc the space for the cart
 //-------------------------------------------------
 
-void device_gb_cart_interface::rom_alloc(UINT32 size)
+void device_gb_cart_interface::rom_alloc(UINT32 size, const char *tag)
 {
 	if (m_rom == NULL)
-		m_rom.resize(size);
+	{
+		astring tempstring(tag);
+		tempstring.cat(GBSLOT_ROM_REGION_TAG);
+		m_rom = device().machine().memory().region_alloc(tempstring, size, 1, ENDIANNESS_LITTLE)->base();
+		m_rom_size = size;
+	}
 }
 
 
@@ -68,11 +75,7 @@ void device_gb_cart_interface::rom_alloc(UINT32 size)
 
 void device_gb_cart_interface::ram_alloc(UINT32 size)
 {
-	if (m_ram == NULL)
-	{
-		m_ram.resize(size);
-		device().save_item(NAME(m_ram));
-	}
+	m_ram.resize(size);
 }
 
 
@@ -279,7 +282,7 @@ bool base_gb_cart_slot_device::call_load()
 			}
 		}
 
-		m_cart->rom_alloc(len);
+		m_cart->rom_alloc(len, tag());
 		ROM = m_cart->get_rom_base();
 
 		if (software_entry() == NULL)
@@ -291,13 +294,11 @@ bool base_gb_cart_slot_device::call_load()
 		offset = 0;
 		if (get_mmm01_candidate(ROM, len))
 			offset = len - 0x8000;
-		int type;
 
 		if (software_entry() != NULL)
-			type = gb_get_pcb_id(get_feature("slot") ? get_feature("slot") : "rom");
+			m_type = gb_get_pcb_id(get_feature("slot") ? get_feature("slot") : "rom");
 		else
-			type = get_cart_type(ROM + offset, len - offset);
-
+			m_type = get_cart_type(ROM + offset, len - offset);
 
 		// setup RAM/NVRAM/RTC/RUMBLE
 		if (software_entry() != NULL)
@@ -368,7 +369,7 @@ bool base_gb_cart_slot_device::call_load()
 					break;
 			}
 
-			if (type == GB_MBC_MBC2 ||  type == GB_MBC_MBC7)
+			if (m_type == GB_MBC_MBC2 ||  m_type == GB_MBC_MBC7)
 				rambanks = 1;
 		}
 
@@ -381,7 +382,7 @@ bool base_gb_cart_slot_device::call_load()
 		if (m_cart->get_ram_size() && m_cart->get_has_battery())
 			battery_load(m_cart->get_ram_base(), m_cart->get_ram_size(), 0xff);
 
-		//printf("Type: %s\n", gb_get_slot(type));
+		//printf("Type: %s\n", gb_get_slot(m_type));
 
 		internal_header_logging(ROM + offset, len);
 
@@ -402,15 +403,13 @@ bool megaduck_cart_slot_device::call_load()
 	if (m_cart)
 	{
 		UINT32 len = (software_entry() == NULL) ? length() : get_software_region_length("rom");
-		UINT8 *ROM;
 
-		m_cart->rom_alloc(len);
-		ROM = m_cart->get_rom_base();
+		m_cart->rom_alloc(len, tag());
 
 		if (software_entry() == NULL)
-			fread(ROM, len);
+			fread(m_cart->get_rom_base(), len);
 		else
-			memcpy(ROM, get_software_region("rom"), len);
+			memcpy(m_cart->get_rom_base(), get_software_region("rom"), len);
 
 		// setup rom bank map based on real length, not header value
 		m_cart->rom_map_setup(len);
@@ -447,7 +446,7 @@ void base_gb_cart_slot_device::setup_ram(UINT8 banks)
 
 bool base_gb_cart_slot_device::call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry)
 {
-	load_software_part_region(*this, swlist, swname, start_entry );
+	load_software_part_region(*this, swlist, swname, start_entry);
 	return true;
 }
 
@@ -565,6 +564,7 @@ int base_gb_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 
 	return type;
 }
+
 /*-------------------------------------------------
  get default card software
  -------------------------------------------------*/

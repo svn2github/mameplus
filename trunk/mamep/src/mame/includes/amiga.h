@@ -437,6 +437,7 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER( floppy_drive_status );
 
 	DECLARE_WRITE_LINE_MEMBER( m68k_reset );
+	DECLARE_WRITE_LINE_MEMBER( kbreset_w );
 
 	DECLARE_READ16_MEMBER( cia_r );
 	DECLARE_WRITE16_MEMBER( cia_w );
@@ -534,8 +535,10 @@ protected:
 
 	// interrupts
 	void set_interrupt(int interrupt);
-	virtual void update_int2();
-	virtual void update_int6();
+	virtual bool int2_pending();
+	virtual bool int6_pending();
+	void update_int2();
+	void update_int6();
 
 	virtual void vblank();
 

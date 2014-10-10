@@ -42,6 +42,8 @@ const device_type A78_CART_SLOT = &device_creator<a78_cart_slot_device>;
 
 device_a78_cart_interface::device_a78_cart_interface (const machine_config &mconfig, device_t &device)
 	: device_slot_card_interface(mconfig, device),
+		m_rom(NULL),
+		m_rom_size(0),
 		m_base_rom(0x8000),
 		m_bank_mask(0)
 {
@@ -60,11 +62,14 @@ device_a78_cart_interface::~device_a78_cart_interface ()
 //  rom_alloc - alloc the space for the cart
 //-------------------------------------------------
 
-void device_a78_cart_interface::rom_alloc(UINT32 size)
+void device_a78_cart_interface::rom_alloc(UINT32 size, const char *tag)
 {
 	if (m_rom == NULL)
 	{
-		m_rom.resize(size);
+		astring tempstring(tag);
+		tempstring.cat(A78SLOT_ROM_REGION_TAG);
+		m_rom = device().machine().memory().region_alloc(tempstring, size, 1, ENDIANNESS_LITTLE)->base();
+		m_rom_size = size;
 		
 		// setup other helpers
 		if ((size / 0x4000) & 1) // compensate for SuperGame carts with 9 x 16K banks (to my knowledge no other cart has m_bank_mask != power of 2)
@@ -85,11 +90,8 @@ void device_a78_cart_interface::rom_alloc(UINT32 size)
 
 void device_a78_cart_interface::ram_alloc(UINT32 size)
 {
-	if (m_ram == NULL)
-	{
-		m_ram.resize(size);
-		device().save_item(NAME(m_ram));
-	}
+	m_ram.resize(size);
+	device().save_item(NAME(m_ram));
 }
 
 
@@ -99,11 +101,8 @@ void device_a78_cart_interface::ram_alloc(UINT32 size)
 
 void device_a78_cart_interface::nvram_alloc(UINT32 size)
 {
-	if (m_nvram == NULL)
-	{
-		m_nvram.resize(size);
-		device().save_item(NAME(m_nvram));
-	}
+	m_nvram.resize(size);
+	device().save_item(NAME(m_nvram));
 }
 
 
@@ -120,7 +119,6 @@ a78_cart_slot_device::a78_cart_slot_device(const machine_config &mconfig, const 
 						device_image_interface(mconfig, *this),
 						device_slot_interface(mconfig, *this)
 {
-	m_type = A78_NOCART;
 }
 
 
@@ -321,8 +319,7 @@ static const a78_slot slot_list[] =
 	{ A78_TYPE1_POK450, "a78_p450_t1" },
 	{ A78_TYPE6_POK450, "a78_p450_t6" },
 	{ A78_TYPEA_POK450, "a78_p450_ta" },
-	{ A78_VERSA_POK450, "a78_p450_vb" },
-	{ A78_NOCART,     "empty" },	// the code should never get here, of course...
+	{ A78_VERSA_POK450, "a78_p450_vb" }
 };
 
 static int a78_get_pcb_id(const char *slot)
@@ -351,22 +348,30 @@ bool a78_cart_slot_device::call_load()
 {
 	if (m_cart)
 	{
-		UINT8 *ROM;
 		UINT32 len;
 		
 		if (software_entry() != NULL)
 		{
 			const char *pcb_name;
+			bool has_ram = get_software_region("ram") ? TRUE : FALSE;
+			bool has_nvram = get_software_region("nvram") ? TRUE : FALSE;
 			len = get_software_region_length("rom");
 			
-			m_cart->rom_alloc(len);
-			ROM = m_cart->get_rom_base();
-			memcpy(ROM, get_software_region("rom"), len);
+			m_cart->rom_alloc(len, tag());
+			memcpy(m_cart->get_rom_base(), get_software_region("rom"), len);
 			
 			if ((pcb_name = get_feature("slot")) != NULL)
 				m_type = a78_get_pcb_id(pcb_name);
 			else
 				m_type = A78_TYPE0;
+
+			if (has_ram)
+				m_cart->ram_alloc(get_software_region_length("ram"));
+			if (has_nvram)
+			{
+				m_cart->nvram_alloc(get_software_region_length("nvram"));
+				battery_load(m_cart->get_nvram_base(), get_software_region_length("nvram"), 0xff);
+			}
 		}
 		else
 		{
@@ -388,7 +393,7 @@ bool a78_cart_slot_device::call_load()
 			// let's try to auto-fix some common errors in the header
 			mapper = validate_header((head[53] << 8) | head[54], TRUE);
 
-			switch (mapper & 0xfe)
+			switch (mapper & 0x2e)
 			{
 				case 0x0000:
 					m_type = BIT(mapper, 0) ? A78_TYPE1 : A78_TYPE0;
@@ -410,21 +415,22 @@ bool a78_cart_slot_device::call_load()
 						m_type = A78_VERSABOARD;
 					break;
 			}
-
-			// check special bits, which override the previous
-			if ((mapper & 0xff00) == 0x0100)
-				m_type = A78_ACTIVISION;
-			else if ((mapper & 0xff00) == 0x0200)
-				m_type = A78_ABSOLUTE;
-			else if ((mapper & 0xff00) == 0x0300)
+			
+			// check if cart has a POKEY at $0450 (typically a VersaBoard variant)!
+			if (mapper & 0x40)
 			{
-				// the cart has a POKEY at $0450 (typically a VersaBoard variant)!
 				if (m_type != A78_TYPE2)
 				{
 					m_type &= ~0x02;
 					m_type += A78_POKEY0450;
 				}
 			}
+			
+			// check special bits, which override the previous
+			if ((mapper & 0xff00) == 0x0100)
+				m_type = A78_ACTIVISION;
+			else if ((mapper & 0xff00) == 0x0200)
+				m_type = A78_ABSOLUTE;
 
 			logerror("Cart type: 0x%x\n", m_type);
 
@@ -447,24 +453,23 @@ bool a78_cart_slot_device::call_load()
 
 			internal_header_logging((UINT8 *)head, length());
 			
-			m_cart->rom_alloc(len);
-			ROM = m_cart->get_rom_base();
-			fread(ROM, len);
+			m_cart->rom_alloc(len, tag());
+			fread(m_cart->get_rom_base(), len);
+			
+			if (m_type == A78_TYPE6)
+				m_cart->ram_alloc(0x4000);
+			if (m_type == A78_MEGACART || (m_type >= A78_VERSABOARD && m_type <= A78_VERSA_POK450))
+				m_cart->ram_alloc(0x8000);
+			if (m_type == A78_XB_BOARD || m_type == A78_XM_BOARD)
+				m_cart->ram_alloc(0x20000);
+			if (m_type == A78_HSC || m_type == A78_XM_BOARD)
+			{
+				m_cart->nvram_alloc(0x800);
+				battery_load(m_cart->get_nvram_base(), 0x800, 0xff);
+			}
 		}
 		
 		//printf("Type: %s\n", a78_get_slot(m_type));
-		
-		if (m_type == A78_TYPE6)
-			m_cart->ram_alloc(0x4000);
-		if (m_type == A78_MEGACART || (m_type >= A78_VERSABOARD && m_type <= A78_VERSA_POK450))
-			m_cart->ram_alloc(0x8000);
-		if (m_type == A78_XB_BOARD || m_type == A78_XM_BOARD)
-			m_cart->ram_alloc(0x20000);
-		if (m_type == A78_HSC || m_type == A78_XM_BOARD)
-		{
-			m_cart->nvram_alloc(0x800);
-			battery_load(m_cart->get_nvram_base(), 0x800, 0xff);
-		}
 	}
 	return IMAGE_INIT_PASS;
 }
@@ -497,7 +502,7 @@ void a78_cart_slot_device::call_unload()
 
 bool a78_cart_slot_device::call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry)
 {
-	load_software_part_region(*this, swlist, swname, start_entry );
+	load_software_part_region(*this, swlist, swname, start_entry);
 	return TRUE;
 }
 
@@ -539,7 +544,7 @@ void a78_cart_slot_device::get_default_card_software(astring &result)
 		// let's try to auto-fix some common errors in the header
 		mapper = validate_header((head[53] << 8) | head[54], FALSE);
 		
-		switch (mapper & 0xfe)
+		switch (mapper & 0x2e)
 		{
 			case 0x0000:
 				type = BIT(mapper, 0) ? A78_TYPE1 : A78_TYPE0;
@@ -562,21 +567,22 @@ void a78_cart_slot_device::get_default_card_software(astring &result)
 				break;
 		}
 		
-		// check special bits, which override the previous
-		if ((mapper & 0xff00) == 0x0100)
-			type = A78_ACTIVISION;
-		else if ((mapper & 0xff00) == 0x0200)
-			type = A78_ABSOLUTE;
-		else if ((mapper & 0xff00) == 0x0300)
+		// check if cart has a POKEY at $0450 (typically a VersaBoard variant)!
+		if (mapper & 0x40)
 		{
-			// the cart has a POKEY at $0450 (typically a VersaBoard variant)!
 			if (type != A78_TYPE2)
 			{
 				type &= ~0x02;
 				type += A78_POKEY0450;
 			}
 		}
-
+		
+		// check special bits, which override the previous
+		if ((mapper & 0xff00) == 0x0100)
+			type = A78_ACTIVISION;
+		else if ((mapper & 0xff00) == 0x0200)
+			type = A78_ABSOLUTE;
+		
 		logerror("Cart type: %x\n", type);
 		slot_string = a78_get_slot(type);
 		

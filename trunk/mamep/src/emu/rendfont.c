@@ -12,7 +12,7 @@
 #include "rendfont.h"
 #include "rendutil.h"
 #include "emuopts.h"
-#include "zlib.h"
+#include <zlib.h>
 
 #ifdef UI_COLOR_DISPLAY
 //mamep: for ui_get_rgb_color()

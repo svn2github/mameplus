@@ -1297,6 +1297,7 @@ void ppc_device::static_generate_memory_accessor(int mode, int size, int iswrite
 				UML_MOV(block, mem(&m_core->tempaddr), I0);                      // mov     [tempaddr],i0
 				UML_DMOV(block, mem(&m_core->tempdata.d), I1);                   // dmov    [tempdata],i1
 				UML_DSHR(block, I1, I1, 32);                                            // dshr    i1,i1,32
+				UML_AND(block, I0, I0, ~7);                                             // and     i0,i0,~7
 				UML_DMOV(block, I2, U64(0x00000000ffffffff));                           // dmov    i2,0x00000000ffffffff
 				UML_CALLH(block, *masked);                                              // callh   masked
 				UML_ADD(block, I0, mem(&m_core->tempaddr), 4);                   // add     i0,[tempaddr],4
@@ -1308,6 +1309,7 @@ void ppc_device::static_generate_memory_accessor(int mode, int size, int iswrite
 			{
 				UML_MOV(block, mem(&m_core->tempaddr), I0);                      // mov     [tempaddr],i0
 				UML_DMOV(block, I2, U64(0x00000000ffffffff));                           // mov     i2,0x00000000ffffffff
+				UML_AND(block, I0, I0, ~7);                                             // and     i0,i0,~7
 				UML_CALLH(block, *masked);                                              // callh   masked
 				UML_DSHL(block, mem(&m_core->tempdata.d), I0, 32);               // dshl    [tempdata],i0,32
 				UML_ADD(block, I0, mem(&m_core->tempaddr), 4);                   // add     i0,[tempaddr],4
@@ -3157,7 +3159,7 @@ int ppc_device::generate_instruction_1f(drcuml_block *block, compiler_state *com
 			UML_CMP(block, I0, I0);                                             // cmp     i0,i0
 			UML_GETFLGS(block, I0, FLAG_Z | FLAG_C | FLAG_S);                           // getflgs i0,zcs
 			UML_LOAD(block, I0, m_cmp_cr_table, I0, SIZE_BYTE, SCALE_x1);// load    i0,cmp_cr_table,i0,byte
-			UML_OR(block, CR32(G_CRFD(op)), I0, XERSO32);                               // or      [crn],i0,[xerso]
+			UML_OR(block, CR32(0), I0, XERSO32);                               // or      [cr0],i0,[xerso]
 
 			generate_compute_flags(block, desc, TRUE, 0, FALSE);                       // <update flags>
 			return TRUE;

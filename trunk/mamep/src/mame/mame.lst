@@ -1161,6 +1161,7 @@ devzone2        // 8022 (c) [1980]
 cheekyms        // 8004 (c) [1980?]
 zerohour        // 8011 (c) Universal
 zerohoura       // 8011 (c) Universal
+zerohouri       //
 redclash        // (c) 1981 Tehkan
 redclasha       // (c) 1981 Tehkan
 redclashk       // (c) Kaneko (bootleg?)
@@ -2104,9 +2105,10 @@ arkanoid        // A75 (c) 1986 Taito Corporation Japan (World)
 arkanoidu       // A75 (c) 1986 Taito America Corporation + Romstar license (US)
 arkanoiduo      // A75 (c) 1986 Taito America Corporation + Romstar license (US)
 arkanoidj       // A75 (c) 1986 Taito Corporation (Japan)
-arkanoidjo      // A75 (c) 1986 Taito Corporation (Japan)
-arkanoidjb      // bootleg
-arkanoidjb2     // bootleg (Beta)
+arkanoidja      // A75 (c) 1986 Taito Corporation (Japan)
+arkanoidjb      // A75 (c) 1986 Taito Corporation (Japan)
+arkanoidjbl     // bootleg
+arkanoidjbl2    // bootleg (Beta)
 ark1ball        // bootleg
 arkangc         // bootleg
 arkangc2        // bootleg
@@ -3027,6 +3029,7 @@ toramich        // 11/1987 (c) 1987 (Japan
 tigeroadb       // bootleg
 f1dream         //  4/1988 (c) 1988 + Romstar
 f1dreamb        // bootleg
+f1dreamba       // bootleg
 1943kai         //  6/1988 (c) 1987 (Japan)
 lastduel        //  7/1988 (c) 1988 (US)
 lastduelo       //  7/1988 (c) 1988 (US)
@@ -3114,6 +3117,8 @@ sf2eb           // 14/02/1991 (c) 1991 (World)
 sf2ed           // 18/03/1991 (c) 1991 (World)
 sf2ee           // 28/02/1991 (c) 1991 (World)
 sf2ebbl         // 14/02/1991 (c) 1991 (World, bootleg)
+sf2ebbl2        // 14/02/1991 (c) 1991 (World, bootleg)
+sf2ebbl3        // 14/02/1991 (c) 1991 (World, bootleg)
 sf2stt          // bootleg
 sf2rk           // bootleg
 sf2ua           // 06/02/1991 (c) 1991 (USA)
@@ -3185,12 +3190,14 @@ sf2m5           // hack
 sf2m6           // hack
 sf2m7           // hack
 sf2m8           // bootleg
+sf2m9           // bootleg
 sf2yyc          // hack
 sf2koryu        // hack
 sf2dongb        // hack
 sf2mdt          // bootleg
 sf2mdta         // bootleg
 sf2mdtb         // bootleg
+sf2mdtc         // bootleg
 cworld2j        // 11/06/1992 (c) 1992 (Japan)
 varth           // 14/07/1992 (c) 1992 (World)
 varthr1         // 12/06/1992 (c) 1992 (World)
@@ -5407,6 +5414,7 @@ radirgya        // 2005.12.04 Radirgy (Rev A)
 mushik2e        // 2005.?? Mushiking The King Of Beetles II ENG (Ver. 1.001)
 mushi2ea        // 2005.?? Mushiking The King Of Beetles II ENG (Ver. 2.001)
 				// 2005.?? MushiKing The King Of Beetle III
+mushi2k5        // 2005.?? MushiKing The King Of Beetle 2K5 1st
 kurucham        // 2006.03 Kurukuru Chameleon
 trgheart        // 2006.05 Trigger Heart Exelica (Rev A)
 zunou           // 2006.07 Touch de Zunou
@@ -5465,6 +5473,7 @@ vf4c            // 2002.01.31 Virtua Fighter 4 (Rev C) (cartridge)
 kingrt66        // 2002.02 The King of Route 66 (Rev A)
 				// 2002.02.14 Initial D Arcade Stage (Japan)
 initd           // 2002.03 Initial D Arcade Stage (Japan) (Rev B)
+initdo          // 2002.03 Initial D Arcade Stage (Japan)
 				// 2002.06 World Club Champion Football Serie A 2001-2002
 soulsurf        // 2002.07 Soul Surfer
 initdexp        // 2002.07.18 Initial D Arcade Stage (Export) (Rev A)
@@ -5875,6 +5884,7 @@ wndrplnt        // (c) 1987 Data East Corporation (Japan)
 chelnov         // (c) 1988 Data East USA (World)
 chelnovu        // (c) 1988 Data East USA (US)
 chelnovj        // (c) 1988 Data East Corporation (Japan)
+chelnovjbl      // bootleg
 // the following ones all run on similar hardware
 hbarrel         // (c) 1987 Data East USA (US)
 hbarrelw        // (c) 1987 Data East Corporation (World)
@@ -8336,6 +8346,8 @@ raiden2ea       // (c) 1993 Seibu Kaihatsu
 raiden2eu       // (c) 1993 Seibu Kaihatsu + Fabtek license
 raiden2eua      // (c) 1993 Seibu Kaihatsu + Fabtek license
 raiden2nl       // (c) 1993 Seibu Kaihatsu
+raiden2g        // (c) 1993 Seibu Kaihatsu + Tuning license
+raiden2dx       // (c) 1993 Seibu Kaihatsu
 
 raidendx        // (c) 1994 Seibu Kaihatsu
 raidendxk       // (c) 1994 Seibu Kaihatsu
@@ -8344,6 +8356,8 @@ raidendxa1      // (c) 1994 Seibu Kaihatsu + Metrotainment license
 raidendxa2      // (c) 1994 Seibu Kaihatsu + Metrotainment license
 raidendxg       // (c) 1994 Seibu Kaihatsu + Tuning license
 raidendxnl      // (c) 1994 Seibu Kaihatsu
+raidendxj       // (c) 1994 Seibu Kaihatsu
+raidendxch
 zeroteam        // (c) 1993 Seibu Kaihatsu + Fabtek license
 zeroteama       // (c) 1993 Seibu Kaihatsu
 zeroteamb       // (c) 1993 Seibu Kaihatsu
@@ -8355,6 +8369,7 @@ xsedae          // (c) 1995 Dream Island
 
 // Newer V33 PCB with COP3 protection
 r2dx_v33        // (c) 1996 Seibu Kaihatsu
+r2dx_v33_r2     // (c) 1996 Seibu Kaihatsu
 nzeroteam       // (c) 1997 Seibu Kaihatsu
 zerotm2k        // (c) 2000 Seibu Kaihatsu
 
@@ -8664,6 +8679,7 @@ tengai          // (c) 1996
 tengaij         // (c) 1996
 // Semicom games on "Psikyo 68020"-like hardware
 baryon          // (c) 1997 SemiCom
+baryona         // (c) 1997 SemiCom
 dreamwld        // (c) 2000 SemiCom
 rolcrush        // (c) 1999 Trust
 
@@ -9684,6 +9700,7 @@ orlegende       //
 orlegendc       //
 orlegendca      //
 orlegend111c    //
+orlegend111t	//
 orlegend105k    //
 drgw2           // (c) 1997 Dragon World 2
 dw2v100x        //
@@ -10460,6 +10477,8 @@ bigappg         // (c) 1986 Merit
 riviera         // (c) 1987 Merit
 rivieraa        // (c) 1986 Merit
 rivierab        // (c) 1986 Merit
+americna        // (c) 1987 Merit
+americnaa       // (c) 1994 Merit
 dodgecty        // (c) 1988 Merit
 dodgectya       // (c) 1986 Merit
 dodgectyb       // (c) 1986 Merit
@@ -10935,6 +10954,7 @@ comg905d        // (c) 198? Cal Omega Inc.
 // IGT Player's Edge Plus
 peset001        // (c) 1987 IGT - International Game Technology
 peset038        // (c) 1987 IGT - International Game Technology
+pepk1024        // (c) 1987 IGT - International Game Technology
 pepp0002        // (c) 1987 IGT - International Game Technology
 pepp0002a       // (c) 1987 IGT - International Game Technology
 pepp0008        // (c) 1987 IGT - International Game Technology
@@ -10977,6 +10997,7 @@ pepp0127a       // (c) 1987 IGT - International Game Technology
 pepp0158        // (c) 1987 IGT - International Game Technology
 pepp0158a       // (c) 1987 IGT - International Game Technology
 pepp0158b       // (c) 1987 IGT - International Game Technology
+pepp0158c       // (c) 1987 IGT - International Game Technology
 pepp0159        // (c) 1987 IGT - International Game Technology
 pepp0171        // (c) 1987 IGT - International Game Technology
 pepp0171a       // (c) 1987 IGT - International Game Technology
@@ -31740,6 +31761,9 @@ strike
 
 /* Below are misc lazy adds, or yet to be sorted out... */
 
+cspin2
+caprcyc
+
 // VLC Nevada
 nevada
 
@@ -31758,6 +31782,11 @@ gluck2     // 1992 Yung Yu / CYE
 
 // Valco fireball
 fireball
+
+//M.G.A.
+mgavegas
+mgavegas21
+mgavegas133
 
 amusco     // 1987, Amusco.
 cocoloco   // 198?, Petaco S.A.

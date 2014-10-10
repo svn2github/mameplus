@@ -104,6 +104,7 @@ ins8250_uart_device::ins8250_uart_device(const machine_config &mconfig, device_t
 			m_ri(1),
 			m_cts(1)
 {
+	m_regs.ier = 0;
 }
 
 ins8250_device::ins8250_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
@@ -313,7 +314,7 @@ WRITE8_MEMBER( ins8250_uart_device::ins8250_w )
 			  bits 5 - 0, you could cause an interrupt if the appropriate IER bit
 			  is set.
 			*/
-			m_regs.lsr = data;
+			m_regs.lsr = (m_regs.lsr & 0x40) | (data & ~0x40);
 
 			tmp = 0;
 			tmp |= ( m_regs.lsr & 0x01 ) ? COM_INT_PENDING_RECEIVED_DATA_AVAILABLE : 0;
@@ -574,6 +575,7 @@ void ins8250_uart_device::device_reset()
 	update_msr();
 	m_regs.msr &= 0xf0;
 	m_int_pending = 0;
+	update_interrupt();
 	receive_register_reset();
 	transmit_register_reset();
 	m_txd = 1;

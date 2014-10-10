@@ -28,7 +28,6 @@ The Grid         v1.2   10/18/2000
 
 #include "emu.h"
 #include "cpu/tms32031/tms32031.h"
-#include "cpu/tms34010/tms34010.h"
 #include "cpu/adsp2100/adsp2100.h"
 #include "cpu/pic16c5x/pic16c5x.h"
 #include "includes/midzeus.h"
@@ -473,14 +472,13 @@ WRITE32_MEMBER(midzeus_state::analog_w)
  *
  *************************************/
 
-static void update_gun_irq(running_machine &machine)
+void midzeus_state::update_gun_irq()
 {
-	midzeus_state *state = machine.driver_data<midzeus_state>();
 	/* low 2 bits of gun_control seem to enable IRQs */
 	if (gun_irq_state & gun_control & 0x03)
-		state->m_maincpu->set_input_line(3, ASSERT_LINE);
+		m_maincpu->set_input_line(3, ASSERT_LINE);
 	else
-		state->m_maincpu->set_input_line(3, CLEAR_LINE);
+		m_maincpu->set_input_line(3, CLEAR_LINE);
 }
 
 
@@ -491,7 +489,7 @@ TIMER_CALLBACK_MEMBER(midzeus_state::invasn_gun_callback)
 
 	/* set the appropriate IRQ in the internal gun control and update */
 	gun_irq_state |= 0x01 << player;
-	update_gun_irq(machine());
+	update_gun_irq();
 
 	/* generate another interrupt on the next scanline while we are within the BEAM_DY */
 	beamy++;
@@ -510,7 +508,7 @@ WRITE32_MEMBER(midzeus_state::invasn_gun_w)
 	/* bits 0-1 enable IRQs (?) */
 	/* bits 2-3 reset IRQ states */
 	gun_irq_state &= ~((gun_control >> 2) & 3);
-	update_gun_irq(machine());
+	update_gun_irq();
 
 	for (player = 0; player < 2; player++)
 	{

@@ -28,7 +28,7 @@ void tc0150rod_device::device_start()
 	m_ram.resize_and_clear(TC0150ROD_RAM_SIZE / 2);
 	save_item(NAME(m_ram));
 
-	m_roadgfx = region()->base();
+	m_roadgfx = (UINT16 *)region()->base();
 	assert(m_roadgfx);
 }
 

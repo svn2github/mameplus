@@ -162,7 +162,6 @@ Current Problem(s) - in order of priority
 #include "machine/eepromser.h"
 #include "sound/okim6295.h"
 #include "includes/raiden2.h"
-#include "video/seibu_crtc.h"
 
 
 void raiden2_state::machine_start()
@@ -170,74 +169,25 @@ void raiden2_state::machine_start()
 	save_item(NAME(bg_bank));
 	save_item(NAME(fg_bank));
 	save_item(NAME(mid_bank));
+	save_item(NAME(tx_bank));
 	save_item(NAME(raiden2_tilemap_enable));
 	save_item(NAME(prg_bank));
 	save_item(NAME(cop_bank));
-	save_item(NAME(cop_itoa));
-	save_item(NAME(cop_status));
-	save_item(NAME(cop_scale));
-	save_item(NAME(cop_itoa_digit_count));
-	save_item(NAME(cop_angle));
-	save_item(NAME(cop_dist));
-	save_item(NAME(cop_latch_addr));
-	save_item(NAME(cop_latch_trigger));
-	save_item(NAME(cop_latch_value));
-	save_item(NAME(cop_latch_mask));
-	save_item(NAME(cop_angle_target));
-	save_item(NAME(cop_angle_step));
+
 	save_item(NAME(sprite_prot_x));
 	save_item(NAME(sprite_prot_y));
 	save_item(NAME(dst1));
 	save_item(NAME(cop_spr_maxx));
 	save_item(NAME(cop_spr_off));
-	save_item(NAME(cop_hit_status));
-	save_item(NAME(cop_hit_baseadr));
-	save_item(NAME(cop_hit_val_x));
-	save_item(NAME(	cop_hit_val_y));
-	save_item(NAME(cop_hit_val_z));
-	save_item(NAME(cop_hit_val_unk));
-	save_item(NAME(cop_sort_ram_addr));
-	save_item(NAME(cop_sort_lookup));
-	save_item(NAME(cop_sort_param));
+
 	
 	save_item(NAME(scrollvals));
-	save_item(NAME(cop_regs));
-	save_item(NAME(cop_itoa_digits));
-	save_item(NAME(cop_func_trigger));
-	save_item(NAME(cop_func_value));
-	save_item(NAME(cop_func_mask));
-	save_item(NAME(cop_program));
+
 	save_item(NAME(sprite_prot_src_addr));
 
-//	save_pointer(NAME(cop_collision_info), sizeof(colinfo)*2); // this is illegal
-	save_item(NAME(cop_collision_info[0].x));
-	save_item(NAME(cop_collision_info[0].y));
-	save_item(NAME(cop_collision_info[0].z));
-
-	save_item(NAME(cop_collision_info[0].min_x));
-	save_item(NAME(cop_collision_info[0].min_y));
-	save_item(NAME(cop_collision_info[0].min_z));
-
-	save_item(NAME(cop_collision_info[0].max_x));
-	save_item(NAME(cop_collision_info[0].max_y));
-	save_item(NAME(cop_collision_info[0].max_z));
-
-	save_item(NAME(cop_collision_info[1].x));
-	save_item(NAME(cop_collision_info[1].y));
-	save_item(NAME(cop_collision_info[1].z));
-
-	save_item(NAME(cop_collision_info[1].min_x));
-	save_item(NAME(cop_collision_info[1].min_y));
-	save_item(NAME(cop_collision_info[1].min_z));
-
-	save_item(NAME(cop_collision_info[1].max_x));
-	save_item(NAME(cop_collision_info[1].max_y));
-	save_item(NAME(cop_collision_info[1].max_z));
-
-//	save_item(NAME(tile_buffer));
-//	save_item(NAME(sprite_buffer));
 }
 
+/*
 UINT16 raiden2_state::rps()
 {
 	return m_maincpu->state_int(NEC_CS);
@@ -247,113 +197,9 @@ UINT16 raiden2_state::rpc()
 {
 	return m_maincpu->state_int(NEC_IP);
 }
+*/
 
 int cnt=0, ccol = -1;
-
-WRITE16_MEMBER(raiden2_state::cop_pgm_data_w)
-{
-	assert(ACCESSING_BITS_0_7 && ACCESSING_BITS_8_15);
-	cop_program[cop_latch_addr] = data;
-	int idx = cop_latch_addr >> 3;
-	cop_func_trigger[idx] = cop_latch_trigger;
-	cop_func_value[idx]   = cop_latch_value;
-	cop_func_mask[idx]    = cop_latch_mask;
-
-	if(data) {
-		int off = data & 31;
-		int reg = (data >> 5) & 3;
-		int op = (data >> 7) & 31;
-
-		logerror("COPDIS: %04x s=%02x f1=%x l=%x f2=%02x %x %04x %02x %03x %02x.%x.%02x ", cop_latch_trigger,  (cop_latch_trigger >> 11) << 3, (cop_latch_trigger >> 10) & 1, ((cop_latch_trigger >> 7) & 7)+1, cop_latch_trigger & 0x7f, cop_latch_value, cop_latch_mask, cop_latch_addr, data, op, reg, off);
-
-		off *= 2;
-
-		// COPDIS: 0205 s=00 f1=0 l=5 f2=05 6 ffeb 00 188 03.0.08 read32 10(r0)
-		// COPDIS: 0205 s=00 f1=0 l=5 f2=05 6 ffeb 01 282 05.0.02 add32 4(r0)
-		// COPDIS: 0205 s=00 f1=0 l=5 f2=05 6 ffeb 02 082 01.0.02 write32 4(r0)
-		// COPDIS: 0205 s=00 f1=0 l=5 f2=05 6 ffeb 03 b8e 17.0.0e add16h 1c(r0)
-		// COPDIS: 0205 s=00 f1=0 l=5 f2=05 6 ffeb 04 98e 13.0.0e write16h 1c(r0)
-
-		// 188 182 082 b8e 98e -> 04  = 04+04    1ch = 1c+04
-		// 188 188 082 b8e 98e -> 04  = 04+10    1ch = 1c+10
-		// 188 18e 082 b8e 98e -> 04  = 04+1c    1ch = 1c+1c
-		// 188 282 082 b8e 98e -> 04  = 04+10    1ch = 1c+10
-		// 188 288 082 b8e 98e -> 04  = 10+10    1ch = 1c+10
-		// 188 28e 082 b8e 98e -> 04  = 1c+10    1ch = 1c+10
-		// 188 282 282 282 082 -> 04  = 04+04+10 10h = 04+10
-		// 188 188 188 188 082 -> 04h = 04+10    04l = 04+10+10
-		// 188 188 188 188 082 -> 04  = 04+10    04l = 04+10+10  10h = 04+10 (same, but trigger = 020b)
-
-		switch(op) {
-		case 0x01:
-			if(off)
-				logerror("addmem32 %x(r%x)\n", off, reg);
-			else
-				logerror("addmem32 (r%x)\n", reg);
-			break;
-		case 0x03:
-			if(off)
-				logerror("read32 %x(r%x)\n", off, reg);
-			else
-				logerror("read32 (r%x)\n", reg);
-			break;
-		case 0x05:
-			if(off)
-				logerror("add32 %x(r%x)\n", off, reg);
-			else
-				logerror("add32 (r%x)\n", reg);
-			break;
-		case 0x13:
-			if(off)
-				logerror("write16h %x(r%x)\n", off, reg);
-			else
-				logerror("write16h (r%x)\n", reg);
-			break;
-		case 0x15:
-			if(off)
-				logerror("sub32 %x(r%x)\n", off, reg);
-			else
-				logerror("sub32 (r%x)\n", reg);
-			break;
-		case 0x17:
-			if(off)
-				logerror("addmem16 %x(r%x)\n", off, reg);
-			else
-				logerror("addmem16 (r%x)\n", reg);
-			break;
-		default:
-			logerror("?\n");
-			break;
-		}
-	}
-}
-
-WRITE16_MEMBER(raiden2_state::cop_pgm_addr_w)
-{
-	assert(ACCESSING_BITS_0_7 && ACCESSING_BITS_8_15);
-	assert(data < 0x100);
-	cop_latch_addr = data;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_pgm_value_w)
-{
-	assert(ACCESSING_BITS_0_7 && ACCESSING_BITS_8_15);
-	cop_latch_value = data;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_pgm_mask_w)
-{
-	assert(ACCESSING_BITS_0_7 && ACCESSING_BITS_8_15);
-	cop_latch_mask = data;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_pgm_trigger_w)
-{
-	assert(ACCESSING_BITS_0_7 && ACCESSING_BITS_8_15);
-	cop_latch_trigger = data;
-}
-
-
 
 
 WRITE16_MEMBER(raiden2_state::m_videoram_private_w)
@@ -384,350 +230,6 @@ WRITE16_MEMBER(raiden2_state::m_videoram_private_w)
 	}
 }
 
-WRITE16_MEMBER(raiden2_state::cop_itoa_low_w)
-{
-	cop_itoa = (cop_itoa & ~UINT32(mem_mask)) | (data & mem_mask);
-
-	int digits = 1 << cop_itoa_digit_count*2;
-	UINT32 val = cop_itoa;
-
-	if(digits > 9)
-		digits = 9;
-	for(int i=0; i<digits; i++)
-		if(!val && i)
-			cop_itoa_digits[i] = 0x20;
-		else {
-			cop_itoa_digits[i] = 0x30 | (val % 10);
-			val = val / 10;
-		}
-	cop_itoa_digits[9] = 0;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_itoa_high_w)
-{
-	cop_itoa = (cop_itoa & ~(mem_mask << 16)) | ((data & mem_mask) << 16);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_itoa_digit_count_w)
-{
-	COMBINE_DATA(&cop_itoa_digit_count);
-}
-
-READ16_MEMBER(raiden2_state::cop_itoa_digits_r)
-{
-	return cop_itoa_digits[offset*2] | (cop_itoa_digits[offset*2+1] << 8);
-}
-
-READ16_MEMBER(raiden2_state::cop_status_r)
-{
-	return cop_status;
-}
-
-READ16_MEMBER(raiden2_state::cop_angle_r)
-{
-	return cop_angle;
-}
-
-READ16_MEMBER(raiden2_state::cop_dist_r)
-{
-	return cop_dist;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_scale_w)
-{
-	COMBINE_DATA(&cop_scale);
-	cop_scale &= 3;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_angle_target_w)
-{
-	COMBINE_DATA(&cop_angle_target);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_angle_step_w)
-{
-	COMBINE_DATA(&cop_angle_step);
-}
-
-READ16_MEMBER(raiden2_state::cop_reg_high_r)
-{
-	return cop_regs[offset] >> 16;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_reg_high_w)
-{
-	cop_regs[offset] = (cop_regs[offset] & ~(mem_mask << 16)) | ((data & mem_mask) << 16);
-}
-
-READ16_MEMBER(raiden2_state::cop_reg_low_r)
-{
-	return cop_regs[offset];
-}
-
-WRITE16_MEMBER(raiden2_state::cop_reg_low_w)
-{
-	cop_regs[offset] = (cop_regs[offset] & ~UINT32(mem_mask)) | (data & mem_mask);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_hitbox_baseadr_w)
-{
-	COMBINE_DATA(&cop_hit_baseadr);
-}
-
-void raiden2_state::cop_collision_read_xy(address_space &space, int slot, UINT32 spradr)
-{
-	cop_collision_info[slot].x = space.read_dword(spradr+4);
-	cop_collision_info[slot].y = space.read_dword(spradr+8);
-	cop_collision_info[slot].z = space.read_dword(spradr+12);
-}
-
-void raiden2_state::cop_collision_update_hitbox(address_space &space, int slot, UINT32 hitadr)
-{
-	UINT32 hitadr2 = space.read_word(hitadr) | (cop_hit_baseadr << 16);
-
-	INT8 hx = space.read_byte(hitadr2++);
-	UINT8 hw = space.read_byte(hitadr2++);
-	INT8 hy = space.read_byte(hitadr2++);
-	UINT8 hh = space.read_byte(hitadr2++);
-	INT8 hz = space.read_byte(hitadr2++);
-	UINT8 hd = space.read_byte(hitadr2++);
-
-	cop_collision_info[slot].min_x = (cop_collision_info[slot].x >> 16) + hx;
-	cop_collision_info[slot].min_y = (cop_collision_info[slot].y >> 16) + hy;
-	cop_collision_info[slot].min_z = (cop_collision_info[slot].z >> 16) + hz;
-	cop_collision_info[slot].max_x = cop_collision_info[slot].min_x + hw;
-	cop_collision_info[slot].max_y = cop_collision_info[slot].min_y + hh;
-	cop_collision_info[slot].max_z = cop_collision_info[slot].min_z + hd;
-
-	cop_hit_status = 7;
-
-	/* outbound X check */
-	if(cop_collision_info[0].max_x >= cop_collision_info[1].min_x && cop_collision_info[0].min_x <= cop_collision_info[1].max_x)
-		cop_hit_status &= ~1;
-
-	/* outbound Y check */
-	if(cop_collision_info[0].max_y >= cop_collision_info[1].min_y && cop_collision_info[0].min_y <= cop_collision_info[1].max_y)
-		cop_hit_status &= ~2;
-
-	/* outbound Z check */
-	if(cop_collision_info[0].max_z >= cop_collision_info[1].min_z && cop_collision_info[0].min_z <= cop_collision_info[1].max_z)
-		cop_hit_status &= ~4;
-
-	cop_hit_val_x = (cop_collision_info[0].x - cop_collision_info[1].x) >> 16;
-	cop_hit_val_y = (cop_collision_info[0].y - cop_collision_info[1].y) >> 16;
-	cop_hit_val_z = (cop_collision_info[0].z - cop_collision_info[1].z) >> 16;
-	cop_hit_val_unk = cop_hit_status; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
-}
-
-WRITE16_MEMBER(raiden2_state::cop_cmd_w)
-{
-	cop_status &= 0x7fff;
-
-	switch(data) {
-	case 0x0205: {  // 0205 0006 ffeb 0000 - 0188 0282 0082 0b8e 098e 0000 0000 0000
-		int ppos = space.read_dword(cop_regs[0] + 4 + offset*4);
-		int npos = ppos + space.read_dword(cop_regs[0] + 0x10 + offset*4);
-		int delta = (npos >> 16) - (ppos >> 16);
-		space.write_dword(cop_regs[0] + 4 + offset*4, npos);
-		space.write_word(cop_regs[0] + 0x1e + offset*4, space.read_word(cop_regs[0] + 0x1e + offset*4) + delta);
-		break;
-	}
-
-	case 0x0904: { /* X Se Dae and Zero Team uses this variant */
-		space.write_dword(cop_regs[0] + 16 + offset*4, space.read_dword(cop_regs[0] + 16 + offset*4) - space.read_dword(cop_regs[0] + 0x28 + offset*4));
-		break;
-	}
-	case 0x0905: //  0905 0006 fbfb 0008 - 0194 0288 0088 0000 0000 0000 0000 0000
-		space.write_dword(cop_regs[0] + 16 + offset*4, space.read_dword(cop_regs[0] + 16 + offset*4) + space.read_dword(cop_regs[0] + 0x28 + offset*4));
-		break;
-
-	case 0x130e:   // 130e 0005 bf7f 0010 - 0984 0aa4 0d82 0aa2 039b 0b9a 0b9a 0a9a
-	case 0x138e:
-	case 0x338e: { // 338e 0005 bf7f 0030 - 0984 0aa4 0d82 0aa2 039c 0b9c 0b9c 0a9a
-		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
-		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
-
-		if(!dy) {
-			cop_status |= 0x8000;
-			cop_angle = 0;
-		} else {
-			cop_angle = atan(double(dx)/double(dy)) * 128 / M_PI;
-			if(dy<0)
-				cop_angle += 0x80;
-		}
-
-		if(data & 0x0080) {
-			space.write_byte(cop_regs[0]+0x34, cop_angle);
-		}
-		break;
-	}
-
-	case 0x2208:
-	case 0x2288: { // 2208 0005 f5df 0020 - 0f8a 0b8a 0388 0b9a 0b9a 0a9a 0000 0000
-		int dx = space.read_word(cop_regs[0]+0x12);
-		int dy = space.read_word(cop_regs[0]+0x16);
-
-		if(!dy) {
-			cop_status |= 0x8000;
-			cop_angle = 0;
-		} else {
-			cop_angle = atan(double(dx)/double(dy)) * 128 / M_PI;
-			if(dy<0)
-				cop_angle += 0x80;
-		}
-
-		if(data & 0x0080) {
-			space.write_byte(cop_regs[0]+0x34, cop_angle);
-		}
-		break;
-	}
-
-	case 0x2a05: { // 2a05 0006 ebeb 0028 - 09af 0a82 0082 0a8f 018e 0000 0000 0000
-		int delta = space.read_word(cop_regs[1] + 0x1e + offset*4);
-		space.write_dword(cop_regs[0] + 4+2  + offset*4, space.read_word(cop_regs[0] + 4+2  + offset*4) + delta);
-		space.write_dword(cop_regs[0] + 0x1e + offset*4, space.read_word(cop_regs[0] + 0x1e + offset*4) + delta);
-		break;
-	}
-
-	case 0x39b0:
-	case 0x3b30:
-	case 0x3bb0: { // 3bb0 0004 007f 0038 - 0f9c 0b9c 0b9c 0b9c 0b9c 0b9c 0b9c 099c
-		/* TODO: these are actually internally loaded via 0x130e command */
-		int dx,dy;
-
-		dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
-		dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
-		
-		dx = dx >> 16;
-		dy = dy >> 16;
-		cop_dist = sqrt((double)(dx*dx+dy*dy));
-
-		if(data & 0x0080)
-			space.write_word(cop_regs[0]+(data & 0x200 ? 0x3a : 0x38), cop_dist);
-		break;
-	}
-
-	case 0x42c2: { // 42c2 0005 fcdd 0040 - 0f9a 0b9a 0b9c 0b9c 0b9c 029c 0000 0000
-		int div = space.read_word(cop_regs[0]+(0x36));
-		if(!div)
-			div = 1;
-
-		/* TODO: bits 5-6-15 */
-		cop_status = 7;
-
-		space.write_word(cop_regs[0]+(0x38), (cop_dist << (5 - cop_scale)) / div);
-		break;
-	}
-
-	case 0x4aa0: { // 4aa0 0005 fcdd 0048 - 0f9a 0b9a 0b9c 0b9c 0b9c 099b 0000 0000
-		int div = space.read_word(cop_regs[0]+(0x38));
-		if(!div)
-			div = 1;
-
-		/* TODO: bits 5-6-15 */
-		cop_status = 7;
-
-		space.write_word(cop_regs[0]+(0x36), (cop_dist << (5 - cop_scale)) / div);
-		break;
-	}
-
-	case 0x6200: {
-		UINT8 angle = space.read_byte(cop_regs[0]+0x34);
-		UINT16 flags = space.read_word(cop_regs[0]);
-		cop_angle_target &= 0xff;
-		cop_angle_step &= 0xff;
-		flags &= ~0x0004;
-		int delta = angle - cop_angle_target;
-		if(delta >= 128)
-			delta -= 256;
-		else if(delta < -128)
-			delta += 256;
-		if(delta < 0) {
-			if(delta >= -cop_angle_step) {
-				angle = cop_angle_target;
-				flags |= 0x0004;
-			} else
-				angle += cop_angle_step;
-		} else {
-			if(delta <= cop_angle_step) {
-				angle = cop_angle_target;
-				flags |= 0x0004;
-			} else
-				angle -= cop_angle_step;
-		}
-		space.write_word(cop_regs[0], flags);
-		space.write_byte(cop_regs[0]+0x34, angle);
-		break;
-	}
-
-	case 0x8100: { // 8100 0007 fdfb 0080 - 0b9a 0b88 0888 0000 0000 0000 0000 0000
-		int raw_angle = (space.read_word(cop_regs[0]+(0x34)) & 0xff);
-		double angle = raw_angle * M_PI / 128;
-		double amp = (65536 >> 5)*(space.read_word(cop_regs[0]+(0x36)) & 0xff);
-		int res;
-		/* TODO: up direction, why? (check machine/seicop.c) */
-		if(raw_angle == 0xc0)
-			amp*=2;
-		res = int(amp*sin(angle)) << cop_scale;
-		space.write_dword(cop_regs[0] + 16, res);
-		break;
-	}
-
-	case 0x8900: { // 8900 0007 fdfb 0088 - 0b9a 0b8a 088a 0000 0000 0000 0000 0000
-		int raw_angle = (space.read_word(cop_regs[0]+(0x34)) & 0xff);
-		double angle = raw_angle * M_PI / 128;
-		double amp = (65536 >> 5)*(space.read_word(cop_regs[0]+(0x36)) & 0xff);
-		int res;
-		/* TODO: left direction, why? (check machine/seicop.c) */
-		if(raw_angle == 0x80)
-			amp*=2;
-		res = int(amp*cos(angle)) << cop_scale;
-		space.write_dword(cop_regs[0] + 20, res);
-		break;
-	}
-
-	case 0x5205:   // 5205 0006 fff7 0050 - 0180 02e0 03a0 00a0 03a0 0000 0000 0000
-		//      fprintf(stderr, "sprcpt 5205 %04x %04x %04x %08x %08x\n", cop_regs[0], cop_regs[1], cop_regs[3], space.read_dword(cop_regs[0]), space.read_dword(cop_regs[3]));
-		space.write_dword(cop_regs[1], space.read_dword(cop_regs[0]));
-		break;
-
-	case 0x5a05:   // 5a05 0006 fff7 0058 - 0180 02e0 03a0 00a0 03a0 0000 0000 0000
-		//      fprintf(stderr, "sprcpt 5a05 %04x %04x %04x %08x %08x\n", cop_regs[0], cop_regs[1], cop_regs[3], space.read_dword(cop_regs[0]), space.read_dword(cop_regs[3]));
-		space.write_dword(cop_regs[1], space.read_dword(cop_regs[0]));
-		break;
-
-	case 0xf205:   // f205 0006 fff7 00f0 - 0182 02e0 03c0 00c0 03c0 0000 0000 0000
-		//      fprintf(stderr, "sprcpt f205 %04x %04x %04x %08x %08x\n", cop_regs[0]+4, cop_regs[1], cop_regs[3], space.read_dword(cop_regs[0]+4), space.read_dword(cop_regs[3]));
-		space.write_dword(cop_regs[2], space.read_dword(cop_regs[0]+4));
-		break;
-
-		// raidendx only
-	case 0x7e05:
-		space.write_byte(0x470, space.read_byte(cop_regs[4]));
-		break;
-
-	case 0xa100:
-	case 0xa180:
-		cop_collision_read_xy(space, 0, cop_regs[0]);
-		break;
-
-	case 0xa900:
-	case 0xa980:
-		cop_collision_read_xy(space, 1, cop_regs[1]);
-		break;
-
-	case 0xb100:
-		cop_collision_update_hitbox(space, 0, cop_regs[2]);
-		break;
-
-	case 0xb900:
-		cop_collision_update_hitbox(space, 1, cop_regs[3]);
-		break;
-
-	default:
-		logerror("pcall %04x (%04x:%04x) [%x %x %x %x]\n", data, rps(), rpc(), cop_regs[0], cop_regs[1], cop_regs[2], cop_regs[3]);
-	}
-}
 
 
 void raiden2_state::combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_mask)
@@ -992,7 +494,7 @@ TILE_GET_INFO_MEMBER(raiden2_state::get_text_tile_info)
 
 	tile &= 0xfff;
 
-	SET_TILE_INFO_MEMBER(0,tile,color,0);
+	SET_TILE_INFO_MEMBER(0,tile + tx_bank * 0x1000,color,0);
 }
 
 /* VIDEO START (move to video file) */
@@ -1082,6 +584,8 @@ UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_rgb32 
 	if (!(raiden2_tilemap_enable & 16))
 		blend_layer(bitmap, cliprect, sprite_buffer, cur_spri[4]);
 
+	if (machine().input().code_pressed_once(KEYCODE_Z))
+		if (m_raiden2cop) m_raiden2cop->dump_table();
 
 	return 0;
 }
@@ -1214,7 +718,7 @@ void raiden2_state::common_reset()
 	bg_bank=0;
 	fg_bank=6;
 	mid_bank=1;
-	cop_itoa_digit_count = 4; //TODO: Raiden 2 never inits the BCD register, value here is a guess (8 digits, as WR is 10.000.000 + a)
+	tx_bank = 0;
 }
 
 MACHINE_RESET_MEMBER(raiden2_state,raiden2)
@@ -1247,6 +751,7 @@ MACHINE_RESET_MEMBER(raiden2_state,zeroteam)
 	bg_bank = 0;
 	fg_bank = 2;
 	mid_bank = 1;
+	tx_bank = 0;
 	sprcpt_init();
 
 	membank("mainbank1")->set_entry(2);
@@ -1261,6 +766,7 @@ MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 	bg_bank = 0;
 	fg_bank = 2;
 	mid_bank = 1;
+	tx_bank = 0;
 	sprcpt_init();
 }
 
@@ -1285,10 +791,6 @@ WRITE16_MEMBER(raiden2_state::raiden2_bank_w)
 	}
 }
 
-READ16_MEMBER(raiden2_state::cop_collision_status_r)
-{
-	return cop_hit_status;
-}
 
 WRITE16_MEMBER(raiden2_state::sprite_prot_x_w)
 {
@@ -1374,141 +876,48 @@ WRITE16_MEMBER(raiden2_state::sprite_prot_off_w)
 	cop_spr_off = data;
 }
 
-READ16_MEMBER(raiden2_state::cop_collision_status_y_r)
-{
-	return cop_hit_val_y;
-}
-
-READ16_MEMBER(raiden2_state::cop_collision_status_x_r)
-{
-	return cop_hit_val_x;
-}
-
-READ16_MEMBER(raiden2_state::cop_collision_status_z_r)
-{
-	return cop_hit_val_z;
-}
-
-READ16_MEMBER(raiden2_state::cop_collision_status_unk_r)
-{
-	return cop_hit_val_unk;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_lookup_hi_w)
-{
-	cop_sort_lookup = (cop_sort_lookup&0x0000ffff)|(data<<16);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_lookup_lo_w)
-{
-	cop_sort_lookup = (cop_sort_lookup&0xffff0000)|(data&0xffff);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_ram_addr_hi_w)
-{
-	cop_sort_ram_addr = (cop_sort_ram_addr&0x0000ffff)|(data<<16);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_ram_addr_lo_w)
-{
-	cop_sort_ram_addr = (cop_sort_ram_addr&0xffff0000)|(data&0xffff);
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_param_w)
-{
-	cop_sort_param = data;
-}
-
-WRITE16_MEMBER(raiden2_state::cop_sort_dma_trig_w)
-{
-	UINT16 sort_size;
-
-	sort_size = data;
-
-	//printf("%04x %04x %04x %04x\n",cop_sort_ram_addr,cop_sort_lookup,cop_sort_param,data);
-
-	{
-		int i,j;
-		UINT8 xchg_flag;
-		UINT32 addri,addrj;
-		UINT16 vali,valj;
-
-		/* TODO: use a better algorithm than bubble sort! */
-		for(i=2;i<sort_size;i+=2)
-		{
-			for(j=i-2;j<sort_size;j+=2)
-			{
-				addri = cop_sort_ram_addr+space.read_word(cop_sort_lookup+i);
-				addrj = cop_sort_ram_addr+space.read_word(cop_sort_lookup+j);
-
-				vali = space.read_word(addri);
-				valj = space.read_word(addrj);
-
-				//printf("%08x %08x %04x %04x\n",addri,addrj,vali,valj);
-
-				switch(cop_sort_param)
-				{
-					case 2: xchg_flag = (vali > valj); break;
-					case 1: xchg_flag = (vali < valj); break;
-					default: xchg_flag = 0; /* printf("Warning: sort-DMA used with param %02x\n",cop_sort_param); */ break;
-				}
-
-				if(xchg_flag)
-				{
-					UINT16 xch_val;
-
-					xch_val = space.read_word(cop_sort_lookup+i);
-					space.write_word(cop_sort_lookup+i,space.read_word(cop_sort_lookup+j));
-					space.write_word(cop_sort_lookup+j,xch_val);
-				}
-			}
-		}
-	}
-}
-
 /* MEMORY MAPS */
 static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
-	AM_RANGE(0x0041c, 0x0041d) AM_WRITE(cop_angle_target_w) // angle target (for 0x6200 COP macro)
-	AM_RANGE(0x0041e, 0x0041f) AM_WRITE(cop_angle_step_w)   // angle step   (for 0x6200 COP macro)
-	AM_RANGE(0x00420, 0x00421) AM_WRITE(cop_itoa_low_w)
-	AM_RANGE(0x00422, 0x00423) AM_WRITE(cop_itoa_high_w)
-	AM_RANGE(0x00424, 0x00425) AM_WRITE(cop_itoa_digit_count_w)
+	AM_RANGE(0x0041c, 0x0041d) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_angle_target_w) // angle target (for 0x6200 COP macro)
+	AM_RANGE(0x0041e, 0x0041f) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_angle_step_w)   // angle step   (for 0x6200 COP macro)
+	AM_RANGE(0x00420, 0x00421) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_itoa_low_w)
+	AM_RANGE(0x00422, 0x00423) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_itoa_high_w)
+	AM_RANGE(0x00424, 0x00425) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_itoa_digit_count_w)
 	AM_RANGE(0x00428, 0x00429) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_dma_v1_w)
 	AM_RANGE(0x0042a, 0x0042b) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_dma_v2_w)
-	AM_RANGE(0x00432, 0x00433) AM_WRITE(cop_pgm_data_w)
-	AM_RANGE(0x00434, 0x00435) AM_WRITE(cop_pgm_addr_w)
-	AM_RANGE(0x00436, 0x00437) AM_WRITE(cop_hitbox_baseadr_w)
-	AM_RANGE(0x00438, 0x00439) AM_WRITE(cop_pgm_value_w)
-	AM_RANGE(0x0043a, 0x0043b) AM_WRITE(cop_pgm_mask_w)
-	AM_RANGE(0x0043c, 0x0043d) AM_WRITE(cop_pgm_trigger_w)
-	AM_RANGE(0x00444, 0x00445) AM_WRITE(cop_scale_w)
-	AM_RANGE(0x00450, 0x00451) AM_WRITE(cop_sort_ram_addr_hi_w)
-	AM_RANGE(0x00452, 0x00453) AM_WRITE(cop_sort_ram_addr_lo_w)
-	AM_RANGE(0x00454, 0x00455) AM_WRITE(cop_sort_lookup_hi_w)
-	AM_RANGE(0x00456, 0x00457) AM_WRITE(cop_sort_lookup_lo_w)
-	AM_RANGE(0x00458, 0x00459) AM_WRITE(cop_sort_param_w)
+	AM_RANGE(0x00432, 0x00433) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pgm_data_w)
+	AM_RANGE(0x00434, 0x00435) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pgm_addr_w)
+	AM_RANGE(0x00436, 0x00437) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_hitbox_baseadr_w)
+	AM_RANGE(0x00438, 0x00439) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pgm_value_w)
+	AM_RANGE(0x0043a, 0x0043b) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pgm_mask_w)
+	AM_RANGE(0x0043c, 0x0043d) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pgm_trigger_w)
+	AM_RANGE(0x00444, 0x00445) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_scale_w)
+	AM_RANGE(0x00450, 0x00451) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_ram_addr_hi_w)
+	AM_RANGE(0x00452, 0x00453) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_ram_addr_lo_w)
+	AM_RANGE(0x00454, 0x00455) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_lookup_hi_w)
+	AM_RANGE(0x00456, 0x00457) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_lookup_lo_w)
+	AM_RANGE(0x00458, 0x00459) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_param_w)
 	AM_RANGE(0x0045a, 0x0045b) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pal_brightness_val_w) //palette DMA brightness val, used by X Se Dae / Zero Team
 	AM_RANGE(0x0045c, 0x0045d) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_pal_brightness_mode_w)  //palette DMA brightness mode, used by X Se Dae / Zero Team (sets to 5)
-	AM_RANGE(0x00470, 0x00471) AM_READWRITE(cop_tile_bank_2_r,cop_tile_bank_2_w)
+	AM_RANGE(0x00470, 0x00471) AM_READWRITE(cop_tile_bank_2_r,cop_tile_bank_2_w) // implementaton of this varies between games, external hookup?
 
 	AM_RANGE(0x00476, 0x00477) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_dma_adr_rel_w)
 	AM_RANGE(0x00478, 0x00479) AM_DEVWRITE("raiden2cop", raiden2cop_device,cop_dma_src_w)
 	AM_RANGE(0x0047a, 0x0047b) AM_DEVWRITE("raiden2cop", raiden2cop_device,cop_dma_size_w)
 	AM_RANGE(0x0047c, 0x0047d) AM_DEVWRITE("raiden2cop", raiden2cop_device,cop_dma_dst_w)
 	AM_RANGE(0x0047e, 0x0047f) AM_DEVREADWRITE("raiden2cop", raiden2cop_device, cop_dma_mode_r, cop_dma_mode_w)
-	AM_RANGE(0x004a0, 0x004a9) AM_READWRITE(cop_reg_high_r, cop_reg_high_w)
-	AM_RANGE(0x004c0, 0x004c9) AM_READWRITE(cop_reg_low_r, cop_reg_low_w)
-	AM_RANGE(0x00500, 0x00505) AM_WRITE(cop_cmd_w)
-	AM_RANGE(0x00580, 0x00581) AM_READ(cop_collision_status_r)
-	AM_RANGE(0x00582, 0x00583) AM_READ(cop_collision_status_y_r)
-	AM_RANGE(0x00584, 0x00585) AM_READ(cop_collision_status_x_r)
-	AM_RANGE(0x00586, 0x00587) AM_READ(cop_collision_status_z_r)
-	AM_RANGE(0x00588, 0x00589) AM_READ(cop_collision_status_unk_r)
-	AM_RANGE(0x00590, 0x00599) AM_READ(cop_itoa_digits_r)
-	AM_RANGE(0x005b0, 0x005b1) AM_READ(cop_status_r)
-	AM_RANGE(0x005b2, 0x005b3) AM_READ(cop_dist_r)
-	AM_RANGE(0x005b4, 0x005b5) AM_READ(cop_angle_r)
+	AM_RANGE(0x004a0, 0x004ad) AM_DEVREADWRITE("raiden2cop", raiden2cop_device, cop_reg_high_r, cop_reg_high_w)
+	AM_RANGE(0x004c0, 0x004cd) AM_DEVREADWRITE("raiden2cop", raiden2cop_device, cop_reg_low_r, cop_reg_low_w)
+	AM_RANGE(0x00500, 0x00505) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_cmd_w)
+	AM_RANGE(0x00580, 0x00581) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_collision_status_r)
+	AM_RANGE(0x00582, 0x00587) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_collision_status_val_r)
+	AM_RANGE(0x00588, 0x00589) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_collision_status_stat_r)
+	AM_RANGE(0x00590, 0x00599) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_itoa_digits_r)
+	AM_RANGE(0x005b0, 0x005b1) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_status_r)
+	AM_RANGE(0x005b2, 0x005b3) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_dist_r)
+	AM_RANGE(0x005b4, 0x005b5) AM_DEVREAD("raiden2cop", raiden2cop_device, cop_angle_r)
 
+	/* I think all this block is part of the video chip */
 	AM_RANGE(0x00600, 0x0064f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read, write)
 //  AM_RANGE(0x0061c, 0x0061d) AM_WRITE(tilemap_enable_w)
 //  AM_RANGE(0x00620, 0x0062b) AM_WRITE(tile_scroll_w)
@@ -1530,8 +939,10 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x006da, 0x006db) AM_WRITE(sprite_prot_y_w)
 	AM_RANGE(0x006dc, 0x006dd) AM_READWRITE(sprite_prot_maxx_r, sprite_prot_maxx_w)
 	AM_RANGE(0x006de, 0x006df) AM_WRITE(sprite_prot_src_w)
+	/* end video block */
+
 	AM_RANGE(0x006fc, 0x006fd) AM_DEVWRITE("raiden2cop", raiden2cop_device,cop_dma_trigger_w)
-	AM_RANGE(0x006fe, 0x006ff) AM_WRITE(cop_sort_dma_trig_w) // sort-DMA trigger
+	AM_RANGE(0x006fe, 0x006ff) AM_DEVWRITE("raiden2cop", raiden2cop_device, cop_sort_dma_trig_w) // sort-DMA trigger
 
 	AM_RANGE(0x00762, 0x00763) AM_READ(sprite_prot_dst1_r)
 ADDRESS_MAP_END
@@ -1973,6 +1384,7 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 
 	MCFG_RAIDEN2COP_ADD("raiden2cop")
 	MCFG_RAIDEN2COP_VIDEORAM_OUT_CB(WRITE16(raiden2_state, m_videoram_private_w))
+	MCFG_ITOA_UNUSED_DIGIT_VALUE(0x20)
 
 	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 
@@ -2033,6 +1445,7 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 
 	MCFG_RAIDEN2COP_ADD("raiden2cop")
 	MCFG_RAIDEN2COP_VIDEORAM_OUT_CB(WRITE16(raiden2_state, m_videoram_private_w))
+	MCFG_ITOA_UNUSED_DIGIT_VALUE(0x20)
 
 	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 
@@ -2547,6 +1960,49 @@ ROM_START( raiden2eua ) // sort of a mixture of raiden2e easy set with voice rom
 ROM_END
 
 
+ROM_START( raiden2g ) // this is the same code revision as raiden2eua but a german region
+	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
+	ROM_LOAD32_BYTE("raiden_2_1.bin",   0x000000, 0x40000, CRC(ed1514e3) SHA1(296125bfe3c4f3033f7aa319dd8554bc978c4a00) )
+	ROM_RELOAD(0x100000, 0x40000)
+	ROM_LOAD32_BYTE("raiden_2_2.bin",   0x000001, 0x40000, CRC(bb6ecf2a) SHA1(d4f628e9d0ed2897654f05a8a2541e1ed3faf8dd) )
+	ROM_RELOAD(0x100001, 0x40000)
+	ROM_LOAD32_BYTE("raiden_2_3.bin",   0x000002, 0x40000, CRC(6a01d52c) SHA1(983b914592ab9d9c058bebb5bccf5c882e2b82de) )
+	ROM_RELOAD(0x100002, 0x40000)
+	ROM_LOAD32_BYTE("raiden_2_4.bin",   0x000003, 0x40000, CRC(81273f33) SHA1(074cedf44cc5286649cc101bce0b48d40234e472) )
+	ROM_RELOAD(0x100003, 0x40000)
+
+	ROM_REGION( 0x40000, "user2", 0 )   /* COPX */
+	ROM_LOAD( "copx-d2.u0313", 0x00000, 0x40000, CRC(a6732ff9) SHA1(c4856ec77869d9098da24b1bb3d7d58bb74b4cda) ) /* Soldered MASK ROM */
+
+	ROM_REGION( 0x20000, "audiocpu", 0 ) /* 64k code for sound Z80 */
+	ROM_LOAD( "raiden_2_5.bin", 0x000000, 0x08000, CRC(6d362472) SHA1(a362e500bb9492affde1f7a4da7e08dd16e755df) )
+	ROM_CONTINUE(0x10000,0x8000)
+	ROM_COPY( "audiocpu", 0, 0x018000, 0x08000 )
+
+	ROM_REGION( 0x020000, "gfx1", 0 ) /* chars */
+	ROM_LOAD( "raiden_2_7.bin", 0x000000, 0x020000, CRC(c7aa4d00) SHA1(9ad99d3891598c1ea3f12318400ee67666da56dd) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* background gfx */
+	ROM_LOAD( "raiden_2_seibu_bg-1.u0714", 0x000000, 0x200000, CRC(e61ad38e) SHA1(63b06cd38db946ad3fc5c1482dc863ef80b58fec) ) /* Soldered MASK ROM */
+	ROM_LOAD( "raiden_2_seibu_bg-2.u075",  0x200000, 0x200000, CRC(a694a4bb) SHA1(39c2614d0effc899fe58f735604283097769df77) ) /* Soldered MASK ROM */
+
+	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-1.u0811", 0x000000, 0x200000, CRC(ff08ef0b) SHA1(a1858430e8171ca8bab785457ef60e151b5e5cf1) ) /* Soldered MASK ROM */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-2.u082",  0x000002, 0x200000, CRC(638eb771) SHA1(9774cc070e71668d7d1d20795502dccd21ca557b) ) /* Soldered MASK ROM */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-3.u0837", 0x400000, 0x200000, CRC(897a0322) SHA1(abb2737a2446da5b364fc2d96524b43d808f4126) ) /* Soldered MASK ROM */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-4.u0836", 0x400002, 0x200000, CRC(b676e188) SHA1(19cc838f1ccf9c4203cd0e5365e5d99ff3a4ff0f) ) /* Soldered MASK ROM */
+
+	ROM_REGION( 0x100000, "oki1", 0 )   /* ADPCM samples */
+	ROM_LOAD( "raiden_2_6.bin", 0x00000, 0x40000, CRC(fab9f8e4) SHA1(b1eff154c4f766b2d272ac6a57f8d54c9e39e3bb) )
+
+	ROM_REGION( 0x100000, "oki2", 0 )   /* ADPCM samples */
+	ROM_LOAD( "raiden_2_pcm.u1018", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Soldered MASK ROM */
+
+	ROM_REGION( 0x10000, "pals", 0 )    /* PALS */
+	ROM_LOAD( "jj4b02__ami18cv8-15.u0342.jed", 0x0000, 0x288, NO_DUMP)
+	ROM_LOAD( "jj4b01__mmipal16l8bcn.u0341.jed", 0x0000, 0x288, NO_DUMP)
+ROM_END
+
 ROM_START( raiden2nl )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD16_BYTE("1_u0211.bin",   0x000000, 0x80000, CRC(53be3dd0) SHA1(304d118423e4085eea3b883bd625d90d21bb2054) )
@@ -2626,6 +2082,42 @@ ROM_START( raiden2u )
 	ROM_LOAD( "jj4b01__mmipal16l8bcn.u0341.jed", 0x0000, 0x288, NO_DUMP)
 ROM_END
 
+
+ROM_START( raiden2dx ) // this set is very weird, it's Raiden II on a Raiden DX board, I'm assuming for now that it uses Raiden DX graphics, but could be wrong.
+	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
+	ROM_LOAD32_BYTE("u1210.bin", 0x000000, 0x80000, CRC(413241e0) SHA1(50fa501db91412baea474a8faf8ad483f3a119c7) )
+	ROM_LOAD32_BYTE("prg1_u1211.bin", 0x000001, 0x80000, CRC(93491f56) SHA1(2239980fb7267906e4c3985703c2dc2932b23705) )
+	ROM_LOAD32_BYTE("u129.bin",  0x000002, 0x80000, CRC(e0932b6c) SHA1(04f1ca885d220e802023042438f63e40e4106696) )
+	ROM_LOAD32_BYTE("u1212.bin", 0x000003, 0x80000, CRC(505423f4) SHA1(d8e65580deec05dd84c4cf3074cb690e3764c625) )
+
+	ROM_REGION( 0x40000, "user2", 0 )   /* COPX */
+	ROM_LOAD( "copx-d2.6s",   0x00000, 0x40000, CRC(a6732ff9) SHA1(c4856ec77869d9098da24b1bb3d7d58bb74b4cda) ) /* Shared with original Raiden 2 */
+
+	ROM_REGION( 0x20000, "audiocpu", ROMREGION_ERASEFF ) /* 64k code for sound Z80 */
+	ROM_LOAD( "u1110.bin",  0x000000, 0x08000,  CRC(b8ad8fe7) SHA1(290896f811f717ef6e3ec2152d4db98a9fe9b310) )
+	ROM_CONTINUE(0x10000,0x8000)
+	ROM_COPY( "audiocpu", 0, 0x018000, 0x08000 )
+
+	ROM_REGION( 0x020000, "gfx1", 0 ) /* chars */
+	//ROM_LOAD( "fx0_u0724.bin",    0x000000,   0x020000,   CRC(ded3c718) SHA1(c722ec45cd1b2dab23aac14e9113e0e9697830d3) ) // bad dump
+	ROM_LOAD( "7_u0724.bin", 0x000000, 0x020000, CRC(c9ec9469) SHA1(a29f480a1bee073be7a177096ef58e1887a5af24) ) /* PCB silkscreened FX0 */
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* background gfx */
+	ROM_LOAD( "dx_back1.1s",   0x000000, 0x200000, CRC(90970355) SHA1(d71d57cd550a800f583550365102adb7b1b779fc) )
+	ROM_LOAD( "dx_back2.2s",   0x200000, 0x200000, CRC(5799af3e) SHA1(85d6532abd769da77bcba70bd2e77915af40f987) )
+
+	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) */
+	ROM_LOAD32_WORD( "obj1",        0x000000, 0x200000, CRC(ff08ef0b) SHA1(a1858430e8171ca8bab785457ef60e151b5e5cf1) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "obj2",        0x000002, 0x200000, CRC(638eb771) SHA1(9774cc070e71668d7d1d20795502dccd21ca557b) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "dx_obj3.4k",  0x400000, 0x200000, CRC(ba381227) SHA1(dfc4d659aca1722a981fa56a31afabe66f444d5d) )
+	ROM_LOAD32_WORD( "dx_obj4.6k",  0x400002, 0x200000, CRC(65e50d19) SHA1(c46147b4132abce7314b46bf419ce4773e024b05) )
+
+	ROM_REGION( 0x100000, "oki1", 0 )   /* ADPCM samples */
+	ROM_LOAD( "dx_6.3b",   0x00000, 0x40000, CRC(9a9196da) SHA1(3d1ee67fb0d40a231ce04d10718f07ffb76db455) )
+
+	ROM_REGION( 0x100000, "oki2", 0 )   /* ADPCM samples */
+	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
+ROM_END
 
 /* Raiden DX sets */
 
@@ -2875,6 +2367,82 @@ ROM_START( raidendxnl )
 	ROM_LOAD( "pcm.u1018", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
 ROM_END
 
+
+ROM_START( raidendxj )
+	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
+	ROM_LOAD32_BYTE("rdxj_1.u1211", 0x000000, 0x80000, CRC(5af382e1) SHA1(a11fc181da322f484815f55a510ce7e6c7df2d60) )
+	ROM_LOAD32_BYTE("rdxj_2.u0212", 0x000001, 0x80000, CRC(899966fc) SHA1(0f91c2b05a44afb4c4b74e115a8fa530fb6d6414) )
+	ROM_LOAD32_BYTE("rdxj_3.u129",  0x000002, 0x80000, CRC(e7f08013) SHA1(1f99672d8fdbda847c6552da210c417b21ca78ac) )
+	ROM_LOAD32_BYTE("rdxj_4.u1212", 0x000003, 0x80000, CRC(78037e1f) SHA1(8d9c4188ca808e670e330e70e906bb1d27e36492) )
+
+	ROM_REGION( 0x40000, "user2", 0 )   /* COPX */
+	ROM_LOAD( "copx-d2.u0313", 0x00000, 0x40000, CRC(a6732ff9) SHA1(c4856ec77869d9098da24b1bb3d7d58bb74b4cda) ) /* Shared with original Raiden 2 */
+
+	ROM_REGION( 0x20000, "audiocpu", ROMREGION_ERASEFF ) /* 64k code for sound Z80 */
+	ROM_LOAD( "rdxj_5.u1110", 0x000000, 0x08000, CRC(8c46857a) SHA1(8b269cb20adf960ba4eb594d8add7739dbc9a837) )
+	ROM_CONTINUE(0x10000,0x8000)
+	ROM_COPY( "audiocpu", 0, 0x018000, 0x08000 )
+
+	ROM_REGION( 0x020000, "gfx1", 0 ) /* chars */
+	ROM_LOAD( "rdxj_7.u0724", 0x000000, 0x020000, CRC(ec31fa10) SHA1(e39c9d95699dbeb21e3661d863eee503c9011bbc) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* background gfx */
+	ROM_LOAD( "dx_back-1.u075",  0x000000, 0x200000, CRC(90970355) SHA1(d71d57cd550a800f583550365102adb7b1b779fc) )
+	ROM_LOAD( "dx_back-2.u0714", 0x200000, 0x200000, CRC(5799af3e) SHA1(85d6532abd769da77bcba70bd2e77915af40f987) )
+
+	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-1.u0811", 0x000000, 0x200000, CRC(ff08ef0b) SHA1(a1858430e8171ca8bab785457ef60e151b5e5cf1) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "raiden_2_seibu_obj-2.u082",  0x000002, 0x200000, CRC(638eb771) SHA1(9774cc070e71668d7d1d20795502dccd21ca557b) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "dx_obj-3.u0837", 0x400000, 0x200000, CRC(ba381227) SHA1(dfc4d659aca1722a981fa56a31afabe66f444d5d) )
+	ROM_LOAD32_WORD( "dx_obj-4.u0836", 0x400002, 0x200000, CRC(65e50d19) SHA1(c46147b4132abce7314b46bf419ce4773e024b05) )
+
+	ROM_REGION( 0x100000, "oki1", 0 )   /* ADPCM samples */
+	ROM_LOAD( "rdxj_6.u1017", 0x00000, 0x40000, CRC(9a9196da) SHA1(3d1ee67fb0d40a231ce04d10718f07ffb76db455) )
+
+	ROM_REGION( 0x100000, "oki2", 0 )   /* ADPCM samples */
+	ROM_LOAD( "pcm.u1018", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
+ROM_END
+
+
+
+ROM_START( raidendxch )
+	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
+	ROM_LOAD32_BYTE("rdxc_1.u1210", 0x000000, 0x80000, CRC(2154c6ae) SHA1(dc794f8ddbd8a6267db37fe4e3ed44e06e9b84b7) )
+	ROM_LOAD32_BYTE("rdxc_2.u1211", 0x000001, 0x80000, CRC(73bb74b7) SHA1(2f197adbe89d96c9e75054c568c380fdd2e80162))
+	ROM_LOAD32_BYTE("rdxc_3.u129",  0x000002, 0x80000, CRC(50f0a6aa) SHA1(68579f8e73fe06b458368ac9cac0b33370cf3b4e))
+	ROM_LOAD32_BYTE("rdxc_4.u1212", 0x000003, 0x80000, CRC(00071e70) SHA1(8a03ea0e650936e48cdd21ff84132742649920fe) )
+
+	// no other roms present with this set, so the ones below could be wrong
+	ROM_REGION( 0x40000, "user2", 0 )   /* COPX */
+	ROM_LOAD( "copx-d2.6s",   0x00000, 0x40000, CRC(a6732ff9) SHA1(c4856ec77869d9098da24b1bb3d7d58bb74b4cda) ) /* Shared with original Raiden 2 */
+
+	ROM_REGION( 0x20000, "audiocpu", ROMREGION_ERASEFF ) /* 64k code for sound Z80 */
+	ROM_LOAD( "dx_5.5b",  0x000000, 0x08000,  CRC(8c46857a) SHA1(8b269cb20adf960ba4eb594d8add7739dbc9a837) )
+	ROM_CONTINUE(0x10000,0x8000)
+	ROM_COPY( "audiocpu", 0, 0x018000, 0x08000 )
+
+	ROM_REGION( 0x020000, "gfx1", 0 ) /* chars */
+	ROM_LOAD( "dx_7.4s",    0x000000,   0x020000,   CRC(c73986d4) SHA1(d29345077753bda53560dedc95dd23f329e521d9) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* background gfx */
+	ROM_LOAD( "dx_back1.1s",   0x000000, 0x200000, CRC(90970355) SHA1(d71d57cd550a800f583550365102adb7b1b779fc) )
+	ROM_LOAD( "dx_back2.2s",   0x200000, 0x200000, CRC(5799af3e) SHA1(85d6532abd769da77bcba70bd2e77915af40f987) )
+
+	ROM_REGION( 0x800000, "gfx3", 0 ) /* sprite gfx (encrypted) */
+	ROM_LOAD32_WORD( "obj1",        0x000000, 0x200000, CRC(ff08ef0b) SHA1(a1858430e8171ca8bab785457ef60e151b5e5cf1) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "obj2",        0x000002, 0x200000, CRC(638eb771) SHA1(9774cc070e71668d7d1d20795502dccd21ca557b) ) /* Shared with original Raiden 2 */
+	ROM_LOAD32_WORD( "dx_obj3.4k",  0x400000, 0x200000, CRC(ba381227) SHA1(dfc4d659aca1722a981fa56a31afabe66f444d5d) )
+	ROM_LOAD32_WORD( "dx_obj4.6k",  0x400002, 0x200000, CRC(65e50d19) SHA1(c46147b4132abce7314b46bf419ce4773e024b05) )
+
+	ROM_REGION( 0x100000, "oki1", 0 )   /* ADPCM samples */
+	ROM_LOAD( "dx_6.3b",   0x00000, 0x40000, CRC(9a9196da) SHA1(3d1ee67fb0d40a231ce04d10718f07ffb76db455) )
+
+	ROM_REGION( 0x100000, "oki2", 0 )   /* ADPCM samples */
+	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
+ROM_END
+
+
+
 /* Zero Team sets */
 /* Zero team is slightly older hardware (early 93 instead of late 93) but
 almost identical to raiden 2 with a few key differences:
@@ -2964,6 +2532,7 @@ Notes:
                         SEI1000 SB01-001 (QFP184) - main protection
 
 */
+
 
 ROM_START( zeroteam ) // Fabtek, US licensee, displays 'USA' under zero team logo, board had serial 'Seibu Kaihatsu No. 0001468' on it, as well as AAMA 0458657
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
@@ -3405,9 +2974,23 @@ DRIVER_INIT_MEMBER(raiden2_state,xsedae)
 	/* doesn't have banking */
 }
 
+const UINT16 raiden2_state::zeroteam_blended_colors[] = {
+	// Player selection
+	0x37e,
+	// Boss spear shadow
+	0x38e,
+	// Scaffolding shadow
+	0x52e,
+	// Road brightening
+	0x5de,
+
+	0xffff
+};
+
+
 DRIVER_INIT_MEMBER(raiden2_state,zeroteam)
 {
-	init_blending(xsedae_blended_colors);
+	init_blending(zeroteam_blended_colors);
 	static const int spri[5] = { -1, 0, 1, 2, 3 };
 	cur_spri = spri;
 	membank("mainbank1")->configure_entries(0, 4, memregion("mainprg")->base(), 0x10000);
@@ -3428,6 +3011,8 @@ GAME( 1993, raiden2e,   raiden2,  raiden2,  raiden2,  raiden2_state, raiden2,  R
 GAME( 1993, raiden2ea,  raiden2,  raiden2,  raiden2,  raiden2_state, raiden2,  ROT270, "Seibu Kaihatsu", "Raiden II (easy version, Japan?)", GAME_SUPPORTS_SAVE ) // rev 4 (Region 0x00) - Should be Japan, but the easy sets have no 'FOR USE IN JAPAN ONLY' display even when region is 00
 GAME( 1993, raiden2eu,  raiden2,  raiden2,  raiden2,  raiden2_state, raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)", "Raiden II (easy version, US set 2)", GAME_SUPPORTS_SAVE ) //  ^
 GAME( 1993, raiden2eua, raiden2,  raiden2,  raiden2,  raiden2_state, raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)", "Raiden II (easy version, US set 1)", GAME_SUPPORTS_SAVE ) // rev 3 and 4 mix?
+GAME( 1993, raiden2g,   raiden2,  raiden2,  raiden2,  raiden2_state, raiden2,  ROT270, "Seibu Kaihatsu (Tuning license)", "Raiden II (easy version, Germany)", GAME_SUPPORTS_SAVE )
+GAME( 1993, raiden2dx,  raiden2,  raidendx, raiden2,  raiden2_state, raidendx, ROT270, "Seibu Kaihatsu", "Raiden II (harder, Raiden DX hardware)", GAME_SUPPORTS_SAVE )
 
 GAME( 1994, raidendx,   0,        raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu", "Raiden DX (UK)", GAME_SUPPORTS_SAVE )
 GAME( 1994, raidendxa1, raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Hong Kong, set 1)", GAME_SUPPORTS_SAVE )
@@ -3436,6 +3021,8 @@ GAME( 1994, raidendxk,  raidendx, raidendx, raidendx, raiden2_state, raidendx, R
 GAME( 1994, raidendxu,  raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu (Fabtek license)", "Raiden DX (US)", GAME_SUPPORTS_SAVE )
 GAME( 1994, raidendxg,  raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu (Tuning license)", "Raiden DX (Germany)", GAME_SUPPORTS_SAVE )
 GAME( 1994, raidendxnl, raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu", "Raiden DX (Holland)", GAME_SUPPORTS_SAVE )
+GAME( 1994, raidendxj,  raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu", "Raiden DX (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1994, raidendxch, raidendx, raidendx, raidendx, raiden2_state, raidendx, ROT270, "Seibu Kaihatsu (Ideal International Development Corp license) ", "Raiden DX (China)", GAME_SUPPORTS_SAVE )
 
 GAME( 1993, zeroteam,   0,        zeroteam, zeroteam, raiden2_state, zeroteam, ROT0,   "Seibu Kaihatsu (Fabtek license)", "Zero Team USA (US)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
 GAME( 1993, zeroteama,  zeroteam, zeroteam, zeroteam, raiden2_state, zeroteam, ROT0,   "Seibu Kaihatsu", "Zero Team (Japan?, earlier?)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )

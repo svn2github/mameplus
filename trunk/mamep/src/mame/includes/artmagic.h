@@ -32,6 +32,8 @@ public:
 	required_device<tlc34076_device> m_tlc34076;
 	
 	required_shared_ptr<UINT16> m_control;
+	required_shared_ptr<UINT16> m_vram0;
+	required_shared_ptr<UINT16> m_vram1;
 	
 	UINT8 m_tms_irq;
 	UINT8 m_hack_irq;
@@ -42,9 +44,12 @@ public:
 	UINT8 m_prot_output_bit;
 	UINT8 m_prot_bit_index;
 	UINT16 m_prot_save;
-	void (*m_protection_handler)(running_machine &);
-	required_shared_ptr<UINT16> m_vram0;
-	required_shared_ptr<UINT16> m_vram1;
+	typedef void (artmagic_state::*prot_func)();
+	prot_func m_protection_handler;
+	void ultennis_protection();
+	void cheesech_protection();
+	void stonebal_protection();
+	
 	int m_xor[16];
 	int m_is_stoneball;
 	UINT16 *m_blitter_base;
@@ -58,6 +63,10 @@ public:
 	DECLARE_READ16_MEMBER(unk_r);
 	DECLARE_READ16_MEMBER(artmagic_blitter_r);
 	DECLARE_WRITE16_MEMBER(artmagic_blitter_w);
+	DECLARE_WRITE_LINE_MEMBER(m68k_gen_int);
+	TMS340X0_TO_SHIFTREG_CB_MEMBER(to_shiftreg);
+	TMS340X0_FROM_SHIFTREG_CB_MEMBER(from_shiftreg);
+	TMS340X0_SCANLINE_RGB32_CB_MEMBER(scanline);
 	DECLARE_CUSTOM_INPUT_MEMBER(prot_r);
 	DECLARE_DRIVER_INIT(shtstar);
 	DECLARE_DRIVER_INIT(cheesech);
@@ -69,14 +78,9 @@ public:
 	void decrypt_cheesech();
 	void decrypt_ultennis();
 	void execute_blit();
+	void update_irq_state();
 	inline UINT16 *address_to_vram(offs_t *address);
 	
 protected:
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
-
-
-/*----------- defined in video/artmagic.c -----------*/
-void artmagic_to_shiftreg(address_space &space, offs_t address, UINT16 *data);
-void artmagic_from_shiftreg(address_space &space, offs_t address, UINT16 *data);
-void artmagic_scanline(screen_device &screen, bitmap_rgb32 &bitmap, int scanline, const tms34010_display_params *params);

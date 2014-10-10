@@ -4070,6 +4070,25 @@ ROM_START( mtkob2 )
 	ROM_LOAD( "mtkob2-key.bin", 0x000000, 0x000004, CRC(db088208) SHA1(14d65ad2555183a445abcd93907c85df4032b41d) )
 ROM_END
 
+ROM_START( mushi2k5 )
+	NAOMI_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	ROM_REGION( 0x7800000, "rom_board", ROMREGION_ERASEFF)
+	ROM_LOAD( "epr-24286.ic22", 0x0000000, 0x0400000, CRC(9d26e2fc) SHA1(74bcd7daf994a5c97c836b6f060c73d31a9c06d8) ) 
+	ROM_LOAD( "mpr-24276.ic1",  0x0800000, 0x1000000, CRC(35ac9283) SHA1(74af0e3f294fc76d44c8c6b54042186dec8b9f8a) ) 
+	ROM_LOAD( "mpr-24277.ic2",  0x1800000, 0x1000000, CRC(16111394) SHA1(7ca20de07cfa3fa248b472819bc893f00689e3a1) ) 
+	ROM_LOAD( "mpr-24278.ic3",  0x2800000, 0x1000000, CRC(bf0ec0bc) SHA1(7de72decf97999e74b510e9655a57ad6d1def1c8) ) 
+	ROM_LOAD( "mpr-24279.ic4",  0x3800000, 0x1000000, CRC(f7d0ab5b) SHA1(10188a22a1918b18008973135ef2e00dd26dd6cb) ) 
+	ROM_LOAD( "mpr-24280.ic5",  0x4800000, 0x1000000, CRC(61d5c470) SHA1(c2b3dc71706a5c8a237efc2fe5c35061abb99173) ) 
+	ROM_LOAD( "mpr-24281.ic6",  0x5800000, 0x1000000, CRC(39133c32) SHA1(09ea8c1a98ba0fac36e18ae14ed5302feaeb89ca) ) 
+	ROM_LOAD( "mpr-24282.ic7",  0x6800000, 0x1000000, CRC(9aa4ad5a) SHA1(2d81f99a579477c5db725f71c51f18afc15abce7) ) 
+
+	ROM_REGION( 4, "rom_key", ROMREGION_ERASE00 )
+
+	ROM_REGION( 4, "boardid", ROMREGION_ERASEVAL(0x02) )
+ROM_END
+
 ROM_START( crackndj )
 	NAOMI_BIOS
 	NAOMI_DEFAULT_EEPROM
@@ -8111,6 +8130,19 @@ ROM_START( initd )
 	ROM_LOAD("317-0331-jpn.pic", 0x00, 0x4000, CRC(0a3bf606) SHA1(7c0e22df4a43a440571ac55fd0a6575931e8f959) )
 ROM_END
 
+ROM_START( initdo )
+	NAOMI2_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	DISK_REGION( "gdrom" )
+	DISK_IMAGE_READONLY( "gds-0020", 0, SHA1(e1766340da8191ab51a67477876d1806f2153a7e) )
+
+	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
+	//PIC16C622A (317-0331-JPN)
+	//(sticker 253-5508-0331J)
+	ROM_LOAD("317-0331-jpn.pic", 0x00, 0x4000, CRC(0a3bf606) SHA1(7c0e22df4a43a440571ac55fd0a6575931e8f959) )
+ROM_END
+
 ROM_START( vf4evo )
 	NAOMI2_BIOS
 	NAOMI_DEFAULT_EEPROM
@@ -8165,7 +8197,8 @@ ROM_START( initdv2j )
 	NAOMI_DEFAULT_EEPROM
 
 	DISK_REGION( "gdrom" )
-	DISK_IMAGE_READONLY( "gds-0026b", 0, BAD_DUMP  SHA1(8ddc3ccd32ab3416fbe2921f6d6617d6c9f23203) )
+	// disc is labeled "gds-0026a" but ring code and product number are gds-0026b.
+	DISK_IMAGE_READONLY( "gds-0026b", 0, SHA1(54cc643e1f850cfaea7d39f6778b662125cba111) )
 
 	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
 	//PIC16C622A (317-0345-JPN)
@@ -8831,6 +8864,7 @@ ROM_END
 /* 0136 */ GAME( 2001, shootplm, naomi,    naomim1, naomi,   naomi_state, naomi,   ROT0, "Sega", "Shootout Pool Medal", GAME_FLAGS )
 /* 0140 */ GAME( 2004, kick4csh, naomi,    naomim1, naomi,   naomi_state, kick4csh,ROT0, "Sega", "Kick '4' Cash", GAME_FLAGS )
 /* 0150 */ GAME( 2003, mtkob2,   naomi,    naomim1, naomi,   naomi_state, naomi,   ROT0, "Sega", "Mushiking The King Of Beetle 2K3 2nd", GAME_FLAGS )
+/* 0158 */ GAME( 2005, mushi2k5, naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Mushiking The King Of Beetle 2K5 1st", GAME_FLAGS )
 /* 0164 */ GAME( 2005, mushik2e, naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "MushiKing II - The King Of Beetle II ENG (Ver. 1.001)", GAME_FLAGS )
 /* 0164 */ GAME( 2005, mushi2ea, mushik2e, naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "MushiKing II - The King Of Beetle II ENG (Ver. 2.001)", GAME_FLAGS )
 /* 0166 */ GAME( 2006, zunou,    naomi,    naomim4, naomi,   naomi_state, naomi,   ROT0, "Sega", "Touch De Zunou (Rev A)", GAME_FLAGS )
@@ -8934,7 +8968,7 @@ GAME( 2003, puyofevp, naomi, naomim1, naomi, naomi_state, naomi, ROT0, "Sega", "
 /* 0018  */ GAME( 2001, lupinsho, naomigd, naomigd,  hotd2,   naomi_state, naomigd, ROT0, "Sega / Eighting", "Lupin The Third - The Shooting (GDS-0018)", GAME_FLAGS )
 // 0018A Lupin The Third - The Shooting (Rev A)
 /* 0019  */ GAME( 2002, vathlete, naomigd, naomigd,  naomi,   naomi_state, naomigd, ROT0, "Sega", "Virtua Athletics / Virtua Athlete (GDS-0019)", GAME_FLAGS )
-// 0020  Initial D Arcade Stage
+/* 0020  */ GAME( 2002, initdo,   initd,   naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage (Japan) (GDS-0020)", GAME_FLAGS ) 
 // 0020A Initial D Arcade Stage (Rev A)
 /* 0020B */ GAME( 2002, initd,    naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Initial D Arcade Stage (Rev B) (Japan) (GDS-0020B)", GAME_FLAGS )
 // 0021  Lupin The Third - The Typing

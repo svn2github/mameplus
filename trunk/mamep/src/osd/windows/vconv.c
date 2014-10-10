@@ -107,6 +107,7 @@ static const translation_info gcc_translate[] =
 	{ 0,        "c++",                      "" },
 	{ 0,        "-flto",                    "/GL" },
 	{ 0,        "-fno-optimize-sibling-calls", "" },
+	{ VS2005,   "-fopenmp", 					"/openmp" },
 	{ 0 }
 };
 
@@ -365,7 +366,7 @@ static void build_command_line(int argc, char *argv[])
 	// identify the version number of the EXE
 	if (!icl_compile)
 		exe_version = get_exe_version(executable);
-	else 
+	else
 		exe_version = 0x00110000; // assume this for ICL
 
 	// special cases

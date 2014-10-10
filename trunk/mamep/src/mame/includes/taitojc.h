@@ -1,5 +1,4 @@
 #include "video/poly.h"
-#include "machine/mb8421.h"
 #include "machine/taitoio.h"
 
 #define TAITOJC_POLYGON_FIFO_SIZE       0x20000
@@ -27,7 +26,7 @@ public:
 	void render_shade_scan(INT32 scanline, const extent_t &extent, const taitojc_polydata &extradata, int threadid);
 	void render_texture_scan(INT32 scanline, const extent_t &extent, const taitojc_polydata &extradata, int threadid);
 
-	void render_polygons(running_machine &machine, UINT16 *polygon_fifo, int length);
+	void render_polygons(UINT16 *polygon_fifo, int length);
 
 private:
 	bitmap_ind16 *m_framebuffer;
@@ -43,16 +42,17 @@ public:
 		m_maincpu(*this,"maincpu"),
 		m_dsp(*this,"dsp"),
 		m_tc0640fio(*this, "tc0640fio"),
-		m_mb8421(*this, "mb8421"),
 		m_gfx2(*this, "gfx2"),
 		m_vram(*this, "vram"),
 		m_objlist(*this, "objlist"),
 		m_snd_shared_ram(*this, "snd_shared"),
 		m_main_ram(*this, "main_ram"),
+		m_dsp_shared_ram(*this, "dsp_shared"),
 		m_palette_ram(*this, "palette_ram"),
 		m_gfxdecode(*this, "gfxdecode"),
 		m_screen(*this, "screen"),
-		m_palette(*this, "palette")
+		m_palette(*this, "palette"),
+		m_analog_ports(*this, "AN")
 	{
 		m_mcu_output = 0;
 		m_speed_meter = 0;
@@ -63,18 +63,19 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_dsp;
 	required_device<tc0640fio_device> m_tc0640fio;
-	required_device<mb8421_device> m_mb8421;
 	required_memory_region m_gfx2;
 
 	required_shared_ptr<UINT32> m_vram;
 	required_shared_ptr<UINT32> m_objlist;
 	required_shared_ptr<UINT32> m_snd_shared_ram;
 	required_shared_ptr<UINT32> m_main_ram;
+	required_shared_ptr<UINT16> m_dsp_shared_ram;
 	required_shared_ptr<UINT32> m_palette_ram;
 
 	required_device<gfxdecode_device> m_gfxdecode;
 	required_device<screen_device> m_screen;
 	required_device<palette_device> m_palette;
+	optional_ioport_array<8> m_analog_ports;
 
 	taitojc_renderer *m_renderer;
 
@@ -86,7 +87,6 @@ public:
 	UINT16 m_dsp_tex_offset;
 
 	int m_first_dsp_reset;
-	UINT8 m_dsp_shared_ram_hi[0x800];
 	INT16 m_viewport_data[3];
 	INT16 m_projection_data[3];
 	INT16 m_intersection_data[3];
@@ -117,8 +117,6 @@ public:
 
 	DECLARE_READ8_MEMBER(mcu_comm_r);
 	DECLARE_WRITE8_MEMBER(mcu_comm_w);
-	DECLARE_READ8_MEMBER(dsp_shared_r);
-	DECLARE_WRITE8_MEMBER(dsp_shared_w);
 	DECLARE_READ32_MEMBER(snd_share_r);
 	DECLARE_WRITE32_MEMBER(snd_share_w);
 	DECLARE_READ8_MEMBER(jc_pcbid_r);
@@ -135,6 +133,12 @@ public:
 	DECLARE_READ8_MEMBER(hc11_output_r);
 	DECLARE_WRITE8_MEMBER(hc11_data_w);
 	DECLARE_READ8_MEMBER(hc11_analog_r);
+
+	DECLARE_READ16_MEMBER(dsp_shared_r);
+	DECLARE_WRITE16_MEMBER(dsp_shared_w);
+	DECLARE_READ16_MEMBER(dsp_to_main_7fe_r);
+	DECLARE_WRITE16_MEMBER(dsp_to_main_7fe_w);
+	DECLARE_WRITE16_MEMBER(main_to_dsp_7ff_w);
 
 	DECLARE_READ16_MEMBER(dsp_rom_r);
 	DECLARE_WRITE16_MEMBER(dsp_rom_w);
@@ -171,8 +175,6 @@ public:
 	UINT32 screen_update_taitojc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_dendego(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(taitojc_vblank);
-	DECLARE_WRITE_LINE_MEMBER(mb8421_intl);
-	DECLARE_WRITE_LINE_MEMBER(mb8421_intr);
 	void draw_object(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT32 w1, UINT32 w2, UINT8 bank_type);
 	void draw_object_bank(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 bank_type, UINT8 pri);
 	void taitojc_clear_frame();

@@ -18,7 +18,7 @@ protected:
 private:
 	// internal state
 	dynamic_array<UINT16> m_ram;
-	UINT8 *        m_roadgfx;
+	UINT16 *m_roadgfx;
 };
 
 extern const device_type TC0150ROD;

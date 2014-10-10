@@ -98,6 +98,30 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/apf/slot.h,BUSES += APF
+#-------------------------------------------------
+
+ifneq ($(filter APF,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/apf
+BUSOBJS += $(BUSOBJ)/apf/slot.o
+BUSOBJS += $(BUSOBJ)/apf/rom.o
+endif
+
+
+#-------------------------------------------------
+#
+#@src/emu/bus/arcadia/slot.h,BUSES += ARCADIA
+#-------------------------------------------------
+
+ifneq ($(filter ARCADIA,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/arcadia
+BUSOBJS += $(BUSOBJ)/arcadia/slot.o
+BUSOBJS += $(BUSOBJ)/arcadia/rom.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/bw2/exp.h,BUSES += BW2
 #-------------------------------------------------
 
@@ -228,6 +252,18 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/chanf/slot.h,BUSES += CHANNELF
+#-------------------------------------------------
+
+ifneq ($(filter CHANNELF,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/chanf
+BUSOBJS += $(BUSOBJ)/chanf/slot.o
+BUSOBJS += $(BUSOBJ)/chanf/rom.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/comx35/exp.h,BUSES += COMX35
 #-------------------------------------------------
 
@@ -262,6 +298,18 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/crvision/slot.h,BUSES += CRVISION
+#-------------------------------------------------
+
+ifneq ($(filter CRVISION,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/crvision
+BUSOBJS += $(BUSOBJ)/crvision/slot.o
+BUSOBJS += $(BUSOBJ)/crvision/rom.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/dmv/dmv.h,BUSES += DMV
 #-------------------------------------------------
 
@@ -270,6 +318,7 @@ OBJDIRS += $(BUSOBJ)/dmv
 BUSOBJS += $(BUSOBJ)/dmv/dmvbus.o
 BUSOBJS += $(BUSOBJ)/dmv/k220.o
 BUSOBJS += $(BUSOBJ)/dmv/k230.o
+BUSOBJS += $(BUSOBJ)/dmv/k233.o
 BUSOBJS += $(BUSOBJ)/dmv/k806.o
 BUSOBJS += $(BUSOBJ)/dmv/ram.o
 endif
@@ -373,6 +422,20 @@ ifneq ($(filter IMI7000,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/imi7000
 BUSOBJS += $(BUSOBJ)/imi7000/imi7000.o
 BUSOBJS += $(BUSOBJ)/imi7000/imi5000h.o
+endif
+
+
+#-------------------------------------------------
+#
+#@src/emu/bus/intv/slot.h,BUSES += INTV
+#-------------------------------------------------
+
+ifneq ($(filter INTV,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/intv
+BUSOBJS += $(BUSOBJ)/intv/slot.o
+BUSOBJS += $(BUSOBJ)/intv/rom.o
+BUSOBJS += $(BUSOBJ)/intv/voice.o
+BUSOBJS += $(BUSOBJ)/intv/ecs.o
 endif
 
 
@@ -508,6 +571,20 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/odyssey2/slot.h,BUSES += O2
+#-------------------------------------------------
+
+ifneq ($(filter O2,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/odyssey2
+BUSOBJS += $(BUSOBJ)/odyssey2/slot.o
+BUSOBJS += $(BUSOBJ)/odyssey2/rom.o
+BUSOBJS += $(BUSOBJ)/odyssey2/chess.o
+BUSOBJS += $(BUSOBJ)/odyssey2/voice.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/pc_joy/pc_joy.h,BUSES += PC_JOY
 #-------------------------------------------------
 
@@ -607,6 +684,18 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/vc4000/slot.h,BUSES += VC4000
+#-------------------------------------------------
+
+ifneq ($(filter VC4000,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vc4000
+BUSOBJS += $(BUSOBJ)/vc4000/slot.o
+BUSOBJS += $(BUSOBJ)/vc4000/rom.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/vcs/vcs_slot.h,BUSES += VCS
 #-------------------------------------------------
 
@@ -639,6 +728,18 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/vectrex/slot.h,BUSES += VECTREX
+#-------------------------------------------------
+
+ifneq ($(filter VECTREX,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vectrex
+BUSOBJS += $(BUSOBJ)/vectrex/slot.o
+BUSOBJS += $(BUSOBJ)/vectrex/rom.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/bus/vic10/exp.h,BUSES += VIC10
 #-------------------------------------------------
 
@@ -658,6 +759,7 @@ endif
 ifneq ($(filter VIC20,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/vic20
 BUSOBJS += $(BUSOBJ)/vic20/exp.o
+BUSOBJS += $(BUSOBJ)/vic20/fe3.o
 BUSOBJS += $(BUSOBJ)/vic20/megacart.o
 BUSOBJS += $(BUSOBJ)/vic20/std.o
 BUSOBJS += $(BUSOBJ)/vic20/vic1010.o
@@ -780,6 +882,8 @@ BUSOBJS += $(BUSOBJ)/a2bus/a2mcms.o
 BUSOBJS += $(BUSOBJ)/a2bus/a2dx1.o
 BUSOBJS += $(BUSOBJ)/a2bus/timemasterho.o
 BUSOBJS += $(BUSOBJ)/a2bus/mouse.o
+BUSOBJS += $(BUSOBJ)/a2bus/corvfdc01.o
+BUSOBJS += $(BUSOBJ)/a2bus/corvfdc02.o
 endif
 
 #-------------------------------------------------
@@ -955,6 +1059,16 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/vboy/slot.h,BUSES += VBOY
+#-------------------------------------------------
+ifneq ($(filter VBOY,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/vboy
+BUSOBJS += $(BUSOBJ)/vboy/slot.o
+BUSOBJS += $(BUSOBJ)/vboy/rom.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/bus/megadrive/md_slot.h,BUSES += MEGADRIVE
 #-------------------------------------------------
 
@@ -1046,6 +1160,7 @@ BUSOBJS += $(BUSOBJ)/sms_ctrl/rfu.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/sports.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/sportsjp.o
 BUSOBJS += $(BUSOBJ)/sms_ctrl/multitap.o
+BUSOBJS += $(BUSOBJ)/sms_ctrl/graphic.o
 endif
 
 #-------------------------------------------------
@@ -1172,6 +1287,16 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/bus/scv/slot.h,BUSES += SCV
+#-------------------------------------------------
+ifneq ($(filter SCV,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/scv
+BUSOBJS += $(BUSOBJ)/scv/slot.o
+BUSOBJS += $(BUSOBJ)/scv/rom.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/bus/x68k/x68kexp.h,BUSES += X68K
 #-------------------------------------------------
 ifneq ($(filter X68K,$(BUSES)),)
@@ -1217,6 +1342,7 @@ BUSOBJS += $(BUSOBJ)/scsi/acb4070.o
 BUSOBJS += $(BUSOBJ)/scsi/d9060hd.o
 BUSOBJS += $(BUSOBJ)/scsi/sa1403d.o
 BUSOBJS += $(BUSOBJ)/scsi/s1410.o
+BUSOBJS += $(BUSOBJ)/scsi/pc9801_sasi.o
 endif
 
 #-------------------------------------------------
@@ -1320,3 +1446,15 @@ BUSOBJS += $(BUSOBJ)/vtech/ioexp/carts.o
 BUSOBJS += $(BUSOBJ)/vtech/ioexp/joystick.o
 BUSOBJS += $(BUSOBJ)/vtech/ioexp/printer.o
 endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/wswan/slot.h,BUSES += WSWAN
+#-------------------------------------------------
+
+ifneq ($(filter WSWAN,$(BUSES)),)
+OBJDIRS += $(BUSOBJ)/wswan
+BUSOBJS += $(BUSOBJ)/wswan/slot.o
+BUSOBJS += $(BUSOBJ)/wswan/rom.o
+endif
+

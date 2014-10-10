@@ -228,7 +228,7 @@ void a26_rom_3e_device::device_start()
 
 void a26_rom_3e_device::device_reset()
 {
-	m_num_bank = m_rom.count() / 0x800;
+	m_num_bank = m_rom_size / 0x800;
 	m_base_bank = m_num_bank - 1;
 	m_ram_bank = 0;
 	m_ram_enable = 0;
@@ -236,7 +236,7 @@ void a26_rom_3e_device::device_reset()
 
 void a26_rom_3f_device::device_reset()
 {
-	m_num_bank = m_rom.count() / 0x800;
+	m_num_bank = m_rom_size / 0x800;
 	m_base_bank = m_num_bank - 1;
 }
 
@@ -332,7 +332,7 @@ READ8_MEMBER(a26_rom_2k_device::read_rom)
 		return m_ram[offset & (m_ram.count() - 1)];
 	}
 
-	return m_rom[offset & (m_rom.count() - 1)];
+	return m_rom[offset & (m_rom_size - 1)];
 }
 
 /*-------------------------------------------------
@@ -678,40 +678,35 @@ WRITE8_MEMBER(a26_rom_fe_device::write_bank)
 
 READ8_MEMBER(a26_rom_3e_device::read_rom)
 {
-	if (m_ram && m_ram_enable && offset >= 0x400 && offset < 0x600)
-	{
-		offset -= 0x400;
-		return m_ram[offset + (m_ram_bank * 0x200)];
-	}
+	if (m_ram && m_ram_enable && offset < 0x400)
+		return m_ram[offset + (m_ram_bank * 0x400)];
 	
 	if (offset >= 0x800)
-		return m_rom[offset + (m_num_bank - 1) * 0x800];
+		return m_rom[(offset & 0x7ff) + (m_num_bank - 1) * 0x800];
 	else
 		return m_rom[offset + m_base_bank * 0x800];
 }
 
 WRITE8_MEMBER(a26_rom_3e_device::write_bank)
 {
-	if (offset)	// 0x3f
+	if (offset == 0x3f)
 	{
 		m_base_bank = data & (m_num_bank - 1);
 		m_ram_enable = 0;
 	}
-	else	// 0x3e
+	else if (offset == 0x3e)
 	{
-		m_ram_bank = data & 0x3f;
+		m_ram_bank = data & 0x1f;
 		m_ram_enable = 1;
 	}
 }
 
 WRITE8_MEMBER(a26_rom_3e_device::write_ram)
 {
-	if (m_ram && m_ram_enable && offset >= 0x400 && offset < 0x600)
-	{
-		offset -= 0x400;
-		m_ram[offset + (m_ram_bank * 0x200)] = data;
-	}
+	if (m_ram && m_ram_enable && offset >= 0x400 && offset < 0x800)
+		m_ram[(offset & 0x3ff) + (m_ram_bank * 0x400)] = data;
 }
+
 
 /*-------------------------------------------------
  "3F Bankswitch" Carts: 
@@ -850,7 +845,7 @@ WRITE8_MEMBER(a26_rom_e7_device::write_bank)
 
 READ8_MEMBER(a26_rom_ua_device::read_rom)
 {
-	return m_rom[(offset + (m_base_bank * 0x1000)) & (m_rom.count() - 1)];
+	return m_rom[(offset + (m_base_bank * 0x1000)) & (m_rom_size - 1)];
 }
 
 READ8_MEMBER(a26_rom_ua_device::read_bank)
