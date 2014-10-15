@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 /***********************************************************************************************************
 
 
@@ -31,7 +33,7 @@ o2_voice_device::o2_voice_device(const machine_config &mconfig, const char *tag,
 
 
 void o2_voice_device::device_start()
-{	
+{
 	save_item(NAME(m_lrq_state));
 }
 

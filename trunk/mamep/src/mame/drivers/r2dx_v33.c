@@ -5,37 +5,57 @@ Raiden 2 / DX V33 Version
 Raiden 2 / DX checks if there's the string "RAIDEN" at start-up inside the eeprom, otherwise it dies.
 Then it puts settings at 0x9e08 and 0x9e0a (bp 91acb)
 
-	the 333 ROM is a 0x10000 byte table (bytes values?)
-	followed by a 0x400 bytes (word values)?
-	the remaining space is 0xff
+    the 333 ROM is a 0x10000 byte table (bytes values?)
+    followed by a 0x400 bytes (word values)?
+    the remaining space is 0xff
 
-	Notes:
+    Notes:
 
-	Zero Team 2000
-	 - EEPROM contains high scores, but they don't get restored? (original bug?)
+    Zero Team 2000
+     - EEPROM contains high scores, but they don't get restored? (original bug?)
 
-	New Zero Team
-	 - 2 Player only? Service mode only shows 2 Players and I don't see a switch
-	 - Stages 3 and 1 are swapped, this is correct.
+    New Zero Team
+     - 2 Player only? Service mode only shows 2 Players and I don't see a switch
+     - Stages 3 and 1 are swapped, this is correct.
 
-	Raiden 2 New / Raiden DX
-	 - This is a 2-in-1 board.  The current game to boot is stored in the EEPROM.
-	   If you wish to change game then on powerup you must hold down all 4 (P1) joystick
-	   directions simultaneously along with either button 1 or button 2.
-	   Obviously this is impossible with a real joystck!
+    Raiden 2 New / Raiden DX
+     - This is a 2-in-1 board.  The current game to boot is stored in the EEPROM.
+       If you wish to change game then on powerup you must hold down all 4 (P1) joystick
+       directions simultaneously along with either button 1 or button 2.
+       Obviously this is impossible with a real joystck!
 
-	   It is also impossible in MAME unless you enable -joystick_contradictory
-	   to disable MAME from preventing opposing joystick directions being pressed
-	   and you'll most likely have to remap some keys too because 5 buttons at the
-	   same time is beyond the limits of most keyboards.
+       It is also impossible in MAME unless you enable -joystick_contradictory
+       to disable MAME from preventing opposing joystick directions being pressed
+       and you'll most likely have to remap some keys too because 5 buttons at the
+       same time is beyond the limits of most keyboards.
 
-	   We currently use a default EEPROM for each game as this is most likely how
-	   it shipped, the game changing is an undocumented secret.
+       We currently use a default EEPROM for each game as this is most likely how
+       it shipped, the game changing is an undocumented secret.
 
-	 - The sound is awful, this is just how it is.
-	 
-	 - In Raiden 2 New stages 5 and 1 are swapped, and the intro is missing, this is
-	   correct.
+     - The sound is awful, this is just how it is.
+
+     - In Raiden 2 New stages 5 and 1 are swapped, and the intro is missing, this is
+       correct.
+
+*/
+
+/* Rom structure notes
+
+ Raiden 2 New/DX (hardware can bank upper/lower half of rom to switch fixed areas)
+
+ 000000-02ffff : 0xff fill, inaccessible by hardware
+ 030000-0fffff : 'Fixed' ROM data for Raiden 2
+ 100000-1fffff : Banked ROM data for Raiden 2 (16x 0x10000 banks)
+
+ 200000-22ffff : 0xff fill, inaccessible by hardware
+ 230000-2fffff : 'Fixed' ROM data for Raiden DX
+ 300000-3fffff : Banked ROM data for Raiden DX (16x 0x10000 banks)
+
+ New Zero Team /Zero
+
+ 000000-01ffff : 0xff fill, inaccessible by hardware?
+ 020000-0fffff : Fixed ROM data for Zero Team
+ (no banking)
 
 */
 
@@ -110,7 +130,23 @@ public:
 	UINT32 screen_update_rdx_v33(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(rdx_v33_interrupt);
 	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect,int pri);
+
+protected:
+	virtual void machine_start();
 };
+
+void r2dx_v33_state::machine_start()
+{
+	raiden2_state::machine_start();
+
+	save_item(NAME(m_r2dxbank));
+	save_item(NAME(m_r2dxgameselect));
+	save_item(NAME(m_r2dx_angle));
+	save_item(NAME(r2dx_i_dx));
+	save_item(NAME(r2dx_i_dy));
+	save_item(NAME(r2dx_i_angle));
+	save_item(NAME(r2dx_i_sdist));
+}
 
 WRITE16_MEMBER(r2dx_v33_state::tile_bank_w)
 {
@@ -139,7 +175,6 @@ WRITE16_MEMBER(r2dx_v33_state::tile_bank_w)
 void r2dx_v33_state::r2dx_setbanking(void)
 {
 	membank("bank1")->set_entry(m_r2dxgameselect*0x20 + m_r2dxbank + 16);
-	membank("bank2")->set_entry(m_r2dxgameselect*0x20 + 3);
 	membank("bank3")->set_entry(m_r2dxgameselect);
 }
 
@@ -157,7 +192,7 @@ WRITE16_MEMBER(r2dx_v33_state::rdx_v33_eeprom_w)
 		// 0x04 is active in Raiden DX mode, it could be part of the rom bank (which half of the rom to use) or the FG tile bank (or both?)
 		// the bit gets set if it reads RAIDENDX from the EEPROM
 		m_r2dxgameselect = (data & 0x04) >> 2;
-		
+
 		tx_bank = m_r2dxgameselect;
 		text_layer->mark_all_dirty();
 
@@ -242,7 +277,7 @@ WRITE16_MEMBER(r2dx_v33_state::mcu_table_w)
 
 WRITE16_MEMBER(r2dx_v33_state::mcu_table2_w)
 {
-//	printf("mcu_table2_w %04x %04x\n", data, mem_mask);
+//  printf("mcu_table2_w %04x %04x\n", data, mem_mask);
 
 	mcu_data[offset+4] = data;
 
@@ -251,7 +286,7 @@ WRITE16_MEMBER(r2dx_v33_state::mcu_table2_w)
 
 WRITE16_MEMBER(r2dx_v33_state::r2dx_rom_bank_w)
 {
-	printf("rom bank %04x %04x\n", data, mem_mask);
+	//printf("rom bank %04x %04x\n", data, mem_mask);
 	m_r2dxbank = data & 0xf;
 	r2dx_setbanking();
 
@@ -321,7 +356,7 @@ WRITE16_MEMBER(r2dx_v33_state::r2dx_paldma_w)
 {
 	int src = 0x1f000;
 
-	for (int i = 0; i < 0x1000 / 2; i++) 
+	for (int i = 0; i < 0x1000 / 2; i++)
 	{
 		UINT16 palval = space.read_word(src);
 		src += 2;
@@ -357,7 +392,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x00436, 0x00437) AM_READ(r2dx_cos_r)
 
 	AM_RANGE(0x00600, 0x0064f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read, write)
-//	AM_RANGE(0x00650, 0x0068f) AM_RAM //???
+//  AM_RANGE(0x00650, 0x0068f) AM_RAM //???
 
 	AM_RANGE(0x0068e, 0x0068f) AM_WRITENOP // maybe a watchdog?
 	AM_RANGE(0x006b0, 0x006b1) AM_WRITE(mcu_prog_w) // could be encryption key uploads just like raiden2.c ?
@@ -365,7 +400,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 //  AM_RANGE(0x006b4, 0x006b5) AM_WRITENOP
 //  AM_RANGE(0x006b6, 0x006b7) AM_WRITENOP
 	AM_RANGE(0x006bc, 0x006bd) AM_WRITE(mcu_prog_offs_w)
-//	AM_RANGE(0x006be, 0x006bf) AM_WRITENOP 
+//  AM_RANGE(0x006be, 0x006bf) AM_WRITENOP
 
 	// sprite protection not 100% verified as the same
 	AM_RANGE(0x006c0, 0x006c1) AM_READWRITE(sprite_prot_off_r, sprite_prot_off_w)
@@ -376,7 +411,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x006da, 0x006db) AM_WRITE(sprite_prot_y_w)
 	AM_RANGE(0x006dc, 0x006dd) AM_READWRITE(sprite_prot_maxx_r, sprite_prot_maxx_w)
 	AM_RANGE(0x006de, 0x006df) AM_WRITE(sprite_prot_src_w)
-	
+
 
 	AM_RANGE(0x00700, 0x00701) AM_WRITE(rdx_v33_eeprom_w)
 	AM_RANGE(0x00740, 0x00741) AM_READ(r2dx_debug_r)
@@ -400,8 +435,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x1f000, 0x1ffff) AM_RAM //_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE(0x20000, 0x2ffff) AM_ROM AM_ROMBANK("bank1") AM_WRITENOP
-	AM_RANGE(0x30000, 0x3ffff) AM_ROM AM_ROMBANK("bank2") AM_WRITENOP
-	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_ROMBANK("bank3") AM_WRITENOP
+	AM_RANGE(0x30000, 0xfffff) AM_ROM AM_ROMBANK("bank3") AM_WRITENOP
 ADDRESS_MAP_END
 
 
@@ -468,7 +502,7 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(r2dx_v33_state::zerotm2k_eeprom_w)
 {
-//	printf("zerotm2k_eeprom_w %04x %04x\n", data, mem_mask);
+//  printf("zerotm2k_eeprom_w %04x %04x\n", data, mem_mask);
 
 	m_eeprom->clk_write((data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
 	m_eeprom->di_write((data & 0x04) >> 2);
@@ -813,29 +847,20 @@ DRIVER_INIT_MEMBER(r2dx_v33_state,rdx_v33)
 	cur_spri = spri;
 
 	membank("bank1")->configure_entries(0, 0x40, memregion("mainprg")->base(), 0x10000);
-	membank("bank2")->configure_entries(0, 0x40, memregion("mainprg")->base(), 0x10000);
 
-	membank("bank3")->configure_entry(0, memregion("mainprg")->base()+0x040000); // 0x40000 - 0xfffff bank for Raiden 2
-	membank("bank3")->configure_entry(1, memregion("mainprg")->base()+0x240000); // 0x40000 - 0xfffff bank for Raiden DX
+	membank("bank3")->configure_entry(0, memregion("mainprg")->base()+0x030000); // 0x30000 - 0xfffff bank for Raiden 2
+	membank("bank3")->configure_entry(1, memregion("mainprg")->base()+0x230000); // 0x30000 - 0xfffff bank for Raiden DX
 
 
 	raiden2_decrypt_sprites(machine());
 
 //  sensible defaults if booting as R2
-	membank("bank1")->set_entry(2);
-	membank("bank2")->set_entry(3);
+	membank("bank1")->set_entry(0);
 	membank("bank3")->set_entry(0);
 
 
 	membank("okibank")->configure_entries(0, 4, memregion("oki")->base(), 0x40000);
 	membank("okibank")->set_entry(0);
-	//  sensible defaults if booting as RDX - we set now set this later..
-	//	membank("bank1")->set_entry(0x20+16);
-	//	membank("bank2")->set_entry(0x20+3);
-	//	membank("bank3")->set_entry(1);
-
-
-
 
 }
 
@@ -937,7 +962,7 @@ ROM_START( r2dx_v33 )
 	ROM_LOAD("prg.223", 0x000000, 0x400000, CRC(b3dbcf98) SHA1(30d6ec2090531c8c579dff74c4898889902d7d87) )
 
 	ROM_REGION( 0x400000, "maincpu", ROMREGION_ERASEFF ) /* v33 main cpu */
-	
+
 	ROM_REGION( 0x040000, "gfx1", 0 ) /* chars */
 	ROM_LOAD( "fix.613", 0x000000, 0x040000, CRC(3da27e39) SHA1(3d446990bf36dd0a3f8fadb68b15bed54904c8b5) )
 
@@ -986,7 +1011,7 @@ ROM_START( r2dx_v33_r2 )
 ROM_END
 
 // uses dipswitches
-ROM_START( nzeroteam ) /* V33 SYSTEM TYPE_B hardware, uses SEI333 (AKA COPX-D3) for protection  */ 
+ROM_START( nzeroteam ) /* V33 SYSTEM TYPE_B hardware, uses SEI333 (AKA COPX-D3) for protection  */
 	ROM_REGION( 0x100000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD16_BYTE("prg1", 0x000000, 0x80000, CRC(3c7d9410) SHA1(25f2121b6c2be73f11263934266901ed5d64d2ee) )
 	ROM_LOAD16_BYTE("prg2", 0x000001, 0x80000, CRC(6cba032d) SHA1(bf5d488cd578fff09e62e3650efdee7658033e3f) )
@@ -1053,11 +1078,16 @@ ROM_END
 
 // newer PCB, with V33 CPU and COPD3 protection, but weak sound hardware. - was marked as Raiden DX New in the rom dump, but boots as Raiden 2 New version, the rom contains both
 // is there a switching method? for now I've split it into 2 sets with different EEPROM, the game checks that on startup and runs different code depending on what it finds
-GAME( 1996, r2dx_v33,    0,          rdx_v33,  rdx_v33, r2dx_v33_state,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II New / Raiden DX (newer V33 PCB) (Raiden DX EEPROM)", 0)
-GAME( 1996, r2dx_v33_r2, r2dx_v33,   rdx_v33,  rdx_v33, r2dx_v33_state,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II New / Raiden DX (newer V33 PCB) (Raiden II EEPROM)", 0)
+GAME( 1996, r2dx_v33,    0,          rdx_v33,  rdx_v33, r2dx_v33_state,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II New / Raiden DX (newer V33 PCB) (Raiden DX EEPROM)", GAME_SUPPORTS_SAVE)
+GAME( 1996, r2dx_v33_r2, r2dx_v33,   rdx_v33,  rdx_v33, r2dx_v33_state,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II New / Raiden DX (newer V33 PCB) (Raiden II EEPROM)", GAME_SUPPORTS_SAVE)
 
 // 'V33 system type_b' - uses V33 CPU, COPX-D3 external protection rom, but still has the proper sound system, DSW for settings
-GAME( 1997, nzeroteam, zeroteam,  nzerotea, nzerotea, r2dx_v33_state, nzerotea,  ROT0,   "Seibu Kaihatsu", "New Zero Team", 0)
+GAME( 1997, nzeroteam, zeroteam,  nzerotea, nzerotea, r2dx_v33_state, nzerotea,  ROT0,   "Seibu Kaihatsu (Haoyunlai Trading Company license)", "New Zero Team (V33 SYSTEM TYPE_B hardware)", GAME_SUPPORTS_SAVE) // license text translated from title screen
+
+// 'V33 SYSTEM TYPE_C' - uses V33 CPU, basically the same board as TYPE_C VER2
+// there is a version of New Zero Team on "V33 SYSTEM TYPE_C" board with EEPROM rather than dipswitches like Zero Team 2000
 
 // 'V33 SYSTEM TYPE_C VER2' - uses V33 CPU, COPX-D3 external protection rom, but still has the proper sound system, unencrypted sprites, EEPROM for settings.  PCB also seen without 'VER2', looks the same
-GAME( 2000, zerotm2k,  zeroteam,  zerotm2k, zerotm2k, r2dx_v33_state, zerotm2k,  ROT0,   "Seibu Kaihatsu", "Zero Team 2000", 0)
+GAME( 2000, zerotm2k,  zeroteam,  zerotm2k, zerotm2k, r2dx_v33_state, zerotm2k,  ROT0,   "Seibu Kaihatsu", "Zero Team 2000", GAME_SUPPORTS_SAVE)
+
+// there is also a 'Raiden 2 2000' on unknown hardware.

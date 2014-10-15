@@ -30,7 +30,7 @@ const device_type TRIDENT_VGA = &device_creator<trident_vga_device>;
 #define CRTC_PORT_ADDR ((vga.miscellaneous_output&1)?0x3d0:0x3b0)
 
 #define LOG (1)
-#define LOG_ACCEL (0)
+#define LOG_ACCEL (1)
 
 trident_vga_device::trident_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: svga_device(mconfig, TRIDENT_VGA, "Trident TGUI9680", tag, owner, clock, "trident_vga", __FILE__)
@@ -45,21 +45,21 @@ UINT8 trident_vga_device::READPIXEL8(INT16 x, INT16 y)
 UINT16 trident_vga_device::READPIXEL15(INT16 x, INT16 y)
 {
 	return (vga.memory[((y & 0xfff)*offset() + (x & 0xfff)*2) % vga.svga_intf.vram_size] |
-           (vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*2)+1) % vga.svga_intf.vram_size] << 8));
+			(vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*2)+1) % vga.svga_intf.vram_size] << 8));
 }
 
 UINT16 trident_vga_device::READPIXEL16(INT16 x, INT16 y)
 {
 	return (vga.memory[((y & 0xfff)*offset() + (x & 0xfff)*2) % vga.svga_intf.vram_size] |
-           (vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*2)+1) % vga.svga_intf.vram_size] << 8));
+			(vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*2)+1) % vga.svga_intf.vram_size] << 8));
 }
 
 UINT32 trident_vga_device::READPIXEL32(INT16 x, INT16 y)
 {
 	return (vga.memory[((y & 0xfff)*offset() + (x & 0xfff)*4) % vga.svga_intf.vram_size] |
-		   (vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+1) % vga.svga_intf.vram_size] << 8) |
-		   (vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+2) % vga.svga_intf.vram_size] << 16) |
-		   (vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+3) % vga.svga_intf.vram_size] << 24));
+			(vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+1) % vga.svga_intf.vram_size] << 8) |
+			(vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+2) % vga.svga_intf.vram_size] << 16) |
+			(vga.memory[((y & 0xfff)*offset() + ((x & 0xfff)*4)+3) % vga.svga_intf.vram_size] << 24));
 }
 
 void trident_vga_device::WRITEPIXEL8(INT16 x, INT16 y, UINT8 data)
@@ -120,6 +120,9 @@ UINT32 trident_vga_device::handle_rop(UINT32 src, UINT32 dst)
 	case 0x5a:  // XOR PAT
 		src = dst ^ src;
 		break;
+	case 0xb8:  // PAT xor (SRC and (DST xor PAT)) (correct?)
+		src = src & (dst ^ src);
+		break;
 	}
 	return src;
 }
@@ -140,7 +143,7 @@ UINT32 trident_vga_device::READPIXEL(INT16 x,INT16 y)
 void trident_vga_device::WRITEPIXEL(INT16 x,INT16 y, UINT32 data)
 {
 	if(svga.rgb8_en)
-		WRITEPIXEL8(x,y,(((data >> 16) & 0xff) | ((data >> 8) & 0xff) | (data & 0xff)));  // XFree86 3.3 sets bits 0-7 to 0 when using mono patterns, does it OR each byte?
+		WRITEPIXEL8(x,y,(((data >> 8) & 0xff) | (data & 0xff)));  // XFree86 3.3 sets bits 0-7 to 0 when using mono patterns, does it OR each byte?
 	if(svga.rgb15_en)
 		WRITEPIXEL15(x,y,data & 0x7fff);
 	if(svga.rgb16_en)
@@ -184,14 +187,15 @@ void trident_vga_device::device_start()
 void trident_vga_device::device_reset()
 {
 	svga_device::device_reset();
-	svga.id = 0xd3;  // identifies at TGUI9660XGi (set to 0xe3 to identify at TGUI9440AGi)
+	svga.id = 0xd3;  // 0xd3 identifies at TGUI9660XGi (set to 0xe3 to identify at TGUI9440AGi)
 	tri.revision = 0x01;  // revision identifies as TGUI9680
 	tri.new_mode = false;  // start up in old mode
 	tri.dac_active = false;
 	tri.linear_active = false;
 	tri.mmio_active = false;
 	tri.sr0f = 0x6f;
-	tri.sr0c = 0x78;
+	tri.sr0c = 0x70;
+	tri.cr2a = 0x03;  // set ISA interface?
 	tri.mem_clock = 0x2c6;  // 50MHz default
 	tri.vid_clock = 0;
 	tri.port_3c3 = true;
@@ -245,9 +249,9 @@ UINT32 trident_vga_device::screen_update(screen_device &screen, bitmap_rgb32 &bi
 			for(x=0;x<cursor_size;x++)
 			{
 				UINT32 bitb = (vga.memory[(src+3) % vga.svga_intf.vram_size]
-				            | ((vga.memory[(src+2) % vga.svga_intf.vram_size]) << 8)
-				            | ((vga.memory[(src+1) % vga.svga_intf.vram_size]) << 16)
-				            | ((vga.memory[(src+0) % vga.svga_intf.vram_size]) << 24));
+							| ((vga.memory[(src+2) % vga.svga_intf.vram_size]) << 8)
+							| ((vga.memory[(src+1) % vga.svga_intf.vram_size]) << 16)
+							| ((vga.memory[(src+0) % vga.svga_intf.vram_size]) << 24));
 				UINT32 bita = (vga.memory[(src+7) % vga.svga_intf.vram_size]
 							| ((vga.memory[(src+6) % vga.svga_intf.vram_size]) << 8)
 							| ((vga.memory[(src+5) % vga.svga_intf.vram_size]) << 16)
@@ -517,6 +521,9 @@ UINT8 trident_vga_device::trident_crtc_reg_read(UINT8 index)
 		case 0x1f:
 			res = tri.cr1f;
 			break;
+		case 0x20:
+			res = tri.cr20;
+			break;
 		case 0x21:
 			res = tri.cr21;
 			break;
@@ -532,6 +539,9 @@ UINT8 trident_vga_device::trident_crtc_reg_read(UINT8 index)
 			break;
 		case 0x29:
 			res = tri.cr29;
+			break;
+		case 0x2a:
+			res = tri.cr2a;
 			break;
 		case 0x38:
 			res = tri.pixel_depth;
@@ -618,12 +628,15 @@ void trident_vga_device::trident_crtc_reg_write(UINT8 index, UINT8 data)
 		case 0x1f:
 			tri.cr1f = data;  // "Software Programming Register"  written to by the BIOS
 			break;
+		case 0x20:  // FIFO Control (old MMIO enable? no documentation of this register)
+			tri.cr20 = data;
+			break;
 		case 0x21:  // Linear aperture
 			tri.cr21 = data;
 			tri.linear_address = ((data & 0xc0)<<18) | ((data & 0x0f)<<20);
 			tri.linear_active = data & 0x20;
-			//if(tri.linear_active)
-				//popmessage("Trident: Linear Aperture active - %08x, %s",tri.linear_address,(tri.cr21 & 0x10) ? "2MB" : "1MB" );
+			if(tri.linear_active)
+				popmessage("Trident: Linear Aperture active - %08x, %s",tri.linear_address,(tri.cr21 & 0x10) ? "2MB" : "1MB" );
 			break;
 		case 0x27:
 			vga.crtc.start_addr = (vga.crtc.start_addr & 0xfff9ffff) | ((data & 0x03)<<17);
@@ -631,6 +644,9 @@ void trident_vga_device::trident_crtc_reg_write(UINT8 index, UINT8 data)
 		case 0x29:
 			tri.cr29 = data;
 			vga.crtc.offset = (vga.crtc.offset & 0xfeff) | ((data & 0x10)<<4);
+			break;
+		case 0x2a:
+			tri.cr2a = data;
 			break;
 		case 0x38:
 			// bit 0: 16 bit bus
@@ -1006,8 +1022,36 @@ WRITE8_MEMBER(trident_vga_device::port_83c6_w)
 	}
 }
 
+READ8_MEMBER(trident_vga_device::vram_r)
+{
+	if (tri.linear_active)
+		return vga.memory[offset % vga.svga_intf.vram_size];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(trident_vga_device::vram_w)
+{
+	if (tri.linear_active)
+	{
+		if(tri.accel_memwrite_active)
+		{
+			tri.accel_transfer = (tri.accel_transfer & (~(0x000000ff << (24-(8*(offset % 4)))))) | (data << (24-(8 * (offset % 4))));
+			if(offset % 4 == 3)
+				accel_data_write(tri.accel_transfer);
+			return;
+		}
+		vga.memory[offset % vga.svga_intf.vram_size] = data;
+	}
+}
+
 READ8_MEMBER(trident_vga_device::mem_r )
 {
+	if((tri.cr20 & 0x10) && (offset >= 0x1ff00)) // correct for old MMIO?
+	{
+		return old_mmio_r(space,offset-0x1ff00);
+	}
+
 	if (svga.rgb8_en || svga.rgb15_en || svga.rgb16_en || svga.rgb32_en)
 	{
 		int data;
@@ -1029,6 +1073,12 @@ READ8_MEMBER(trident_vga_device::mem_r )
 
 WRITE8_MEMBER(trident_vga_device::mem_w)
 {
+	if((tri.cr20 & 0x10) && (offset >= 0x1ff00)) // correct for old MMIO?
+	{
+		old_mmio_w(space,offset-0x1ff00,data);
+		return;
+	}
+
 	if(tri.accel_memwrite_active)
 	{
 		tri.accel_transfer = (tri.accel_transfer & (~(0x000000ff << (24-(8*(offset % 4)))))) | (data << (24-(8 * (offset % 4))));
@@ -1054,66 +1104,87 @@ WRITE8_MEMBER(trident_vga_device::mem_w)
 	vga_device::mem_w(space,offset,data,mem_mask);
 }
 
+// Old style MMIO (maps to 0xbff00)
+void trident_vga_device::old_mmio_w(address_space& space, UINT32 offset, UINT8 data)
+{
+	if(offset >= 0x20)
+		accel_w(space,offset-0x20,data);
+}
+
+UINT8 trident_vga_device::old_mmio_r(address_space& space, UINT32 offset)
+{
+	if(offset == 0x20)
+	{
+		if(tri.accel_busy)
+			return 0x20;
+	}
+	if(offset > 0x20)
+		return accel_r(space,offset-0x20);
+	else
+		return 0x00;
+}
+
+
 // 2D Acceleration functions (very WIP)
 
 // From XFree86 source:
 /*
 Graphics Engine for 9440/9660/9680
 
-#define GER_STATUS	0x2120
-#define		GE_BUSY	0x80
-#define GER_OPERMODE	0x2122		 Byte for 9440, Word for 96xx
-#define		DST_ENABLE	0x200	// Destination Transparency
-#define GER_COMMAND	0x2124
-#define		GE_NOP		0x00	// No Operation
-#define		GE_BLT		0x01	// BitBLT ROP3 only
-#define		GE_BLT_ROP4	0x02	// BitBLT ROP4 (96xx only)
-#define		GE_SCANLINE	0x03	// Scan Line
-#define		GE_BRESLINE	0x04	// Bresenham Line
-#define		GE_SHVECTOR	0x05	// Short Vector
-#define		GE_FASTLINE	0x06	// Fast Line (96xx only)
-#define		GE_TRAPEZ	0x07	// Trapezoidal fill (96xx only)
-#define		GE_ELLIPSE	0x08	// Ellipse (96xx only) (RES)
-#define		GE_ELLIP_FILL	0x09	// Ellipse Fill (96xx only) (RES)
-#define	GER_FMIX	0x2127
-#define GER_DRAWFLAG	0x2128		// long
-#define		FASTMODE	1<<28
-#define		STENCIL		0x8000
-#define		SOLIDFILL	0x4000
-#define		TRANS_ENABLE	0x1000
-#define 	TRANS_REVERSE	0x2000
-#define		YMAJ		0x0400
-#define		XNEG		0x0200
-#define		YNEG		0x0100
-#define		SRCMONO		0x0040
-#define		PATMONO		0x0020
-#define		SCR2SCR		0x0004
-#define		PAT2SCR		0x0002
-#define GER_FCOLOUR	0x212C		// Word for 9440, long for 96xx
-#define GER_BCOLOUR	0x2130		// Word for 9440, long for 96xx
-#define GER_PATLOC	0x2134		// Word
-#define GER_DEST_XY	0x2138
-#define GER_DEST_X	0x2138		// Word
-#define GER_DEST_Y	0x213A		// Word
-#define GER_SRC_XY	0x213C
-#define GER_SRC_X	0x213C		// Word
-#define GER_SRC_Y	0x213E		// Word
-#define GER_DIM_XY	0x2140
-#define GER_DIM_X	0x2140		// Word
-#define GER_DIM_Y	0x2142		// Word
-#define GER_STYLE	0x2144		// Long
-#define GER_CKEY	0x2168		// Long
-#define GER_FPATCOL	0x2178
-#define GER_BPATCOL	0x217C
-#define GER_PATTERN	0x2180		// from 0x2180 to 0x21FF
+#define GER_STATUS  0x2120
+#define     GE_BUSY 0x80
+#define GER_OPERMODE    0x2122       Byte for 9440, Word for 96xx
+#define     DST_ENABLE  0x200   // Destination Transparency
+#define GER_COMMAND 0x2124
+#define     GE_NOP      0x00    // No Operation
+#define     GE_BLT      0x01    // BitBLT ROP3 only
+#define     GE_BLT_ROP4 0x02    // BitBLT ROP4 (96xx only)
+#define     GE_SCANLINE 0x03    // Scan Line
+#define     GE_BRESLINE 0x04    // Bresenham Line
+#define     GE_SHVECTOR 0x05    // Short Vector
+#define     GE_FASTLINE 0x06    // Fast Line (96xx only)
+#define     GE_TRAPEZ   0x07    // Trapezoidal fill (96xx only)
+#define     GE_ELLIPSE  0x08    // Ellipse (96xx only) (RES)
+#define     GE_ELLIP_FILL   0x09    // Ellipse Fill (96xx only) (RES)
+#define GER_FMIX    0x2127
+#define GER_DRAWFLAG    0x2128      // long
+#define     FASTMODE    1<<28
+#define     STENCIL     0x8000
+#define     SOLIDFILL   0x4000
+#define     TRANS_ENABLE    0x1000
+#define     TRANS_REVERSE   0x2000
+#define     YMAJ        0x0400
+#define     XNEG        0x0200
+#define     YNEG        0x0100
+#define     SRCMONO     0x0040
+#define     PATMONO     0x0020
+#define     SCR2SCR     0x0004
+#define     PAT2SCR     0x0002
+#define GER_FCOLOUR 0x212C      // Word for 9440, long for 96xx
+#define GER_BCOLOUR 0x2130      // Word for 9440, long for 96xx
+#define GER_PATLOC  0x2134      // Word
+#define GER_DEST_XY 0x2138
+#define GER_DEST_X  0x2138      // Word
+#define GER_DEST_Y  0x213A      // Word
+#define GER_SRC_XY  0x213C
+#define GER_SRC_X   0x213C      // Word
+#define GER_SRC_Y   0x213E      // Word
+#define GER_DIM_XY  0x2140
+#define GER_DIM_X   0x2140      // Word
+#define GER_DIM_Y   0x2142      // Word
+#define GER_STYLE   0x2144      // Long
+#define GER_CKEY    0x2168      // Long
+#define GER_FPATCOL 0x2178
+#define GER_BPATCOL 0x217C
+#define GER_PATTERN 0x2180      // from 0x2180 to 0x21FF
 
  Additional - Graphics Engine for 96xx
-#define GER_SRCCLIP_XY	0x2148
-#define GER_SRCCLIP_X	0x2148		// Word
-#define GER_SRCCLIP_Y	0x214A		// Word
-#define GER_DSTCLIP_XY	0x214C
-#define GER_DSTCLIP_X	0x214C		// Word
-#define GER_DSTCLIP_Y	0x214E		// Word
+#define GER_SRCCLIP_XY  0x2148
+#define GER_SRCCLIP_X   0x2148      // Word
+#define GER_SRCCLIP_Y   0x214A      // Word
+#define GER_DSTCLIP_XY  0x214C
+#define GER_DSTCLIP_X   0x214C      // Word
+#define GER_DSTCLIP_Y   0x214E      // Word
 */
 
 READ8_MEMBER(trident_vga_device::accel_r)
@@ -1131,6 +1202,8 @@ READ8_MEMBER(trident_vga_device::accel_r)
 		else
 			res = 0x00;
 		break;
+	// Operation mode:
+	// bit 8: disable clipping if set
 	case 0x02:  // Operation Mode
 		res = tri.accel_opermode & 0x00ff;
 		break;

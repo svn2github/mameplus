@@ -121,7 +121,7 @@ public:
 	int verify_cart(UINT8 *magic, int size);
 	void set_lphaser_xoffset(UINT8 *rom, int size);
 
-	void save_ram()	{ if (m_cart && m_cart->get_ram_size()) m_cart->save_ram(); }
+	void save_ram() { if (m_cart && m_cart->get_ram_size()) m_cart->save_ram(); }
 
 	void set_mandatory(bool val) { m_must_be_loaded = val; }
 	void set_intf(const char * interface) { m_interface = interface; }
@@ -231,5 +231,11 @@ public:
 	static_cast<sega8_card_slot_device *>(device)->set_intf("sg1000_cart"); \
 	static_cast<sega8_card_slot_device *>(device)->set_ext("bin,sg");
 
+
+// slot interfaces
+SLOT_INTERFACE_EXTERN( sg1000_cart );
+SLOT_INTERFACE_EXTERN( sg1000mk3_cart );
+SLOT_INTERFACE_EXTERN( sms_cart );
+SLOT_INTERFACE_EXTERN( gg_cart );
 
 #endif

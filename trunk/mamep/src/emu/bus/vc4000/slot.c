@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 /***********************************************************************************************************
 
     Interton Electronic VC 4000 cart emulation
@@ -16,7 +18,7 @@
 const device_type VC4000_CART_SLOT = &device_creator<vc4000_cart_slot_device>;
 
 //**************************************************************************
-//    APF Cartridges Interface
+//    VC4000 Cartridges Interface
 //**************************************************************************
 
 //-------------------------------------------------
@@ -112,7 +114,7 @@ void vc4000_cart_slot_device::device_config_complete()
 
 
 //-------------------------------------------------
-//  APF PCB
+//  VC4000 PCB
 //-------------------------------------------------
 
 struct vc4000_slot
@@ -167,9 +169,9 @@ bool vc4000_cart_slot_device::call_load()
 			seterror(IMAGE_ERROR_UNSPECIFIED, "Image extends beyond the expected size for a VC4000 cart");
 			return IMAGE_INIT_FAIL;
 		}
-		
+
 		m_cart->rom_alloc(size, tag());
-			
+
 		if (software_entry() == NULL)
 			fread(m_cart->get_rom_base(), size);
 		else
@@ -234,7 +236,7 @@ void vc4000_cart_slot_device::get_default_card_software(astring &result)
 			type = VC4000_CHESS2;
 		else if (size > 0x0800) // some 4k roms have 1k of mirrored ram
 			type = VC4000_RAM1K;
-		
+
 		slot_string = vc4000_get_slot(type);
 
 		//printf("type: %s\n", slot_string);
@@ -292,5 +294,3 @@ WRITE8_MEMBER(vc4000_cart_slot_device::write_ram)
 	if (m_cart)
 		m_cart->write_ram(space, offset, data);
 }
-
-

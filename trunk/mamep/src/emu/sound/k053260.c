@@ -385,11 +385,11 @@ void k053260_device::KDSC_Voice::key_on()
 
 	else if (m_start + m_length >= m_device->m_rom_size)
 		logerror("K053260: Attempting to play past the end of the ROM ( start = %06x, length = %06x )\n",
-				 m_start, m_length);
+					m_start, m_length);
 
 	else
 	{
-		m_position = m_kadpcm; // for kadpcm low bit is nybble offset, so must start at 1 due to preincrement
+		m_position = m_kadpcm ? 1 : 0; // for kadpcm low bit is nybble offset, so must start at 1 due to preincrement
 		m_counter = 0x1000 - CLOCKS_PER_SAMPLE; // force update on next sound_stream_update
 		m_output = 0;
 		m_playing = true;
@@ -413,7 +413,7 @@ void k053260_device::KDSC_Voice::play(stream_sample_t *outputs)
 	{
 		m_counter = m_counter - 0x1000 + m_pitch;
 
-		UINT32 bytepos = ++m_position >> m_kadpcm;
+		UINT32 bytepos = ++m_position >> ( m_kadpcm ? 1 : 0 );
 		/*
 		Yes, _pre_increment. Playback must start 1 byte position after the
 		start address written to the register, or else ADPCM sounds will
@@ -464,7 +464,7 @@ UINT8 k053260_device::KDSC_Voice::read_rom()
 	if (offs >= m_device->m_rom_size)
 	{
 		logerror("%s: K053260: Attempting to read past the end of the ROM (offs = %06x, size = %06x)\n",
-				 m_device->machine().describe_context(), offs, m_device->m_rom_size);
+					m_device->machine().describe_context(), offs, m_device->m_rom_size);
 		return 0;
 	}
 

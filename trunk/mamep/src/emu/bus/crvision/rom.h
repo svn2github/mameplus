@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __CRVISION_ROM_H
 #define __CRVISION_ROM_H
 
@@ -41,7 +43,7 @@ class crvision_rom8k_device : public crvision_rom_device
 public:
 	// construction/destruction
 	crvision_rom8k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_rom80);
 };
@@ -53,7 +55,7 @@ class crvision_rom10k_device : public crvision_rom_device
 public:
 	// construction/destruction
 	crvision_rom10k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_rom40);
 	virtual DECLARE_READ8_MEMBER(read_rom80);
@@ -66,7 +68,7 @@ class crvision_rom12k_device : public crvision_rom_device
 public:
 	// construction/destruction
 	crvision_rom12k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_rom40);
 	virtual DECLARE_READ8_MEMBER(read_rom80);
@@ -79,7 +81,7 @@ class crvision_rom16k_device : public crvision_rom_device
 public:
 	// construction/destruction
 	crvision_rom16k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_rom80);
 };
@@ -91,7 +93,7 @@ class crvision_rom18k_device : public crvision_rom_device
 public:
 	// construction/destruction
 	crvision_rom18k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_rom40);
 	virtual DECLARE_READ8_MEMBER(read_rom80);

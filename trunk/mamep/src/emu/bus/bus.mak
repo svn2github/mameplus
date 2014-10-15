@@ -945,6 +945,7 @@ BUSOBJS += $(BUSOBJ)/rs232/printer.o
 BUSOBJS += $(BUSOBJ)/rs232/rs232.o
 BUSOBJS += $(BUSOBJ)/rs232/ser_mouse.o
 BUSOBJS += $(BUSOBJ)/rs232/terminal.o
+BUSOBJS += $(BUSOBJ)/rs232/xvd701.o
 endif
 
 #-------------------------------------------------
@@ -1143,6 +1144,8 @@ ifneq ($(filter SEGA8,$(BUSES)),)
 OBJDIRS += $(BUSOBJ)/sega8
 BUSOBJS += $(BUSOBJ)/sega8/sega8_slot.o
 BUSOBJS += $(BUSOBJ)/sega8/rom.o
+BUSOBJS += $(BUSOBJ)/sega8/ccatch.o
+BUSOBJS += $(BUSOBJ)/sega8/mgear.o
 endif
 
 #-------------------------------------------------

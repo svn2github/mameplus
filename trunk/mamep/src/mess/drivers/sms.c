@@ -16,7 +16,6 @@
  - Gear to Gear Port SMS Controller Adaptor
  - Sega Demo Unit II (kiosk expansion device)
  - SMS Disk System (floppy disk drive expansion device) - unreleased
- - Sega Graphic Board (black version) - unreleased
  - Rapid button of Japanese Master System
  - Keyboard support for Sega Mark III (sg1000m3 driver)
  - Link between two Mark III's through keyboard, supported by F-16 Fighting Falcon
@@ -231,9 +230,7 @@ DC00      - Selection buttons #2, 9-16 (R)
 #include "sound/sn76496.h"
 #include "sound/2413intf.h"
 #include "video/315_5124.h"
-#include "imagedev/cartslot.h"
 #include "includes/sms.h"
-#include "bus/sega8/rom.h"
 
 #include "sms1.lh"
 
@@ -461,41 +458,6 @@ WRITE_LINE_MEMBER(sms_state::sms_int_callback)
 	m_maincpu->set_input_line(0, state);
 }
 
-static SLOT_INTERFACE_START(sms_cart)
-	SLOT_INTERFACE_INTERNAL("rom",  SEGA8_ROM_STD)
-	SLOT_INTERFACE_INTERNAL("codemasters",  SEGA8_ROM_CODEMASTERS)
-	SLOT_INTERFACE_INTERNAL("4pak",  SEGA8_ROM_4PAK)
-	SLOT_INTERFACE_INTERNAL("zemina",  SEGA8_ROM_ZEMINA)
-	SLOT_INTERFACE_INTERNAL("nemesis",  SEGA8_ROM_NEMESIS)
-	SLOT_INTERFACE_INTERNAL("janggun",  SEGA8_ROM_JANGGUN)
-	SLOT_INTERFACE_INTERNAL("korean",  SEGA8_ROM_KOREAN)
-	SLOT_INTERFACE_INTERNAL("korean_nb",  SEGA8_ROM_KOREAN_NB)
-SLOT_INTERFACE_END
-
-static SLOT_INTERFACE_START(sg1000mk3_cart)
-	SLOT_INTERFACE_INTERNAL("rom",  SEGA8_ROM_STD)
-	SLOT_INTERFACE_INTERNAL("terebi",  SEGA8_ROM_TEREBI)
-	SLOT_INTERFACE_INTERNAL("codemasters",  SEGA8_ROM_CODEMASTERS)
-	SLOT_INTERFACE_INTERNAL("4pak",  SEGA8_ROM_4PAK)
-	SLOT_INTERFACE_INTERNAL("zemina",  SEGA8_ROM_ZEMINA)
-	SLOT_INTERFACE_INTERNAL("nemesis",  SEGA8_ROM_NEMESIS)
-	SLOT_INTERFACE_INTERNAL("janggun",  SEGA8_ROM_JANGGUN)
-	SLOT_INTERFACE_INTERNAL("korean",  SEGA8_ROM_KOREAN)
-	SLOT_INTERFACE_INTERNAL("korean_nb",  SEGA8_ROM_KOREAN_NB)
-	SLOT_INTERFACE_INTERNAL("othello",  SEGA8_ROM_OTHELLO)
-	SLOT_INTERFACE_INTERNAL("castle",  SEGA8_ROM_CASTLE)
-	SLOT_INTERFACE_INTERNAL("dahjee_typea",  SEGA8_ROM_DAHJEE_TYPEA)
-	SLOT_INTERFACE_INTERNAL("dahjee_typeb",  SEGA8_ROM_DAHJEE_TYPEB)
-// are these SC-3000 carts below actually compatible or not? remove if not!
-	SLOT_INTERFACE_INTERNAL("level3",  SEGA8_ROM_BASIC_L3)
-	SLOT_INTERFACE_INTERNAL("music_editor",  SEGA8_ROM_MUSIC_EDITOR)
-SLOT_INTERFACE_END
-
-static SLOT_INTERFACE_START(gg_cart)
-	SLOT_INTERFACE_INTERNAL("rom",  SEGA8_ROM_STD)
-	SLOT_INTERFACE_INTERNAL("eeprom",  SEGA8_ROM_EEPROM)
-	SLOT_INTERFACE_INTERNAL("codemasters",  SEGA8_ROM_CODEMASTERS)
-SLOT_INTERFACE_END
 
 static MACHINE_CONFIG_START( sms_ntsc_base, sms_state )
 	/* basic machine hardware */
@@ -821,7 +783,7 @@ static MACHINE_CONFIG_START( gamegear, sms_state )
 	/* cartridge */
 	MCFG_GG_CARTRIDGE_ADD("slot", gg_cart, NULL)
 
-	MCFG_SOFTWARE_LIST_ADD("cart_list","gamegear")
+	MCFG_SOFTWARE_LIST_ADD("cart_list", "gamegear")
 MACHINE_CONFIG_END
 
 

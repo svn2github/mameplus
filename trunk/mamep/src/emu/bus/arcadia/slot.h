@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __ARCADIA_SLOT_H
 #define __ARCADIA_SLOT_H
 
@@ -97,6 +99,5 @@ extern const device_type EA2001_CART_SLOT;
 
 #define MCFG_ARCADIA_CARTRIDGE_ADD(_tag,_slot_intf,_def_slot) \
 	MCFG_DEVICE_ADD(_tag, EA2001_CART_SLOT, 0) \
-	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, false) \
-
+	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, false)
 #endif

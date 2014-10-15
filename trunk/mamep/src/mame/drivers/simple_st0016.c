@@ -1,6 +1,13 @@
 /*******************************************
+
   Seta custom ST-0016 chip based games.
     driver by Tomasz Slanina
+
+  this is for 'simple' games using the chip
+  where the chip is providing the maincpu
+  video, and sound functionality of the game
+  rather than acting as a sub-cpu
+
 ********************************************
 
 Todo:
@@ -13,11 +20,10 @@ Dips verified for Neratte Chu (nratechu) from manual
 #include "cpu/v810/v810.h"
 #include "cpu/z80/z80.h"
 #include "sound/st0016.h"
-#include "includes/st0016.h"
+#include "includes/simple_st0016.h"
 #include "machine/st0016.h"
 
 
-UINT32 st0016_rom_bank;
 
 /*************************************
  *
@@ -28,13 +34,8 @@ UINT32 st0016_rom_bank;
 static ADDRESS_MAP_START( st0016_mem, AS_PROGRAM, 8, st0016_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xcfff) AM_READ(st0016_sprite_ram_r) AM_WRITE(st0016_sprite_ram_w)
-	AM_RANGE(0xd000, 0xdfff) AM_READ(st0016_sprite2_ram_r) AM_WRITE(st0016_sprite2_ram_w)
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM
 	AM_RANGE(0xe800, 0xe87f) AM_RAM /* common ram */
-	//AM_RANGE(0xe900, 0xe9ff) // sound - internal
-	AM_RANGE(0xea00, 0xebff) AM_READ(st0016_palette_ram_r) AM_WRITE(st0016_palette_ram_w)
-	AM_RANGE(0xec00, 0xec1f) AM_READ(st0016_character_ram_r) AM_WRITE(st0016_character_ram_w)
 	AM_RANGE(0xf000, 0xffff) AM_RAM /* work ram */
 ADDRESS_MAP_END
 
@@ -76,24 +77,19 @@ WRITE8_MEMBER(st0016_state::mux_select_w)
 WRITE8_MEMBER(st0016_state::st0016_rom_bank_w)
 {
 	membank("bank1")->set_base(memregion("maincpu")->base() + (data* 0x4000));
-	st0016_rom_bank=data;
+//  st0016_rom_bank=data;
 }
 
 static ADDRESS_MAP_START( st0016_io, AS_IO, 8, st0016_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0xbf) AM_READ(st0016_vregs_r) AM_WRITE(st0016_vregs_w) /* video/crt regs ? */
 	AM_RANGE(0xc0, 0xc0) AM_READ_PORT("P1") AM_WRITE(mux_select_w)
 	AM_RANGE(0xc1, 0xc1) AM_READ_PORT("P2") AM_WRITENOP
 	AM_RANGE(0xc2, 0xc2) AM_READ(mux_r) AM_WRITENOP
 	AM_RANGE(0xc3, 0xc3) AM_READ_PORT("P2") AM_WRITENOP
 	AM_RANGE(0xe0, 0xe0) AM_WRITENOP /* renju = $40, neratte = 0 */
 	AM_RANGE(0xe1, 0xe1) AM_WRITE(st0016_rom_bank_w)
-	AM_RANGE(0xe2, 0xe2) AM_WRITE(st0016_sprite_bank_w)
-	AM_RANGE(0xe3, 0xe4) AM_WRITE(st0016_character_bank_w)
-	AM_RANGE(0xe5, 0xe5) AM_WRITE(st0016_palette_bank_w)
 	AM_RANGE(0xe6, 0xe6) AM_WRITENOP /* banking ? ram bank ? shared rambank ? */
 	AM_RANGE(0xe7, 0xe7) AM_WRITENOP /* watchdog */
-	AM_RANGE(0xf0, 0xf0) AM_READ(st0016_dma_r)
 ADDRESS_MAP_END
 
 
@@ -145,7 +141,6 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( st0016_m2_io, AS_IO, 8, st0016_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0xbf) AM_READ(st0016_vregs_r) AM_WRITE(st0016_vregs_w)
 	AM_RANGE(0xc0, 0xc3) AM_READ(latch8_r) AM_WRITE(latch8_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ_PORT("P1") AM_WRITE(mux_select_w)
 	AM_RANGE(0xd1, 0xd1) AM_READ_PORT("P2") AM_WRITENOP
@@ -153,12 +148,8 @@ static ADDRESS_MAP_START( st0016_m2_io, AS_IO, 8, st0016_state )
 	AM_RANGE(0xd3, 0xd3) AM_READ_PORT("P2") AM_WRITENOP
 	AM_RANGE(0xe0, 0xe0) AM_WRITENOP
 	AM_RANGE(0xe1, 0xe1) AM_WRITE(st0016_rom_bank_w)
-	AM_RANGE(0xe2, 0xe2) AM_WRITE(st0016_sprite_bank_w)
-	AM_RANGE(0xe3, 0xe4) AM_WRITE(st0016_character_bank_w)
-	AM_RANGE(0xe5, 0xe5) AM_WRITE(st0016_palette_bank_w)
 	AM_RANGE(0xe6, 0xe6) AM_WRITENOP /* banking ? ram bank ? shared rambank ? */
 	AM_RANGE(0xe7, 0xe7) AM_WRITENOP /* watchdog */
-	AM_RANGE(0xf0, 0xf0) AM_READ(st0016_dma_r)
 ADDRESS_MAP_END
 
 /*************************************
@@ -380,9 +371,63 @@ static INPUT_PORTS_START( mayjisn2 )
 	PORT_DIPSETTING(    0x40, "A" )
 INPUT_PORTS_END
 
-static GFXDECODE_START( st0016 )
-//  GFXDECODE_ENTRY( NULL, 0, charlayout,      0, 16*4  )
-GFXDECODE_END
+
+static INPUT_PORTS_START( gostop )
+	PORT_START("P1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("OUT")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("WAIT")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+
+	PORT_START("P2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("Gift 1")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME("Gift 2")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1) PORT_NAME("Gift 3")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("SYSTEM") // IP3 - bits 5-8
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1) PORT_NAME("Reset")
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED ) // don't show up in test menu
+
+
+	PORT_START("UNK")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED ) // nothing?
+
+	PORT_START("DSW1")
+	PORT_DIPUNKNOWN_DIPLOC( 0x01, IP_ACTIVE_LOW, "SW1:1" ) // shows up as IP3 bit 3
+	PORT_DIPUNKNOWN_DIPLOC( 0x02, IP_ACTIVE_LOW, "SW1:2" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x04, IP_ACTIVE_LOW, "SW1:3" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, IP_ACTIVE_LOW, "SW1:4" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, IP_ACTIVE_LOW, "SW1:5" ) // shows up as IP3 bit 2
+	PORT_DIPNAME( 0x20, 0x20, "Init Ram" ) PORT_DIPLOCATION("SW1:6")
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPUNKNOWN_DIPLOC( 0x40, IP_ACTIVE_LOW, "SW1:7" )
+	PORT_SERVICE_DIPLOC(  0x80, IP_ACTIVE_LOW, "SW2:8" )
+
+	PORT_START("DSW2") // no dsw2 listed in test mode
+	PORT_DIPUNKNOWN_DIPLOC( 0x01, IP_ACTIVE_LOW, "SW2:1" ) // shows up as IP3 bit 1
+	PORT_DIPUNKNOWN_DIPLOC( 0x02, IP_ACTIVE_LOW, "SW2:2" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x04, IP_ACTIVE_LOW, "SW2:3" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, IP_ACTIVE_LOW, "SW2:4" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, IP_ACTIVE_LOW, "SW2:5" ) // shows up as IP3 bit 0
+	PORT_DIPUNKNOWN_DIPLOC( 0x20, IP_ACTIVE_LOW, "SW2:6" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x40, IP_ACTIVE_LOW, "SW2:7" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x80, IP_ACTIVE_LOW, "SW2:8" )
+INPUT_PORTS_END
+
 
 TIMER_DEVICE_CALLBACK_MEMBER(st0016_state::st0016_int)
 {
@@ -404,6 +449,12 @@ TIMER_DEVICE_CALLBACK_MEMBER(st0016_state::st0016_int)
  *
  *************************************/
 
+UINT32 st0016_state::screen_update_st0016(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	return m_maincpu->update(screen,bitmap,cliprect);
+}
+
+
 static MACHINE_CONFIG_START( st0016, st0016_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",ST0016_CPU,8000000) /* 8 MHz ? */
@@ -418,12 +469,10 @@ static MACHINE_CONFIG_START( st0016, st0016_state )
 	MCFG_SCREEN_SIZE(48*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(st0016_state, screen_update_st0016)
-	MCFG_SCREEN_PALETTE("palette")
+	MCFG_SCREEN_PALETTE("maincpu:palette")
 
-	MCFG_GFXDECODE_ADD("gfxdecode", "palette", st0016)
-	MCFG_PALETTE_ADD("palette", 16*16*4+1)
 
-	MCFG_VIDEO_START_OVERRIDE(st0016_state,st0016)
+//  MCFG_VIDEO_START_OVERRIDE(st0016_state,st0016)
 
 MACHINE_CONFIG_END
 
@@ -637,23 +686,23 @@ ROM_END
 
 DRIVER_INIT_MEMBER(st0016_state,renju)
 {
-	st0016_game=0;
+	m_maincpu->st0016_game=0;
 }
 
 DRIVER_INIT_MEMBER(st0016_state,nratechu)
 {
-	st0016_game=1;
+	m_maincpu->st0016_game=1;
 }
 
 DRIVER_INIT_MEMBER(st0016_state,mayjinsn)
 {
-	st0016_game=4;//|0x80;
+	m_maincpu->st0016_game=4;//|0x80;
 	membank("bank2")->set_base(memregion("user1")->base());
 }
 
 DRIVER_INIT_MEMBER(st0016_state,mayjisn2)
 {
-	st0016_game=4;
+	m_maincpu->st0016_game=4;
 	membank("bank2")->set_base(memregion("user1")->base());
 }
 
@@ -667,12 +716,13 @@ DRIVER_INIT_MEMBER(st0016_state,mayjisn2)
  *
  *************************************/
 
-GAME(  1994, renju,     0,      renju,    renju,   st0016_state,    renju,    ROT0, "Visco",     "Renju Kizoku", 0)
-GAME(  1996, nratechu,  0,      st0016,   nratechu, st0016_state, nratechu, ROT0, "Seta",      "Neratte Chu", 0)
-GAME(  1994, mayjisn2,  0,      mayjinsn, mayjisn2, st0016_state, mayjisn2, ROT0, "Seta",      "Mayjinsen 2", 0)
-GAME(  1995, koikois,   0,      st0016,   koikois, st0016_state,  renju,    ROT0, "Visco",     "Koi Koi Shimasho", GAME_IMPERFECT_GRAPHICS)
+GAME( 1994, renju,      0,      renju,    renju,    st0016_state, renju,    ROT0, "Visco",            "Renju Kizoku", 0)
+GAME( 1996, nratechu,   0,      st0016,   nratechu, st0016_state, nratechu, ROT0, "Seta",             "Neratte Chu", 0)
+GAME( 1994, mayjisn2,   0,      mayjinsn, mayjisn2, st0016_state, mayjisn2, ROT0, "Seta",             "Mayjinsen 2", 0)
+GAME( 1995, koikois,    0,      st0016,   koikois,  st0016_state, renju,    ROT0, "Visco",            "Koi Koi Shimasho", GAME_IMPERFECT_GRAPHICS)
+GAME( 2001, gostop,     0,      st0016,   gostop,   st0016_state, renju,    ROT0, "Visco",            "Kankoku Hanafuda Go-Stop", 0)
+
 /* Not working */
-GAME( 1994, mayjinsn,   0,      mayjinsn, st0016, st0016_state,   mayjinsn, ROT0, "Seta",      "Mayjinsen",GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING)
-GAME( 1994, dcrown,     0,      st0016,   renju, st0016_state,    renju,    ROT0, "Nippon Data Kiki", "Dream Crown (Set 1)", GAME_NOT_WORKING) // (c) 1994 Nippon Data Kiki is uploaded near the Japanese Insert coin text
-GAME( 1994, dcrowna,    dcrown, st0016,   renju, st0016_state,    renju,    ROT0, "Nippon Data Kiki", "Dream Crown (Set 2)", GAME_NOT_WORKING) // the Insert Coin text has been translated to English and no (c) is uploaded
-GAME( 2001, gostop,     0,      st0016,   renju, st0016_state,    renju,    ROT0, "Visco", "Kankoku Hanafuda Go-Stop", GAME_NOT_WORKING)
+GAME( 1994, mayjinsn,   0,      mayjinsn, st0016,   st0016_state, mayjinsn, ROT0, "Seta",             "Mayjinsen",GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING)
+GAME( 1994, dcrown,     0,      st0016,   renju,    st0016_state, renju,    ROT0, "Nippon Data Kiki", "Dream Crown (Set 1)", GAME_NOT_WORKING) // (c) 1994 Nippon Data Kiki is uploaded near the Japanese Insert coin text
+GAME( 1994, dcrowna,    dcrown, st0016,   renju,    st0016_state, renju,    ROT0, "Nippon Data Kiki", "Dream Crown (Set 2)", GAME_NOT_WORKING) // the Insert Coin text has been translated to English and no (c) is uploaded

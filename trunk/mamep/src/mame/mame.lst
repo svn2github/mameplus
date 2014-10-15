@@ -49,6 +49,7 @@ pacman          // (c) 1980 Midway
 pacmanf         // hack
 puckmod         // (c) 1981 Namco
 pacmod          // (c) 1981 Midway
+pacmanjpm       // bootleg
 newpuc2         // hack
 newpuc2b        // hack
 pacuman         // bootleg
@@ -103,6 +104,7 @@ msheartb        // hack
 mspacmanbg      // bootleg
 mspacmanbgd     // bootleg
 mspacmanbcc     // bootleg
+mspacmanblt     // bootleg
 woodpeck        // (c) 1981 Amenip (Palcom Queen River)
 woodpeca        // (c) 1981 Amenip Nova Games Ltd.
 mspacmab        // bootleg
@@ -135,6 +137,8 @@ mschamps        // hack (hack of the Rayglo hack?)
 cannonbp        // hack
 superabc        // hack
 superabco       // hack
+pengojpm        // bootleg
+pengopac        // bootleg
 
 // S2650 Pacman Kits
 drivfrcp        // (c) 1984 Shinkai Inc. (Magic Eletronics Inc. license)
@@ -330,6 +334,7 @@ ckongs          // bootleg
 froggers        // bootleg
 frogf           // bootleg
 quaak           // bootleg
+froggeram       // bootleg
 amidars         // GX337 (c) 1982 Konami
 triplep         // (c) 1982 KKI / made by Sanritsu?
 triplepa        // (c) 1982 KKI / made by Sanritsu?
@@ -467,6 +472,7 @@ kickboy         // (c) 1983
 itaten          // (c) 1984 + Alice
 friskyt         // (c) 1981
 friskyta        // (c) 1981
+friskytb        // (c) 1981
 radrad          // (c) 1982 Nichibutsu USA
 seicross        // (c) 1984 + Alice
 sectrzon        // (c) 1984 + Alice
@@ -1239,6 +1245,8 @@ marioe          // (c) 1983 Nintendo of America
 marioo          // (c) 1983 Nintendo of America
 marioj          // (c) 1983 Nintendo
 masao           // bootleg
+mariobl         // bootleg
+dkong3abl       //
 pestplce        // bootleg on donkey kong hw
 spclforc        // (c) 1985 Senko Industries (Magic Eletronics Inc. license)
 spcfrcii        // (c) 1985 Senko Industries (Magic Eletronics Inc. license)
@@ -1758,6 +1766,7 @@ motorace        // (c) 1983 Williams license
 mototour        // (c) 1983 Tecfri
 shtrider        // (c) 1984 Seibu Kaihatsu
 shtridera       // (c) 1984 Seibu Kaihatsu
+shtriderb       // bootleg
 wilytowr        // M63 (c) 1984
 atomboy         // M63 (c) 1985 Irem + Memetron license
 atomboya        // M63 (c) 1985 Irem + Memetron license
@@ -2101,6 +2110,7 @@ rbisland        // B22 (c) 1987 Taito Corporation
 rbislando       // B22 (c) 1987 Taito Corporation
 rbislande       // B39 (c) 1988 Taito Corporation
 jumping         // bootleg
+jumpinga        // bootleg
 arkanoid        // A75 (c) 1986 Taito Corporation Japan (World)
 arkanoidu       // A75 (c) 1986 Taito America Corporation + Romstar license (US)
 arkanoiduo      // A75 (c) 1986 Taito America Corporation + Romstar license (US)
@@ -2124,6 +2134,7 @@ arktayt2        // bootleg
 arkatour        // ??? (c) 1987 Taito America Corporation + Romstar license (US)
 tetrsark        // ??? (c) D.R.Korea
 hexa            // D. R. Korea
+hexaa			//
 brixian         // (c) 1993 Cheil Computer System
 sqix            // B03 1987
 sqixr1          // B03 1987
@@ -3253,7 +3264,8 @@ ganbare         // 11/04/2000 (c) 2000 (Japan)
 // Capcom CPS2 games
 // list completed by CPS2Shock
 // http://cps2shock.retrogames.com
-ssf2            // 11/09/1993 (c) 1993 (World)
+ssf2            // 05/10/1993 (c) 1993 (World)
+ssf2r1          // 11/09/1993 (c) 1993 (World)
 ssf2u           // 11/09/1993 (c) 1993 (USA)
 ssf2a           // 05/10/1993 (c) 1993 (Asia)
 ssf2ar1         // 14/09/1993 (c) 1993 (Asia)
@@ -5885,6 +5897,7 @@ chelnov         // (c) 1988 Data East USA (World)
 chelnovu        // (c) 1988 Data East USA (US)
 chelnovj        // (c) 1988 Data East Corporation (Japan)
 chelnovjbl      // bootleg
+chelnovjbla     // bootleg
 // the following ones all run on similar hardware
 hbarrel         // (c) 1987 Data East USA (US)
 hbarrelw        // (c) 1987 Data East Corporation (World)
@@ -8337,7 +8350,7 @@ goodejan        // (c) 1991 Seibu/Tecmo
 goodejana       // (c) 1991 Seibu/Tecmo
 
 raiden2         // (c) 1993 Seibu Kaihatsu + Fabtek license
-raiden2u		// (c) 1993 Seibu Kaihatsu + Fabtek license
+raiden2u        // (c) 1993 Seibu Kaihatsu + Fabtek license
 raiden2hk       // (c) 1993 Seibu Kaihatsu + Metrotainment license
 raiden2j        // (c) 1993 Seibu Kaihatsu
 raiden2i        // (c) 1993 Seibu Kaihatsu
@@ -8788,6 +8801,7 @@ grtesoro4       // (c) 1999 - Ref ???
 
 // Gaelco 3D games
 speedup         // (c) 1996 - Ref ???
+speedup10       // (c) 1996 - Ref ???
 surfplnt        // (c) 1997 - Ref 971223
 surfplnt40      // (c) 1997 - Ref 970514
 radikalb        // (c) 1998 - Ref ???
@@ -10478,7 +10492,6 @@ riviera         // (c) 1987 Merit
 rivieraa        // (c) 1986 Merit
 rivierab        // (c) 1986 Merit
 americna        // (c) 1987 Merit
-americnaa       // (c) 1994 Merit
 dodgecty        // (c) 1988 Merit
 dodgectya       // (c) 1986 Merit
 dodgectyb       // (c) 1986 Merit
@@ -10497,6 +10510,7 @@ pbss330         // (c) 1994 Merit
 pbst30          // (c) 1994 Merit
 pbst30b         // (c) 1993 Merit
 realbrod        // (c) 1995 Merit
+mtjpoker        // (c) 1994 Merit
 megat2          // (c) 1994 Merit
 megat2a         // (c) 1994 Merit
 megat2b         // (c) 1994 Merit

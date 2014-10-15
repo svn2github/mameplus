@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __O2_CHESS_H
 #define __O2_CHESS_H
 
@@ -10,10 +12,9 @@
 
 class o2_chess_device : public o2_rom_device
 {
-	
 	virtual machine_config_constructor device_mconfig_additions() const;
-//	virtual const rom_entry *device_rom_region() const;
-	
+//  virtual const rom_entry *device_rom_region() const;
+
 public:
 	// construction/destruction
 	o2_chess_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);

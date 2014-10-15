@@ -105,7 +105,7 @@ bool windows_osd_interface::video_init()
 void windows_osd_interface::video_exit()
 {
 	window_exit();
-	
+
 	// free all of our monitor information
 	while (win_monitor_list != NULL)
 	{
@@ -119,10 +119,10 @@ void windows_osd_interface::video_exit()
 
 win_monitor_info::win_monitor_info()
 	: next(NULL),
-	  handle(NULL),
-	  aspect(0.0f),
-	  reqwidth(0),
-	  reqheight(0)
+		handle(NULL),
+		aspect(0.0f),
+		reqwidth(0),
+		reqheight(0)
 {
 }
 

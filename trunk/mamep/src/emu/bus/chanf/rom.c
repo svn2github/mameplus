@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 /***********************************************************************************************************
 
 
@@ -25,7 +27,8 @@ const device_type CHANF_ROM_STD = &device_creator<chanf_rom_device>;
 const device_type CHANF_ROM_MAZE = &device_creator<chanf_maze_device>;
 const device_type CHANF_ROM_HANGMAN = &device_creator<chanf_hangman_device>;
 const device_type CHANF_ROM_CHESS = &device_creator<chanf_chess_device>;
-const device_type CHANF_ROM_MULTI = &device_creator<chanf_multi_device>;
+const device_type CHANF_ROM_MULTI_OLD = &device_creator<chanf_multi_old_device>;
+const device_type CHANF_ROM_MULTI_FINAL = &device_creator<chanf_multi_final_device>;
 
 
 chanf_rom_device::chanf_rom_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
@@ -55,8 +58,13 @@ chanf_chess_device::chanf_chess_device(const machine_config &mconfig, const char
 {
 }
 
-chanf_multi_device::chanf_multi_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-					: chanf_rom_device(mconfig, CHANF_ROM_MULTI, "Channel F Multigame Cart", tag, owner, clock, "chanf_multi", __FILE__)
+chanf_multi_old_device::chanf_multi_old_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: chanf_rom_device(mconfig, CHANF_ROM_MULTI_OLD, "Channel F Multigame (Earlier Version) Cart", tag, owner, clock, "chanf_multi_old", __FILE__)
+{
+}
+
+chanf_multi_final_device::chanf_multi_final_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: chanf_rom_device(mconfig, CHANF_ROM_MULTI_FINAL, "Channel F Multigame (Final Version) Cart", tag, owner, clock, "chanf_multi_fin", __FILE__)
 {
 }
 
@@ -109,14 +117,27 @@ void chanf_hangman_device::device_reset()
 }
 
 
-void chanf_multi_device::device_start()
+void chanf_multi_old_device::device_start()
 {
 	save_item(NAME(m_base_bank));
 }
 
-void chanf_multi_device::device_reset()
+void chanf_multi_old_device::device_reset()
 {
 	m_base_bank = 0;
+}
+
+
+void chanf_multi_final_device::device_start()
+{
+	save_item(NAME(m_base_bank));
+	save_item(NAME(m_half_bank));
+}
+
+void chanf_multi_final_device::device_reset()
+{
+	m_base_bank = 0;
+	m_half_bank = 0;
 }
 
 
@@ -143,7 +164,7 @@ UINT8 chanf_rom_device::common_read_2102(UINT32 offset)
 			m_data0 = m_ram[m_addr] & 1;
 			return (m_latch[0] & 0x7f) | (m_data0 << 7);
 		}
-		
+
 		return m_latch[0];
 	}
 	else
@@ -155,10 +176,10 @@ void chanf_rom_device::common_write_2102(UINT32 offset, UINT8 data)
 	if (offset == 0)
 	{
 		m_latch[0] = data;
-		
+
 		m_read_write = BIT(data, 0);
 
-		m_addr_latch = (m_addr_latch & 0x3f3) | (BIT(data, 2) << 2) | (BIT(data, 1) << 3);	// bits 2,3 come from this write!
+		m_addr_latch = (m_addr_latch & 0x3f3) | (BIT(data, 2) << 2) | (BIT(data, 1) << 3);  // bits 2,3 come from this write!
 		m_addr = m_addr_latch;
 
 		m_data0 = BIT(data, 3);
@@ -178,7 +199,7 @@ void chanf_rom_device::common_write_2102(UINT32 offset, UINT8 data)
 
 // These are shared among Schach & Multigame cart types (not directly used by base chanf_rom_device)
 UINT8 chanf_rom_device::common_read_3853(UINT32 offset)
-{ 
+{
 	if (offset < m_ram.count())
 		return m_ram[offset];
 	else
@@ -186,21 +207,36 @@ UINT8 chanf_rom_device::common_read_3853(UINT32 offset)
 }
 
 void chanf_rom_device::common_write_3853(UINT32 offset, UINT8 data)
-{ 
+{
 	if (offset < m_ram.count())
 		m_ram[offset] = data;
 }
 
-READ8_MEMBER(chanf_multi_device::read_rom)
+READ8_MEMBER(chanf_multi_old_device::read_rom)
 {
 	if (offset < 0x2000)
-		return m_rom[offset + (m_base_bank * 0x2000)];
+		return m_rom[offset + m_base_bank * 0x2000];
 	else
 		return 0xff;
 }
 
-WRITE8_MEMBER(chanf_multi_device::write_bank)
+WRITE8_MEMBER(chanf_multi_old_device::write_bank)
 {
-	m_base_bank = data;
+	//printf("0x%x\n", data);
+	m_base_bank = data & 0x1f;
 }
 
+READ8_MEMBER(chanf_multi_final_device::read_rom)
+{
+	if (offset < 0x2000)
+		return m_rom[offset + (m_base_bank * 0x2000) + (m_half_bank * 0x1000)];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(chanf_multi_final_device::write_bank)
+{
+	//printf("0x%x\n", data);
+	m_base_bank = data & 0x1f;
+	m_half_bank = BIT(data, 5);
+}

@@ -70,7 +70,7 @@
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/nvram.h"
-#include "machine/315-5296.h"
+#include "machine/315_5296.h"
 #include "sound/okim6295.h"
 #include "sound/sn76496.h"
 #include "sound/2612intf.h"
@@ -432,7 +432,7 @@ WRITE8_MEMBER(segac2_state::io_portd_w)
 	 D0 : To CN1 pin 8. (Coin meter 1)
 	*/
 	//coin_lockout_w(space.machine(), 1, data & 0x08);
-    //coin_lockout_w(space.machine(), 0, data & 0x04);
+	//coin_lockout_w(space.machine(), 0, data & 0x04);
 	coin_counter_w(space.machine(), 1, data & 0x02);
 	coin_counter_w(space.machine(), 0, data & 0x01);
 }

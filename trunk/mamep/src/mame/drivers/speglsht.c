@@ -106,17 +106,20 @@ Notes:
 #include "emu.h"
 #include "machine/st0016.h"
 #include "cpu/mips/r3000.h"
-#include "includes/st0016.h"
 
 
-class speglsht_state : public st0016_state
+class speglsht_state : public driver_device
 {
 public:
 	speglsht_state(const machine_config &mconfig, device_type type, const char *tag)
-		: st0016_state(mconfig, type, tag),
+		: driver_device(mconfig, type, tag),
 			m_shared(*this, "shared"),
 			m_framebuffer(*this, "framebuffer"),
-			m_cop_ram(*this, "cop_ram") { }
+			m_cop_ram(*this, "cop_ram"),
+			m_palette(*this, "palette"),
+			m_maincpu(*this,"maincpu"),
+			m_subcpu(*this, "sub")
+			{ }
 
 	required_shared_ptr<UINT8> m_shared;
 	required_shared_ptr<UINT32> m_framebuffer;
@@ -133,32 +136,44 @@ public:
 	DECLARE_MACHINE_RESET(speglsht);
 	DECLARE_VIDEO_START(speglsht);
 	UINT32 screen_update_speglsht(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	required_device<palette_device> m_palette;
+	optional_device<st0016_cpu_device> m_maincpu;
+	optional_device<cpu_device> m_subcpu;
+
+	DECLARE_WRITE8_MEMBER(st0016_rom_bank_w);
 };
 
 
 static ADDRESS_MAP_START( st0016_mem, AS_PROGRAM, 8, speglsht_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xcfff) AM_READ(st0016_sprite_ram_r) AM_WRITE(st0016_sprite_ram_w)
-	AM_RANGE(0xd000, 0xdfff) AM_READ(st0016_sprite2_ram_r) AM_WRITE(st0016_sprite2_ram_w)
+	//AM_RANGE(0xc000, 0xcfff) AM_READ(st0016_sprite_ram_r) AM_WRITE(st0016_sprite_ram_w)
+	//AM_RANGE(0xd000, 0xdfff) AM_READ(st0016_sprite2_ram_r) AM_WRITE(st0016_sprite2_ram_w)
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM
 	AM_RANGE(0xe800, 0xe87f) AM_RAM
 	//AM_RANGE(0xe900, 0xe9ff) // sound - internal
-	AM_RANGE(0xea00, 0xebff) AM_READ(st0016_palette_ram_r) AM_WRITE(st0016_palette_ram_w)
-	AM_RANGE(0xec00, 0xec1f) AM_READ(st0016_character_ram_r) AM_WRITE(st0016_character_ram_w)
+	//AM_RANGE(0xea00, 0xebff) AM_READ(st0016_palette_ram_r) AM_WRITE(st0016_palette_ram_w)
+	//AM_RANGE(0xec00, 0xec1f) AM_READ(st0016_character_ram_r) AM_WRITE(st0016_character_ram_w)
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("shared")
 ADDRESS_MAP_END
 
+// common rombank? should go in machine/st0016 with larger address space exposed?
+WRITE8_MEMBER(speglsht_state::st0016_rom_bank_w)
+{
+	membank("bank1")->set_base(memregion("maincpu")->base() + (data* 0x4000));
+}
+
+
 static ADDRESS_MAP_START( st0016_io, AS_IO, 8, speglsht_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0xbf) AM_READ(st0016_vregs_r) AM_WRITE(st0016_vregs_w)
+	//AM_RANGE(0x00, 0xbf) AM_READ(st0016_vregs_r) AM_WRITE(st0016_vregs_w)
 	AM_RANGE(0xe1, 0xe1) AM_WRITE(st0016_rom_bank_w)
-	AM_RANGE(0xe2, 0xe2) AM_WRITE(st0016_sprite_bank_w)
-	AM_RANGE(0xe3, 0xe4) AM_WRITE(st0016_character_bank_w)
-	AM_RANGE(0xe5, 0xe5) AM_WRITE(st0016_palette_bank_w)
+	//AM_RANGE(0xe2, 0xe2) AM_WRITE(st0016_sprite_bank_w)
+	//AM_RANGE(0xe3, 0xe4) AM_WRITE(st0016_character_bank_w)
+	//AM_RANGE(0xe5, 0xe5) AM_WRITE(st0016_palette_bank_w)
 	AM_RANGE(0xe6, 0xe6) AM_WRITENOP
 	AM_RANGE(0xe7, 0xe7) AM_WRITENOP
-	AM_RANGE(0xf0, 0xf0) AM_READ(st0016_dma_r)
+	//AM_RANGE(0xf0, 0xf0) AM_READ(st0016_dma_r)
 ADDRESS_MAP_END
 
 READ32_MEMBER(speglsht_state::shared_r)
@@ -329,7 +344,7 @@ MACHINE_RESET_MEMBER(speglsht_state,speglsht)
 VIDEO_START_MEMBER(speglsht_state,speglsht)
 {
 	m_bitmap = auto_bitmap_ind16_alloc(machine(), 512, 5122 );
-	VIDEO_START_CALL_MEMBER(st0016);
+//  VIDEO_START_CALL_MEMBER(st0016);
 }
 
 #define PLOT_PIXEL_RGB(x,y,r,g,b)   if(y>=0 && x>=0 && x<512 && y<512) \
@@ -354,7 +369,7 @@ UINT32 speglsht_state::screen_update_speglsht(screen_device &screen, bitmap_rgb3
 
 	//draw st0016 gfx to temporary bitmap (indexed 16)
 	m_bitmap->fill(0);
-	st0016_draw_screen(screen, *m_bitmap, cliprect);
+	m_maincpu->st0016_draw_screen(screen, *m_bitmap, cliprect);
 
 	//copy temporary bitmap to rgb 32 bit bitmap
 	for(y=cliprect.min_y; y<cliprect.max_y;y++)
@@ -364,7 +379,7 @@ UINT32 speglsht_state::screen_update_speglsht(screen_device &screen, bitmap_rgb3
 		{
 			if(srcline[x])
 			{
-				rgb_t color=m_palette->pen_color(srcline[x]);
+				rgb_t color=m_maincpu->m_palette->pen_color(srcline[x]);
 				PLOT_PIXEL_RGB(x,y,color.r(),color.g(),color.b());
 			}
 		}
@@ -425,7 +440,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(speglsht_state,speglsht)
 {
-	st0016_game=3;
+	m_maincpu->st0016_game=3;
 }
 
 

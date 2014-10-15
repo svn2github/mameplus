@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __VC4000_ROM_H
 #define __VC4000_ROM_H
 
@@ -29,7 +31,7 @@ class vc4000_ram1k_device : public vc4000_rom_device
 public:
 	// construction/destruction
 	vc4000_ram1k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_ram);
 	virtual DECLARE_WRITE8_MEMBER(write_ram);
@@ -42,7 +44,7 @@ class vc4000_chess2_device : public vc4000_rom_device
 public:
 	// construction/destruction
 	vc4000_chess2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(extra_rom);
 	virtual DECLARE_READ8_MEMBER(read_ram);

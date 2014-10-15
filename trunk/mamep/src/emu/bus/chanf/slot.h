@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __CHANF_SLOT_H
 #define __CHANF_SLOT_H
 
@@ -13,6 +15,7 @@ enum
 	CF_MAZE,
 	CF_HANGMAN,
 	CF_CHESS,
+	CF_MULTI_OLD,
 	CF_MULTI
 };
 
@@ -39,7 +42,7 @@ public:
 	UINT32 get_rom_size() { return m_rom_size; }
 	UINT32 get_ram_size() { return m_ram.count(); }
 
-	void save_ram()	{ device().save_item(NAME(m_ram)); }
+	void save_ram() { device().save_item(NAME(m_ram)); }
 
 protected:
 	// internal state
@@ -71,7 +74,7 @@ public:
 
 	int get_type() { return m_type; }
 
-	void save_ram()	{ if (m_cart && m_cart->get_ram_size()) m_cart->save_ram(); }
+	void save_ram() { if (m_cart && m_cart->get_ram_size()) m_cart->save_ram(); }
 
 	virtual iodevice_t image_type() const { return IO_CARTSLOT; }
 	virtual bool is_readable()  const { return 1; }
@@ -112,6 +115,5 @@ extern const device_type CHANF_CART_SLOT;
 
 #define MCFG_CHANNELF_CARTRIDGE_ADD(_tag,_slot_intf,_def_slot) \
 	MCFG_DEVICE_ADD(_tag, CHANF_CART_SLOT, 0) \
-	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, false) \
-
+	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, false)
 #endif

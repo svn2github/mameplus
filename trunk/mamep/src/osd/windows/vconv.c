@@ -107,7 +107,7 @@ static const translation_info gcc_translate[] =
 	{ 0,        "c++",                      "" },
 	{ 0,        "-flto",                    "/GL" },
 	{ 0,        "-fno-optimize-sibling-calls", "" },
-	{ VS2005,   "-fopenmp", 					"/openmp" },
+	{ VS2005,   "-fopenmp", 		"/openmp" },
 	{ 0 }
 };
 

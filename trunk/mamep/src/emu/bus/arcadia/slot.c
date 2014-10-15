@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 /***********************************************************************************************************
 
     Emerson Arcadia 2001 (and clones) cart emulation
@@ -153,7 +155,7 @@ bool arcadia_cart_slot_device::call_load()
 		UINT32 len = (software_entry() == NULL) ? length() : get_software_region_length("rom");
 
 		m_cart->rom_alloc(len, tag());
-			
+
 		if (software_entry() == NULL)
 			fread(m_cart->get_rom_base(), len);
 		else
@@ -258,4 +260,3 @@ READ8_MEMBER(arcadia_cart_slot_device::extra_rom)
 	else
 		return 0xff;
 }
-

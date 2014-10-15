@@ -567,6 +567,7 @@ MACHINES += Z80STI
 MACHINES += Z8536
 MACHINES += SECFLASH
 MACHINES += PCCARD
+MACHINES += FDC37C665GT
 #MACHINES += SMC92X4
 #MACHINES += TI99_HD
 #MACHINES += STRATA
@@ -1226,7 +1227,7 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/igs_m036.o \
 	$(DRIVERS)/iqblock.o $(VIDEO)/iqblock.o \
 	$(DRIVERS)/lordgun.o $(VIDEO)/lordgun.o \
-	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o	$(MACHINE)/pgmprot_igs027a_type1.o $(MACHINE)/pgmprot_igs027a_type2.o $(MACHINE)/pgmprot_igs027a_type3.o $(MACHINE)/pgmprot_igs025_igs012.o $(MACHINE)/pgmprot_igs025_igs022.o $(MACHINE)/pgmprot_igs025_igs028.o $(MACHINE)/pgmprot_orlegend.o \
+	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o $(MACHINE)/pgmprot_igs027a_type1.o $(MACHINE)/pgmprot_igs027a_type2.o $(MACHINE)/pgmprot_igs027a_type3.o $(MACHINE)/pgmprot_igs025_igs012.o $(MACHINE)/pgmprot_igs025_igs022.o $(MACHINE)/pgmprot_igs025_igs028.o $(MACHINE)/pgmprot_orlegend.o \
 	$(DRIVERS)/pgm2.o \
 	$(DRIVERS)/spoker.o \
 	$(MACHINE)/igs036crypt.o \
@@ -1753,7 +1754,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/turbo.o $(AUDIO)/turbo.o $(VIDEO)/turbo.o \
 	$(DRIVERS)/vicdual.o $(AUDIO)/vicdual.o $(VIDEO)/vicdual.o $(AUDIO)/carnival.o $(AUDIO)/depthch.o $(AUDIO)/invinco.o $(AUDIO)/pulsar.o \
 	$(DRIVERS)/zaxxon.o $(AUDIO)/zaxxon.o $(VIDEO)/zaxxon.o \
-	$(MACHINE)/315-5296.o \
+	$(MACHINE)/315_5296.o \
 	$(MACHINE)/fd1089.o \
 	$(MACHINE)/fd1094.o \
 	$(MACHINE)/fddebug.o \
@@ -1808,7 +1809,7 @@ $(MAMEOBJ)/seta.a: \
 	$(DRIVERS)/srmp6.o \
 	$(DRIVERS)/ssv.o $(VIDEO)/ssv.o \
 	$(VIDEO)/st0020.o \
-	$(MACHINE)/st0016.o $(DRIVERS)/st0016.o $(VIDEO)/st0016.o \
+	$(MACHINE)/st0016.o $(DRIVERS)/simple_st0016.o \
 	$(VIDEO)/seta001.o \
 
 $(MAMEOBJ)/sigma.a: \
@@ -2960,7 +2961,6 @@ $(DRIVERS)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
 $(VIDEO)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
 $(MACHINE)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
 $(VIDEO)/model2.o:      $(MAMESRC)/video/model2rd.inc
-$(VIDEO)/model3.o:      $(MAMESRC)/video/m3raster.inc
 $(VIDEO)/n64.o:         $(MAMESRC)/video/rdpfiltr.inc
 $(DRIVERS)/bfm_sc4.o:   $(MAMESRC)/includes/bfm_sc45.h
 $(DRIVERS)/bfm_sc5.o:   $(MAMESRC)/includes/bfm_sc45.h

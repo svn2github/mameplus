@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 /***********************************************************************************************************
 
     APF Imagination / M-1000 cart emulation
@@ -167,9 +169,9 @@ bool apf_cart_slot_device::call_load()
 			seterror(IMAGE_ERROR_UNSPECIFIED, "Image extends beyond the expected size for an APF cart");
 			return IMAGE_INIT_FAIL;
 		}
-		
+
 		m_cart->rom_alloc(size, tag());
-			
+
 		if (software_entry() == NULL)
 			fread(m_cart->get_rom_base(), size);
 		else
@@ -292,5 +294,3 @@ WRITE8_MEMBER(apf_cart_slot_device::write_ram)
 	if (m_cart)
 		m_cart->write_ram(space, offset, data);
 }
-
-

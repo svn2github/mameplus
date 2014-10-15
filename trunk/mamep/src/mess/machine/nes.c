@@ -10,7 +10,6 @@
 #include "crsshair.h"
 #include "cpu/m6502/m6502.h"
 #include "includes/nes.h"
-#include "imagedev/cartslot.h"
 #include "imagedev/flopdrv.h"
 
 /***************************************************************************
@@ -98,7 +97,7 @@ void nes_state::setup_ioports()
 		sprintf(str, "FT_COL%i", i);
 		m_io_ftrainer[i] = ioport(str);
 	}
-	
+
 	m_io_ctrlsel        = ioport("CTRLSEL");
 	m_io_exp            = ioport("EXP");
 	m_io_paddle         = ioport("PADDLE");

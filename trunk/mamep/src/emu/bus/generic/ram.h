@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:etabeta
 #ifndef __GENERIC_RAM_H
 #define __GENERIC_RAM_H
 
@@ -12,14 +14,14 @@ class generic_ram_plain_device : public device_t,
 public:
 	// construction/destruction
 	generic_ram_plain_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, UINT32 size, const char *shortname, const char *source);
-	
+
 	// device-level overrides
 	virtual void device_start();
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_ram);
 	virtual DECLARE_WRITE8_MEMBER(write_ram);
-	
+
 private:
 	UINT32 m_size;
 };
@@ -33,14 +35,14 @@ class generic_ram_linear_device : public device_t,
 public:
 	// construction/destruction
 	generic_ram_linear_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, UINT32 size, const char *shortname, const char *source);
-	
+
 	// device-level overrides
 	virtual void device_start();
-	
+
 	// reading and writing
 	virtual DECLARE_READ8_MEMBER(read_ram);
 	virtual DECLARE_WRITE8_MEMBER(write_ram);
-	
+
 private:
 	UINT32 m_size;
 };

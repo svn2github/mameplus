@@ -41,7 +41,7 @@ void msx_state::check_irq()
 }
 
 
-void msx_state::msx_ch_reset_core ()
+void msx_state::machine_reset()
 {
 	msx_memory_reset ();
 	msx_memory_map_all ();
@@ -52,24 +52,10 @@ void msx_state::msx_ch_reset_core ()
 	check_irq();
 }
 
-MACHINE_START_MEMBER(msx_state,msx)
-{
-	MACHINE_START_CALL_MEMBER( msx2 );
-}
 
-MACHINE_START_MEMBER(msx_state,msx2)
+void msx_state::machine_start()
 {
 	m_port_c_old = 0xff;
-}
-
-MACHINE_RESET_MEMBER(msx_state,msx)
-{
-	msx_ch_reset_core ();
-}
-
-MACHINE_RESET_MEMBER(msx_state,msx2)
-{
-	msx_ch_reset_core ();
 }
 
 
@@ -189,7 +175,7 @@ static const UINT8 cc_ex[0x100] = {
 };
 
 
-DRIVER_INIT_MEMBER(msx_state,msx)
+void msx_state::driver_start()
 {
 	m_maincpu->set_input_line_vector(0, 0xff);
 

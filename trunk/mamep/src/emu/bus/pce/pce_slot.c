@@ -305,15 +305,15 @@ int pce_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 		type = PCE_SF2;
 
 	/* Check for Populous */
-	if (len >= 0x1f26 + 8 && !memcmp(ROM + 0x1f26, "POPULOUS", 8))
+	if (len >= (0x1f26 + 8) && !memcmp(ROM + 0x1f26, "POPULOUS", 8))
 		type = PCE_POPULOUS;
 
 	// Check for CD system card v3 which adds on-cart RAM to the system
-	if (!memcmp(ROM + 0x3FFB6, "PC Engine CD-ROM SYSTEM", 23))
+	if (len >= (0x3ffb6 + 23) && !memcmp(ROM + 0x3ffb6, "PC Engine CD-ROM SYSTEM", 23))
 	{
 		/* Check if 192KB additional system card ram should be used */
-		if(!memcmp(ROM + 0x29D1, "VER. 3.", 7))         { type = PCE_CDSYS3J; } // JP version
-		else if(!memcmp(ROM + 0x29C4, "VER. 3.", 7 ))   { type = PCE_CDSYS3U; } // US version
+		if (!memcmp(ROM + 0x29d1, "VER. 3.", 7))         { type = PCE_CDSYS3J; } // JP version
+		else if (!memcmp(ROM + 0x29c4, "VER. 3.", 7 ))   { type = PCE_CDSYS3U; } // US version
 	}
 
 	return type;
