@@ -355,6 +355,15 @@ void sound_sdl::set_mastervolume(int _attenuation)
 		_attenuation = -32;
 
 	attenuation = _attenuation;
+
+	if ((attenuation == -32) && (stream_in_initialized))
+	{
+		SDL_PauseAudio(1);
+	}
+	else if (stream_in_initialized)
+	{
+		SDL_PauseAudio(0);
+	}
 }
 
 //============================================================
@@ -480,7 +489,7 @@ static int sdl_init(running_machine &machine)
 	}
 
 	// compute the buffer sizes
-	stream_buffer_size = machine.sample_rate() * 2 * sizeof(INT16) * audio_latency / MAX_AUDIO_LATENCY;
+	stream_buffer_size = (machine.sample_rate() * 2 * sizeof(INT16) * (2 + audio_latency)) / 30;
 	stream_buffer_size = (stream_buffer_size / 1024) * 1024;
 	if (stream_buffer_size < 1024)
 		stream_buffer_size = 1024;

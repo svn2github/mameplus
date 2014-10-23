@@ -710,7 +710,7 @@ void windows_osd_interface::osd_exit()
 	win_cleanup_sockets();
 
 	osd_interface::osd_exit();
-	
+
 	// take down the watchdog thread if it exists
 	if (watchdog_thread != NULL)
 	{

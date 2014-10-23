@@ -1118,6 +1118,7 @@ BUSOBJS += $(BUSOBJ)/neogeo/bootleg_prot.o
 BUSOBJS += $(BUSOBJ)/neogeo/bootleg_cart.o
 BUSOBJS += $(BUSOBJ)/neogeo/bootleg_hybrid_cart.o
 BUSOBJS += $(BUSOBJ)/neogeo/sbp_prot.o
+BUSOBJS += $(BUSOBJ)/neogeo/kog_prot.o
 BUSOBJS += $(BUSOBJ)/neogeo/rom.o
 endif
 
@@ -1249,6 +1250,7 @@ BUSOBJS += $(BUSOBJ)/coco/coco_orch90.o
 BUSOBJS += $(BUSOBJ)/coco/coco_pak.o
 BUSOBJS += $(BUSOBJ)/coco/coco_fdc.o
 BUSOBJS += $(BUSOBJ)/coco/coco_multi.o
+BUSOBJS += $(BUSOBJ)/coco/coco_dwsock.o
 endif
 
 #-------------------------------------------------

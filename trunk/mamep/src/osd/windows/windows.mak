@@ -185,7 +185,7 @@ endif
 endif
 
 ifdef MSVC_ANALYSIS
-CCOMFLAGS += /analyze /wd6011 /wd6328 /wd6204 /wd6244 /wd6385 /wd6308 /wd6246 /wd6031 /wd6326 /wd6255 /wd6330 /wd28251 /wd6054 /wd6340 /wd28125 /wd6053 /wd6001 /wd6386 /wd28278 /wd6297 /wd28183 /wd28159 /wd28182 /wd6237 /wd6239 /wd6240 /wd6323 /wd28199 /wd6235 /wd6285 /wd6286 /wd6384 /wd6293 /analyze:stacksize384112
+CCOMFLAGS += /analyze /wd6011 /wd6328 /wd6204 /wd6244 /wd6385 /wd6308 /wd6246 /wd6031 /wd6326 /wd6255 /wd6330 /wd28251 /wd6054 /wd6340 /wd28125 /wd6053 /wd6001 /wd6386 /wd28278 /wd6297 /wd28183 /wd28159 /wd28182 /wd6237 /wd6239 /wd6240 /wd6323 /wd28199 /wd6235 /wd6285 /wd6286 /wd6384 /wd6293 /analyze:stacksize1070232
 endif
 
 # enable exception handling for C++
@@ -220,8 +220,14 @@ endif
 # explicitly set the entry point for UNICODE builds
 LDFLAGS += /ENTRY:wmainCRTStartup
 
+ifdef MSVC_BUILD
+ifdef DEBUG
+LDFLAGS += /NODEFAULTLIB:LIBCMT
+endif
+endif
+
 # add some VC++-specific defines
-DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf -DWIN32
+DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -DWIN32
 
 OSDCLEAN = msvcclean
 
@@ -367,7 +373,7 @@ OSDOBJS += \
 	$(OSDOBJ)/modules/sound/sdl_sound.o
 endif
 
-ifdef USE_NETWORK
+ifndef DONT_USE_NETWORK
 OSDOBJS += \
 	$(WINOBJ)/netdev.o \
 	$(WINOBJ)/netdev_pcap.o
@@ -419,6 +425,11 @@ OSDOBJS += \
 	$(OSDOBJ)/modules/debugger/qt/debugqtmemorywindow.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtbreakpointswindow.moc.o
 endif
+
+#-------------------------------------------------
+# WinPCap
+#-------------------------------------------------
+INCPATH += -I$(SRC)/lib/winpcap
 
 #-------------------------------------------------
 # For building Scale Effects include scale.mak

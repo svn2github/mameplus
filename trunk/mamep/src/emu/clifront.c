@@ -64,6 +64,7 @@ const options_entry cli_options::s_option_entries[] =
 	{ CLICOMMAND_GETSOFTLIST ";glist",  "0",       OPTION_COMMAND,    "retrieve software list by name" },
 	{ CLICOMMAND_VERIFYSOFTLIST ";vlist", "0",     OPTION_COMMAND,    "verify software list by name" },
 	{ CLICOMMAND_LIST_MIDI_DEVICES ";mlist", "0",  OPTION_COMMAND,    "list available MIDI I/O devices" },
+	{ CLICOMMAND_LIST_NETWORK_ADAPTERS ";nlist", "0",  OPTION_COMMAND,    "list available network adapters" },
 	{ CLICOMMAND_LISTGAMES,             "0",       OPTION_COMMAND,    "year, manufacturer and full name" },		// for make tp_manufact.txt
 	{ NULL }
 };
@@ -801,6 +802,19 @@ void cli_frontend::listmedia(const char *gamename)
 void cli_frontend::listmididevices(const char *gamename)
 {
 	osd_list_midi_devices();
+}
+
+
+//-------------------------------------------------
+//  listnetworkadapters - output the list of network
+//  adapters available in the current system to be used
+//-------------------------------------------------
+
+void cli_frontend::listnetworkadapters(const char *gamename)
+{
+	m_osd.network_init();
+	osd_list_network_adapters();
+	m_osd.network_exit();
 }
 
 
@@ -1750,6 +1764,7 @@ void cli_frontend::execute_commands(const char *exename)
 		{ CLICOMMAND_GETSOFTLIST,   &cli_frontend::getsoftlist },
 		{ CLICOMMAND_VERIFYSOFTLIST,    &cli_frontend::verifysoftlist },
 		{ CLICOMMAND_LIST_MIDI_DEVICES, &cli_frontend::listmididevices },
+		{ CLICOMMAND_LIST_NETWORK_ADAPTERS, &cli_frontend::listnetworkadapters },
 		{ CLICOMMAND_LISTGAMES,	    &cli_frontend::listgames }		// for make tp_manufact.txt
 	};
 

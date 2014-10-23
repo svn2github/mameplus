@@ -58,9 +58,6 @@ USE_DISPATCH_GL = 1
 # There is no need to play with this option unless you are doing
 # active development on sdlmame or SDL.
 
-# uncomment the next line to compile and link against SDL2.0
-# SDL_LIBVER = sdl2
-
 # uncomment the next line to use couriersud's multi-keyboard patch for SDL 2.1? (this API was removed prior to the 2.0 release)
 # SDL2_MULTIAPI = 1
 
@@ -86,12 +83,17 @@ SDL_FRAMEWORK_PATH = /Library/Frameworks/
 OSDSRC = $(SRC)/osd
 OSDOBJ = $(OBJ)/osd
 
-ifndef NO_USE_QTDEBUG
-OBJDIRS += $(OSDOBJ)/modules/debugger/qt
+# default to SDL2 for non-OS/2 builds now
+ifndef SDL_LIBVER
+ifneq ($(TARGETOS),os2)
+SDL_LIBVER = sdl2
+else
+SDL_LIBVER = sdl
+endif
 endif
 
-ifndef SDL_LIBVER
-SDL_LIBVER = sdl
+ifndef NO_USE_QTDEBUG
+OBJDIRS += $(OSDOBJ)/modules/debugger/qt
 endif
 
 ifdef SDL_INSTALL_ROOT
@@ -754,7 +756,7 @@ endif # USE_XINPUT
 # Network (TAP/TUN)
 #-------------------------------------------------
 
-ifdef USE_NETWORK
+ifndef DONT_USE_NETWORK
 ifeq ($(SDL_NETWORK),taptun)
 OSDOBJS += \
 	$(SDLOBJ)/netdev.o \

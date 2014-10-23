@@ -37,7 +37,7 @@ public:
 		m_comms_ram(*this, "comms_ram"),
 		m_maincpu(*this, "maincpu"),
 		m_subcpu(*this, "sub"),
-		m_region_gfx1(*this, "gfx1"),
+		m_gfxrom(*this, "gfx1"),
 		m_io_cr_clear(*this, "CR_CLEAR"),
 		m_io_coins(*this, "COINS"),
 		m_io_pl1_1(*this, "PL1_1"),
@@ -108,7 +108,7 @@ public:
 	UINT32 screen_update_nightgal(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 
 protected:
-	required_memory_region m_region_gfx1;
+	required_region_ptr<UINT8> m_gfxrom;
 	required_ioport m_io_cr_clear;
 	required_ioport m_io_coins;
 	required_ioport m_io_pl1_1;
@@ -169,15 +169,13 @@ UINT32 nightgal_state::screen_update_nightgal(screen_device &screen, bitmap_ind1
 
 UINT8 nightgal_state::nightgal_gfx_nibble( int niboffset )
 {
-	UINT8 *blit_rom = m_region_gfx1->base();
-
 	if (niboffset & 1)
 	{
-		return (blit_rom[(niboffset >> 1) & 0x1ffff] & 0xf0) >> 4;
+		return (m_gfxrom[(niboffset >> 1) & 0x1ffff] & 0xf0) >> 4;
 	}
 	else
 	{
-		return (blit_rom[(niboffset >> 1) & 0x1ffff] & 0x0f);
+		return (m_gfxrom[(niboffset >> 1) & 0x1ffff] & 0x0f);
 	}
 }
 
@@ -367,10 +365,10 @@ master-slave algorithm
 -executes a wai (i.e. halt) opcode then expects to receive another irq...
 */
 
-#define MAIN_Z80_RUN   if(offset == 2) state->m_z80_latch = 0x00
-#define MAIN_Z80_HALT  if(offset == 2) state->m_z80_latch = 0x80
-//#define SUB_NCS_RUN state->m_ncs_latch = 0x00
-//#define SUB_NCS_HALT state->m_ncs_latch = 0x80
+#define MAIN_Z80_RUN   if(offset == 2) m_z80_latch = 0x00
+#define MAIN_Z80_HALT  if(offset == 2) m_z80_latch = 0x80
+//#define SUB_NCS_RUN m_ncs_latch = 0x00
+//#define SUB_NCS_HALT m_ncs_latch = 0x80
 #ifdef UNUSED_CODE
 WRITE8_MEMBER(nightgal_state::nsc_latch_w)
 {

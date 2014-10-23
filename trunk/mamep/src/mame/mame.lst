@@ -1647,6 +1647,7 @@ tron            // (c) 1982
 tron2           // (c) 1982
 tron3           // (c) 1982
 tron4           // (c) 1982
+tronger         // (c) 1982
 kroozr          // (c) 1982
 domino          // (c) 1982
 wacko           // (c) 1982
@@ -2084,6 +2085,7 @@ kicknrun        // A87 (c) 1986 Taito Corporation
 kicknrunu       // A87 (c) 1986 Taito Corporation
 mexico86        // bootleg (Micro Research)
 darius          // A96 (c) 1986 Taito Corporation Japan (World)
+dariusu         // A96 (c) 1986 Taito America Corporation (US)
 dariusj         // A96 (c) 1986 Taito Corporation (Japan)
 dariuso         // A96 (c) 1986 Taito Corporation (Japan)
 dariuse         // A96 (c) 1986 Taito Corporation (Japan)
@@ -2134,7 +2136,7 @@ arktayt2        // bootleg
 arkatour        // ??? (c) 1987 Taito America Corporation + Romstar license (US)
 tetrsark        // ??? (c) D.R.Korea
 hexa            // D. R. Korea
-hexaa			//
+hexaa           //
 brixian         // (c) 1993 Cheil Computer System
 sqix            // B03 1987
 sqixr1          // B03 1987
@@ -3208,7 +3210,7 @@ sf2dongb        // hack
 sf2mdt          // bootleg
 sf2mdta         // bootleg
 sf2mdtb         // bootleg
-sf2mdtc         // bootleg
+sf2b            // bootleg
 cworld2j        // 11/06/1992 (c) 1992 (Japan)
 varth           // 14/07/1992 (c) 1992 (World)
 varthr1         // 12/06/1992 (c) 1992 (World)
@@ -5916,9 +5918,10 @@ hippodrm        // EW (c) 1989 Data East USA (US)
 ffantasy        // EV (c) 1989 Data East Corporation (Japan)
 ffantasya       // EV (c) 1989 Data East Corporation (Japan)
 ffantasybl      // bootleg
+secretag        // (c) 1989 Data East Corporation (World)
+secretagj       // (c) 1989 Data East Corporation (Japan)
 slyspy          // (c) 1989 Data East USA (US)
 slyspy2         // (c) 1989 Data East USA (US)
-secretag        // (c) 1989 Data East Corporation (World)
 secretab        // bootleg
 midres          // (c) 1989 Data East Corporation (World)
 midresu         // (c) 1989 Data East USA (US)
@@ -6438,6 +6441,7 @@ tmntu           // GX963 (c) 1989 (US)
 tmntua          // GX963 (c) 1989 (US)
 tmht            // GX963 (c) 1989 (UK)
 tmhta           // GX963 (c) 1989 (UK)
+tmhtb           // GX963 (c) 1989 (UK?)
 tmntj           // GX963 (c) 1990 (Japan)
 tmht2p          // GX963 (c) 1989 (UK)
 tmht2pa         // GX963 (c) 1989 (UK)
@@ -9805,6 +9809,7 @@ killbldp        // (c) 2004 Killing Blade Plus
 happy6          // (c) 2004 Happy 6
 happy6101       //
 svg             // (c) 2003 Spectral vs Generation
+svgtw
 svgpcb          //
 ket             // (c) 2002 Ketsui
 keta            //
@@ -31777,6 +31782,14 @@ strike
 
 cspin2
 caprcyc
+
+newufo
+newufo_sonic
+newufo_nfl
+newufo_xmas
+ufomini
+ufo21
+ufo800
 
 // VLC Nevada
 nevada

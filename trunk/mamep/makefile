@@ -264,11 +264,11 @@ BUILD_MIDILIB = 1
 # uncomment next line to enable LTO (link-time optimizations)
 # LTO = 1
 
-# uncomment next line to enable networking
-# USE_NETWORK = 1
+# uncomment next line to disable networking
+# DONT_USE_NETWORK = 1
 
 # uncomment to enable SSE2 optimized code and SSE2 code generation (implicitly enabled by 64-bit compilers)
-SSE2 = 1
+# SSE2 = 1
 
 # uncomment to enable OpenMP optimized code
 # OPENMP = 1
@@ -482,9 +482,11 @@ ifdef PROFILER
 DEFS += -DMAME_PROFILER
 endif
 
-# define USE_NETWORK if we are a making network enabled build
-ifdef USE_NETWORK
+# define USE_NETWORK if networking is enabled (not OS/2 and hasn't been disabled)
+ifneq ($(TARGETOS),os2)
+ifndef DONT_USE_NETWORK
 DEFS += -DUSE_NETWORK
+endif
 endif
 
 # need to ensure FLAC functions are statically linked
@@ -631,7 +633,6 @@ CCOMFLAGS += -msse2
 endif
 
 ifdef OPENMP
-DEFS += -DHAS_OPENMP
 CCOMFLAGS += -fopenmp
 else
 CCOMFLAGS += -Wno-unknown-pragmas
@@ -678,7 +679,9 @@ endif
 ifneq (,$(findstring undefined,$(SANITIZE)))
 ifneq (,$(findstring clang,$(CC)))
 # TODO: check if linker is clang++
-CCOMFLAGS += -fno-sanitize=alignment -fno-sanitize=function -fno-sanitize=shift -fno-sanitize=null -fno-sanitize=signed-integer-overflow -fno-sanitize=vptr -fno-sanitize=float-cast-overflow -fno-sanitize=integer-divide-by-zero -fno-sanitize=float-divide-by-zero -fno-sanitize=object-size
+CCOMFLAGS += -fno-sanitize=alignment -fno-sanitize=function -fno-sanitize=shift -fno-sanitize=null  -fno-sanitize=vptr -fno-sanitize=object-size
+# clang takes forever to compile src/emu/cpu/tms57002/tms57002.c when this isn't disabled
+CCOMFLAGS += -fno-sanitize=signed-integer-overflow
 endif
 endif
 endif
