@@ -59,6 +59,7 @@ BUSES += MSX_SLOT
 BUSES += NEOGEO
 BUSES += NES
 BUSES += PCE
+BUSES += PSX_CONTROLLER
 BUSES += SATURN
 BUSES += SEGA8
 BUSES += SMS_CTRL
@@ -174,13 +175,7 @@ $(MESSOBJ)/snk.a:               \
 	$(MESS_VIDEO)/k1ge.o        \
 
 $(MESSOBJ)/sony.a:              \
-	$(MESS_DRIVERS)/psx.o       \
-	$(MESS_MACHINE)/psxcport.o  \
-	$(MESS_MACHINE)/psxcd.o     \
-	$(MESS_MACHINE)/psxcard.o   \
-	$(MESS_MACHINE)/psxanalog.o \
-	$(MESS_MACHINE)/psxmultitap.o \
-	$(MESS_DRIVERS)/pockstat.o  \
+	$(MESS_DRIVERS)/pockstat.o $(MESS_DRIVERS)/psx.o $(MESS_MACHINE)/psxcd.o \
 
 
 
