@@ -1071,6 +1071,8 @@ bool floppy_image_format_t::type_no_data(int type) const
 		type == CRC_CBM_START ||
 		type == CRC_MACHEAD_START ||
 		type == CRC_FCS_START ||
+		type == CRC_VICTOR_HDR_START ||
+		type == CRC_VICTOR_DATA_START ||
 		type == CRC_END ||
 		type == SECTOR_LOOP_START ||
 		type == SECTOR_LOOP_END ||
@@ -1112,6 +1114,12 @@ void floppy_image_format_t::collect_crcs(const desc_e *desc, gen_crc_info *crcs)
 		case CRC_FCS_START:
 			crcs[desc[i].p1].type = CRC_FCS;
 			break;
+		case CRC_VICTOR_HDR_START:
+			crcs[desc[i].p1].type = CRC_VICTOR_HDR;
+			break;
+		case CRC_VICTOR_DATA_START:
+			crcs[desc[i].p1].type = CRC_VICTOR_DATA;
+			break;
 		}
 
 	for(int i=0; desc[i].type != END; i++)
@@ -1131,6 +1139,8 @@ int floppy_image_format_t::crc_cells_size(int type) const
 	case CRC_CBM: return 10;
 	case CRC_MACHEAD: return 8;
 	case CRC_FCS: return 20;
+	case CRC_VICTOR_HDR: return 10;
+	case CRC_VICTOR_DATA: return 20;
 	default: return 0;
 	}
 }
@@ -1271,17 +1281,40 @@ void floppy_image_format_t::fixup_crc_fcs(UINT32 *buffer, const gen_crc_info *cr
 	// TODO
 }
 
+void floppy_image_format_t::fixup_crc_victor_header(UINT32 *buffer, const gen_crc_info *crc)
+{
+	UINT8 v = 0;
+	for(int o = crc->start; o < crc->end; o+=10) {
+		v += ((gcr5bw_tb[bitn_r(buffer, o, 5)] << 4) | gcr5bw_tb[bitn_r(buffer, o+5, 5)]);
+	}
+	int offset = crc->write;
+	gcr5_w(buffer, offset, 10, v);
+}
+
+void floppy_image_format_t::fixup_crc_victor_data(UINT32 *buffer, const gen_crc_info *crc)
+{
+	UINT16 v = 0;
+	for(int o = crc->start; o < crc->end; o+=10) {
+		v += ((gcr5bw_tb[bitn_r(buffer, o, 5)] << 4) | gcr5bw_tb[bitn_r(buffer, o+5, 5)]);
+	}
+	int offset = crc->write;
+	gcr5_w(buffer, offset, 10, v & 0xff);
+	gcr5_w(buffer, offset, 10, v >> 8);
+}
+
 void floppy_image_format_t::fixup_crcs(UINT32 *buffer, gen_crc_info *crcs)
 {
 	for(int i=0; i != MAX_CRC_COUNT; i++)
 		if(crcs[i].write != -1) {
 			switch(crcs[i].type) {
-			case CRC_AMIGA:   fixup_crc_amiga(buffer, crcs+i); break;
-			case CRC_CBM:     fixup_crc_cbm(buffer, crcs+i); break;
-			case CRC_CCITT:   fixup_crc_ccitt(buffer, crcs+i); break;
-			case CRC_CCITT_FM:fixup_crc_ccitt_fm(buffer, crcs+i); break;
-			case CRC_MACHEAD: fixup_crc_machead(buffer, crcs+i); break;
-			case CRC_FCS:     fixup_crc_fcs(buffer, crcs+i); break;
+			case CRC_AMIGA:			fixup_crc_amiga(buffer, crcs+i); break;
+			case CRC_CBM:			fixup_crc_cbm(buffer, crcs+i); break;
+			case CRC_CCITT:			fixup_crc_ccitt(buffer, crcs+i); break;
+			case CRC_CCITT_FM:		fixup_crc_ccitt_fm(buffer, crcs+i); break;
+			case CRC_MACHEAD:		fixup_crc_machead(buffer, crcs+i); break;
+			case CRC_FCS:			fixup_crc_fcs(buffer, crcs+i); break;
+			case CRC_VICTOR_HDR:	fixup_crc_victor_header(buffer, crcs+i); break;
+			case CRC_VICTOR_DATA:	fixup_crc_victor_data(buffer, crcs+i); break;
 			}
 			if(crcs[i].fixup_mfm_clock) {
 				int offset = crcs[i].write + crc_cells_size(crcs[i].type);
@@ -1403,6 +1436,11 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 			raw_w(buffer, offset, desc[index].p2, desc[index].p1);
 			break;
 
+		case SYNC_GCR5:
+			for(int i=0; i<desc[index].p1; i++)
+				raw_w(buffer, offset, 10, 0xffff);
+			break;
+
 		case TRACK_ID:
 			mfm_w(buffer, offset, 8, track);
 			break;
@@ -1425,6 +1463,10 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 
 		case TRACK_ID_8N1:
 			_8n1_w(buffer, offset, 8, track);
+			break;
+
+		case TRACK_ID_VICTOR_GCR5:
+			gcr5_w(buffer, offset, 10, 1 + track + (head * 0x80));
 			break;
 
 		case HEAD_ID:
@@ -1536,6 +1578,8 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 		case CRC_CCITT_FM_START:
 		case CRC_MACHEAD_START:
 		case CRC_FCS_START:
+		case CRC_VICTOR_HDR_START:
+		case CRC_VICTOR_DATA_START:
 			crcs[desc[index].p1].start = offset;
 			break;
 
@@ -1647,11 +1691,11 @@ void floppy_image_format_t::normalize_times(UINT32 *buffer, int bitlen)
 	}
 }
 
-void floppy_image_format_t::generate_track_from_bitstream(int track, int head, const UINT8 *trackbuf, int track_size, floppy_image *image)
+void floppy_image_format_t::generate_track_from_bitstream(int track, int head, const UINT8 *trackbuf, int track_size, floppy_image *image, int subtrack)
 {
 	// Maximal number of cells which happens when the buffer is all 1
-	image->set_track_size(track, head, track_size+1);
-	UINT32 *dest = image->get_buffer(track, head);
+	image->set_track_size(track, head, track_size+1, subtrack);
+	UINT32 *dest = image->get_buffer(track, head, subtrack);
 	UINT32 *base = dest;
 
 	UINT32 cbit = floppy_image::MG_A;
@@ -1669,8 +1713,8 @@ void floppy_image_format_t::generate_track_from_bitstream(int track, int head, c
 
 	int size = dest - base;
 	normalize_times(base, size);
-	image->set_track_size(track, head, size);
-	image->set_write_splice_position(track, head, 0);
+	image->set_track_size(track, head, size, subtrack);
+	image->set_write_splice_position(track, head, 0, subtrack);
 }
 
 void floppy_image_format_t::generate_track_from_levels(int track, int head, UINT32 *trackbuf, int track_size, int splice_pos, floppy_image *image)
@@ -2166,9 +2210,9 @@ const floppy_image_format_t::desc_e floppy_image_format_t::amiga_22[] = {
 	{ END }
 };
 
-void floppy_image_format_t::generate_bitstream_from_track(int track, int head, int cell_size, UINT8 *trackbuf, int &track_size, floppy_image *image)
+void floppy_image_format_t::generate_bitstream_from_track(int track, int head, int cell_size, UINT8 *trackbuf, int &track_size, floppy_image *image, int subtrack)
 {
-	int tsize = image->get_track_size(track, head);
+	int tsize = image->get_track_size(track, head, subtrack);
 	if(!tsize || tsize == 1) {
 		// Unformatted track
 		track_size = 200000000/cell_size;
@@ -2177,8 +2221,8 @@ void floppy_image_format_t::generate_bitstream_from_track(int track, int head, i
 	}
 
 	// Start at the write splice
-	const UINT32 *tbuf = image->get_buffer(track, head);
-	UINT32 splice = image->get_write_splice_position(track, head);
+	const UINT32 *tbuf = image->get_buffer(track, head, subtrack);
+	UINT32 splice = image->get_write_splice_position(track, head, subtrack);
 	int cur_pos = splice;
 	int cur_entry = 0;
 	while(cur_entry < tsize-1 && (tbuf[cur_entry+1] & floppy_image::TIME_MASK) < cur_pos)

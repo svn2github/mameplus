@@ -97,6 +97,7 @@ enum
 #define OPTION_SNAPNAME             "snapname"
 #define OPTION_SNAPSIZE             "snapsize"
 #define OPTION_SNAPVIEW             "snapview"
+#define OPTION_SNAPBILINEAR         "snapbilinear"
 #define OPTION_STATENAME            "statename"
 #define OPTION_BURNIN               "burnin"
 
@@ -181,6 +182,8 @@ enum
 // core misc options
 #define OPTION_DRC                  "drc"
 #define OPTION_DRC_USE_C            "drc_use_c"
+#define OPTION_DRC_LOG_UML          "drc_log_uml"
+#define OPTION_DRC_LOG_NATIVE       "drc_log_native"
 #define OPTION_BIOS                 "bios"
 #define OPTION_CHEAT                "cheat"
 #define OPTION_SKIP_GAMEINFO        "skip_gameinfo"
@@ -295,6 +298,7 @@ public:
 	const char *snap_name() const { return value(OPTION_SNAPNAME); }
 	const char *snap_size() const { return value(OPTION_SNAPSIZE); }
 	const char *snap_view() const { return value(OPTION_SNAPVIEW); }
+	bool snap_bilinear() const { return bool_value(OPTION_SNAPBILINEAR); }
 	const char *state_name() const { return value(OPTION_STATENAME); }
 	bool burnin() const { return bool_value(OPTION_BURNIN); }
 
@@ -374,6 +378,8 @@ public:
 	// core misc options
 	bool drc() const { return bool_value(OPTION_DRC); }
 	bool drc_use_c() const { return bool_value(OPTION_DRC_USE_C); }
+	bool drc_log_uml() const { return bool_value(OPTION_DRC_LOG_UML); }
+	bool drc_log_native() const { return bool_value(OPTION_DRC_LOG_NATIVE); }
 	const char *bios() const { return value(OPTION_BIOS); }
 	bool cheat() const { return bool_value(OPTION_CHEAT); }
 	bool skip_gameinfo() const { return bool_value(OPTION_SKIP_GAMEINFO); }

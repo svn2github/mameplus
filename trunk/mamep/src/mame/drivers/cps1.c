@@ -4283,7 +4283,7 @@ ROM_START( striderjr )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "sth63b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "sth63b.1a",    0x0000, 0x0117, BAD_DUMP CRC(c706b773) SHA1(ddfe2e747637eec081a5125cfefcb478a4ba9e76) ) /* Handcrafted but works on actual PCB.  Redump needed */
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -4764,7 +4764,7 @@ ROM_START( area88r )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "ara63b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "ara63b.1a",    0x0000, 0x0117, BAD_DUMP CRC(f5569c93) SHA1(7db7cf23639036590eef1e5e309f08560859efaf) ) /* Handcrafted but works on actual PCB.  Redump needed */
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -12914,9 +12914,14 @@ DRIVER_INIT_MEMBER(cps_state,cawingb)
 	DRIVER_INIT_CALL(cps1);
 }
 
+READ16_MEMBER(cps_state::dinoh_r)
+{
+	return 0xffff;
+}
+
 DRIVER_INIT_MEMBER(cps_state,dinoh)
 {
-//	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff,  read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff,  read16_delegate(FUNC(cps_state::dinoh_r),this));
 	m_maincpu->space(AS_PROGRAM).install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
 	dino_decode(machine());	
 	DRIVER_INIT_CALL(cps1);
@@ -13035,7 +13040,7 @@ DRIVER_INIT_MEMBER(cps_state,dinohb)
 
 DRIVER_INIT_MEMBER( cps_state,dinohunt )
 {
-//	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff, read16_delegate(FUNC(cps_state::dinoh_r),this));
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfc0000, 0xfc0001, read16_delegate(FUNC(cps_state::cps1_in2_r),this)); /* Extra input ports */
 	m_maincpu->space(AS_PROGRAM).install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
 	dino_decode(machine());

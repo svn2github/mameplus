@@ -10,7 +10,7 @@ though. The table below shows the differences between the different models.
 
 Mode     | ROM       | RAM      | R pins | O pins | K pins | ids
 ---------+-----------+----------+--------+--------+--------|----------
-tms0970* | 1024 *  8 |  64 *  4 |        |        |        | tms0972
+tms0970  | 1024 *  8 |  64 *  4 |        |        |        | tms0972
 tms0920* |  511?*  9 |  40 *  5 |        |        |        | tmc0921
 tms0980  | 2048 *  9 |  64 *  9 |        |        |        | tmc0981
 tms1000  | 1024 *  8 |  64 *  4 |     11 |      8 |      4 | tms1001
@@ -123,11 +123,11 @@ unknown cycle: CME, SSE, SSS
 #include "debugger.h"
 #include "tms0980.h"
 
-#define LOG                 0
 
 
 const device_type TMS0980 = &device_creator<tms0980_cpu_device>;
 const device_type TMS1000 = &device_creator<tms1000_cpu_device>;
+const device_type TMS0970 = &device_creator<tms0970_cpu_device>;
 const device_type TMS1070 = &device_creator<tms1070_cpu_device>;
 const device_type TMS1200 = &device_creator<tms1200_cpu_device>;
 const device_type TMS1270 = &device_creator<tms1270_cpu_device>;
@@ -203,6 +203,7 @@ const device_type TMS1300 = &device_creator<tms1300_cpu_device>;
 #define I_DAN       ( MICRO_MASK | M_CKP | M_ATN | M_CIN | M_C8 | M_AUTA )
 #define I_DMAN      ( MICRO_MASK | M_MTP | M_15TN | M_C8 | M_AUTA )
 #define I_DMEA      ( MICRO_MASK | M_MTP | M_DMTP | M_SSS | M_AUTA )
+#define I_NDMEA     ( MICRO_MASK | M_MTN | M_NDMTP | M_SSS | M_AUTA )
 #define I_DNAA      ( MICRO_MASK | M_DMTP | M_NATN | M_SSS | M_AUTA )
 #define I_DYN       ( MICRO_MASK | M_YTP | M_15TN | M_C8 | M_AUTY )
 #define I_IA        ( MICRO_MASK | M_ATN | M_CIN | M_AUTA )
@@ -211,7 +212,6 @@ const device_type TMS1300 = &device_creator<tms1300_cpu_device>;
 #define I_KNEZ      ( MICRO_MASK | M_CKP | M_NE )
 #define I_MNEA      ( MICRO_MASK | M_MTP | M_ATN | M_NE )
 #define I_MNEZ      ( MICRO_MASK | M_MTP | M_NE )
-#define I_M_NDMEA   ( MICRO_MASK | M_MTN | M_NDTMP | M_SSS | M_AUTA )
 #define I_SAMAN     ( MICRO_MASK | M_MTP | M_NATN | M_CIN | M_C8 | M_AUTA )
 #define I_SETR      ( MICRO_MASK | M_YTP | M_15TN | M_AUTY | M_C8 )
 #define I_TAM       ( MICRO_MASK | M_STO )
@@ -236,20 +236,11 @@ const device_type TMS1300 = &device_creator<tms1300_cpu_device>;
 #define I_YNEC      ( MICRO_MASK | M_YTP | M_CKN | M_NE )
 
 
-static const UINT8 tms0980_c2_value[4] =
-{
-	0x00, 0x02, 0x01, 0x03
-};
-static const UINT8 tms0980_c3_value[8] =
-{
-	0x00, 0x04, 0x02, 0x06, 0x01, 0x05, 0x03, 0x07
-};
-static const UINT8 tms0980_c4_value[16] =
-{
-	0x00, 0x08, 0x04, 0x0C, 0x02, 0x0A, 0x06, 0x0E, 0x01, 0x09, 0x05, 0x0D, 0x03, 0x0B, 0x07, 0x0F
-};
+static const UINT8 tms0980_c2_value[4] = { 0, 2, 1, 3 };
+static const UINT8 tms0980_c3_value[8] = { 0, 4, 2, 6, 1, 5, 3, 7 };
+static const UINT8 tms0980_c4_value[16] = { 0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE, 0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF };
 static const UINT8 tms0980_bit_value[4] = { 1, 4, 2, 8 };
-static const UINT8 tms0980_nbit_value[4] = { 0x0E, 0x0B, 0x0D, 0x07 };
+static const UINT8 tms0980_nbit_value[4] = { 0xE, 0xB, 0xD, 0x7 };
 
 
 static const UINT32 tms0980_decode[512] =
@@ -257,7 +248,7 @@ static const UINT32 tms0980_decode[512] =
 	/* 0x000 */
 	F_COMX, I_ALEM, I_YNEA, I_XMA, I_DYN, I_IYC, I_CLA, I_DMAN,
 	I_TKA, I_MNEA, I_TKM, F_ILL, F_ILL, F_SETR, I_KNEZ, F_ILL,
-	I_DMEA, I_DNAA, I_CCLA, I_DMEA, F_ILL, I_AMAAC, F_ILL, F_ILL,
+	I_DMEA, I_DNAA, I_CCLA, I_NDMEA, F_ILL, I_AMAAC, F_ILL, F_ILL,
 	I_CTMDYN, I_XDA, F_ILL, F_ILL, F_ILL, F_ILL, F_ILL, F_ILL,
 	I_TBIT, I_TBIT, I_TBIT, I_TBIT, F_ILL, F_ILL, F_ILL, F_ILL,
 	I_TAY, I_TMA, I_TMY, I_TYA, I_TAMDYN, I_TAMIYC, I_TAMZA, I_TAM,
@@ -329,7 +320,8 @@ static const UINT32 tms0980_decode[512] =
 };
 
 
-static const UINT32 tms1000_default_decode[256] = {
+static const UINT32 tms1000_default_decode[256] =
+{
 	/* 0x00 */
 	F_COMX, I_A8AAC, I_YNEA, I_TAM, I_TAMZA, I_A10AAC, I_A6AAC, I_DAN,
 	I_TKA, I_KNEZ, F_TDO, F_CLO, F_RSTR, F_SETR, I_IA, F_RETN,
@@ -371,7 +363,8 @@ static const UINT32 tms1000_default_decode[256] = {
 };
 
 
-static const UINT32 tms1100_default_decode[256] = {
+static const UINT32 tms1100_default_decode[256] =
+{
 	/* 0x00 */
 	I_MNEA, I_ALEM, I_YNEA, I_XMA, I_DYN, I_IYC, I_AMAAC, I_DMAN,
 	I_TKA, F_COMX, F_TDO, F_COMC, F_RSTR, F_SETR, I_KNEZ, F_RETN,
@@ -413,13 +406,8 @@ static const UINT32 tms1100_default_decode[256] = {
 };
 
 
-static ADDRESS_MAP_START(tms0980_internal_rom, AS_PROGRAM, 16, tms1xxx_cpu_device)
-	AM_RANGE( 0x0000, 0x0FFF ) AM_ROM
-ADDRESS_MAP_END
-
-
-static ADDRESS_MAP_START(tms0980_internal_ram, AS_DATA, 8, tms1xxx_cpu_device)
-	AM_RANGE( 0x0000, 0x0FFF ) AM_RAM
+static ADDRESS_MAP_START(program_11bit_9, AS_PROGRAM, 16, tms1xxx_cpu_device)
+	AM_RANGE( 0x000, 0xfff ) AM_ROM
 ADDRESS_MAP_END
 
 
@@ -433,13 +421,19 @@ static ADDRESS_MAP_START(program_11bit_8, AS_PROGRAM, 8, tms1xxx_cpu_device)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START(data_6bit, AS_DATA, 8, tms1xxx_cpu_device)
+static ADDRESS_MAP_START(data_64x4, AS_DATA, 8, tms1xxx_cpu_device)
 	AM_RANGE( 0x00, 0x3f ) AM_RAM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START(data_7bit, AS_DATA, 8, tms1xxx_cpu_device)
+static ADDRESS_MAP_START(data_128x4, AS_DATA, 8, tms1xxx_cpu_device)
 	AM_RANGE( 0x00, 0x7f ) AM_RAM
+ADDRESS_MAP_END
+
+
+static ADDRESS_MAP_START(data_64x9_as4, AS_DATA, 8, tms1xxx_cpu_device)
+	AM_RANGE( 0x00, 0x8f ) AM_RAM
+	AM_RANGE( 0x90, 0xff ) AM_NOP
 ADDRESS_MAP_END
 
 
@@ -504,8 +498,8 @@ void tms1xxx_cpu_device::device_start()
 
 void tms1xxx_cpu_device::device_reset()
 {
-	m_pa = 0x0F;
-	m_pb = 0x0F;
+	m_pa = 0xF;
+	m_pb = 0xF;
 	m_pc = 0;
 	m_dam = 0;
 	m_ca = 0;
@@ -620,7 +614,8 @@ location{1:0} =  ( pc{5:4} == 00 && pc{0} == 0 ) => 11
                  ( pc{5:4} == 11 && pc{0} == 1 ) => 10
 
 */
-static const UINT8 tms1000_next_pc[64] = {
+static const UINT8 tms1000_next_pc[64] =
+{
 	0x01, 0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x11, 0x13, 0x15, 0x17, 0x19, 0x1B, 0x1D, 0x1F,
 	0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3F,
 	0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E,
@@ -636,14 +631,14 @@ static const UINT8 tms1000_next_pc[64] = {
   or321 = OR of pc5 and pc6, i.e. output is true if ((pc&0x60) != 0)
   nand322 = NAND of pc0 through pc5 plus /pc6,
       i.e. output is true if (pc != 0x3f)
-  nand325 = nand pf nand323, or321 and nand322
+  nand325 = nand of nand323, or321 and nand322
       This one is complex:
       / or321 means if pc&0x60 is zero, output MUST be true
       \ nand323 means if (pc&0x60=0x60) && (pc&0x1f != 0x1f), output MUST be true
       nand322 means if pc = 0x3f, output MUST be true
       hence, nand325 is if pc = 0x7f, false. if pc = 0x3f, true. if pc&0x60 is zero OR pc&0x60 is 0x60, true. otherwise, false.
 
-      tms0980_nect_pc below implements an indentical function to this in a somewhat more elegant way.
+      tms0980_next_pc below implements an identical function to this in a somewhat more elegant way.
 */
 void tms1xxx_cpu_device::next_pc()
 {
@@ -652,7 +647,7 @@ void tms1xxx_cpu_device::next_pc()
 		UINT8   xorval = ( m_pc & 0x3F ) == 0x3F ? 1 : 0;
 		UINT8   new_bit = ( ( m_pc ^ ( m_pc << 1 ) ) & 0x40 ) ? xorval : 1 - xorval;
 
-		m_pc = ( m_pc << 1 ) | new_bit;
+		m_pc = ((m_pc << 1) | new_bit) & ((1 << m_pc_size) - 1);
 	}
 	else
 	{
@@ -711,7 +706,6 @@ void tms1xxx_cpu_device::execute_run()
 {
 	do
 	{
-//      debugger_instruction_hook( this, ( ( m_pa << m_pc_size ) | m_pc ) << 1 );
 		m_icount--;
 		switch( m_subcycle )
 		{
@@ -811,12 +805,10 @@ void tms1xxx_cpu_device::execute_run()
 				}
 				if ( m_decode & M_STO )
 				{
-//printf("write ram %02x data %01x\n", m_ram_address, m_a );
 					m_data->write_byte( m_ram_address, m_a );
 				}
 				if ( m_decode & M_CKM )
 				{
-//printf("write ram %02x data %01x\n", m_ram_address, m_cki_bus );
 					m_data->write_byte( m_ram_address, m_cki_bus );
 				}
 			}
@@ -824,12 +816,10 @@ void tms1xxx_cpu_device::execute_run()
 			{
 				if ( m_decode & F_SBIT )
 				{
-//printf("write ram %02x data %01x\n", m_ram_address, m_ram_data | tms0980_bit_value[ m_opcode & 0x03 ] );
 					m_data->write_byte( m_ram_address, m_ram_data | tms0980_bit_value[ m_opcode & 0x03 ] );
 				}
 				if ( m_decode & F_RBIT )
 				{
-//printf("write ram %02x data %01x\n", m_ram_address, m_ram_data & tms0980_nbit_value[ m_opcode & 0x03 ] );
 					m_data->write_byte( m_ram_address, m_ram_data & tms0980_nbit_value[ m_opcode & 0x03 ] );
 				}
 				if ( m_decode & F_SETR )
@@ -850,10 +840,6 @@ void tms1xxx_cpu_device::execute_run()
 					{
 						logerror("unknown output pla mapping for status latch = %d and a = %X\n", m_status_latch, m_a);
 					}
-//if ( ( c_output_pla[ ( m_status_latch << 4 ) | m_a ] & 0xFF00 ) == 0xFF00 )
-//printf("****** o output m_status_latch = %X, m_a = %X\n", m_status_latch, m_a);
-//else
-//printf("o output m_status_latch = %X, m_a = %X\n", m_status_latch, m_a);
 
 					m_write_o( 0, m_o & m_o_mask, 0xffff );
 				}
@@ -951,8 +937,6 @@ void tms1xxx_cpu_device::execute_run()
 				m_opcode = m_program->read_byte( m_rom_address );
 			}
 			next_pc();
-			if (LOG)
-				logerror( "tms0980: read opcode %04x from %04x. Set pc to %04x\n", m_opcode, m_rom_address, m_pc );
 
 			/* ram address */
 			m_ram_address = ( m_x << 4 ) | m_y;
@@ -1042,7 +1026,7 @@ void tms1100_cpu_device::state_string_export(const device_state_entry &entry, as
 
 tms0980_cpu_device::tms0980_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: tms1xxx_cpu_device( mconfig, TMS0980, "TMS0980", tag, owner, clock, tms0980_decode, 0x00ff, 0x07ff, 7, 9, 4
-						, 12, ADDRESS_MAP_NAME( tms0980_internal_rom ), 7, ADDRESS_MAP_NAME( tms0980_internal_ram ), "tms0980", __FILE__)
+						, 12, ADDRESS_MAP_NAME( program_11bit_9 ), 8, ADDRESS_MAP_NAME( data_64x9_as4 ), "tms0980", __FILE__)
 {
 }
 
@@ -1056,14 +1040,14 @@ offs_t tms0980_cpu_device::disasm_disassemble(char *buffer, offs_t pc, const UIN
 
 tms1000_cpu_device::tms1000_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: tms1xxx_cpu_device( mconfig, TMS1000, "TMS1000", tag, owner, clock, tms1000_default_decode, 0x00ff, 0x07ff, 6, 8, 2
-						, 11, ADDRESS_MAP_NAME( program_11bit_8 ), 7, ADDRESS_MAP_NAME( data_7bit ), "tms1000", __FILE__)
+						, 10, ADDRESS_MAP_NAME( program_10bit_8 ), 6, ADDRESS_MAP_NAME( data_64x4 ), "tms1000", __FILE__)
 {
 }
 
 
 tms1000_cpu_device::tms1000_cpu_device(const machine_config &mconfig, device_type type, const char*name, const char *tag, device_t *owner, UINT32 clock, UINT16 o_mask, UINT16 r_mask, const char *shortname, const char *source)
 	: tms1xxx_cpu_device( mconfig, type, name, tag, owner, clock, tms1000_default_decode, o_mask, r_mask, 6, 8, 2
-						, 10, ADDRESS_MAP_NAME( program_10bit_8 ), 6, ADDRESS_MAP_NAME( data_6bit ), shortname, source )
+						, 10, ADDRESS_MAP_NAME( program_10bit_8 ), 6, ADDRESS_MAP_NAME( data_64x4 ), shortname, source )
 {
 }
 
@@ -1074,6 +1058,11 @@ offs_t tms1000_cpu_device::disasm_disassemble(char *buffer, offs_t pc, const UIN
 	return CPU_DISASSEMBLE_NAME(tms1000)(this, buffer, pc, oprom, opram, options);
 }
 
+
+tms0970_cpu_device::tms0970_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms1000_cpu_device( mconfig, TMS0970, "TMS0970", tag, owner, clock, 0x00ff, 0x07ff, "tms0970", __FILE__)
+{
+}
 
 tms1070_cpu_device::tms1070_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: tms1000_cpu_device( mconfig, TMS1070, "TMS1070", tag, owner, clock, 0x00ff, 0x07ff, "tms1070", __FILE__)
@@ -1095,14 +1084,14 @@ tms1270_cpu_device::tms1270_cpu_device(const machine_config &mconfig, const char
 
 tms1100_cpu_device::tms1100_cpu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: tms1xxx_cpu_device( mconfig, TMS1100, "TMS1100", tag, owner, clock, tms1100_default_decode, 0x00ff, 0x07ff, 6, 8, 3
-						, 11, ADDRESS_MAP_NAME( program_11bit_8 ), 7, ADDRESS_MAP_NAME( data_7bit ), "tms1100", __FILE__ )
+						, 11, ADDRESS_MAP_NAME( program_11bit_8 ), 7, ADDRESS_MAP_NAME( data_128x4 ), "tms1100", __FILE__ )
 {
 }
 
 
 tms1100_cpu_device::tms1100_cpu_device(const machine_config &mconfig, device_type type, const char*name, const char *tag, device_t *owner, UINT32 clock, UINT16 o_mask, UINT16 r_mask, const char *shortname, const char *source)
 	: tms1xxx_cpu_device( mconfig, type, name, tag, owner, clock, tms1100_default_decode, o_mask, r_mask, 6, 8, 3
-						, 11, ADDRESS_MAP_NAME( program_11bit_8 ), 7, ADDRESS_MAP_NAME( data_7bit ), shortname, source )
+						, 11, ADDRESS_MAP_NAME( program_11bit_8 ), 7, ADDRESS_MAP_NAME( data_128x4 ), shortname, source )
 {
 }
 

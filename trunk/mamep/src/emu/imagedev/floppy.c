@@ -93,6 +93,15 @@ const device_type SONY_OA_D31V = &device_creator<sony_oa_d31v>;
 const device_type SONY_OA_D32W = &device_creator<sony_oa_d32w>;
 const device_type SONY_OA_D32V = &device_creator<sony_oa_d32v>;
 
+// teac 5.25" drives
+#if 0
+const device_type TEAC_FD_55A = &device_creator<teac_fd_55a>;
+const device_type TEAC_FD_55B = &device_creator<teac_fd_55b>;
+const device_type TEAC_FD_55E = &device_creator<teac_fd_55e>;
+#endif
+const device_type TEAC_FD_55F = &device_creator<teac_fd_55f>;
+const device_type TEAC_FD_55G = &device_creator<teac_fd_55g>;
+
 // ALPS 5.25" drives
 const device_type ALPS_3255190x = &device_creator<alps_3255190x>;
 
@@ -623,14 +632,14 @@ attotime floppy_image_device::get_next_transition(const attotime &from_when)
 	if(!image || mon)
 		return attotime::never;
 
-	int cells = image->get_track_size(cyl, ss);
+	int cells = image->get_track_size(cyl, ss, subcyl);
 	if(cells <= 1)
 		return attotime::never;
 
 	attotime base;
 	UINT32 position = find_position(base, from_when);
 
-	const UINT32 *buf = image->get_buffer(cyl, ss);
+	const UINT32 *buf = image->get_buffer(cyl, ss, subcyl);
 	int index = find_index(position, buf, cells);
 
 	if(index == -1)
@@ -661,16 +670,16 @@ void floppy_image_device::write_flux(const attotime &start, const attotime &end,
 	for(int i=0; i != transition_count; i++)
 		trans_pos[i] = find_position(base, transitions[i]);
 
-	int cells = image->get_track_size(cyl, ss);
-	UINT32 *buf = image->get_buffer(cyl, ss);
+	int cells = image->get_track_size(cyl, ss, subcyl);
+	UINT32 *buf = image->get_buffer(cyl, ss, subcyl);
 
 	int index;
 	if(cells)
 		index = find_index(start_pos, buf, cells);
 	else {
 		index = 0;
-		image->set_track_size(cyl, ss, 1);
-		buf = image->get_buffer(cyl, ss);
+		image->set_track_size(cyl, ss, 1, subcyl);
+		buf = image->get_buffer(cyl, ss, subcyl);
 		buf[cells++] = floppy_image::MG_N;
 	}
 
@@ -684,9 +693,9 @@ void floppy_image_device::write_flux(const attotime &start, const attotime &end,
 	UINT32 pos = start_pos;
 	int ti = 0;
 	while(pos != end_pos) {
-		if(image->get_track_size(cyl, ss) < cells+10) {
-			image->set_track_size(cyl, ss, cells+200);
-			buf = image->get_buffer(cyl, ss);
+		if(image->get_track_size(cyl, ss, subcyl) < cells+10) {
+			image->set_track_size(cyl, ss, cells+200, subcyl);
+			buf = image->get_buffer(cyl, ss, subcyl);
 		}
 		UINT32 next_pos;
 		if(ti != transition_count)
@@ -704,7 +713,7 @@ void floppy_image_device::write_flux(const attotime &start, const attotime &end,
 		cur_mg = cur_mg == floppy_image::MG_A ? floppy_image::MG_B : floppy_image::MG_A;
 	}
 
-	image->set_track_size(cyl, ss, cells);
+	image->set_track_size(cyl, ss, cells, subcyl);
 }
 
 void floppy_image_device::write_zone(UINT32 *buf, int &cells, int &index, UINT32 spos, UINT32 epos, UINT32 mg)
@@ -812,7 +821,7 @@ void floppy_image_device::set_write_splice(const attotime &when)
 		image_dirty = true;
 		attotime base;
 		int splice_pos = find_position(base, when);
-		image->set_write_splice_position(cyl, ss, splice_pos);
+		image->set_write_splice_position(cyl, ss, splice_pos, subcyl);
 	}
 }
 
@@ -1762,6 +1771,81 @@ void sony_oa_d32v::handled_variants(UINT32 *variants, int &var_count) const
 	variants[var_count++] = floppy_image::SSDD;
 }
 
+//-------------------------------------------------
+//  teac fd-55f
+//
+//  track to track: 3 ms
+//  average: 94 ms
+//  setting time: 15 ms
+//  motor start time: 400 ms
+//
+//-------------------------------------------------
+
+teac_fd_55f::teac_fd_55f(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
+	floppy_image_device(mconfig, TEAC_FD_55F, "TEAC FD-55F FDD", tag, owner, clock, "teac_fd_55f", __FILE__)
+{
+}
+
+teac_fd_55f::~teac_fd_55f()
+{
+}
+
+void teac_fd_55f::setup_characteristics()
+{
+	form_factor = floppy_image::FF_525;
+	tracks = 80;
+	sides = 2;
+	set_rpm(300);
+}
+
+void teac_fd_55f::handled_variants(UINT32 *variants, int &var_count) const
+{
+	var_count = 0;
+	variants[var_count++] = floppy_image::SSSD;
+	variants[var_count++] = floppy_image::SSDD;
+	variants[var_count++] = floppy_image::SSQD;
+	variants[var_count++] = floppy_image::DSSD;
+	variants[var_count++] = floppy_image::DSDD;
+	variants[var_count++] = floppy_image::DSQD;
+}
+
+//-------------------------------------------------
+//  teac fd-55g
+//
+//  track to track: 3 ms
+//  average: 91 ms
+//  setting time: 15 ms
+//  motor start time: 400 ms
+//
+//-------------------------------------------------
+
+teac_fd_55g::teac_fd_55g(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
+	floppy_image_device(mconfig, TEAC_FD_55G, "TEAC FD-55G FDD", tag, owner, clock, "teac_fd_55g", __FILE__)
+{
+}
+
+teac_fd_55g::~teac_fd_55g()
+{
+}
+
+void teac_fd_55g::setup_characteristics()
+{
+	form_factor = floppy_image::FF_525;
+	tracks = 77;
+	sides = 2;
+	set_rpm(360);
+}
+
+void teac_fd_55g::handled_variants(UINT32 *variants, int &var_count) const
+{
+	var_count = 0;
+	variants[var_count++] = floppy_image::SSSD;
+	variants[var_count++] = floppy_image::SSDD;
+	variants[var_count++] = floppy_image::SSQD;
+	variants[var_count++] = floppy_image::DSDD;
+	variants[var_count++] = floppy_image::DSQD;
+	variants[var_count++] = floppy_image::DSHD;
+}
 
 //-------------------------------------------------
 //  ALPS 32551901 (black) / 32551902 (brown)

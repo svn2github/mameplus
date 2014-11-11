@@ -138,6 +138,7 @@ struct I386_CALL_GATE
 		UINT32 flags;
 		i386_op_func handler16;
 		i386_op_func handler32;
+		bool lockable;
 	};
 	static const X86_OPCODE s_x86_opcode_table[];
 
@@ -186,6 +187,7 @@ struct I386_CALL_GATE
 	int m_halted;
 
 	int m_operand_size;
+	int m_xmm_operand_size;
 	int m_address_size;
 	int m_operand_prefix;
 	int m_address_prefix;
@@ -244,6 +246,8 @@ struct I386_CALL_GATE
 	i386_op_func m_opcode_table3f3_16[256];
 	i386_op_func m_opcode_table3f3_32[256];
 
+	bool m_lock_table[2][256];
+
 	UINT8 *m_cycle_table_pm;
 	UINT8 *m_cycle_table_rm;
 
@@ -256,6 +260,7 @@ struct I386_CALL_GATE
 	bool m_nmi_latched;
 	UINT32 m_smbase;
 	devcb_write_line m_smiact;
+	bool m_lock;
 
 	// bytes in current opcode, debug only
 	UINT8 m_opcode_bytes[16];
@@ -327,6 +332,8 @@ struct I386_CALL_GATE
 	void pentium_msr_write(UINT32 offset, UINT64 data, UINT8 *valid_msr);
 	UINT64 p6_msr_read(UINT32 offset,UINT8 *valid_msr);
 	void p6_msr_write(UINT32 offset, UINT64 data, UINT8 *valid_msr);
+	UINT64 piv_msr_read(UINT32 offset,UINT8 *valid_msr);
+	void piv_msr_write(UINT32 offset, UINT64 data, UINT8 *valid_msr);
 	inline UINT64 MSR_READ(UINT32 offset,UINT8 *valid_msr);
 	inline void MSR_WRITE(UINT32 offset, UINT64 data, UINT8 *valid_msr);
 	UINT32 i386_load_protected_mode_segment(I386_SREG *seg, UINT64 *desc );

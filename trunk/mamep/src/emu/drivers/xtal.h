@@ -71,6 +71,7 @@ enum
 	XTAL_4_9152MHz      = 4915200,
 	XTAL_5MHz           = 5000000,      /* Mutant Night */
 	XTAL_5_0688MHz      = 5068800,      /* Xerox 820, DEC VK100 */
+	XTAL_5_46MHz        = 5460000,      /* ec1840 and ec1841 keyboard */
 	XTAL_5_626MHz       = 5626000,      /* RCA CDP1869 PAL dot clock */
 	XTAL_5_67MHz        = 5670000,      /* RCA CDP1869 NTSC dot clock */
 	XTAL_5_7143MHz      = 5714300,      /* Cidelsa Destroyer */
@@ -132,6 +133,7 @@ enum
 	XTAL_14_7456MHz     = 14745600,     /* Namco System 12 & System Super 22/23 for JVS */
 	XTAL_15MHz          = 15000000,     /* Sinclair QL, Amusco Poker */
 	XTAL_15_36MHz       = 15360000,     /* Visual 1050 */
+	XTAL_15_4MHz        = 15400000,     /* DVK KSM */
 	XTAL_15_468MHz      = 15468480,     /* Bank Panic h/w, Sega G80 */
 	XTAL_15_8976MHz     = 15897600,     /* IAI Swyft */
 	XTAL_16MHz          = 16000000,     /* Extremely common, used on 100's of PCBs */

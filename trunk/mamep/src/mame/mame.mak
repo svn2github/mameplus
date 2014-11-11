@@ -282,6 +282,8 @@ SOUNDS += T6721A
 SOUNDS += MOS7360
 #SOUNDS += ESQPUMP
 #SOUNDS += VRC6
+SOUNDS += SB0400
+SOUNDS += AC97
 
 #-------------------------------------------------
 # specify available video cores
@@ -301,6 +303,7 @@ VIDEOS += DM9368
 #VIDEOS += EF9340_1
 #VIDEOS += EF9345
 #VIDEOS += GF4500
+VIDEOS += GF6800GT
 VIDEOS += EPIC12
 VIDEOS += FIXFREQ
 VIDEOS += H63484
@@ -447,6 +450,7 @@ MACHINES += LDV1000
 MACHINES += LDVP931
 #MACHINES += LH5810
 MACHINES += LINFLASH
+MACHINES += LPCI
 #MACHINES += LSI53C810
 #MACHINES += M68307
 #MACHINES += M68340
@@ -589,6 +593,7 @@ MACHINES += FDC37C665GT
 #BUSES += ADAMNET
 #BUSES += APF
 #BUSES += ARCADIA
+#BUSES += ASTROCADE
 #BUSES += BML3
 #BUSES += BW2
 #BUSES += C64
@@ -617,6 +622,7 @@ BUSES += GENERIC
 BUSES += ISA
 #BUSES += ISBX
 #BUSES += KC
+#BUSES += LPCI
 #BUSES += MACPDS
 #BUSES += MIDI
 #BUSES += MEGADRIVE
@@ -627,11 +633,11 @@ BUSES += NEOGEO
 #BUSES += O2
 #BUSES += ORICEXT
 #BUSES += PCE
-#BUSES += PCI
 #BUSES += PC_JOY
 #BUSES += PC_KBD
 #BUSES += PET
 #BUSES += PLUS4
+#BUSES += PSX_CONTROLLER
 #BUSES += QL
 BUSES += RS232
 #BUSES += S100
@@ -642,6 +648,7 @@ BUSES += SCSI
 #BUSES += SMS_CTRL
 #BUSES += SMS_EXP
 #BUSES += SNES
+#BUSES += SPC1000
 #BUSES += TI99PEB
 #BUSES += TVC
 #BUSES += VBOY
@@ -1711,7 +1718,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/hikaru.o \
 	$(DRIVERS)/hshavoc.o \
 	$(DRIVERS)/kopunch.o $(VIDEO)/kopunch.o \
-	$(DRIVERS)/lindbergh.o \
+	$(DRIVERS)/lindbergh.o $(MACHINE)/segabb.o \
 	$(MACHINE)/megadriv.o \
 	$(DRIVERS)/megadrvb.o \
 	$(DRIVERS)/megaplay.o \
@@ -1724,6 +1731,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/naomi.o $(MACHINE)/dc.o $(VIDEO)/powervr2.o $(MACHINE)/naomi.o \
 	$(MACHINE)/naomig1.o $(MACHINE)/naomibd.o $(MACHINE)/naomirom.o $(MACHINE)/naomigd.o \
 	$(MACHINE)/naomicrypt.o $(MACHINE)/naomim1.o $(MACHINE)/naomim2.o $(MACHINE)/naomim4.o \
+	$(MACHINE)/315-5881_crypt.o \
 	$(MACHINE)/awboard.o \
 	$(MACHINE)/mie.o $(MACHINE)/maple-dc.o $(MACHINE)/mapledev.o $(MACHINE)/dc-ctrl.o $(MACHINE)/jvs13551.o \
 	$(DRIVERS)/triforce.o \
@@ -1731,6 +1739,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segac2.o \
 	$(DRIVERS)/segae.o \
 	$(DRIVERS)/shtzone.o \
+	$(DRIVERS)/segacoin.o \
 	$(DRIVERS)/segag80r.o $(MACHINE)/segag80.o $(AUDIO)/segag80r.o $(VIDEO)/segag80r.o \
 	$(DRIVERS)/segag80v.o $(AUDIO)/segag80v.o $(VIDEO)/segag80v.o \
 	$(DRIVERS)/segahang.o $(VIDEO)/segahang.o \
@@ -2666,6 +2675,8 @@ $(DRIVERS)/goldstar.o:  $(LAYOUT)/goldstar.lh \
 
 $(DRIVERS)/grchamp.o:   $(LAYOUT)/grchamp.lh
 
+$(DRIVERS)/harddriv.o:  $(LAYOUT)/racedrivpan.lh
+
 $(DRIVERS)/highvdeo.o:  $(LAYOUT)/fashion.lh
 
 $(DRIVERS)/hankin.o:    $(LAYOUT)/hankin.lh
@@ -2849,6 +2860,11 @@ $(DRIVERS)/segajw.o:    $(LAYOUT)/segajw.lh
 $(DRIVERS)/segaorun.o:  $(LAYOUT)/outrun.lh
 
 $(DRIVERS)/segas32.o:   $(LAYOUT)/radr.lh
+
+$(DRIVERS)/segaufo.o:   $(LAYOUT)/newufo.lh \
+			$(LAYOUT)/ufomini.lh \
+			$(LAYOUT)/ufo21.lh \
+			$(LAYOUT)/ufo800.lh
 
 $(DRIVERS)/segaybd.o:   $(LAYOUT)/pdrift.lh
 

@@ -131,7 +131,7 @@ $(MESSOBJ)/atari.a:             \
 	$(MESS_DRIVERS)/atari400.o $(MESS_MACHINE)/atarifdc.o \
 
 $(MESSOBJ)/bandai.a:            \
-	$(MESS_DRIVERS)/wswan.o $(MESS_AUDIO)/wswan_snd.o $(MESS_MACHINE)/wswan.o $(MESS_VIDEO)/wswan.o \
+	$(MESS_DRIVERS)/wswan.o $(MESS_AUDIO)/wswan_snd.o $(MESS_MACHINE)/wswan.o $(MESS_VIDEO)/wswan_video.o \
 
 $(MESSOBJ)/funtech.a:           \
 	$(MESS_DRIVERS)/supracan.o  \
