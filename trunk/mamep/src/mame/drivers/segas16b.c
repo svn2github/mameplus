@@ -4470,6 +4470,49 @@ ROM_END
 //
 ROM_START( dunkshot )
 	ROM_REGION( 0x30000, "maincpu", 0 ) // 68000 code
+	ROM_LOAD16_BYTE( "epr-10520c.a1", 0x000001, 0x8000, CRC(ba9c5d10) SHA1(370d0455903c1bce3b5ad2ffa1d02ccd6da78840) )
+	ROM_LOAD16_BYTE( "epr-10523c.a4", 0x000000, 0x8000, CRC(106733c2) SHA1(d792b3d5073becbd9f440faff45692ab9e6309b9) )
+	ROM_LOAD16_BYTE( "epr-10521.a2",  0x010001, 0x8000, CRC(e2d5f97a) SHA1(bf7b4a029580633fee65be89d5c9c83ff76a8484) ) // == epr-10468.a2
+	ROM_LOAD16_BYTE( "epr-10524.a5",  0x010000, 0x8000, CRC(22777314) SHA1(fbc35505a94c8d4bdb44ee058e9e2e9e9b377c5c) ) // == epr-10471.a5
+	ROM_LOAD16_BYTE( "epr-10522.a3",  0x020001, 0x8000, CRC(e5b5f754) SHA1(af02c46437e3cf62331753dc405211b7f90e3f62) )
+	ROM_LOAD16_BYTE( "epr-10525.a6",  0x020000, 0x8000, CRC(7f41f334) SHA1(631f6113f3c0c47f2dd1ee0ea6e7db4321d7366d) )
+
+	ROM_REGION( 0x18000, "gfx1", 0 ) // tiles
+	ROM_LOAD( "epr-10528.b9",  0x00000, 0x8000, CRC(a8a3762d) SHA1(af75df6eda0df903e2b3f9680cd128da4227961d) )
+	ROM_LOAD( "epr-10529.b10", 0x08000, 0x8000, CRC(80cbff50) SHA1(3641ee337194d56d774bf1be91939d03f3c0f77b) )
+	ROM_LOAD( "epr-10530.b11", 0x10000, 0x8000, CRC(2dbe1e52) SHA1(a6b74f88e2f47322fbde1f6682cae58caf79f6c8) )
+
+	ROM_REGION16_BE( 0x80000, "sprites", 0 ) // sprites
+	ROM_LOAD16_BYTE( "epr-10481.b5", 0x00000, 0x8000, CRC(feb04bc9) SHA1(233dc8e3b887a88ac114723d58a909a58f0ae771) )
+	ROM_RELOAD(                      0x10000, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10477.b1", 0x00001, 0x8000, CRC(f9d3b2cb) SHA1(b530fe16882c718122bfd1de098f39e54993de28) )
+	ROM_RELOAD(                      0x10001, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10482.b6", 0x20000, 0x8000, CRC(5bc07618) SHA1(f4c88f81b407d467f958181770ea4fd32aab3daf) )
+	ROM_RELOAD(                      0x30000, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10478.b2", 0x20001, 0x8000, CRC(5b5c5c92) SHA1(1c6f1cafa0788678c80ade11560f4a8d8bb7272a) )
+	ROM_RELOAD(                      0x30001, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10483.b7", 0x40000, 0x8000, CRC(7cab4f9e) SHA1(2310a9fe604f78d74d84bea301c95e6f0e6a6085) )
+	ROM_RELOAD(                      0x50000, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10479.b3", 0x40001, 0x8000, CRC(e84190a0) SHA1(23a8799adf81e1884a8c6b4c55397b8bca2f1850) )
+	ROM_RELOAD(                      0x50001, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10527.b8", 0x60000, 0x8000, CRC(39b1a242) SHA1(cf0c0768d006a18345b66dd389acba1e8192ec53) )
+	ROM_RELOAD(                      0x70000, 0x8000 )
+	ROM_LOAD16_BYTE( "epr-10526.b4", 0x60001, 0x8000, CRC(bf200754) SHA1(60900d80cfea147b011813dde558c1d39fdd274c) )
+	ROM_RELOAD(                      0x70001, 0x8000 )
+
+	ROM_REGION( 0x50000, "soundcpu", 0 ) // sound CPU
+	ROM_LOAD( "epr-10473.a7",   0x00000, 0x08000, CRC(7f1f5a27) SHA1(7ff91b95c883b395ab4ff5e440d78e553a09e623) )
+	ROM_LOAD( "epr-10474.a8",   0x10000, 0x08000, CRC(419a656e) SHA1(aa734ae835761badeb069f99acc5fded2a19b3a3) )
+	ROM_LOAD( "epr-10475.a9",   0x20000, 0x08000, CRC(17d55e85) SHA1(0c414bafecbfaa82679cc155f15f5255c186358d) )
+	ROM_LOAD( "epr-10476.a10",  0x30000, 0x08000, CRC(a6be0956) SHA1(fc4d6e25e0b46679f94fddbb1850fb0b02f8d84b) )
+
+	ROM_REGION( 0x2000, "maincpu:key", 0 ) // decryption key
+	ROM_LOAD( "317-0022.key", 0x0000, 0x2000, CRC(4eedc66d) SHA1(50588fa13bf25a2d1322579cdc9937450543c978) )
+ROM_END
+
+
+ROM_START( dunkshoto )
+	ROM_REGION( 0x30000, "maincpu", 0 ) // 68000 code
 	ROM_LOAD16_BYTE( "epr-10467.a1", 0x000001, 0x8000, CRC(29774114) SHA1(3a88739213afd4ef7807ddbd3acdfddeb9636fd3) )
 	ROM_LOAD16_BYTE( "epr-10470.a4", 0x000000, 0x8000, CRC(8c60761f) SHA1(aba009f482df7023b460ab20e50225ab5f6dff6d) )
 	ROM_LOAD16_BYTE( "epr-10468.a2", 0x010001, 0x8000, CRC(e2d5f97a) SHA1(bf7b4a029580633fee65be89d5c9c83ff76a8484) )
@@ -6131,14 +6174,14 @@ ROM_START( tturf )
 	ROM_LOAD16_BYTE( "epr-12326.a5",  0x00001, 0x20000, CRC(f998862b) SHA1(69902ab0162eb42e1d6a9792651a5d41cb77477d) )
 
 	ROM_REGION( 0x30000, "gfx1", 0 ) // tiles
-	ROM_LOAD( "opr-12268.a14", 0x00000, 0x10000, CRC(e0dac07f) SHA1(c7f6de42eb93a8f34afdc300628735b5f40a34c2) )	// ROMS are Toshiba TMM24512AF one time programmable roms
-	ROM_LOAD( "opr-12269.a15", 0x10000, 0x10000, CRC(457a8790) SHA1(b701e1a1745cefb31083c8a3daa3b23181f89576) )	// Some ROM boards might have standard EPR numbers with
-	ROM_LOAD( "opr-12270.a16", 0x20000, 0x10000, CRC(69fc025b) SHA1(20be1242de27f1b997d43890051cc5d5ac8a127a) )	//  standard EPROM chips instead
+	ROM_LOAD( "opr-12268.a14", 0x00000, 0x10000, CRC(e0dac07f) SHA1(c7f6de42eb93a8f34afdc300628735b5f40a34c2) ) // ROMS are Toshiba TMM24512AF one time programmable roms
+	ROM_LOAD( "opr-12269.a15", 0x10000, 0x10000, CRC(457a8790) SHA1(b701e1a1745cefb31083c8a3daa3b23181f89576) ) // Some ROM boards might have standard EPR numbers with
+	ROM_LOAD( "opr-12270.a16", 0x20000, 0x10000, CRC(69fc025b) SHA1(20be1242de27f1b997d43890051cc5d5ac8a127a) ) //  standard EPROM chips instead
 
 	ROM_REGION16_BE( 0x100000, "sprites", 0 ) // sprites
-	ROM_LOAD16_BYTE( "opr-12279.b1", 0x00001, 0x10000, CRC(7a169fb1) SHA1(1ec6da0d2cfcf727e61f61c847fd8b975b64f944) )	// ROMS are Toshiba TMM24512AF one time programmable roms
-	ROM_LOAD16_BYTE( "opr-12283.b5", 0x00000, 0x10000, CRC(ae0fa085) SHA1(ae9af92d4dd0c8a0f064d24e647522b588fbd7f7) )	// Some ROM boards might have standard EPR numbers with
-	ROM_LOAD16_BYTE( "opr-12278.b2", 0x40001, 0x10000, CRC(961d06b7) SHA1(b1a9dea63785bfa2c0e7b931387b91dfcd27d79b) )	//  standard EPROM chips instead
+	ROM_LOAD16_BYTE( "opr-12279.b1", 0x00001, 0x10000, CRC(7a169fb1) SHA1(1ec6da0d2cfcf727e61f61c847fd8b975b64f944) )   // ROMS are Toshiba TMM24512AF one time programmable roms
+	ROM_LOAD16_BYTE( "opr-12283.b5", 0x00000, 0x10000, CRC(ae0fa085) SHA1(ae9af92d4dd0c8a0f064d24e647522b588fbd7f7) )   // Some ROM boards might have standard EPR numbers with
+	ROM_LOAD16_BYTE( "opr-12278.b2", 0x40001, 0x10000, CRC(961d06b7) SHA1(b1a9dea63785bfa2c0e7b931387b91dfcd27d79b) )   //  standard EPROM chips instead
 	ROM_LOAD16_BYTE( "opr-12282.b6", 0x40000, 0x10000, CRC(e8671ee1) SHA1(a3732938c370f1936d867aae9c3d1e9bbfb57ede) )
 	ROM_LOAD16_BYTE( "opr-12277.b3", 0x80001, 0x10000, CRC(f16b6ba2) SHA1(00cc04c7b5aad82d51d2d252e1e57bcdc5e2c9e3) )
 	ROM_LOAD16_BYTE( "opr-12281.b7", 0x80000, 0x10000, CRC(1ef1077f) SHA1(8ce6fd7d32a20b93b3f91aaa43fe22720da7236f) )
@@ -6817,7 +6860,8 @@ GAME( 1988, ddux,       0,        system16b_fd1094,    ddux,     segas16b_state,
 GAME( 1988, dduxj,      ddux,     system16b_fd1094,    ddux,     segas16b_state,generic_5521,       ROT0,   "Sega", "Dynamite Dux (set 2, Japan, FD1094 317-0094)", 0 )
 GAME( 1988, ddux1,      ddux,     system16b_i8751,     ddux,     segas16b_state,ddux_5704,          ROT0,   "Sega", "Dynamite Dux (set 1, 8751 317-0095)", 0 )
 
-GAME( 1986, dunkshot,   0,        system16b_fd1089a,   dunkshot, segas16b_state,dunkshot_5358_small,ROT0,   "Sega", "Dunk Shot (FD1089A 317-0022)", 0 )
+GAME( 1987, dunkshot,   0,        system16b_fd1089a,   dunkshot, segas16b_state,dunkshot_5358_small,ROT0,   "Sega", "Dunk Shot (Rev C, FD1089A 317-0022)", 0 )
+GAME( 1986, dunkshoto,  dunkshot, system16b_fd1089a,   dunkshot, segas16b_state,dunkshot_5358_small,ROT0,   "Sega", "Dunk Shot (FD1089A 317-0022)", 0 )
 
 GAME( 1989, eswat,      0,        system16b_fd1094_5797,eswat,   segas16b_state,generic_5797,       ROT0,   "Sega", "E-Swat - Cyber Police (set 4, World, FD1094 317-0130)", 0 )
 GAME( 1989, eswatu,     eswat,    system16b_fd1094_5797,eswat,   segas16b_state,generic_5797,       ROT0,   "Sega", "E-Swat - Cyber Police (set 3, US, FD1094 317-0129)", 0 )
@@ -6873,7 +6917,7 @@ GAME( 1987, timescan,   0,        system16b,           timescan, segas16b_state,
 
 GAME( 1994, toryumon,   0,        system16b_5797,      toryumon, segas16b_state,generic_5797,       ROT0,   "Sega", "Toryumon", 0 )
 
-GAME( 1989, tturf,      0,        system16b_i8751,     tturf,    segas16b_state,tturf_5704,         ROT0,   "Sega / Sunsoft", "Tough Turf (set 2, Japan, 8751 317-0104)", 0 ) 
+GAME( 1989, tturf,      0,        system16b_i8751,     tturf,    segas16b_state,tturf_5704,         ROT0,   "Sega / Sunsoft", "Tough Turf (set 2, Japan, 8751 317-0104)", 0 )
 GAME( 1989, tturfu,     tturf,    system16b_i8751,     tturf,    segas16b_state,generic_5358,       ROT0,   "Sega / Sunsoft", "Tough Turf (set 1, US, 8751 317-0099)", 0)
 
 GAME( 1988, wb3,        0,        system16b_i8751,     wb3,      segas16b_state,wb3_5704,           ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 6, World, System 16B, 8751 317-0098)", 0 )

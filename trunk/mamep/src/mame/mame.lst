@@ -2172,6 +2172,8 @@ asukaj          // B68 (c) 1988 Taito Corporation (Japan)
 mofflott        // C17 (c) 1989 Taito Corporation (Japan)
 cadash          // C21 (c) 1989 Taito Corporation Japan
 cadashj         // C21 (c) 1989 Taito Corporation
+cadashj1        // C21 (c) 1989 Taito Corporation
+cadashjo        // C21 (c) 1989 Taito Corporation
 cadashu         // C21 (c) 1989 Taito America Corporation
 cadashi         // C21 (c) 1989 Taito Corporation Japan
 cadashf         // C21 (c) 1989 Taito Corporation Japan
@@ -2852,7 +2854,7 @@ crusherm        // (c) 1999 Takumi
 tjumpman        // (c) 1999 Namco
 
 mushisam        // (c) 2004 Cave (AMI license) - 2004/10/12.MASTER VER.
-mushisama       // (c) 2004 Cave (AMI license) - 2004/10/12 MASTER VER.      
+mushisama       // (c) 2004 Cave (AMI license) - 2004/10/12 MASTER VER.
 mushisamb       // (c) 2004 Cave (AMI license) - 2004/10/12 MASTER VER
 espgal2         // (c) 2005 Cave (AMI license) - 2005/11/14 MASTER VER
 ibara           // (c) 2005 Cave (AMI license) - 2005/03/22 MASTER VER..
@@ -3028,6 +3030,7 @@ bionicc         //  3/1987 (c) 1987 (Euro)
 bionicc1        //  3/1987 (c) 1987 (US)
 bionicc2        //  3/1987 (c) 1987 (US)
 topsecrt        //  3/1987 (c) 1987 (Japan)
+supduck         // (c) Comad
 1943            //  6/1987 (c) 1987 (Euro)
 1943u           //  6/1987 (c) 1987 (US) Rev C
 1943j           //  6/1987 (c) 1987 (Japan) Rev B
@@ -4587,6 +4590,7 @@ ddux            // (c) 1989 (FD1094, decrypted)
 dduxj           // (c) 1989 (FD1094, decrypted)
 ddux1           // (c) 1989 (8751)
 dunkshot        // (c) 1986 (FD1094, decrypted)
+dunkshoto       // (c) 1986 (FD1094, decrypted)
 eswat           // (c) 1989 (FD1094, decrypted)
 eswatu          // (c) 1989 (FD1094, decrypted)
 eswatj          // (c) 1989 (FD1094, decrypted)
@@ -5279,8 +5283,9 @@ alpilota        // 1999.03 Airline Pilots (Rev A)
 ggram2          // 1999.04 Giant Gram: All Japan Pro Wrestling 2
 				// 1999.05 Taisen Puzzle Kurutto Stone
 ringout         // 1999.06 Ring Out 4x4
-f355bios        // 1999.07 F355 Challenge (BIOS)
-f355            // 1999.07 F355 Challenge
+f355dlx         // 1999.07 F355 Challenge Deluxe (BIOS)
+f355bios        // 1999.08 F355 Challenge Twin (BIOS)
+f355            // 1999.07 F355 Challenge Deluxe
 f355twin        // 1999.07 F355 Challenge Twin
 shangril        // 1999.08 Dengen Tenshi Taisen Janshi Shangri-la
 tduno           // 1999.08 Touch de UNO! / Unou Nouryoku Check Machine
@@ -5324,7 +5329,7 @@ toukon4         // 2000.04 Shin Nihon Prowrestling Toukon Retsuden 4 Arcade Edit
 qmegamis        // 2000.05 Quiz Ah Megamisama
 derbyo2k        // 2000.06 Derby Owners Club 2000 Ver.2 (Rev A)
 starhrse        // 2000.?? Star Horse (big screens)
-starhrct        // 2000.?? Star Horse (server)
+starhrct        // 2000.12 Star Horse (server)
 starhrcl        // 2000.?? Star Horse (client)
 vonot           // 2000.06 Virtual-on Oratorio Tangram M.S.B.S. Ver.5.66 2000 Edition
 ggx             // 2000.07 Guilty Gear X
@@ -5338,7 +5343,8 @@ gram2000        // 2000.09 Giant Gram 2000
 crackndj        // 2000.10 Crackin' DJ
 deathcox        // 2000.10 Death Crimson OX
 cspike          // 2000.10 Gun Spike / Cannon Spike
-sstrkfgt        // 2000.10 Sega Strike Fighter (Rev A)
+sstrkfgt        // 2000.10 Sega Strike Fighter (Rev A, set 1)
+sstrkfgta       // 2000.10 Sega Strike Fighter (Rev A, set 2)
 confmiss        // 2000.10.11 Confidential Mission         // First GD-ROM game?
 ninjaslt1       // 2000.11 Ninja Assault (NJA1 Ver. A)
 ninjaslt2       // 2000.11 Ninja Assault (NJA2 Ver. A)
@@ -5358,7 +5364,6 @@ f355twn2        // 2001.01 F355 Challenge 2 Twin
 sfz3ugd         // 2001.02 Street Fighter ZERO3 Upper
 gundmgd         // 2001.03 Mobile Suit Gundam: Federation Vs. Zeon (GD-ROM)
 gundmct         // 2001.03 Mobile Suit Gundam: Federation Vs. Zeon (cartridge)
-starhrsp        // 2001.03 Star Horse Progress (Rev A)
 dygolf          // 2001.04.27 Dynamic Golf / Virtua Golf (Rev A)
 				// 2001.04 Shakatto Tambourine Motto Norinori Shinkyoku Tsuika
 shaktmsp        // 2001.04.04 Shakatto Tambourine 2K1 SPR
@@ -5387,7 +5392,6 @@ ikaruga         // 2001.12 Ikaruga
 lupinsho        // 2001.12 Lupin the Third: the Shooting
 drbyocwc        // 2001.?? Derby Owners Club World Edition (Rev. C)
 derbyocw        // 2001.?? Derby Owners Club World Edition (Rev. D)
-shootplm        // 2001.?? Shootout Pool Medal
 				// 2001.?? Star Horse 2001
 hopper          // 2002.?? SWP Hopper Board
 vathlete        // 2002.03 Virtua Athletics / Virtua Athlete
@@ -5404,7 +5408,7 @@ moeru           // 2002.12 Moeru Casinyo
 				// 2002.?? Pochinya
 quizqgd         // 2002.?? Quiz Keitai Q mode
 shootopl        // 2002.?? Shootout Pool
-shootpl         // 2002.?? Shootout Pool / Shootout Pool Prize (Rev A)
+shootpl         // 2003.?? Shootout Pool The Medal / Shootout Pool Prize (Rev A)
 mtkob2          // 2003.02 MushiKing The King Of Beetle
 				// 2003.03 Sega Network Taisen Mahjong MJ
 ggxxrl          // 2003.03 Guilty Gear XX # Reload (Rev A)
@@ -5415,6 +5419,7 @@ usagiym         // 2003.06 Usagi Yamashiro Mahjong Hen
 oinori          // 2003.08 Oinori-daimyoujin Matsuri
 psyvar2         // 2003.11 Psyvariar 2 - The Will To Fabricate
 puyofev         // 2003.11 Puyo Puyo Fever
+starhrsp        // 2003.12 Star Horse Progress (Rev A)
 puyofevp        // 2003.?? Puyo Puyo Fever (prototype)
 				// 2003.?? Dragon Treasure
 				// 2003.?? Rabbit 2
@@ -5422,6 +5427,7 @@ cfield          // 2004.06 Chaos Field
 tetkiwam        // 2004.06 Tetris Kiwamemichi (Arcade TV Game List - P.88, Right, 11 from bottom)
 trizeal         // 2004.09 Trizeal
 				// 2004.?? Dragon Treasure 2
+shootplm        // 2004.?? Shootout Pool The Medal Ver. B / Shootout Pool Prize Ver. B
 kick4csh        // 2004.?? Kick '4' Cash
 				// 2004.?? The Quiz Show
 				// 2005.03 Melty Blood Act Cadenza
@@ -5509,7 +5515,7 @@ vf4evoa         // 2002.08 Virtua Fighter 4 Evolution
 initdv2jo       // 2002.12 Initial D Arcade Stage Ver. 2 (Japan)
 initdv2e        // 2002.12 Initial D Arcade Stage Ver. 2 (export)
 vf4evo          // 2002.12 Virtua Fighter 4 Evolution Ver.B
-clubk2k3        // 2003.?? Club Kart: European Session (2003)
+clubk2k3        // 2003.?? Club Kart: European Session (2003, Rev A)
 clubk2kp        // 2003.?? Club Kart: European Session (2003, prototype)
 initdexpo       // 2002.?? Initial D Arcade Stage (Export)
 				// 2002.?? Sega Driving Simulator
@@ -6858,6 +6864,7 @@ skydiver        // 009787           1978/06 [6800]
 // Smokey Joe   // 030926           1978/07 [6502]
 sbrkout3        // 033442-033452    1978/09 [6502]
 sbrkout         // 033453-033455    1978/09 [6502]
+sbrkoutc        // unrealeased proto
 atarifb         // 033xxx           1978/10 [6502]
 atarifb1        // 033xxx           1978/10 [6502]
 orbit           // 033689-033702    1978/11 [6800]
@@ -7210,6 +7217,7 @@ atetris         // 136066           (c) 1988
 atetrisa        // 136066           (c) 1988
 atetrisb        // (bootleg)
 atetrisb2       // (bootleg)
+atetrisb3       // (bootleg)
 // Escape from the Planet of Robot Monsters
 eprom           // 136069           (c) 1989
 eprom2          // 136069           (c) 1989
@@ -8372,6 +8380,7 @@ goodejan        // (c) 1991 Seibu/Tecmo
 goodejana       // (c) 1991 Seibu/Tecmo
 
 raiden2         // (c) 1993 Seibu Kaihatsu + Fabtek license
+raiden2sw       // (c) 1993 Seibu Kaihats
 raiden2u        // (c) 1993 Seibu Kaihatsu + Fabtek license
 raiden2hk       // (c) 1993 Seibu Kaihatsu + Metrotainment license
 raiden2j        // (c) 1993 Seibu Kaihatsu
@@ -8717,6 +8726,7 @@ baryon          // (c) 1997 SemiCom
 baryona         // (c) 1997 SemiCom
 dreamwld        // (c) 2000 SemiCom
 rolcrush        // (c) 1999 Trust
+cutefght        // (c) 1998 SemiCom
 
 // SH2 board
 s1945ii         // (c) 1997
@@ -8831,13 +8841,13 @@ radikalb        // (c) 1998 - Ref ???
 // SH-4 hardware
 atvtrack        // (c) 2002 - Ref 020419
 atvtracka       // (c) 2002 - Ref 020419
+smashdrv        // (c) 2000
 
 /*
   Remaining Gaelco Games:
   =======================
   1999: Rolling Extreme
   2000: Football Power
-  2001: Smashing Drive
 */
 
 // Galeco PC based games
@@ -9312,6 +9322,7 @@ speedbal        // (c) 1987
 musicbal        // (c) 1987
 sauro           // (c) 1987
 saurop          // (c) 1987
+saurorr         // (c) 1987
 trckydoc        // (c) 1987
 trckydoca       // (c) 1987
 
@@ -9582,6 +9593,7 @@ cafebrk         // "528" Mahjong Cafe Break (C) 1999 Nakanihon / Dynax
 jongtei         // "532" Mahjong Jong-Tei (C) 1999 Dynax
 seljan2         // "557" 1996 Dynax / Face
 realbrk         // "600" Billiard Academy Real Break 1998 (Europe)
+realbrko        // "600" Billiard Academy Real Break 1998 (Europe)
 realbrkk        // "600" Billiard Academy Real Break 1998 (Korea)
 janshinp        // "700j" 1996 Dynax / Sigma
 dtoyoken        // "700d" 1996 Dynax / Sigma
@@ -9737,7 +9749,7 @@ orlegende       //
 orlegendc       //
 orlegendca      //
 orlegend111c    //
-orlegend111t	//
+orlegend111t    //
 orlegend105k    //
 drgw2           // (c) 1997 Dragon World 2
 dw2v100x        //
@@ -10535,9 +10547,10 @@ pitbossm        // (c) 1994 Merit
 pitbossma       // (c) 1994 Merit
 pbss330         // (c) 1994 Merit
 pbst30          // (c) 1994 Merit
-pbst30b         // (c) 1993 Merit
+pbst30a         // (c) 1993 Merit
 realbrod        // (c) 1995 Merit
 mtjpoker        // (c) 1994 Merit
+megat           // (c) 1994 Merit
 megat2          // (c) 1994 Merit
 megat2a         // (c) 1994 Merit
 megat2b         // (c) 1994 Merit
@@ -12786,6 +12799,7 @@ attckexd        // (c) 1977 Exidy
 deathrac        // (c) 1976 Exidy
 biplane4        // (c) 1976 Fun Games
 take5           // (c) 1975 Fun Games
+dpatrol         // (c) 1977 PSE
 bballrmt        // (c) 1974 Ramtek
 cleanswp        // (c) 1974 Ramtek
 vollyrmt        // (c) 1973 Ramtek
@@ -31855,4 +31869,7 @@ mgavegas133
 
 amusco     // 1987, Amusco.
 cocoloco   // 198?, Petaco S.A.
+
+alinvade
+
 #endif // !NCP

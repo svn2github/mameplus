@@ -40,7 +40,7 @@ public:
 		m_cart(*this, "cartslot"),
 		m_cursx(*this, "CURSX"),
 		m_cursy(*this, "CURSY"),
-		m_buttons(*this, "BUTTONS") 
+		m_buttons(*this, "BUTTONS")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -92,7 +92,7 @@ protected:
 	required_ioport m_cursx;
 	required_ioport m_cursy;
 	required_ioport m_buttons;
-	
+
 	void register_save();
 	void handle_irqs();
 	void clear_irq_line(int irq);

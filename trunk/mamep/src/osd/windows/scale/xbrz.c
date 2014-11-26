@@ -189,7 +189,7 @@ void rgbtoLuv(xbrz_uint32 c, double& L, double& u, double& v)
     if ( var_Y > 0.008856 ) var_Y = std::pow(var_Y , 1.0/3 );
     else                    var_Y =  7.787 * var_Y  +  16.0 / 116;
 
-    const double ref_X =  95.047;        //Observer= 2°, Illuminant= D65
+    const double ref_X =  95.047;        //Observer= 2ï¿½, Illuminant= D65
     const double ref_Y = 100.000;
     const double ref_Z = 108.883;
 
@@ -225,7 +225,7 @@ void rgbtoLab(xbrz_uint32 c, unsigned char& L, signed char& A, signed char& B)
     double z = 0.0193339 * r + 0.1191920 * g + 0.9503041 * b;
     //------XYZ to Lab------
     const double refX = 95.047;  //
-    const double refY = 100.000; //Observer= 2°, Illuminant= D65
+    const double refY = 100.000; //Observer= 2ï¿½, Illuminant= D65
     const double refZ = 108.883; //
     double var_X = x / refX;
     double var_Y = y / refY;
@@ -636,7 +636,7 @@ void scalePixel(const Kernel_3x3& ker,
                 break;
 
             //make sure there is no second blending in an adjacent rotation for this pixel: handles insular pixels, mario eyes
-            if (getTopR(blend) != BLEND_NONE && !eq(e, g)) //but support double-blending for 90° corners
+            if (getTopR(blend) != BLEND_NONE && !eq(e, g)) //but support double-blending for 90ï¿½ corners
                 doLineBlend = false;
             if (getBottomL(blend) != BLEND_NONE && !eq(e, c))
                 doLineBlend = false;
@@ -726,7 +726,7 @@ void scaleImage(const xbrz_uint32* src, xbrz_uint32* trg, int srcWidth, int srcH
             const int x_p1 = MIN(x + 1, srcWidth - 1);
             const int x_p2 = MIN(x + 2, srcWidth - 1);
 
-            Kernel_4x4 ker = {}; //perf: initialization is negligable
+            Kernel_4x4 ker = {}; //perf: initialization is negligible
             ker.a = s_m1[x_m1]; //read sequentially from memory as far as possible
             ker.b = s_m1[x];
             ker.c = s_m1[x_p1];
@@ -789,7 +789,7 @@ void scaleImage(const xbrz_uint32* src, xbrz_uint32* trg, int srcWidth, int srcH
             //evaluate the four corners on bottom-right of current pixel
             unsigned char blend_xy = 0; //for current (x, y) position
             {
-                Kernel_4x4 ker = {}; //perf: initialization is negligable
+                Kernel_4x4 ker = {}; //perf: initialization is negligible
                 ker.a = s_m1[x_m1]; //read sequentially from memory as far as possible
                 ker.b = s_m1[x];
                 ker.c = s_m1[x_p1];
@@ -838,7 +838,7 @@ void scaleImage(const xbrz_uint32* src, xbrz_uint32* trg, int srcWidth, int srcH
             //blend four corners of current pixel
             if (blendingNeeded(blend_xy)) //good 20% perf-improvement
             {
-                Kernel_3x3 ker = {}; //perf: initialization is negligable
+                Kernel_3x3 ker = {}; //perf: initialization is negligible
 
                 ker.a = s_m1[x_m1]; //read sequentially from memory as far as possible
                 ker.b = s_m1[x];
@@ -950,7 +950,7 @@ struct Scaler3x
     {
         //model a round corner
         alphaBlend<45, 100>(out.template ref<2, 2>(), col); //exact: 0.4545939598
-        //alphaBlend<14, 1000>(out.template ref<2, 1>(), col); //0.01413008627 -> negligable
+        //alphaBlend<14, 1000>(out.template ref<2, 1>(), col); //0.01413008627 -> negligible
         //alphaBlend<14, 1000>(out.template ref<1, 2>(), col); //0.01413008627
     }
 };
@@ -1094,7 +1094,7 @@ struct Scaler5x
         alphaBlend<86, 100>(out.template ref<4, 4>(), col); //exact: 0.8631434088
         alphaBlend<23, 100>(out.template ref<4, 3>(), col); //0.2306749731
         alphaBlend<23, 100>(out.template ref<3, 4>(), col); //0.2306749731
-        //alphaBlend<8, 1000>(out.template ref<4, 2>(), col); //0.008384061834 -> negligable
+        //alphaBlend<8, 1000>(out.template ref<4, 2>(), col); //0.008384061834 -> negligible
         //alphaBlend<8, 1000>(out.template ref<2, 4>(), col); //0.008384061834
     }
 };
