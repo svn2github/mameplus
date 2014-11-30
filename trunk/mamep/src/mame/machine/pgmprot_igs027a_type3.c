@@ -72,6 +72,14 @@ READ16_MEMBER(pgm_arm_type3_state::svg_m68k_ram_r )
 	return share16[BYTE_XOR_LE(offset)];
 }
 
+READ16_MEMBER(pgm_arm_type3_state::dmnfrnt_m68k_ram_r )
+{
+	int ram_sel = (m_svg_ram_sel & 1) ^ 1;
+	UINT16 *share16 = (UINT16 *)(m_svg_shareram[ram_sel & 1]);
+	share16[0x158/2] = ioport("Region")->read();
+	return share16[BYTE_XOR_LE(offset)];
+}
+
 WRITE16_MEMBER(pgm_arm_type3_state::svg_m68k_ram_w )
 {
 	int ram_sel = (m_svg_ram_sel & 1) ^ 1;
@@ -135,6 +143,16 @@ static ADDRESS_MAP_START( svg_68k_mem, AS_PROGRAM, 16, pgm_arm_type3_state )
 ADDRESS_MAP_END
 
 
+static ADDRESS_MAP_START( dmnfrnt_68k_mem, AS_PROGRAM, 16, pgm_arm_type3_state )
+	AM_IMPORT_FROM(pgm_mem)
+	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")  /* Game ROM */
+
+	AM_RANGE(0x500000, 0x50ffff) AM_READWRITE(dmnfrnt_m68k_ram_r, svg_m68k_ram_w)    /* ARM7 Shared RAM */
+	AM_RANGE(0x5c0000, 0x5c0001) AM_READWRITE(svg_68k_nmi_r, svg_68k_nmi_w)      /* ARM7 FIQ */
+	AM_RANGE(0x5c0300, 0x5c0301) AM_READWRITE(svg_latch_68k_r, svg_latch_68k_w) /* ARM7 Latch */
+ADDRESS_MAP_END
+
+
 static ADDRESS_MAP_START( 55857G_arm7_map, AS_PROGRAM, 32, pgm_arm_type3_state )
 	AM_RANGE(0x00000000, 0x00003fff) AM_ROM
 	AM_RANGE(0x08000000, 0x087fffff) AM_ROM AM_REGION("user1", 0)
@@ -158,6 +176,7 @@ MACHINE_RESET_MEMBER(pgm_arm_type3_state, pgm_arm_type3_reset)
 	if (!strcmp(machine().system().name, "theglad")) base = 0x3316;
 	if (!strcmp(machine().system().name, "theglad100")) base = 0x3316;
 	if (!strcmp(machine().system().name, "theglad101")) base = 0x3316;
+	if (!strcmp(machine().system().name, "thegladpcb")) base = 0x3316;
 	if (!strcmp(machine().system().name, "happy6")) base = 0x3586;
 	if (!strcmp(machine().system().name, "happy6101")) base = 0x3586;
 	if (!strcmp(machine().system().name, "svgpcb")) base = 0x3a8e;
@@ -198,6 +217,12 @@ MACHINE_CONFIG_START( pgm_arm_type3, pgm_arm_type3_state )
 	MCFG_CPU_PROGRAM_MAP(55857G_arm7_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(pgm_arm_type3_state, pgm_arm_type3_reset)
+MACHINE_CONFIG_END
+
+
+MACHINE_CONFIG_DERIVED( pgm_arm_type3_dmnfrnt, pgm_arm_type3 )
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(dmnfrnt_68k_mem)
 MACHINE_CONFIG_END
 
 
@@ -718,9 +743,9 @@ DRIVER_INIT_MEMBER(pgm_arm_type3_state,dmnfrnt)
 	// could be a timing error? or shared ram behavior isn't how we think it is?
 	UINT16 *share16;
 	share16 = (UINT16 *)(m_svg_shareram[1]);
-	share16[0x158/2] = 0x0005;
+//	share16[0x158/2] = 0x0005;
 	share16 = (UINT16 *)(m_svg_shareram[0]);
-	share16[0x158/2] = 0x0005;
+//	share16[0x158/2] = 0x0005;
 }
 
 //

@@ -3528,49 +3528,55 @@ hsf2j           // 22/12/2003 (c) 2003, 2004 (Japan)
 hsf2a           // 02/02/2004 (c) 2003, 2004 (Asia)
 
 // CPS2 'Phoenix' bootlegs
-ssf2ud
 ddtodd
 ecofghtrd
+ssf2r1d
+ssf2ud
+ssf2tbd
+armwarr1d
 avspd
-dstlku1d
-ringdstd
+dstlkur1d
+ringdestd
+ssf2td
+ssf2tad
+ssf2xjd
 xmcotar1d
+cybotsud
+cybotsjbl
+mshud
 nwarrud
 sfad
-mshud
+sfaud
 19xxd
+ddsomud
+megaman2d
 sfz2ad
-sfz2jd
+sfz2jr1d
+sfz2ald
 spf2td
 spf2xjd
-ddsomud
-megamn2d
-sfz2ald
-xmvsfu1d
+xmvsfur1d
 batcird
+csclub1d
+mshvsfu1d
+sgemfd
+vhunt2r1d
 vsavd
+vsav2d
 mvscud
 sfa3ud
+sfz3jr2d
 gigawingd
 gigawingjd
 1944d
-progearud
+1944da
+dimahooud
+mmatrixd
+mpangjd
+progeard
 progearjd
 progearjbl
-hsf2d
-ssf2tbd
-ssf2xjd
-sgemfd
-armwar1d
-dimahoud
-mmatrixd
-vhunt2d
-vsav2d
-csclub1d
-cybotsud
-cybotsjd
-mshvsfu1d
-sfz3jr2d
+hsf2ad
 
 // Capcom CPS3 games
 redearth        // 21/11/1996 (c) 1996 (Euro)
@@ -9831,7 +9837,7 @@ dmnfrntpcb      //
 kovshp          // (c) 2004 Knights of Valor Superheroes PLUS
 kovshpa         //
 kovytzy         // (c) 1999 Knights of Valour: Yi Tong Zhong Yuan
-kovshxas        // bootleg
+kovassga        // bootleg
 kovlsqh         // bootleg
 kovlsqh2        // bootleg
 kovlsjb         // bootleg

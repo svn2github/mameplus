@@ -42,31 +42,42 @@
 ******************************************************************************/
 
 // Capcom CPS1 bootleg
+captcommb2  // bootleg
 knightsb2   // bootleg
-wofb        // bootleg
-wofsj       // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
-wofsja      // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
-wofsjb      // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
-wof3js      // bootleg, 1997  Three Sword Masters / San Jian Sheng
-wof3sj      // bootleg, 1997  Three Holy Swords / San Sheng Jian
-wof3sja     // bootleg, 1997  Three Holy Swords / San Sheng Jian
-wofh        // bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan
-wofha       // bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan
-cawingb     // bootleg
+knightsjb   // bootleg
+sf2md       // bootleg
 sf2m10      // bootleg
 sf2m11      // bootleg
 sf2m12      // bootleg
 sf2m13      // bootleg
 sf2m14      // bootleg
+sf2m15      // bootleg
+sf2th       // bootleg
+sf2tha      // bootleg
 sf2tlona    // bootleg, Tu Long set 1
 sf2tlonb    // bootleg, Tu Long set 2
+sf2tlonc    // bootleg, Tu Long set 3
+sf2hfjb     // bootleg
+varthb      // bootleg
+wofb        // bootleg
+wofsj       // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
+wofsja      // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
+wofsjb      // bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo
+wof3js      // bootleg, 1997  Three Sword Masters / San Jian Sheng
+wof3jsa     // bootleg, 1997  Three Sword Masters / San Jian Sheng
+wof3sj      // bootleg, 1997  Three Holy Swords / San Sheng Jian
+wof3sja     // bootleg, 1997  Three Holy Swords / San Sheng Jian
+wofh        // bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan
+wofha       // bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan
 
 // Capcom CPS1 hack
-knightsh    // hack
 kodh        // hack
+knightsh    // hack
 dinoh       // hack
 dinoha      // hack
 dinohb      // hack
+wofchdx     // hack
+wofjm       // hack
 
 // Capcom CPS3 NO CD
 redeartn
@@ -75,23 +86,29 @@ redeartn
 kof96ep     // 0214 (c) 1996 bootleg
 kof97pla    // 0232 (c) 2003 bootleg
 kf2k1pls    // 0262 (c) 2001 bootleg
-kf2k1pa     // 0262 (c) 2001 bootleg
-cthd2k3a    // bootleg of kof2001
+kf2k1pla    // 0262 (c) 2001 bootleg
+cthd2k3a    // 5003 (c) bootleg of kof2001
 kf2k2plb    // 0265 (c) 2002 bootleg
 kf2k2plc    // 0265 (c) 2002 bootleg
-kf2k4pls    // bootleg of kof2002
+kf2k4pls    // 2265 (c) bootleg of kof2002
+kof10thu    // 0275 (c) bootleg of kof2002
 mslug5b     // 0268 (c) 2003 bootleg
-sthoopcd    // xxxx (c) bootleg
+svcplusb    // 0269 (c) 2003 bootleg
 
-// Neo Geo prototype
-bangbedp    // 0259 prototype
-
-// CD to MVS Conversion
-zintrkcd    // 0211 hack - CD to MVS Conversion by Razoola
+// NGCD Conversion
+tpgolfcd    // 0003 hack - CD to MVS Conversion
+sengokcd    // 0017 hack - CD to MVS Conversion
+gpilotcd    // 0020 hack - CD to MVS Conversion
+joyjoycd    // 0021 hack - CD to MVS Conversion
+2020bbcd    // 0030 hack - CD to MVS Conversion
+strhopcd    // 0079 hack - CD to MVS Conversion
+pbobblcd    // 0083 hack - CD to MVS Conversion
 fr2ch       // 0098 hack - CD to MVS Conversion
+zintrkcd    // 0211 hack - CD to MVS Conversion by Razoola
+lasthpcd    // 0300 hack - CD to MVS Conversion
 
-// AES Conversion
-lhcdb
+kovsgqyzc   // bootleg, pgm.c
+kovassg   // bootleg, pgm.c
 
 #ifndef NCP
 
@@ -101,12 +118,5 @@ spclone     // GX587 (c) 1986 based
 bublcave    // hack, bublbobl.c 
 bublredux   // hack, bublbobl.c 
 ddonpacha   // hack, cave.c
-ketarr      // hack, pgm.c 
-ketarr15    // hack, pgm.c 
-ketarr151   // hack, pgm.c
-ketst100    // hack, pgm.c 
-ketstoic    // hack, pgm.c 
-ketback     // hack, pgm.c 
-ketfast     // hack, pgm.c 
 outrunen    // hack, segaorun.c
 #endif // !NCP

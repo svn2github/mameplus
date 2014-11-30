@@ -196,7 +196,7 @@ WRITE16_MEMBER(igs025_device::olds_w )
 			case 0x26:
 			case 0x27:
 				m_kb_ptr++;
-				killbld_protection_calculate_hold(m_kb_cmd & 0x0f, data & 0xff);
+//				killbld_protection_calculate_hold(m_kb_cmd & 0x0f, data & 0xff);
 			break;
 
 		//  default:
@@ -252,6 +252,32 @@ WRITE16_MEMBER(igs025_device::drgw2_d80000_protection_w )
 /****************************************/
 /* READ */
 /****************************************/
+
+READ16_MEMBER(igs025_device::olds_r)
+{
+	if (offset)
+	{
+		switch (m_kb_cmd)
+		{
+			case 0x01:
+				return m_kb_reg & 0x7f;
+
+			case 0x02:
+				return m_olds_bs | 0x80;
+
+			case 0x03:
+				return m_kb_cmd3;
+
+			case 0x05:
+			{
+				UINT32 protvalue = 0x900000 | ioport(":Region")->read(); // region from protection device.
+				return (protvalue>>(8*(m_kb_ptr-1))) & 0xff;
+			}
+		}
+	}
+
+	return 0;
+}
 
 READ16_MEMBER(igs025_device::killbld_igs025_prot_r)
 {

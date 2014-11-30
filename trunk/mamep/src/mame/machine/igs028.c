@@ -39,7 +39,7 @@ void igs028_device::device_reset()
 		logerror("m_sharedprotram was not set\n");
 		return;
 	}
-
+/*
 //  written by protection device
 //  there seems to be an auto-dma that writes from $401000-402573?
 	m_sharedprotram[0x1000/2] = 0x4749; // 'IGS.28'
@@ -47,7 +47,7 @@ void igs028_device::device_reset()
 	m_sharedprotram[0x1004/2] = 0x3832;
 
 	m_sharedprotram[0x3064/2] = 0xB315; // crc?
-
+*/
 }
 
 
@@ -164,12 +164,14 @@ void igs028_device::IGS028_handle()
 	{
 		case 0x12:
 		{
+/*
 			UINT16 mode = m_sharedprotram[0x303e / 2];  // ?
 			UINT16 src  = m_sharedprotram[0x306a / 2] >> 1; // ?
 			UINT16 dst  = m_sharedprotram[0x3084 / 2] & 0x1fff;
 			UINT16 size = m_sharedprotram[0x30a2 / 2] & 0x1fff;
 
 			IGS028_do_dma(src, dst, size, mode);
+*/
 		}
 		break;
 

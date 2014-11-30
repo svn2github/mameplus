@@ -475,9 +475,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_QS4 0x2e,0x0c01,  -1,  -1,  -1,  -1,  0x1c,0x1e,0x08,  0x16,{0x00,0x02,0x28,0x2a},0x2c, {0x04,0x08,0x10,0x00,0x00}
 #define CPS_B_21_QS5 0x1e,0x0c02,  -1,  -1,  -1,  -1,  0x0c, -1,  -1,   0x2a,{0x2c,0x2e,0x30,0x32},0x1c, {0x04,0x08,0x10,0x00,0x00}
 #define HACK_B_1      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x14,{0x12,0x10,0x0e,0x0c},0x0a, {0x0e,0x0e,0x0e,0x30,0x30}
-#define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1,  0x08, -1,  -1,   0x20,{0x28,0x2a,0x2c,0x2e},0x2a, {0x02,0x04,0x08,0x00,0x00}
-#define HACK_B_3      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x04,{0x12,0x10,0x0e,0x0c},0x0a, {0xff,0xff,0xff,0x00,0x00}
-#define HACK_B_4      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x30,{0x2e,0x2c,0x2a,0x28},0x26, {0x02,0x04,0x08,0x00,0x00}
+#define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x30,{0x2e,0x2c,0x2a,0x28},0x26, {0x02,0x04,0x08,0x00,0x00}
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1444,7 +1442,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"cawingu",     CPS_B_16,     mapper_CA24B },
 	{"cawingj",     CPS_B_16,     mapper_CA22B },   // equivalent to CA24B
 	{"cawingbl",    CPS_B_16,     mapper_CA22B },   // equivalent to CA24B
-	{"cawingb",     CPS_B_16,     mapper_CA24B,  0, 0, 0, 3 },
 	{"sf2",         CPS_B_11,     mapper_STF29,  0x36 },
 	{"sf2eb",       CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2ed",       CPS_B_05,     mapper_STF29,  0x36 },
@@ -1486,7 +1483,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"kodj",        CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodja",       CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },   // wrong, this set uses KD22B, still not dumped
 	{"kodb",        CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },   /* bootleg, doesn't use multiply protection */
-	{"kodh",        CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
 	{"captcomm",    CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcommr1",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcommu",   CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
@@ -1498,8 +1494,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsj",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsja",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },   // wrong, this set uses KR22B, still not dumped
 	//{"knightsb",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },   // wrong, knightsb bootleg doesn't use the KR63B PAL
-	{"knightsb2",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
-	{"knightsh",    CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"sf2ce",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceea",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceua",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1529,22 +1523,14 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m6",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m8",       HACK_B_1,     mapper_S9263B, 0,    0, 0, 2 },
-	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
+	{"sf2md",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2dongb",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m10",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m11",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m12",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m13",      HACK_B_4,     mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m14",      HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 6 },
 	{"sf2yyc",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdtb",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2b",    	CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
-	{"sf2tlona",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2tlonb",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2b",        CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1 },
 	{"varth",       CPS_B_04,     mapper_VA63B },   /* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */  // wrong, this set uses VA24B, dumped but equations still not added
 	{"varthr1",     CPS_B_04,     mapper_VA63B },   /* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */  // wrong, this set uses VA24B, dumped but equations still not added
 	{"varthu",      CPS_B_04,     mapper_VA63B },   /* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
@@ -1556,23 +1542,11 @@ static const struct CPS1config cps1_config_table[]=
 	{"wofu",        CPS_B_21_QS1, mapper_TK263B },
 	{"wofj",        CPS_B_21_QS1, mapper_TK263B },
 	{"wofhfh",      CPS_B_21_DEF, mapper_TK263B, 0x36 },    /* Chinese bootleg */
-	{"wofh",        HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofha",       HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wof3js",      CPS_B_21_DEF, mapper_TK263B },
-	{"wofsj",       HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofsja",      HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofsjb",      CPS_B_21_DEF, mapper_TK263B },
-	{"wof3sj",      HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wof3sja",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofb",        CPS_B_21_DEF, mapper_TK263B },
 	{"dino",        CPS_B_21_QS2, mapper_CD63B },   /* layer enable never used */
 	{"dinou",       CPS_B_21_QS2, mapper_CD63B },   /* layer enable never used */
 	{"dinoj",       CPS_B_21_QS2, mapper_CD63B },   /* layer enable never used */
 	{"dinopic",     CPS_B_21_QS2, mapper_CD63B },   /* layer enable never used */
 	{"dinopic2",    CPS_B_21_QS2, mapper_CD63B },   /* layer enable never used */
-	{"dinoh",       CPS_B_21_DEF, mapper_CD63B },   /* layer enable never used */
-	{"dinoha",      CPS_B_21_DEF, mapper_CD63B },   /* layer enable never used */
-	{"dinohb",      CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 5 },	/* layer enable never used */
 	{"dinohunt",    CPS_B_21_DEF, mapper_CD63B },   /* Chinese bootleg */
 	{"punisher",    CPS_B_21_QS3, mapper_PS63B },
 	{"punisheru",   CPS_B_21_QS3, mapper_PS63B },
@@ -1603,6 +1577,33 @@ static const struct CPS1config cps1_config_table[]=
 	{"pang3j",      CPS_B_21_DEF, mapper_pang3 },   /* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */   // should use one of these three CP1B1F,CP1B8K,CP1B9K
 	{"pang3b",      CPS_B_21_DEF, mapper_pang3 },   /* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */   // should use one of these three CP1B1F,CP1B8K,CP1B9K
 	{"ganbare",     CPS_B_21_DEF, mapper_sfzch },   // wrong, this set uses GBPR2, dumped but equations still not added
+
+	{"captcommb2",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"kodh",        CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
+	{"knightsh",    CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsb2",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
+	{"knightsjb",   CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
+	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m10",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m11",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m12",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m13",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m14",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m15",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2th",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tha",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tlona",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tlonb",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tlonc",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2hfjb",     HACK_B_2,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"dinoh",       CPS_B_21_DEF, mapper_CD63B },   /* layer enable never used */
+	{"dinoha",      CPS_B_21_DEF, mapper_CD63B },   /* layer enable never used */
+	{"wofb",        CPS_B_21_DEF, mapper_TK263B },
+	{"wofsjb",      CPS_B_21_DEF, mapper_TK263B, 0, 0, 0, 5 },
+	{"wof3js",      CPS_B_21_DEF, mapper_TK263B },
+	{"wofjm",       CPS_B_21_QS1, mapper_TK263B },
+	{"wofchdx",     CPS_B_21_DEF, mapper_TK263B },
+
 
 	/* CPS Changer */
 
@@ -1971,19 +1972,12 @@ void cps_state::cps1_get_video_base()
 		scroll2xoff = -0x0b;
 		scroll3xoff = -0x0c;
 	}
-	else if (m_game_config->bootleg_kludge == 5)
+	else
+	if (m_game_config->bootleg_kludge == 5)
 	{
-		m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
-		scroll1xoff = 0xffc0;
-		scroll2xoff = 0xffc0;
-		scroll3xoff = 0xffc0;
-	}
-	else if (m_game_config->bootleg_kludge == 6)
-	{
-		m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
-		scroll1xoff = -0x10;
-		scroll2xoff = -0x10;
-		scroll3xoff = -0x10;
+		scroll1xoff = 0x02;
+		scroll2xoff = 0x04;
+		scroll3xoff = 0x08;
 	}
 
 	m_obj = cps1_base(CPS1_OBJ_BASE, m_obj_size);
@@ -2132,11 +2126,6 @@ TILE_GET_INFO_MEMBER(cps_state::get_tile0_info)
 	int attr = m_scroll1[2 * tile_index + 1];
 	int gfxset;
 
-	if (m_game_config->bootleg_kludge == 1)
-	{
-		code &= 0x4fff;
-	}
-
 	code = gfxrom_bank_mapper(GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
@@ -2178,11 +2167,6 @@ TILE_GET_INFO_MEMBER(cps_state::get_tile2_info)
 {
 	int code = m_scroll3[2 * tile_index] & 0x3fff;
 	int attr = m_scroll3[2 * tile_index + 1];
-
-	if (m_game_config->bootleg_kludge == 1)
-	{
-		code &= 0x1fff;
-	}
 
 	code = gfxrom_bank_mapper(GFXTYPE_SCROLL3, code);
 
@@ -2420,7 +2404,7 @@ void cps_state::cps1_find_last_sprite()    /* Find the offset of last sprite */
 	/* Locate the end of table marker */
 	while (offset < m_obj_size / 2)
 	{
-		if (m_game_config->bootleg_kludge == 3) {
+		if (m_game_config->bootleg_kludge == 3 || m_game_config->bootleg_kludge == 4) {
 			/* captcommb - same end of sprite marker as CPS-2 */
 			int colour = m_buffered_obj[offset + 1];
 			if (colour >= 0x8000)
@@ -2473,7 +2457,7 @@ void cps_state::cps1_render_sprites( screen_device &screen, bitmap_ind16 &bitmap
 	UINT16 *base = m_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if ((m_game_config->bootleg_kludge == 1) || (m_game_config->bootleg_kludge == 2) || (m_game_config->bootleg_kludge == 3))
+	if ((m_game_config->bootleg_kludge == 1) || (m_game_config->bootleg_kludge == 2) || (m_game_config->bootleg_kludge == 3) || (m_game_config->bootleg_kludge == 4))
 	{
 		base += m_last_sprite_offset;
 		baseadd = -4;

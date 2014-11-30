@@ -126,10 +126,15 @@ public:
 	UINT16        m_asic3_hold;
 
 	DECLARE_DRIVER_INIT(orlegend);
+	DECLARE_DRIVER_INIT(orld112c);
+	DECLARE_DRIVER_INIT(orld111c);
+	DECLARE_DRIVER_INIT(orld111t);
+	DECLARE_DRIVER_INIT(orld105k);
 	void asic3_compute_hold(int,int);
 	DECLARE_READ16_MEMBER( pgm_asic3_r );
 	DECLARE_WRITE16_MEMBER( pgm_asic3_w );
 	DECLARE_WRITE16_MEMBER( pgm_asic3_reg_w );
+	DECLARE_MACHINE_RESET( pgm_asic3_reset );
 };
 
 
@@ -182,7 +187,8 @@ public:
 	DECLARE_DRIVER_INIT(photoy2k);
 	DECLARE_DRIVER_INIT(kovsh);
 	DECLARE_DRIVER_INIT(kovshp);
-	DECLARE_DRIVER_INIT(kovshxas);
+	DECLARE_DRIVER_INIT(kovassg);
+	DECLARE_DRIVER_INIT(kovassga);
 	DECLARE_DRIVER_INIT(kovlsqh2);
 	DECLARE_DRIVER_INIT(kovqhsgs);
 	DECLARE_DRIVER_INIT(ddp3);
@@ -193,6 +199,7 @@ public:
 	DECLARE_DRIVER_INIT(pgm3in1);
 	DECLARE_DRIVER_INIT(pstar);
 	DECLARE_DRIVER_INIT(kov);
+	DECLARE_DRIVER_INIT(kovplus);
 	DECLARE_DRIVER_INIT(kovboot);
 	DECLARE_DRIVER_INIT(oldsplus);
 	DECLARE_MACHINE_START(pgm_arm_type1);
@@ -210,11 +217,15 @@ public:
 	void pgm_arm7_type1_latch_init();
 	DECLARE_READ16_MEMBER( kovsh_fake_region_r );
 	DECLARE_WRITE16_MEMBER( kovshp_asic27a_write_word );
+	void kovplus_fix_patch();
+	void kovboot_fix_patch();
+	void kovshp_fix_patch();
 	void pgm_decode_kovlsqh2_tiles();
 	void pgm_decode_kovlsqh2_sprites(UINT8 *src );
 	void pgm_decode_kovlsqh2_samples();
 	void pgm_decode_kovqhsgs_program();
 	void pgm_decode_kovqhsgs2_program();
+	void pgm_decode_kovassg_program();
 	DECLARE_READ16_MEMBER( pgm_arm7_type1_sim_r );
 	void command_handler_ddp3(int pc);
 	void command_handler_puzzli2(int pc);
@@ -338,6 +349,7 @@ public:
 	DECLARE_READ32_MEMBER( svg_arm7_shareram_r );
 	DECLARE_WRITE32_MEMBER( svg_arm7_shareram_w );
 	DECLARE_READ16_MEMBER( svg_m68k_ram_r );
+	DECLARE_READ16_MEMBER( dmnfrnt_m68k_ram_r );
 	DECLARE_WRITE16_MEMBER( svg_m68k_ram_w );
 	DECLARE_READ16_MEMBER( svg_68k_nmi_r );
 	DECLARE_WRITE16_MEMBER( svg_68k_nmi_w );
@@ -437,6 +449,7 @@ public:
 	required_device<igs025_device> m_igs025;
 	required_device<igs028_device> m_igs028;
 
+	DECLARE_READ16_MEMBER( olds_prot_swap_r );
 	void igs025_to_igs028_callback( void );
 
 	DECLARE_DRIVER_INIT(olds);
@@ -472,7 +485,9 @@ ADDRESS_MAP_EXTERN( pgm_base_mem, 16 );
 
 
 INPUT_PORTS_EXTERN( orlegend );
-INPUT_PORTS_EXTERN( orlegendt );
+INPUT_PORTS_EXTERN( orld112c );
+INPUT_PORTS_EXTERN( orld111c );
+INPUT_PORTS_EXTERN( orld111t );
 INPUT_PORTS_EXTERN( orld105k );
 
 MACHINE_CONFIG_EXTERN( pgm_asic3 );
@@ -510,6 +525,7 @@ INPUT_PORTS_EXTERN( dw2001 );
 /*----------- defined in machine/pgmprot3.c -----------*/
 
 MACHINE_CONFIG_EXTERN( pgm_arm_type3 );
+MACHINE_CONFIG_EXTERN( pgm_arm_type3_dmnfrnt );
 INPUT_PORTS_EXTERN(theglad);
 INPUT_PORTS_EXTERN(happy6);
 INPUT_PORTS_EXTERN(svg);

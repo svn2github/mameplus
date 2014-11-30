@@ -28,11 +28,14 @@ public:
 	DECLARE_WRITE16_MEMBER(kof10th_bankswitch_w);
 	void install_kof10th_protection(cpu_device* maincpu, neogeo_banked_cart_device* bankdev, UINT8* cpurom, UINT32 cpurom_size, UINT8* fixedrom, UINT32 fixedrom_size);
 	void decrypt_kof10th(UINT8* cpurom, UINT32 cpurom_size);
+	void kof10thd_AES_protection(UINT8* cpurom, UINT32 cpurom_size);
 	void kf10thep_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void kf10thep_AES_protection(UINT8* cpurom, UINT32 cpurom_size);
 	void kf2k5uni_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 	void kf2k5uni_sx_decrypt(UINT8* fixedrom, UINT32 fixedrom_size);
 	void kf2k5uni_mx_decrypt(UINT8* audiorom, UINT32 audiorom_size);
 	void decrypt_kf2k5uni(UINT8* cpurom, UINT32 cpurom_size, UINT8* audiorom, UINT32 audiorom_size, UINT8* fixedrom, UINT32 fixedrom_size);
+	void kf2k5uni_AES_protection(UINT8* cpurom, UINT32 cpurom_size);
 	void kof2002b_gfx_decrypt(UINT8 *src, int size);
 	void kf2k2mp_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 	void kf2k2mp2_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
@@ -75,9 +78,12 @@ public:
 	void matrimbl_decrypt(UINT8* sprrom, UINT32 sprrom_size, UINT8* audiorom, UINT32 audiorom_size);
 	
 	void kof96ep_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
-	void kf2k1pa_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void patch_kof97pla(UINT8* cpurom, UINT32 cpurom_size);
+	void kf2k1pla_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 	void cthd2k3a_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 	void cthd2003_AES_protection(UINT8* cpurom, UINT32 cpurom_size);
+	void kf2k4pls_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
+	void kof10thu_px_decrypt(UINT8* cpurom, UINT32 cpurom_size);
 
 	UINT16 m_cartridge_ram[0x1000]; // bootlegs
 

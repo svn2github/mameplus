@@ -303,38 +303,41 @@ class neogeo_noslot_state : public neogeo_state
 	DECLARE_DRIVER_INIT(kof97oro);
 	DECLARE_DRIVER_INIT(lans2004);
 	DECLARE_DRIVER_INIT(sbp);
+	DECLARE_DRIVER_INIT(kof96ep);
+	DECLARE_DRIVER_INIT(kof97pla);
+	DECLARE_DRIVER_INIT(kf2k1pls);
+	DECLARE_DRIVER_INIT(kf2k1pla);
+	DECLARE_DRIVER_INIT(cthd2k3a);
+	DECLARE_DRIVER_INIT(kf2k2plc);
+	DECLARE_DRIVER_INIT(kf2k4pls);
+	DECLARE_DRIVER_INIT(kof10thu);
+	DECLARE_DRIVER_INIT(mslug5b);
+	DECLARE_DRIVER_INIT(svcplusb);
 	DECLARE_DRIVER_INIT(gfxdec42);
 	DECLARE_DRIVER_INIT(gfxdec50);
-	DECLARE_DRIVER_INIT(kof96ep);
 	DECLARE_DRIVER_INIT(garoud);
-	DECLARE_DRIVER_INIT(kof2000d);
+	DECLARE_DRIVER_INIT(garouhd);
+	DECLARE_DRIVER_INIT(kof2knd);
 	DECLARE_DRIVER_INIT(kof2001d);
-	DECLARE_DRIVER_INIT(kf2k1pls);
-	DECLARE_DRIVER_INIT(kf2k1pa);
-	DECLARE_DRIVER_INIT(cthd2k3a);
 	DECLARE_DRIVER_INIT(cthd2k3d);
 	DECLARE_DRIVER_INIT(mslug4d);
-	DECLARE_DRIVER_INIT(popbounc);
 	DECLARE_DRIVER_INIT(rotdd);
-	DECLARE_DRIVER_INIT(kf2k2plc);
-	DECLARE_DRIVER_INIT(kf2k2ps2);
 	DECLARE_DRIVER_INIT(kof2002d);
 	DECLARE_DRIVER_INIT(kof10thd);
-	DECLARE_DRIVER_INIT(kf2k4pls);
 	DECLARE_DRIVER_INIT(matrimd);
 	DECLARE_DRIVER_INIT(pnyaad);
-	DECLARE_DRIVER_INIT(mslug5b);
 	DECLARE_DRIVER_INIT(mslug5d);
-	DECLARE_DRIVER_INIT(mslug5hd);
+	DECLARE_DRIVER_INIT(mslug5n);
+	DECLARE_DRIVER_INIT(ms5plusd);
 	DECLARE_DRIVER_INIT(svcd);
 	DECLARE_DRIVER_INIT(samsho5d);
-	DECLARE_DRIVER_INIT(kof2003d);
-	DECLARE_DRIVER_INIT(kof2k3d);
-	DECLARE_DRIVER_INIT(kof2k3hd);
 	DECLARE_DRIVER_INIT(kf2k3pcd);
-	DECLARE_DRIVER_INIT(samsh5sd);
-	DECLARE_DRIVER_INIT(kof97pla);
-	DECLARE_DRIVER_INIT(jckeygpd);
+	DECLARE_DRIVER_INIT(kof2003d);
+	DECLARE_DRIVER_INIT(kof2k3hd);
+	DECLARE_DRIVER_INIT(kf2k3bd);
+	DECLARE_DRIVER_INIT(sams5spd);
+	DECLARE_DRIVER_INIT(jockygpd);
+	DECLARE_DRIVER_INIT(kf2k2ps2);
 
 	void install_banked_bios();
 	// non-carts
@@ -344,15 +347,16 @@ class neogeo_noslot_state : public neogeo_state
 	void kf2k3pcb_decrypt_s1data();
 	void kf2k3pcb_sp1_decrypt();
 
-	DECLARE_READ16_MEMBER( popbounc_sfix_16_r );
-	void decrypt_matrimbl();
 	void kof96ep_px_decrypt();
-	void kf2k1pa_sx_decrypt();
+	void patch_kof97pla();
+	void kf2k1pla_sx_decrypt();
 	void cthd2k3a_px_decrypt();
-	void kf2k2mp_px_decrypt();
 	void cthd2003_AES_protection();
-	void kof10thu_decrypt_68K();
-
+	void kf2k4pls_px_decrypt();
+	void kof10thu_px_decrypt();
+	void kf2k5uni_AES_protection();
+	void kf10thep_AES_protection();
+	void kof10thd_AES_protection();
 
 	// legacy
 	optional_device<mslugx_prot_device> m_mslugx_prot;
@@ -540,13 +544,6 @@ ADDRESS_MAP_EXTERN(neogeo_main_map,16);
 
 #define NO_DELTAT_REGION
 
-
-#define NEO_SFIX_32K(name, hash) \
-	ROM_REGION( 0x20000, "fixed", 0 ) \
-	ROM_LOAD( name, 0x000000, 0x08000, hash ) \
-	ROM_REGION( 0x20000, "fixedbios", 0 ) \
-	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) ) \
-	ROM_Y_ZOOM
 
 #define NEO_SFIX_64K(name, hash) \
 	ROM_REGION( 0x20000, "fixed", 0 ) \

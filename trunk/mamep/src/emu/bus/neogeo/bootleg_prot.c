@@ -174,7 +174,6 @@ void ngbootleg_prot_device::decrypt_kof10th(UINT8* cpurom, UINT32 cpurom_size)
 	int i, j;
 	dynamic_buffer dst(0x900000);
 	UINT8 *src = cpurom;
-	UINT16 *mem16 = (UINT16 *)cpurom;
 
 	memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
 	memcpy(dst + 0x100000, src + 0x000000, 0x800000);
@@ -193,9 +192,19 @@ void ngbootleg_prot_device::decrypt_kof10th(UINT8* cpurom, UINT32 cpurom_size)
 	((UINT16*)src)[0x8bf8/2] = 0xf980;
 
 	// Thanks to IQ_132 for the patch
-	mem16[0x053162C/2] = 0x7425; // Fix System
-	mem16[0x053163A/2] = 0x8084; // Fix Region
-	mem16[0x0531648/2] = 0x3641; // Fix some dips
+	((UINT16*)src)[0x53162c/2] = 0x7425; // Fix System
+	((UINT16*)src)[0x53163a/2] = 0x8084; // Fix Region
+	((UINT16*)src)[0x531648/2] = 0x3641; // Fix some dips
+}
+
+void ngbootleg_prot_device::kof10thd_AES_protection(UINT8* cpurom, UINT32 cpurom_size)
+{
+	// Thanks to IQ_132 for the patch
+	UINT16 *mem16 = (UINT16 *)cpurom;
+
+	mem16[0xe002c/2] = 0x6263; // Fix System
+	mem16[0xe003a/2] = 0x3736; // Fix Region
+	mem16[0xe0048/2] = 0x4e75; // Fix some dips
 }
 
 
@@ -226,15 +235,20 @@ void ngbootleg_prot_device::kf10thep_px_decrypt(UINT8* cpurom, UINT32 cpurom_siz
 	}
 	rom[0x00342/2] = 0x000f;
 
-	// Thanks to IQ_132 for the patch
-	rom[0x000126/2] = 0x0010; // Allow Region change
-	rom[0x000228/2] = 0x4E71; // Allow System change
-	rom[0x00022A/2] = 0x4E71;
-	rom[0x00022C/2] = 0x4E71;
-	rom[0x000234/2] = 0x4E71; // bne
-	rom[0x000236/2] = 0x4E71; // bne
-
 	memmove(&rom[0x100000/2], &rom[0x200000/2], 0x600000);
+}
+
+void ngbootleg_prot_device::kf10thep_AES_protection(UINT8* cpurom, UINT32 cpurom_size)
+{
+	// Thanks to IQ_132 for the patch
+	UINT16 *mem16 = (UINT16 *)cpurom;
+
+	mem16[0x000126/2] = 0x0010; // Allow Region change
+	mem16[0x000228/2] = 0x4E71; // Allow System change
+	mem16[0x00022A/2] = 0x4E71;
+	mem16[0x00022C/2] = 0x4E71;
+	mem16[0x000234/2] = 0x4E71; // bne
+	mem16[0x000236/2] = 0x4E71; // bne
 }
 
 
@@ -280,13 +294,16 @@ void ngbootleg_prot_device::kf2k5uni_mx_decrypt(UINT8* audiorom, UINT32 audiorom
 
 void ngbootleg_prot_device::decrypt_kf2k5uni(UINT8* cpurom, UINT32 cpurom_size, UINT8* audiorom, UINT32 audiorom_size, UINT8* fixedrom, UINT32 fixedrom_size)
 {
-	UINT16 *mem16 = (UINT16 *)cpurom;
-
 	kf2k5uni_px_decrypt(cpurom, cpurom_size);
 	kf2k5uni_sx_decrypt(fixedrom, fixedrom_size);
 	kf2k5uni_mx_decrypt(audiorom, audiorom_size);
+}
 
+void ngbootleg_prot_device::kf2k5uni_AES_protection(UINT8* cpurom, UINT32 cpurom_size)
+{
 	// Thanks to IQ_132 for the patch
+	UINT16 *mem16 = (UINT16 *)cpurom;
+
 	mem16[0xDF6B0/2] = 0x4e71;
 	mem16[0xDF6BC/2] = 0x4e71;
 	mem16[0xDF6BE/2] = 0x4e71;
@@ -1098,7 +1115,18 @@ void ngbootleg_prot_device::kof96ep_px_decrypt(UINT8* cpurom, UINT32 cpurom_size
 }
 
 
-void ngbootleg_prot_device::kf2k1pa_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+void ngbootleg_prot_device::patch_kof97pla(UINT8* cpurom, UINT32 cpurom_size)
+{
+	cpurom[0x1394A] = 0x6C;
+	cpurom[0x1394B] = 0xD1;
+	cpurom[0x1394C] = 0x3A;
+	cpurom[0x1394D] = 0x1;
+	cpurom[0x1394E] = 0x6C;
+	cpurom[0x1394F] = 0x91;
+}
+
+
+void ngbootleg_prot_device::kf2k1pla_sx_decrypt(UINT8* cpurom, UINT32 cpurom_size)
 {
 	UINT8 *rom = cpurom;
 	int i;
@@ -1119,18 +1147,15 @@ void ngbootleg_prot_device::cthd2k3a_px_decrypt(UINT8* cpurom, UINT32 cpurom_siz
 		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11
 	};
 
+	int size = cpurom_size;
 	UINT8 *src = cpurom;
-	UINT8 *dst = (UINT8*)malloc(0x500000);
+	dynamic_buffer dst( size );
 
-	if (dst)
+	for (i = 0; i < 0x500000 / 0x20000; i++) 
 	{
-		for (i = 0; i < 0x500000 / 0x20000; i++) 
-		{
-			memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
-		}
-		memcpy (src, dst, 0x500000);
-		free (dst);
+		memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
 	}
+	memcpy (src, dst, 0x500000);
 }
 
 
@@ -1145,6 +1170,44 @@ void ngbootleg_prot_device::cthd2003_AES_protection(UINT8* cpurom, UINT32 cpurom
 
 	// Fix for AES mode (stop loop that triggers Watchdog)
 	mem16[0xA2B7E/2] = 0x4E71;
+}
+
+
+void ngbootleg_prot_device::kf2k4pls_px_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+{
+	UINT8 *src = cpurom;
+	dynamic_buffer dst( 0x200000 );
+
+	memcpy(dst,src,0x100000);
+	memcpy(dst+0x100000,src+0x500000,0x100000);
+	memcpy(src+0x000000,dst+0x1A0000,0x020000);
+	memcpy(src+0x020000,dst+0x080000,0x020000);
+	memcpy(src+0x040000,dst+0x140000,0x020000);
+	memcpy(src+0x060000,dst+0x000000,0x020000);
+	memcpy(src+0x080000,dst+0x180000,0x020000);
+	memcpy(src+0x0A0000,dst+0x0A0000,0x020000);
+	memcpy(src+0x0C0000,dst+0x100000,0x020000);
+	memcpy(src+0x0E0000,dst+0x040000,0x020000);
+}
+
+
+void ngbootleg_prot_device::kof10thu_px_decrypt(UINT8* cpurom, UINT32 cpurom_size)
+{
+	INT32 i, ofst;
+	UINT8 nBank[] = { 0x06, 0x01, 0x02, 0x03, 0x04, 0x05, 0x00, 0x07 };
+
+	int size = cpurom_size;
+	UINT8 *src = cpurom;
+	dynamic_buffer dst( size );
+
+	for( i = 0; i < 0x800000 / 0x100000; i++ ) {
+		memcpy( &dst[ i * 0x100000 ], &src[ nBank[ i ] * 0x100000 ], 0x100000 );
+	}
+	for( i = 0; i < 0x800000 / 2; i++ ) {
+		ofst = BITSWAP8( (i & 0x0000ff), 7, 6, 2, 3, 4, 5, 0, 1 );
+		ofst += (i & 0xffff00);
+		memcpy( &src[ ofst * 2 ], &dst[ i * 2 ], 0x02 );
+	}
 }
 
 

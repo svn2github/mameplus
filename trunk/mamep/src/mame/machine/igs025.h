@@ -13,6 +13,7 @@ class igs025_device : public device_t
 public:
 	igs025_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 
+	DECLARE_READ16_MEMBER( olds_r );
 	DECLARE_READ16_MEMBER( killbld_igs025_prot_r );
 	// use setters instead of making public?
 	const UINT8 (*m_kb_source_data)[0xec];
