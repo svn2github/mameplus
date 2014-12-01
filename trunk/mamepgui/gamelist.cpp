@@ -1724,6 +1724,7 @@ void Gamelist::postLoadIcon()
 
 void Gamelist::loadMMO(int msgCat)
 {
+
 	static const QStringList msgFileName = (QStringList()
 		<< "mame"
 		<< "lst"
@@ -1737,6 +1738,8 @@ void Gamelist::loadMMO(int msgCat)
 		dirpath = "lang/";
 
 	QFile file( dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
+
+
 	if (!file.exists())
 	{
 //		win->log("not exist: " + dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
@@ -1750,6 +1753,8 @@ void Gamelist::loadMMO(int msgCat)
 		int num_msg;
 	};
 
+//在64位下，指针长度变化了
+/*
 	struct mmo_data
 	{
 		const unsigned char *uid;
@@ -1757,6 +1762,15 @@ void Gamelist::loadMMO(int msgCat)
 		const void *wid;
 		const void *wstr;
 	};
+*/
+	struct mmo_data
+	{
+		const unsigned int uid;
+		const unsigned int ustr;
+		const unsigned int wid;
+		const unsigned int wstr;
+	};
+
 
 	struct mmo {
 		enum {
@@ -1775,62 +1789,100 @@ void Gamelist::loadMMO(int msgCat)
 	QHash<QString, QString> mmohash;
 	int size = sizeof pMmo->header;
 
-	if (!file.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly)){
 		goto mmo_readerr;
+	}
+		
 
-	if (file.read((char*)&pMmo->header, size) != size)
+	if (file.read((char*)&pMmo->header, size) != size){
 		goto mmo_readerr;
-
-	if (pMmo->header.dummy)
+	}
+		
+	if (pMmo->header.dummy){
 		goto mmo_readerr;
-
-	if (pMmo->header.version != 3)
+	}
+		
+	if (pMmo->header.version != 3){
 		goto mmo_readerr;
+	}
 
 	pMmo->mmo_index = (mmo_data*)malloc(pMmo->header.num_msg * sizeof(pMmo->mmo_index[0]));
-	if (!pMmo->mmo_index)
+	if (!pMmo->mmo_index){
 		goto mmo_readerr;
+	}
 
 	size = pMmo->header.num_msg * sizeof(pMmo->mmo_index[0]);
-	if (file.read((char*)pMmo->mmo_index, size) != size)
+
+	if (file.read((char*)pMmo->mmo_index, size) != size){
 		goto mmo_readerr;
+	}
 
 	int str_size;
 	size = sizeof(str_size);
-	if (file.read((char*)&str_size, size) != size)
+
+	if (file.read((char*)&str_size, size) != size){
 		goto mmo_readerr;
+	}
+
 
 	pMmo->mmo_str = (char*)malloc(str_size);
-	if (!pMmo->mmo_str)
+	if (!pMmo->mmo_str){
 		goto mmo_readerr;
+	}
 
-	if (file.read((char*)pMmo->mmo_str, str_size) != str_size)
+	if (file.read((char*)pMmo->mmo_str, str_size) != str_size){
+
 		goto mmo_readerr;
+	}
+
+/*
+	for (int i = 0; i < pMmo->header.num_msg; i++)
+	{
+
+		QString name((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].uid));
+		QString localName = QString::fromUtf8((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].ustr));
+		mmohash[name] = localName;
+	}
+*/
 
 	for (int i = 0; i < pMmo->header.num_msg; i++)
 	{
-		QString name((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].uid));
-		QString localName = QString::fromUtf8((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].ustr));
+
+		QString name( (char*)pMmo->mmo_str + pMmo->mmo_index[i].uid );
+		QString localName = QString::fromUtf8( (char*)pMmo->mmo_str + pMmo->mmo_index[i].ustr );
 		mmohash[name] = localName;
 	}
 
 	foreach (QString gameName, pMameDat->games.keys())
 	{
+
 		GameInfo *gameInfo = pMameDat->games[gameName];
 		switch(msgCat)
 		{
 			case UI_MSG_LIST:
-				if (mmohash.contains(gameInfo->description))
+
+				if (mmohash.contains(gameInfo->description)){
+
 					gameInfo->lcDesc = mmohash[gameInfo->description];
+				}
+
 				break;
 			case UI_MSG_MANUFACTURE:
-				if (mmohash.contains(gameInfo->manufacturer))
+
+				if (mmohash.contains(gameInfo->manufacturer)){
+
 					gameInfo->lcMftr = mmohash[gameInfo->manufacturer];
+				}
+					
 				break;
 		}
 	}
 
 mmo_readerr:
+
+
+
+
 	if (pMmo->mmo_str)
 	{
 		free(pMmo->mmo_str);
