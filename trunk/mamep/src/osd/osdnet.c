@@ -128,4 +128,3 @@ void osd_list_network_adapters(void)
 	printf("Network is not supported in this build\n");
 	#endif
 }
-

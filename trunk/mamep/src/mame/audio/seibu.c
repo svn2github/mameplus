@@ -320,16 +320,6 @@ WRITE16_MEMBER( seibu_sound_device::main_word_w )
 	}
 }
 
-READ8_MEMBER( seibu_sound_device::main_v30_r )
-{
-	return main_word_r(space,offset/2,0xffff) >> (8 * (offset & 1));
-}
-
-WRITE8_MEMBER( seibu_sound_device::main_v30_w )
-{
-	main_word_w(space,offset/2,data << (8 * (offset & 1)),0x00ff << (8 * (offset & 1)));
-}
-
 WRITE16_MEMBER( seibu_sound_device::main_mustb_w )
 {
 	if (ACCESSING_BITS_0_7)
@@ -479,12 +469,15 @@ ADDRESS_MAP_END
 
 /***************************************************************************
     Seibu ADPCM device
+    (MSM5205 with interface to sample ROM provided by YM3931)
+
+    FIXME: hook up an actual MSM5205 in place of this custom implementation
 ***************************************************************************/
 
 const device_type SEIBU_ADPCM = &device_creator<seibu_adpcm_device>;
 
 seibu_adpcm_device::seibu_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, SEIBU_ADPCM, "Seibu ADPCM", tag, owner, clock, "seibu_adpcm", __FILE__),
+	: device_t(mconfig, SEIBU_ADPCM, "Seibu ADPCM (MSM5205)", tag, owner, clock, "seibu_adpcm", __FILE__),
 		device_sound_interface(mconfig, *this),
 		m_stream(NULL),
 		m_current(0),

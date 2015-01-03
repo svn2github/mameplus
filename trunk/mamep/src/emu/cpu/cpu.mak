@@ -79,6 +79,56 @@ endif
 
 $(CPUOBJ)/8x300/8x300.o:    $(CPUSRC)/8x300/8x300.c \
 							$(CPUSRC)/8x300/8x300.h
+#-------------------------------------------------
+# ARCangent A4
+#@src/emu/cpu/arc/arc.h,CPUS += ARC
+#-------------------------------------------------
+
+ifneq ($(filter ARC,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/arc
+CPUOBJS += $(CPUOBJ)/arc/arc.o
+DASMOBJS += $(CPUOBJ)/arc/arcdasm.o
+endif
+
+$(CPUOBJ)/arc/arc.o:  $(CPUSRC)/arc/arc.c \
+			$(CPUSRC)/arc/arc.h
+
+#-------------------------------------------------
+# ARcompact (ARCtangent-A5, ARC 600, ARC 700)
+#@src/emu/cpu/arc/arc.h,CPUS += ARCOMPACT
+#-------------------------------------------------
+
+ifneq ($(filter ARCOMPACT,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/arcompact
+CPUOBJS += $(CPUOBJ)/arcompact/arcompact.o $(CPUOBJ)/arcompact/arcompact_execute.o
+DASMOBJS += $(CPUOBJ)/arcompact/arcompactdasm.o $(CPUOBJ)/arcompact/arcompactdasm_dispatch.o $(CPUOBJ)/arcompact/arcompactdasm_ops.o $(CPUOBJ)/arcompact/arcompact_common.o
+endif
+
+$(CPUOBJ)/arcompact/arcompact.o:  $(CPUSRC)/arcompact/arcompact.c \
+			$(CPUSRC)/arcompact/arcompact.h \
+			$(CPUSRC)/arcompact/arcompact_common.h \
+			$(CPUOBJ)/arcompact/arcompact.inc
+
+$(CPUOBJ)/arcompact/arcompact_execute.o:  $(CPUSRC)/arcompact/arcompact_execute.c \
+			$(CPUSRC)/arcompact/arcompact.h \
+			$(CPUSRC)/arcompact/arcompact_common.h \
+			$(CPUOBJ)/arcompact/arcompact.inc
+
+$(CPUOBJ)/arcompact/arcompactdasm_dispatch.o:  $(CPUSRC)/arcompact/arcompactdasm_dispatch.c \
+			$(CPUSRC)/arcompact/arcompactdasm_dispatch.h \
+			$(CPUSRC)/arcompact/arcompact_common.h
+
+$(CPUOBJ)/arcompact/arcompactdasm_ops.o:  $(CPUSRC)/arcompact/arcompactdasm_ops.c \
+			$(CPUSRC)/arcompact/arcompactdasm_ops.h \
+			$(CPUSRC)/arcompact/arcompact_common.h
+
+$(CPUOBJ)/arcompact/arcompact_common.o:  $(CPUSRC)/arcompact/arcompact_common.c \
+			$(CPUSRC)/arcompact/arcompact_common.h
+
+# rule to generate the C files
+$(CPUOBJ)/arcompact/arcompact.inc: $(CPUSRC)/arcompact/arcompact_make.py
+	@echo Generating arcompact source .inc files...
+	$(PYTHON) $(CPUSRC)/arcompact/arcompact_make.py $@
 
 #-------------------------------------------------
 # Acorn ARM series
@@ -1547,7 +1597,7 @@ BUILD += $(M68KMAKE)
 
 $(M68KMAKE): $(CPUOBJ)/m68000/m68kmake.o $(LIBOCORE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(BASELIBS) -o $@
 endif
 
 # rule to ensure we build the header before building the core CPU file

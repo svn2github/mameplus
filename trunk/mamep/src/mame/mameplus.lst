@@ -108,7 +108,8 @@ zintrkcd    // 0211 hack - CD to MVS Conversion by Razoola
 lasthpcd    // 0300 hack - CD to MVS Conversion
 
 kovsgqyzc   // bootleg, pgm.c
-kovassg   // bootleg, pgm.c
+kovassg     // bootleg, pgm.c
+kovassga    // bootleg, pgm.c
 
 #ifndef NCP
 

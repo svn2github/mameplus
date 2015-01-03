@@ -1,7 +1,8 @@
 #include "i82875p.h"
 
-const device_type I82875P_HOST = &device_creator<i82875p_host_device>;
-const device_type I82875P_AGP  = &device_creator<i82875p_agp_device>;
+const device_type I82875P_HOST     = &device_creator<i82875p_host_device>;
+const device_type I82875P_AGP      = &device_creator<i82875p_agp_device>;
+const device_type I82875P_OVERFLOW = &device_creator<i82875p_overflow_device>;
 
 DEVICE_ADDRESS_MAP_START(agp_translation_map, 32, i82875p_host_device)
 ADDRESS_MAP_END
@@ -240,7 +241,8 @@ READ16_MEMBER( i82875p_host_device::toud_r)
 WRITE16_MEMBER(i82875p_host_device::toud_w)
 {
 	COMBINE_DATA(&toud);
-	logerror("%s: toud = %08x\n", tag(), 512*toud);
+	toud &= ~7;
+	logerror("%s: toud = %08x\n", tag(), toud << 16);
 	remap_cb();
 }
 
@@ -309,21 +311,27 @@ READ8_MEMBER(  i82875p_host_device::capreg2_r)
 	return 0x00;
 }
 
+void i82875p_host_device::reset_all_mappings()
+{
+	pci_host_device::reset_all_mappings();
+
+	toud = 0x0400;
+	smram = 0x02;
+	esmramc = 0x38;
+	memset(pam, 0, sizeof(pam));
+}
+
 void i82875p_host_device::device_reset()
 {
 	pci_host_device::device_reset();
 
 	agpm = 0x00;
 	fpllcont = 0x00;
-	memset(pam, 0, sizeof(pam));
-	smram = 0x02;
-	esmramc = 0x38;
 	agpctrl = 0x00000000;
 	apsize = 0x00;
 	attbase = 0x00000000;
 	amtt = 0x10;
 	lptt = 0x10;
-	toud = 0x0400;
 	mchcfg = 0x0000;
 	errcmd = 0x0000;
 	smicmd = 0x0000;
@@ -337,6 +345,13 @@ void i82875p_host_device::map_extra(UINT64 memory_window_start, UINT64 memory_wi
 	io_space->install_device(0, 0xffff, *static_cast<pci_host_device *>(this), &pci_host_device::io_configuration_access_map);
 
 	UINT32 top = toud << 16;
+	if(esmramc & 1) {
+		switch((esmramc >> 1) & 3) {
+		case 2: top += 512*1024; break;
+		case 3: top += 1024*1024; break;
+		}
+	}
+
 	if(top > ram_size)
 		top = ram_size;
 
@@ -406,10 +421,7 @@ void i82875p_host_device::map_extra(UINT64 memory_window_start, UINT64 memory_wi
 
 	if((esmramc & 0x40) && (smram & 0x08))
 		memory_space->install_ram      (0xfeda0000, 0xfedbffff, &ram[0x000a0000/4]);
-
 }
-
-
 
 
 i82875p_agp_device::i82875p_agp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
@@ -425,4 +437,77 @@ void i82875p_agp_device::device_start()
 void i82875p_agp_device::device_reset()
 {
 	agp_bridge_device::device_reset();
+}
+
+DEVICE_ADDRESS_MAP_START(overflow_map, 32, i82875p_overflow_device)
+	AM_RANGE(0x000, 0x007) AM_READWRITE8(dram_row_boundary_r,    dram_row_boundary_w,  0xffffffff)
+	AM_RANGE(0x010, 0x013) AM_READWRITE8(dram_row_attribute_r,   dram_row_attribute_w, 0xffffffff)
+	AM_RANGE(0x060, 0x064) AM_READWRITE (dram_timing_r,          dram_timing_w)
+	AM_RANGE(0x068, 0x06b) AM_READWRITE (dram_controller_mode_r, dram_controller_mode_w)
+ADDRESS_MAP_END
+
+
+i82875p_overflow_device::i82875p_overflow_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: pci_device(mconfig, I82875P_OVERFLOW, "i82875p configuration overflow", tag, owner, clock, "i82875p_overflow", __FILE__)
+{
+}
+
+void i82875p_overflow_device::device_start()
+{
+	pci_device::device_start();
+
+	add_map(4*1024, M_MEM, FUNC(i82875p_overflow_device::overflow_map));
+}
+
+void i82875p_overflow_device::device_reset()
+{
+	pci_device::device_reset();
+	memset(dram_row_boundary, 1, sizeof(dram_row_boundary));
+	memset(dram_row_attribute, 0, sizeof(dram_row_attribute));
+	dram_timing = 0;
+	dram_controller_mode = 0x00010001;
+}
+
+READ8_MEMBER  (i82875p_overflow_device::dram_row_boundary_r)
+{
+	return dram_row_boundary[offset];
+}
+
+WRITE8_MEMBER (i82875p_overflow_device::dram_row_boundary_w)
+{
+	dram_row_boundary[offset] = data;
+	logerror("%s: dram_row_boundary_w %d, %02x\n", tag(), offset, data);
+}
+
+READ8_MEMBER  (i82875p_overflow_device::dram_row_attribute_r)
+{
+	return dram_row_attribute[offset];
+}
+
+WRITE8_MEMBER (i82875p_overflow_device::dram_row_attribute_w)
+{
+	dram_row_attribute[offset] = data;
+	logerror("%s: dram_row_attribute_w %d, %02x\n", tag(), offset, data);
+}
+
+READ32_MEMBER (i82875p_overflow_device::dram_timing_r)
+{
+	return dram_timing;
+}
+
+WRITE32_MEMBER(i82875p_overflow_device::dram_timing_w)
+{
+	COMBINE_DATA(&dram_timing);
+	logerror("%s: dram_timing_w %08x\n", tag(), dram_timing);
+}
+
+READ32_MEMBER (i82875p_overflow_device::dram_controller_mode_r)
+{
+	return dram_controller_mode;
+}
+
+WRITE32_MEMBER(i82875p_overflow_device::dram_controller_mode_w)
+{
+	COMBINE_DATA(&dram_controller_mode);
+	logerror("%s: dram_controller_mode_w %08x\n", tag(), dram_controller_mode);
 }

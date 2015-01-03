@@ -8,6 +8,7 @@
 
 ***************************************************************************/
 
+#include <limits>
 #include "lua/lua.hpp"
 #include "lua/lib/lualibs.h"
 #include "lua/bridge/LuaBridge.h"
@@ -197,6 +198,27 @@ int lua_engine::l_ioport_write(lua_State *L)
 }
 
 //-------------------------------------------------
+//  emu_app_name - return application name
+//-------------------------------------------------
+
+int lua_engine::l_emu_app_name(lua_State *L)
+{
+	lua_pushstring(L, emulator_info::get_appname_lower());
+	return 1;
+}
+
+//-------------------------------------------------
+//  emu_app_version - return application version
+//-------------------------------------------------
+
+int lua_engine::l_emu_app_version(lua_State *L)
+{
+	lua_pushstring(L, bare_build_version);
+	return 1;
+}
+
+
+//-------------------------------------------------
 //  emu_gamename - returns game full name
 //-------------------------------------------------
 
@@ -204,6 +226,32 @@ int lua_engine::l_emu_gamename(lua_State *L)
 {
 	lua_pushstring(L, luaThis->machine().system().description);
 	return 1;
+}
+
+//-------------------------------------------------
+//  emu_romname - returns rom base name
+//-------------------------------------------------
+
+int lua_engine::l_emu_romname(lua_State *L)
+{
+	lua_pushstring(L, luaThis->machine().basename());
+	return 1;
+}
+
+//-------------------------------------------------
+//  emu_pause/emu_unpause - pause/unpause game
+//-------------------------------------------------
+
+int lua_engine::l_emu_pause(lua_State *L)
+{
+	luaThis->machine().pause();
+	return 0;
+}
+
+int lua_engine::l_emu_unpause(lua_State *L)
+{
+	luaThis->machine().resume();
+	return 0;
 }
 
 //-------------------------------------------------
@@ -288,6 +336,107 @@ int lua_engine::l_emu_hook_output(lua_State *L)
 	return 0;
 }
 
+//-------------------------------------------------
+//  machine_get_devices - return table of available devices userdata
+//  -> manager:machine().devices[":maincpu"]
+//-------------------------------------------------
+
+luabridge::LuaRef lua_engine::l_machine_get_devices(const running_machine *r)
+{
+	running_machine *m = const_cast<running_machine *>(r);
+	lua_State *L = luaThis->m_lua_state;
+	luabridge::LuaRef devs_table = luabridge::LuaRef::newTable(L);
+
+	device_t *root = &(m->root_device());
+	devs_table = devtree_dfs(root, devs_table);
+
+	return devs_table;
+}
+
+// private helper for get_devices - DFS visit all devices in a running machine
+luabridge::LuaRef lua_engine::devtree_dfs(device_t *root, luabridge::LuaRef devs_table)
+{
+	if (root) {
+		for (device_t *dev = root->first_subdevice(); dev != NULL; dev = dev->next()) {
+			if (dev && dev->configured() && dev->started()) {
+				devs_table[dev->tag()] = dev;
+				devtree_dfs(dev, devs_table);
+			}
+		}
+	}
+	return devs_table;
+}
+
+//-------------------------------------------------
+//  device_get_memspaces - return table of available address spaces userdata
+//  -> manager:machine().devices[":maincpu"].spaces["program"]
+//-------------------------------------------------
+
+luabridge::LuaRef lua_engine::l_dev_get_memspaces(const device_t *d)
+{
+	device_t *dev = const_cast<device_t *>(d);
+	lua_State *L = luaThis->m_lua_state;
+	luabridge::LuaRef sp_table = luabridge::LuaRef::newTable(L);
+
+	for (address_spacenum sp = AS_0; sp < ADDRESS_SPACES; sp++) {
+		if (dev->memory().has_space(sp)) {
+			sp_table[dev->memory().space(sp).name()] = &(dev->memory().space(sp));
+		}
+	}
+
+	return sp_table;
+}
+
+//-------------------------------------------------
+//  mem_read - templated memory readers for <sign>,<size>
+//  -> manager:machine().devices[":maincpu"].spaces["program"]:read_i8(0xC000)
+//-------------------------------------------------
+
+template <typename T>
+int lua_engine::lua_addr_space::l_mem_read(lua_State *L)
+{
+	address_space &sp = luabridge::Stack<address_space &>::get(L, 1);
+	luaL_argcheck(L, lua_isnumber(L, 2), 2, "address (integer) expected");
+	offs_t address = lua_tounsigned(L, 2);
+	T mem_content = 0;
+	switch(sizeof(mem_content) * 8) {
+		case 8:
+			mem_content = sp.read_byte(address);
+			break;
+		case 16:
+			if ((address & 1) == 0) {
+				mem_content = sp.read_word(address);
+			} else {
+				mem_content = sp.read_word_unaligned(address);
+			}
+			break;
+		case 32:
+			if ((address & 3) == 0) {
+				mem_content = sp.read_dword(address);
+			} else {
+				mem_content = sp.read_dword_unaligned(address);
+			}
+			break;
+		case 64:
+			if ((address & 7) == 0) {
+				mem_content = sp.read_qword(address);
+			} else {
+				mem_content = sp.read_qword_unaligned(address);
+			}
+			break;
+		default:
+			break;
+	}
+
+	if (std::numeric_limits<T>::is_signed) {
+		lua_pushinteger(L, mem_content);
+	} else {
+		lua_pushunsigned(L, mem_content);
+	}
+
+	return 1;
+
+}
 
 void *lua_engine::checkparam(lua_State *L, int idx, const char *tname)
 {
@@ -495,7 +644,10 @@ void lua_engine::initialize()
 {
 	luabridge::getGlobalNamespace (m_lua_state)
 		.beginNamespace ("emu")
+			.addCFunction ("app_name",    l_emu_app_name )
+			.addCFunction ("app_version", l_emu_app_version )
 			.addCFunction ("gamename",    l_emu_gamename )
+			.addCFunction ("romname",     l_emu_romname )
 			.addCFunction ("keypost",     l_emu_keypost )
 			.addCFunction ("hook_output", l_emu_hook_output )
 			.addCFunction ("time",        l_emu_time )
@@ -503,6 +655,8 @@ void lua_engine::initialize()
 			.addCFunction ("after",       l_emu_after )
 			.addCFunction ("exit",        l_emu_exit )
 			.addCFunction ("start",       l_emu_start )
+			.addCFunction ("pause",       l_emu_pause )
+			.addCFunction ("unpause",     l_emu_unpause )
 			.beginClass <machine_manager> ("manager")
 				.addFunction ("machine", &machine_manager::machine)
 				.addFunction ("options", &machine_manager::options)
@@ -512,6 +666,7 @@ void lua_engine::initialize()
 				.addFunction ("hard_reset", &running_machine::schedule_hard_reset)
 				.addFunction ("soft_reset", &running_machine::schedule_soft_reset)
 				.addFunction ("system", &running_machine::system)
+				.addProperty <luabridge::LuaRef, void> ("devices", &lua_engine::l_machine_get_devices)
 			.endClass ()
 			.beginClass <game_driver> ("game_driver")
 				.addData ("name", &game_driver::name)
@@ -519,7 +674,25 @@ void lua_engine::initialize()
 				.addData ("year", &game_driver::year)
 				.addData ("manufacturer", &game_driver::manufacturer)
 			.endClass ()
+			.beginClass <device_t> ("device")
+				.addFunction("name", &device_t::tag)
+				.addProperty <luabridge::LuaRef, void> ("spaces", &lua_engine::l_dev_get_memspaces)
+			.endClass()
+			.beginClass <lua_addr_space> ("lua_addr_space")
+				.addCFunction ("read_i8", &lua_addr_space::l_mem_read<INT8>)
+				.addCFunction ("read_u8", &lua_addr_space::l_mem_read<UINT8>)
+				.addCFunction ("read_i16", &lua_addr_space::l_mem_read<INT16>)
+				.addCFunction ("read_u16", &lua_addr_space::l_mem_read<UINT16>)
+				.addCFunction ("read_i32", &lua_addr_space::l_mem_read<INT32>)
+				.addCFunction ("read_u32", &lua_addr_space::l_mem_read<UINT32>)
+				.addCFunction ("read_i64", &lua_addr_space::l_mem_read<INT64>)
+				.addCFunction ("read_u64", &lua_addr_space::l_mem_read<UINT64>)
+			.endClass()
+			.deriveClass <address_space, lua_addr_space> ("addr_space")
+				.addFunction("name", &address_space::name)
+			.endClass()
 		.endNamespace ();
+
 	luabridge::push (m_lua_state, machine_manager::instance());
 	lua_setglobal(m_lua_state, "manager");
 }

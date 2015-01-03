@@ -13,7 +13,10 @@
  *   SLA7020M (step motor driver)
  *   uPC494C (pulse width modulation control)
  *
- * Devices boot and enter main input loop, but input is not yet implemented.
+ * Devices boot and enter main input loop. Data is received through the
+ * centronics bus and printed as expected. The actual paper output is
+ * still not implemented, though. Look at the output from the fire signal
+ * (epson_lx810l_t::co0_w()) to see what's actually being printed.
  *
  * It is possible to run the printers' self test with this procedure:
  * - Turn on device;
@@ -99,7 +102,7 @@ static ADDRESS_MAP_START( lx810l_mem, AS_PROGRAM, 8, epson_lx810l_t )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM /* 32k firmware */
 	AM_RANGE(0x8000, 0x9fff) AM_RAM /* 8k external RAM */
 	AM_RANGE(0xa000, 0xbfff) AM_READWRITE(fakemem_r, fakemem_w) /* fake memory, write one, set all */
-	AM_RANGE(0xc000, 0xdfff) AM_MIRROR(0x1ff0) AM_DEVREADWRITE("ic3b", e05a30_device, read, write)
+	AM_RANGE(0xc000, 0xdfff) AM_MIRROR(0x1ff0) AM_DEVREADWRITE("e05a30", e05a30_device, read, write)
 	AM_RANGE(0xe000, 0xfeff) AM_NOP /* not used */
 	AM_RANGE(0xff00, 0xffff) AM_RAM /* internal CPU RAM */
 ADDRESS_MAP_END
@@ -140,19 +143,40 @@ static MACHINE_CONFIG_FRAGMENT( epson_lx810l )
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("beeper", BEEP, 0)
 	MCFG_SOUND_ADD("speaker", SPEAKER_SOUND, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
 	/* gate array */
-	MCFG_DEVICE_ADD("ic3b", E05A30, 0)
+	MCFG_DEVICE_ADD("e05a30", E05A30, 0)
 	MCFG_E05A30_PRINTHEAD_CALLBACK(WRITE16(epson_lx810l_t, printhead))
 	MCFG_E05A30_PF_STEPPER_CALLBACK(WRITE8(epson_lx810l_t, pf_stepper))
 	MCFG_E05A30_CR_STEPPER_CALLBACK(WRITE8(epson_lx810l_t, cr_stepper))
 	MCFG_E05A30_READY_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_ready))
+	MCFG_E05A30_CENTRONICS_ACK_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_centronics_ack))
+	MCFG_E05A30_CENTRONICS_BUSY_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_centronics_busy))
+	MCFG_E05A30_CENTRONICS_PERROR_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_centronics_perror))
+	MCFG_E05A30_CENTRONICS_FAULT_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_centronics_fault))
+	MCFG_E05A30_CENTRONICS_SELECT_CALLBACK(WRITELINE(epson_lx810l_t, e05a30_centronics_select))
 
 	/* 256-bit eeprom */
 	MCFG_EEPROM_SERIAL_93C06_ADD("eeprom")
+
+	/* steppers */
+	//should this have MCFG_STEPPER_MAX_STEPS(200*2) ? code shows 200 steps...
+	MCFG_STEPPER_ADD("pf_stepper")
+	MCFG_STEPPER_REEL_TYPE(NOT_A_REEL)
+	MCFG_STEPPER_START_INDEX(16)
+	MCFG_STEPPER_END_INDEX(24)
+	MCFG_STEPPER_INDEX_PATTERN(0x00)
+	MCFG_STEPPER_INIT_PHASE(0)
+
+	MCFG_STEPPER_ADD("cr_stepper")
+	MCFG_STEPPER_REEL_TYPE(NOT_A_REEL)
+	MCFG_STEPPER_START_INDEX(16)
+	MCFG_STEPPER_END_INDEX(24)
+	MCFG_STEPPER_INDEX_PATTERN(0x00)
+	MCFG_STEPPER_INIT_PHASE(2)
+
 MACHINE_CONFIG_END
 
 //-------------------------------------------------
@@ -271,14 +295,19 @@ epson_lx810l_t::epson_lx810l_t(const machine_config &mconfig, const char *tag, d
 	device_t(mconfig, EPSON_LX810L, "Epson LX-810L", tag, owner, clock, "lx810l", __FILE__),
 	device_centronics_peripheral_interface(mconfig, *this),
 	m_maincpu(*this, "maincpu"),
+	m_pf_stepper(*this, "pf_stepper"),
+	m_cr_stepper(*this, "cr_stepper"),
 	m_eeprom(*this, "eeprom"),
 	m_speaker(*this, "speaker"),
+	m_e05a30(*this, "e05a30"),
 	m_93c06_clk(0),
 	m_93c06_cs(0),
 	m_printhead(0),
 	m_pf_pos_abs(200),
 	m_cr_pos_abs(200),
-	m_last_fire(0)
+	m_real_cr_pos(200),
+	m_real_cr_steps(0),
+	m_real_cr_dir(0)
 {
 }
 
@@ -286,14 +315,19 @@ epson_lx810l_t::epson_lx810l_t(const machine_config &mconfig, device_type type, 
 	device_t(mconfig, type, name, tag, owner, clock, shortname, __FILE__),
 	device_centronics_peripheral_interface(mconfig, *this),
 	m_maincpu(*this, "maincpu"),
+	m_pf_stepper(*this, "pf_stepper"),
+	m_cr_stepper(*this, "cr_stepper"),
 	m_eeprom(*this, "eeprom"),
 	m_speaker(*this, "speaker"),
+	m_e05a30(*this, "e05a30"),
 	m_93c06_clk(0),
 	m_93c06_cs(0),
 	m_printhead(0),
 	m_pf_pos_abs(200),
 	m_cr_pos_abs(200),
-	m_last_fire(0)
+	m_real_cr_pos(200),
+	m_real_cr_steps(0),
+	m_real_cr_dir(0)
 {
 }
 
@@ -306,28 +340,11 @@ epson_ap2000_t::epson_ap2000_t(const machine_config &mconfig, const char *tag, d
 //  device_start - device-specific startup
 //-------------------------------------------------
 
-static const stepper_interface lx810l_pf_stepper =
-{
-	STARPOINT_48STEP_REEL,
-	16,
-	24,
-	0x00,
-	0
-};
 
-static const stepper_interface lx810l_cr_stepper =
-{
-	STARPOINT_48STEP_REEL,
-	16,
-	24,
-	0x00,
-	2
-};
+
 
 void epson_lx810l_t::device_start()
 {
-	stepper_config(machine(), 0, &lx810l_pf_stepper);
-	stepper_config(machine(), 1, &lx810l_cr_stepper);
 }
 
 
@@ -338,6 +355,29 @@ void epson_lx810l_t::device_start()
 void epson_lx810l_t::device_reset()
 {
 	m_speaker->level_w(0);
+}
+
+
+//-------------------------------------------------
+//  device_timer - device-specific timer
+//-------------------------------------------------
+
+void epson_lx810l_t::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch (id) {
+	case TIMER_CR:
+		/* The firmware issues two half-steps in sequence, one immediately
+		 * after the other. At full speed, the motor does two half-steps at
+		 * each 833 microseconds. A timer fires the printhead twice, with
+		 * the same period as each half-step (417 microseconds), but with
+		 * a 356 microseconds delay relative to the motor steps.
+		 */
+		m_real_cr_pos += param;
+		m_real_cr_steps--;
+		if (m_real_cr_steps)
+			timer_set(attotime::from_usec(400), TIMER_CR, m_real_cr_dir);
+		break;
+	}
 }
 
 
@@ -479,16 +519,30 @@ WRITE16_MEMBER( epson_lx810l_t::printhead )
 
 WRITE8_MEMBER( epson_lx810l_t::pf_stepper )
 {
-	stepper_update(0, data);
-	m_pf_pos_abs = 200 - stepper_get_absolute_position(0);
+	m_pf_stepper->update(data);
+	m_pf_pos_abs = 200 - m_pf_stepper->get_absolute_position();
 
 	LX810LLOG("%s: %s(%02x); abs %d\n", machine().describe_context(), __func__, data, m_pf_pos_abs);
 }
 
 WRITE8_MEMBER( epson_lx810l_t::cr_stepper )
 {
-	stepper_update(1, data);
-	m_cr_pos_abs = 200 - stepper_get_absolute_position(1);
+	int m_cr_pos_abs_prev = m_cr_pos_abs;
+
+	m_cr_stepper->update(data);
+	m_cr_pos_abs = 200 - m_cr_stepper->get_absolute_position();
+
+	if (m_cr_pos_abs > m_cr_pos_abs_prev) {
+		/* going right */
+		m_real_cr_dir =  1;
+	} else {
+		/* going left */
+		m_real_cr_dir = -1;
+	}
+
+	if (!m_real_cr_steps)
+		timer_set(attotime::from_usec(400), TIMER_CR, m_real_cr_dir);
+	m_real_cr_steps++;
 
 	LX810LLOG("%s: %s(%02x); abs %d\n", machine().describe_context(), __func__, data, m_cr_pos_abs);
 }
@@ -509,25 +563,18 @@ WRITE_LINE_MEMBER( epson_lx810l_t::co0_w )
 
 	/* Printhead is being fired on !state. */
 	if (!state) {
-		int pos = m_cr_pos_abs;
-
-		/* HACK to get fire positions for motor in movement. The firmware
-		 * issues two half-steps one immediately after the other. A timer
-		 * fires the printhead twice. Supposedly, the first time the
-		 * printhead is fired, it is midway between one step and the other.
-		 * Ideally, the stepper motor interface should model the physics
-		 * of the motors. For the moment, we adjust pos to get the
-		 * intermediate position.
+		/* The firmware expects a 300 microseconds delay between the fire
+		 * signal and the impact of the printhead on the paper. This can be
+		 * verified by the timings of the steps and fire signals for the
+		 * same positions with different directions (left to right or right
+		 * to left). We don't simulate this delay since it is smaller than
+		 * the time it takes the printhead to travel one pixel (which would
+		 * be 417 microseconds), so it makes no difference to us.
+		 * It is interesting to note that the vertical alignment between
+		 * lines which are being printed in different directions is
+		 * noticeably off in the 20+ years old printer used for testing =).
 		 */
-
-		if      (m_cr_pos_abs > m_last_fire + 1)
-			pos--;
-		else if (m_cr_pos_abs < m_last_fire - 1)
-			pos++;
-
-		LX810LLOG("FIRE0 %d %d %04x\n", m_pf_pos_abs, pos, m_printhead);
-
-		m_last_fire = pos;
+		LX810LLOG("FIRE0 %d %d %04x\n", m_pf_pos_abs, m_real_cr_pos, m_printhead);
 	}
 }
 

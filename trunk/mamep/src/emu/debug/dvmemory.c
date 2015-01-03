@@ -61,7 +61,7 @@ debug_view_memory_source::debug_view_memory_source(const char *name, memory_regi
 		m_memintf(NULL),
 		m_base(region.base()),
 		m_length(region.bytes()),
-		m_offsetxor(NATIVE_ENDIAN_VALUE_LE_BE(region.bytewidth() - 1, 0)),
+		m_offsetxor(ENDIAN_VALUE_NE_NNE(region.endianness(), 0, region.bytewidth() - 1)),
 		m_endianness(region.endianness()),
 		m_prefsize(MIN(region.bytewidth(), 8))
 {
@@ -101,6 +101,13 @@ debug_view_memory::debug_view_memory(running_machine &machine, debug_view_osd_up
 		m_bytes_per_row(16),
 		m_byte_offset(0)
 {
+	// hack: define some sane init values
+	// that don't hurt the initial computation of top_left
+	// in set_cursor_pos()
+	m_section[0].m_pos = 0;
+	m_section[0].m_width = 1 + 8 + 1;
+	m_section[1].m_pos = m_section[0].m_pos + m_section[0].m_width;
+
 	// fail if no available sources
 	enumerate_sources();
 	if (m_source_list.count() == 0)

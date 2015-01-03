@@ -53,7 +53,7 @@ const image_device_type_info device_image_interface::m_device_info_array[] =
 //-------------------------------------------------
 
 device_image_interface::device_image_interface(const machine_config &mconfig, device_t &device)
-	: device_interface(device),
+	: device_interface(device, "image"),
 		m_file(NULL),
 		m_mame_file(NULL),
 		m_software_info_ptr(NULL),
@@ -1229,9 +1229,9 @@ software_part *device_image_interface::find_software_item(const char *path, bool
 
 		if (swinfo_name == swlistdev->list_name())
 		{
-			// ad hoc handling for the case path = swlist_name:swinfo_name (e.g. 
-			// gameboy:sml) which is not handled properly by software_name_split 
-			// since the function cannot distinguish between this and the case 
+			// ad hoc handling for the case path = swlist_name:swinfo_name (e.g.
+			// gameboy:sml) which is not handled properly by software_name_split
+			// since the function cannot distinguish between this and the case
 			// path = swinfo_name:swpart_name
 			software_info *info = swlistdev->find(swpart_name);
 			if (info != NULL)

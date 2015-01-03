@@ -35,6 +35,7 @@
 #ifndef __POLYNEW_H__
 #define __POLYNEW_H__
 
+#include <limits.h>
 
 //**************************************************************************
 //  DEBUGGING
@@ -226,6 +227,9 @@ private:
 	inline INT32 round_coordinate(_BaseType value)
 	{
 		INT32 result = poly_floor(value);
+
+		if ((value > 0) && (result < 0))
+			return INT_MAX-1;
 		return result + (value - _BaseType(result) > _BaseType(0.5));
 	}
 

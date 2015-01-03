@@ -40,7 +40,7 @@ DEVICE_ADDRESS_MAP_START(config_map, 32, i6300esb_lpc_device)
 	AM_RANGE(0x88, 0x8b) AM_READWRITE8 (d31_err_sts_r,          d31_err_sts_w,          0x00ff0000)
 	AM_RANGE(0x90, 0x93) AM_READWRITE16(pci_dma_cfg_r,          pci_dma_cfg_w,          0x0000ffff)
 	AM_RANGE(0xa0, 0xa3) AM_READWRITE16(gen_pmcon_1_r,          gen_pmcon_1_w,          0x0000ffff)
-	AM_RANGE(0xa0, 0xa3) AM_READWRITE16(gen_pmcon_2_r,          gen_pmcon_2_w,          0xffff0000)
+	AM_RANGE(0xa0, 0xa3) AM_READWRITE8 (gen_pmcon_2_r,          gen_pmcon_2_w,          0x00ff0000)
 	AM_RANGE(0xa4, 0xa7) AM_READWRITE8 (gen_pmcon_3_r,          gen_pmcon_3_w,          0x000000ff)
 	AM_RANGE(0xac, 0xaf) AM_READWRITE  (rst_cnt2_r,             rst_cnt2_w)
 	AM_RANGE(0xb0, 0xb3) AM_READWRITE8 (apm_cnt_r,              apm_cnt_w,              0x00ff0000)
@@ -87,7 +87,8 @@ ADDRESS_MAP_END
 i6300esb_lpc_device::i6300esb_lpc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: pci_device(mconfig, I6300ESB_LPC, "i6300ESB southbridge ISA/LPC bridge", tag, owner, clock, "i6300esb_lpc", __FILE__),
 		acpi(*this, "acpi"),
-		rtc (*this, "rtc")
+		rtc (*this, "rtc"),
+		pit (*this, "pit")
 {
 }
 
@@ -120,6 +121,7 @@ void i6300esb_lpc_device::device_reset()
 	memset(mon_trp_rng, 0, sizeof(mon_trp_rng));
 	mon_trp_msk = 0;
 	nmi_sc = 0;
+	gen_sta = 0x00;
 }
 
 void i6300esb_lpc_device::reset_all_mappings()
@@ -292,15 +294,15 @@ WRITE16_MEMBER(i6300esb_lpc_device::gen_pmcon_1_w)
 	logerror("%s: gen_pmcon_1 = %04x\n", tag(), gen_pmcon_1);
 }
 
-READ16_MEMBER (i6300esb_lpc_device::gen_pmcon_2_r)
+READ8_MEMBER  (i6300esb_lpc_device::gen_pmcon_2_r)
 {
 	return gen_pmcon_2;
 }
 
-WRITE16_MEMBER(i6300esb_lpc_device::gen_pmcon_2_w)
+WRITE8_MEMBER (i6300esb_lpc_device::gen_pmcon_2_w)
 {
-	COMBINE_DATA(&gen_pmcon_2);
-	logerror("%s: gen_pmcon_2 = %04x\n", tag(), gen_pmcon_2);
+	gen_pmcon_2 = data;
+	logerror("%s: gen_pmcon_2 = %02x\n", tag(), gen_pmcon_2);
 }
 
 READ8_MEMBER  (i6300esb_lpc_device::gen_pmcon_3_r)
@@ -749,4 +751,5 @@ void i6300esb_lpc_device::map_extra(UINT64 memory_window_start, UINT64 memory_wi
 	rtc->map_device(memory_window_start, memory_window_end, 0, memory_space, io_window_start, io_window_end, 0, io_space);
 	if(rtc_conf & 4)
 		rtc->map_extdevice(memory_window_start, memory_window_end, 0, memory_space, io_window_start, io_window_end, 0, io_space);
+	pit->map_device(memory_window_start, memory_window_end, 0, memory_space, io_window_start, io_window_end, 0, io_space);
 }

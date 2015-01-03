@@ -51,7 +51,7 @@
 
             - calls config_load_settings() [config.c] to load the configuration file
             - calls nvram_load [machine/generic.c] to load NVRAM
-            - calls ui_display_startup_screens() [ui.c] to display the the startup screens
+            - calls ui_display_startup_screens() [ui.c] to display the startup screens
             - begins resource tracking (level 2)
             - calls soft_reset() [mame.c] to reset all systems
 
@@ -267,6 +267,9 @@ void running_machine::start()
 	save().save_item(NAME(m_watchdog_enabled));
 	save().save_item(NAME(m_watchdog_counter));
 
+	// save the random seed or save states might be broken in drivers that use the rand() method
+	save().save_item(NAME(m_rand_seed));
+
 	// initialize image devices
 	image_init(*this);
 	m_tilemap.reset(global_alloc(tilemap_manager(*this)));
@@ -470,6 +473,15 @@ int running_machine::run(bool firstrun)
 	// in case we got here via exception
 	m_current_phase = MACHINE_PHASE_EXIT;
 
+#ifdef MAME_DEBUG
+	if (g_tagmap_counter_enabled)
+	{
+		g_tagmap_counter_enabled = false;
+		if (*(options().command()) == 0)
+			osd_printf_info("%d tagmap lookups\n", g_tagmap_finds);
+	}
+#endif
+
 	// call all exit callbacks registered
 	call_notifiers(MACHINE_NOTIFY_EXIT);
 	zip_file_cache_clear();
@@ -490,6 +502,15 @@ void running_machine::schedule_exit()
 
 	// if we're executing, abort out immediately
 	m_scheduler.eat_all_cycles();
+
+#ifdef MAME_DEBUG
+	if (g_tagmap_counter_enabled)
+	{
+		g_tagmap_counter_enabled = false;
+		if (*(options().command()) == 0)
+			osd_printf_info("%d tagmap lookups\n", g_tagmap_finds);
+	}
+#endif
 
 	// if we're autosaving on exit, schedule a save as well
 	if (options().autosave() && (m_system.flags & GAME_SUPPORTS_SAVE) && this->time() > attotime::zero)

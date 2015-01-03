@@ -5,13 +5,16 @@
 
 #include "pci.h"
 
-#define MCFG_I82875P_HOST_ADD(_tag, _subdevice_id, _cpu_tag, _ram_size)         \
+#define MCFG_I82875P_HOST_ADD(_tag, _subdevice_id, _cpu_tag, _ram_size)    \
 	MCFG_PCI_HOST_ADD(_tag, I82875P_HOST, 0x80862578, 0x02, _subdevice_id) \
-	downcast<i82875p_host_device *>(device)->set_cpu_tag(_cpu_tag); \
+	downcast<i82875p_host_device *>(device)->set_cpu_tag(_cpu_tag);        \
 	downcast<i82875p_host_device *>(device)->set_ram_size(_ram_size);
 
 #define MCFG_I82875P_AGP_ADD(_tag) \
 	MCFG_AGP_BRIDGE_ADD(_tag, I82875P_AGP, 0x80862579, 0x02)
+
+#define MCFG_I82875P_OVERFLOW_ADD(_tag, _subdevice_id)    \
+	MCFG_PCI_DEVICE_ADD(_tag, I82875P_OVERFLOW, 0x8086257e, 0x02, 0x088000, _subdevice_id)
 
 class i82875p_host_device : public pci_host_device {
 public:
@@ -19,6 +22,8 @@ public:
 
 	void set_cpu_tag(const char *tag);
 	void set_ram_size(int ram_size);
+
+	virtual void reset_all_mappings();
 
 	virtual void map_extra(UINT64 memory_window_start, UINT64 memory_window_end, UINT64 memory_offset, address_space *memory_space,
 							UINT64 io_window_start, UINT64 io_window_end, UINT64 io_offset, address_space *io_space);
@@ -98,8 +103,35 @@ protected:
 	virtual void device_reset();
 };
 
+class i82875p_overflow_device : public pci_device {
+public:
+	i82875p_overflow_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+
+	DECLARE_READ8_MEMBER  (dram_row_boundary_r);
+	DECLARE_WRITE8_MEMBER (dram_row_boundary_w);
+	DECLARE_READ8_MEMBER  (dram_row_attribute_r);
+	DECLARE_WRITE8_MEMBER (dram_row_attribute_w);
+	DECLARE_READ32_MEMBER (dram_timing_r);
+	DECLARE_WRITE32_MEMBER(dram_timing_w);
+	DECLARE_READ32_MEMBER (dram_controller_mode_r);
+	DECLARE_WRITE32_MEMBER(dram_controller_mode_w);
+
+protected:
+
+	virtual void device_start();
+	virtual void device_reset();
+
+private:
+	DECLARE_ADDRESS_MAP(overflow_map, 32);
+
+	UINT8 dram_row_boundary[8], dram_row_attribute[4];
+	UINT32 dram_timing, dram_controller_mode;
+};
+
 extern const device_type I82875P_HOST;
 extern const device_type I82875P_AGP;
+extern const device_type I82875P_OVERFLOW;
 
 
 #endif

@@ -41,47 +41,65 @@
 
 ******************************************************************************/
 
+// CPS2 'Phoenix' bootlegs
+ssf2r1d
+ssf2tbd
+armwarr1d
+dstlkur1d
+ringdestd
+ssf2td
+cybotsjbl
+sfaud
+megaman2d
+sfz2jr1d
+xmvsfur1d
+vhunt2r1d
+1944da
+dimahooud
+mpangjd
+hsf2ad
+
 // Neo Geo decrypted
 samsho2k2   // 0063 (c) 1994 SNK
-zupapad			// 0070 (c) 2001 SNK
-kof99kd			// 0251 (c) 1999 SNK
-ganryud			// 0252 (c) 1999 Visco
-garoud			// 0253 (c) 1999 SNK
-garouhd			// 0253 (c) 1999 SNK
-s1945pd			// 0254 (c) 1999 Psikyo
-preisl2d		// 0255 (c) 1999 Yumekobo
-mslug3hd		// 0256 (c) 2000 SNK
-kof2knd 		// 0257 (c) 2000 SNK
-bangbedd	  // 0259 (c) 2000 Visco
-nitdd			  // 0260 (c) 2000 Eleven / Gavaking
-sengok3d		// 0261 (c) 2001 Noise Factory / SNK
-kof2001d		// 0262 (c) 2001 Eolith / SNK
-kof2k1hd		// 0262 (c) 2001 Eolith / SNK
-cthd2k3d		// 5003 (c) 2003 bootleg
-ct2k3spd		// 5003 (c) 2003 bootleg
-mslug4d			// 0263 (c) 2002 Mega / Playmore
-mslug4hd		// 0263 (c) 2002 Mega / Playmore
-rotdd			  // 0264 (c) 2002 Evoga / Playmore
-kof2002d		// 0265 (c) 2002 Eolith / Playmore
-kof10thd		// 0275 (c) 2004 bootleg
-matrimd			// 0266 (c) 2002 Noise Factory / Atlus
-pnyaad			// 0267 (c) 2003 Aiky / Taito
-mslug5d			// 0268 (c) 2003 SNK Playmore
-mslug5hd		// 0268 (c) 2003 SNK Playmore
-mslug5n			// 0268 (c) 2003 SNK Playmore
-mslug5nd		// 0268 (c) 2003 SNK Playmore
-ms5plusd		// 0268 (c) 2003 bootleg
-svcd			  // 0269 (c) 2003 SNK Playmore
-samsho5d		// 0270 (c) 2003 Yuki Enterprise / SNK Playmore
-samsh5hd		// 0270 (c) 2003 Yuki Enterprise / SNK Playmore
-samsh5bd		// 0270 (c) 2003 bootleg
-kf2k3pcd		// 0271 (c) 2003 SNK Playmore - JAMMA PCB
-kof2003d		// 0271 (c) 2003 SNK Playmore
-kof2k3hd		// 0271 (c) 2003 SNK Playmore
-kf2k3bd			// 0271 (c) 2003 bootleg
-kf2k3pd			// 0271 (c) 2003 bootleg
-kf2k3upd		// 0271 (c) 2003 bootleg
-sams5spd		// 0272 (c) 2003 Yuki Enterprise / SNK Playmore
-sams5shd		// 0272 (c) 2003 Yuki Enterprise / SNK Playmore
-sams5sod		// 0272 (c) 2003 Yuki Enterprise / SNK Playmore
-jockygpd		// 0008 (c) 2001 Sun Amusement / BrezzaSoft
+zupapad	    // 0070 (c) 2001 SNK
+kof99kd	    // 0251 (c) 1999 SNK
+ganryud	    // 0252 (c) 1999 Visco
+garoud	    // 0253 (c) 1999 SNK
+garouhd	    // 0253 (c) 1999 SNK
+s1945pd	    // 0254 (c) 1999 Psikyo
+preisl2d    // 0255 (c) 1999 Yumekobo
+mslug3hd    // 0256 (c) 2000 SNK
+kof2knd     // 0257 (c) 2000 SNK
+bangbedd    // 0259 (c) 2000 Visco
+nitdd       // 0260 (c) 2000 Eleven / Gavaking
+sengok3d    // 0261 (c) 2001 Noise Factory / SNK
+kof2001d    // 0262 (c) 2001 Eolith / SNK
+kof2k1hd    // 0262 (c) 2001 Eolith / SNK
+cthd2k3d    // 5003 (c) 2003 bootleg
+ct2k3spd    // 5003 (c) 2003 bootleg
+mslug4d	    // 0263 (c) 2002 Mega / Playmore
+mslug4hd    // 0263 (c) 2002 Mega / Playmore
+rotdd       // 0264 (c) 2002 Evoga / Playmore
+kof2002d    // 0265 (c) 2002 Eolith / Playmore
+kof10thd    // 0275 (c) 2004 bootleg
+matrimd     // 0266 (c) 2002 Noise Factory / Atlus
+pnyaad      // 0267 (c) 2003 Aiky / Taito
+mslug5d     // 0268 (c) 2003 SNK Playmore
+mslug5hd    // 0268 (c) 2003 SNK Playmore
+mslug5n     // 0268 (c) 2003 SNK Playmore
+mslug5nd    // 0268 (c) 2003 SNK Playmore
+ms5plusd    // 0268 (c) 2003 bootleg
+svcd        // 0269 (c) 2003 SNK Playmore
+samsho5d    // 0270 (c) 2003 Yuki Enterprise / SNK Playmore
+samsh5hd    // 0270 (c) 2003 Yuki Enterprise / SNK Playmore
+samsh5bd    // 0270 (c) 2003 bootleg
+kf2k3pcd    // 0271 (c) 2003 SNK Playmore - JAMMA PCB
+kof2003d    // 0271 (c) 2003 SNK Playmore
+kof2k3hd    // 0271 (c) 2003 SNK Playmore
+kf2k3bd     // 0271 (c) 2003 bootleg
+kf2k3pd     // 0271 (c) 2003 bootleg
+kf2k3upd    // 0271 (c) 2003 bootleg
+sams5spd    // 0272 (c) 2003 Yuki Enterprise / SNK Playmore
+sams5shd    // 0272 (c) 2003 Yuki Enterprise / SNK Playmore
+sams5sod    // 0272 (c) 2003 Yuki Enterprise / SNK Playmore
+jockygpd    // 0008 (c) 2001 Sun Amusement / BrezzaSoft

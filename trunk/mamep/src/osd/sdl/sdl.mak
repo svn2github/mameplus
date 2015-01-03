@@ -77,6 +77,8 @@ USE_DISPATCH_GL = 1
 # change for custom OS X installations
 SDL_FRAMEWORK_PATH = /Library/Frameworks/
 
+# SDL_LIBVER = sdl
+
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
@@ -328,6 +330,7 @@ SDLMAIN = $(SDLOBJ)/main.o
 # needed for unidasm
 LDFLAGS += -Wl,--allow-multiple-definition
 SDL_NETWORK = pcap
+INCPATH += -I$(SRC)/lib/winpcap
 
 # enable UNICODE
 DEFS += -Dmain=utf8_main -DUNICODE -D_UNICODE
@@ -337,6 +340,7 @@ LDFLAGS += -municode
 ifndef NO_USE_QTDEBUG
 QT_INSTALL_HEADERS = $(shell qmake -query QT_INSTALL_HEADERS)
 INCPATH += -I$(QT_INSTALL_HEADERS)/QtCore -I$(QT_INSTALL_HEADERS)/QtGui -I$(QT_INSTALL_HEADERS)
+BASELIBS += -lcomdlg32 -loleaut32 -limm32 -lwinspool -lmsimg32 -lole32 -luuid -lws2_32 -lshell32 -lkernel32
 LIBS += -L$(shell qmake -query QT_INSTALL_LIBS) -lqtmain -lQtGui4 -lQtCore4 -lcomdlg32 -loleaut32 -limm32 -lwinspool -lmsimg32 -lole32 -luuid -lws2_32 -lshell32 -lkernel32
 endif
 endif
@@ -495,8 +499,10 @@ ifndef MACOSX_USE_LIBSDL
 # Compile using framework (compile using libSDL is the exception)
 ifeq ($(SDL_LIBVER),sdl2)
 LIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL2 -framework Cocoa -framework OpenGL -lpthread
+BASELIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL2 -framework Cocoa -framework OpenGL -lpthread
 else
 LIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL -framework Cocoa -framework OpenGL -lpthread
+BASELIBS += -F$(SDL_FRAMEWORK_PATH) -framework SDL -framework Cocoa -framework OpenGL -lpthread
 endif
 INCPATH += -F$(SDL_FRAMEWORK_PATH)
 else
@@ -506,10 +512,10 @@ else
 
 # files (header files are #include "SDL/something.h", so the extra "/SDL"
 # causes a significant problem)
-INCPATH += `sdl-config --cflags | sed 's:/SDL::'`
+INCPATH += `$(SDL_CONFIG) --cflags | sed 's:/SDL::'`
 CCOMFLAGS += -DNO_SDL_GLEXT
 # Remove libSDLmain, as its symbols conflict with SDLMain_tmpl.m
-LIBS += `sdl-config --libs | sed 's/-lSDLmain//'` -lpthread -framework OpenGL
+LIBS += `$(SDL_CONFIG) --libs | sed 's/-lSDLmain//'` -lpthread -framework Cocoa -framework OpenGL
 DEFS += -DMACOSX_USE_LIBSDL
 endif   # MACOSX_USE_LIBSDL
 
@@ -554,6 +560,7 @@ INCPATH += `$(SDL_CONFIG) --cflags  | sed -e 's:/SDL[2]*::' -e 's:\(-D[^ ]*\)::g
 endif
 CCOMFLAGS += `$(SDL_CONFIG) --cflags  | sed -e 's:/SDL[2]*::' -e 's:\(-I[^ ]*\)::g'`
 
+BASELIBS += `$(SDL_CONFIG) --libs`
 LIBS += `$(SDL_CONFIG) --libs`
 
 ifeq ($(SDL_LIBVER),sdl2)
@@ -576,6 +583,7 @@ endif
 
 # libs that Haiku doesn't want but are mandatory on *IX
 ifneq ($(TARGETOS),haiku)
+BASELIBS += -lm -lutil -lpthread
 LIBS += -lm -lutil -lpthread
 endif
 
@@ -644,11 +652,12 @@ endif
 
 ifeq ($(SDL_LIBVER),sdl2)
 LIBS += -lSDL2 -lImm32 -lversion -lole32 -loleaut32 -static
+BASELIBS += -lImm32 -lversion -lole32 -loleaut32 -static
 else
 LIBS += -lSDL -static
 endif
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
-
+BASELIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 endif   # Win32
 
 #-------------------------------------------------
@@ -679,13 +688,17 @@ DEBUGOBJS = \
 	$(OSDOBJ)/modules/debugger/qt/debugqtmainwindow.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtmemorywindow.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtbreakpointswindow.o \
+	$(OSDOBJ)/modules/debugger/qt/debugqtdeviceswindow.o \
+	$(OSDOBJ)/modules/debugger/qt/debugqtdeviceinformationwindow.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtview.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtwindow.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtlogwindow.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtdasmwindow.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtmainwindow.moc.o \
 	$(OSDOBJ)/modules/debugger/qt/debugqtmemorywindow.moc.o \
-	$(OSDOBJ)/modules/debugger/qt/debugqtbreakpointswindow.moc.o
+	$(OSDOBJ)/modules/debugger/qt/debugqtbreakpointswindow.moc.o \
+	$(OSDOBJ)/modules/debugger/qt/debugqtdeviceswindow.moc.o \
+	$(OSDOBJ)/modules/debugger/qt/debugqtdeviceinformationwindow.moc.o
 endif
 
 ifeq ($(NO_DEBUGGER),1)
@@ -761,17 +774,17 @@ endif # USE_XINPUT
 # Network (TAP/TUN)
 #-------------------------------------------------
 
+OSDOBJS += $(SDLOBJ)/netdev.o
+
 ifndef DONT_USE_NETWORK
+
 ifeq ($(SDL_NETWORK),taptun)
-OSDOBJS += \
-	$(SDLOBJ)/netdev.o \
-	$(SDLOBJ)/netdev_tap.o
+OSDOBJS += $(SDLOBJ)/netdev_tap.o
 
 DEFS += -DSDLMAME_NETWORK -DSDLMAME_NET_TAPTUN
 endif
 
 ifeq ($(SDL_NETWORK),pcap)
-OSDOBJS += $(SDLOBJ)/netdev.o
 
 ifeq ($(TARGETOS),macosx)
 OSDOBJS += $(SDLOBJ)/netdev_pcap_osx.o
@@ -780,13 +793,14 @@ OSDOBJS += $(SDLOBJ)/netdev_pcap.o
 endif
 
 DEFS += -DSDLMAME_NETWORK -DSDLMAME_NET_PCAP
+
 ifneq ($(TARGETOS),win32)
 LIBS += -lpcap
 endif
-endif
-else
-OSDOBJS += $(SDLOBJ)/netdev.o
-endif
+
+endif # ifeq ($(SDL_NETWORK),pcap)
+
+endif # ifndef DONT_USE_NETWORK
 
 #-------------------------------------------------
 # Dependencies
@@ -815,6 +829,7 @@ $(SDLOBJ)/draw13.o : $(SDLSRC)/blit13.h
 
 #$(OSDOBJS): $(SDLSRC)/sdl.mak
 
+
 $(LIBOCORE): $(OSDCOREOBJS)
 
 $(LIBOSD): $(OSDOBJS)
@@ -836,7 +851,7 @@ TESTKEYSOBJS = \
 
 testkeys$(EXE): $(TESTKEYSOBJS) $(LIBUTIL) $(LIBOCORE) $(SDLUTILMAIN)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(BASELIBS) -o $@
 
 #-------------------------------------------------
 # clean up

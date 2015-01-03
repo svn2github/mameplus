@@ -60,6 +60,10 @@ enum
 
 struct quad_setup_data
 {
+    quad_setup_data()
+    : dudx(0), dvdx(0), dudy(0), dvdy(0), startu(0), startv(0),
+      rotwidth(0), rotheight(0)
+    {}
 	INT32           dudx, dvdx, dudy, dvdy;
 	INT32           startu, startv;
 	INT32           rotwidth, rotheight;
@@ -90,6 +94,12 @@ struct copy_info {
 /* texture_info holds information about a texture */
 struct texture_info
 {
+    texture_info()
+    : next(NULL), hash(0), flags(0), rawwidth(0), rawheight(0), format(0),
+      pixels(NULL), pitch(0), pixels_own(0), texture_id(NULL), copyinfo(NULL),
+      sdl_access(0), sdl_blendmode(SDL_BLENDMODE_NONE), is_rotated(0), last_access(0)
+    {
+    }
 	texture_info *      next;               // next texture in the list
 
 	HashT               hash;               // hash value for the texture (must be >= pointer size)
@@ -117,6 +127,12 @@ struct texture_info
 /* sdl_info is the information about SDL for the current screen */
 struct sdl_info
 {
+    sdl_info()
+    : blittimer(0), extra_flags(0), sdl_renderer(NULL), texlist(NULL),
+      texture_max_width(0), texture_max_height(0), last_hofs(0), last_vofs(0),
+      resize_pending(0), resize_width(0), resize_height(0),
+      last_blit_time(0), last_blit_pixels(0)
+    {}
 	INT32           blittimer;
 	UINT32          extra_flags;
 
@@ -441,7 +457,7 @@ static int RendererSupportsFormat(SDL_Renderer *renderer, Uint32 format, Uint32 
 
 static void add_list(copy_info **head, copy_info *element, Uint32 bm)
 {
-	copy_info *newci = (copy_info *) osd_malloc(sizeof(copy_info));
+	copy_info *newci = global_alloc(copy_info);
 	*newci = *element;
 
 	newci->bm_mask = bm;
@@ -479,8 +495,12 @@ int drawsdl2_init(running_machine &machine, sdl_draw_info *callbacks)
 
 	expand_copy_info(blit_info_default);
 
+#if USE_OPENGL
 	// Load the GL library now - else MT will fail
 	stemp = downcast<sdl_options &>(machine.options()).gl_lib();
+#else
+	stemp = NULL;
+#endif
 	if (stemp != NULL && strcmp(stemp, SDLOPTVAL_AUTO) == 0)
 		stemp = NULL;
 
@@ -511,7 +531,7 @@ static void drawsdl2_exit(void)
 						(int) bi->perf);
 			freeme = bi;
 			bi = bi->next;
-			osd_free(freeme);
+			global_free(freeme);
 		}
 }
 
@@ -539,25 +559,23 @@ static void drawsdl2_attach(sdl_draw_info *info, sdl_window_info *window)
 static int drawsdl2_window_create(sdl_window_info *window, int width, int height)
 {
 	// allocate memory for our structures
-	sdl_info *sdl = (sdl_info *) osd_malloc(sizeof(*sdl));
+	sdl_info *sdl = global_alloc(sdl_info);
 
 	osd_printf_verbose("Enter drawsdl2_window_create\n");
 
-	memset(sdl, 0, sizeof(*sdl));
-
 	window->dxdata = sdl;
 
-	sdl->extra_flags = (window->fullscreen ?
+	sdl->extra_flags = (window->fullscreen() ?
 			SDL_WINDOW_BORDERLESS | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE);
 
 	// create the SDL window
-	window->sdl_window = SDL_CreateWindow(window->title, SDL_WINDOWPOS_UNDEFINED_DISPLAY(window->monitor->handle), SDL_WINDOWPOS_UNDEFINED,
+	window->sdl_window = SDL_CreateWindow(window->title, window->monitor()->monitor_x, 0,
 			width, height, sdl->extra_flags);
 
-	if (window->fullscreen && video_config.switchres)
+	if (window->fullscreen() && video_config.switchres)
 	{
 		SDL_DisplayMode mode;
-		SDL_GetCurrentDisplayMode(window->monitor->handle, &mode);
+		SDL_GetCurrentDisplayMode(window->monitor()->handle, &mode);
 		mode.w = width;
 		mode.h = height;
 		if (window->refresh)
@@ -661,15 +679,15 @@ static int drawsdl2_xy_to_render_target(sdl_window_info *window, int x, int y, i
 
 static render_primitive_list &drawsdl2_window_get_primitives(sdl_window_info *window)
 {
-	if ((!window->fullscreen) || (video_config.switchres))
+	if ((!window->fullscreen()) || (video_config.switchres))
 	{
-		sdlwindow_blit_surface_size(window, window->width, window->height);
+		window->blit_surface_size(window->width, window->height);
 	}
 	else
 	{
-		sdlwindow_blit_surface_size(window, window->monitor->center_width, window->monitor->center_height);
+		window->blit_surface_size(window->monitor()->center_width, window->monitor()->center_height);
 	}
-	window->target->set_bounds(window->blitwidth, window->blitheight, sdlvideo_monitor_get_aspect(window->monitor));
+	window->target->set_bounds(window->blitwidth, window->blitheight, sdlvideo_monitor_get_aspect(window->monitor()));
 	return window->target->get_primitives();
 }
 
@@ -717,10 +735,10 @@ static int drawsdl2_window_draw(sdl_window_info *window, UINT32 dc, int update)
 	{
 		int ch, cw;
 
-		if ((window->fullscreen) && (!video_config.switchres))
+		if ((window->fullscreen()) && (!video_config.switchres))
 		{
-			ch = window->monitor->center_height;
-			cw = window->monitor->center_width;
+			ch = window->monitor()->center_height;
+			cw = window->monitor()->center_width;
 		}
 		else
 		{
@@ -815,7 +833,7 @@ static void drawsdl2_window_destroy(sdl_window_info *window)
 
 	SDL_DestroyWindow(window->sdl_window);
 
-	osd_free(sdl);
+	global_free(sdl);
 	window->dxdata = NULL;
 }
 
@@ -875,8 +893,7 @@ static texture_info *texture_create(sdl_window_info *window, const render_texinf
 	texture_info *texture;
 
 	// allocate a new texture
-	texture = (texture_info *) osd_malloc(sizeof(*texture));
-	memset(texture, 0, sizeof(*texture));
+	texture = global_alloc(texture_info);
 
 	// fill in the core data
 	texture->hash = texture_compute_hash(texsource, flags);
@@ -893,7 +910,7 @@ static texture_info *texture_create(sdl_window_info *window, const render_texinf
 			texture->format = SDL_TEXFORMAT_ARGB32;
 			break;
 		case TEXFORMAT_RGB32:
-			texture->format = texsource->palette ? SDL_TEXFORMAT_RGB32_PALETTED : SDL_TEXFORMAT_RGB32;
+			texture->format = texsource->palette() ? SDL_TEXFORMAT_RGB32_PALETTED : SDL_TEXFORMAT_RGB32;
 			break;
 		case TEXFORMAT_PALETTE16:
 			texture->format = SDL_TEXFORMAT_PALETTE16;
@@ -902,7 +919,7 @@ static texture_info *texture_create(sdl_window_info *window, const render_texinf
 			texture->format = SDL_TEXFORMAT_PALETTE16A;
 			break;
 		case TEXFORMAT_YUY16:
-			texture->format = texsource->palette ? SDL_TEXFORMAT_YUY16_PALETTED : SDL_TEXFORMAT_YUY16;
+			texture->format = texsource->palette() ? SDL_TEXFORMAT_YUY16_PALETTED : SDL_TEXFORMAT_YUY16;
 			break;
 
 		default:
@@ -936,7 +953,7 @@ static texture_info *texture_create(sdl_window_info *window, const render_texinf
 
 	if ( (texture->copyinfo->func != NULL) && (texture->sdl_access == SDL_TEXTUREACCESS_STATIC))
 	{
-		texture->pixels = osd_malloc_array(texture->setup.rotwidth * texture->setup.rotheight * texture->copyinfo->dst_bpp);
+		texture->pixels = malloc(texture->setup.rotwidth * texture->setup.rotheight * texture->copyinfo->dst_bpp);
 		texture->pixels_own=TRUE;
 	}
 	/* add us to the texture list */
@@ -1131,7 +1148,7 @@ static void drawsdl2_destroy_texture(sdl_info *sdl, texture_info *texture)
 	SDL_DestroyTexture(texture->texture_id);
 	if ( texture->pixels_own )
 	{
-		osd_free(texture->pixels);
+		free(texture->pixels);
 		texture->pixels=NULL;
 		texture->pixels_own=FALSE;
 	}
@@ -1143,7 +1160,7 @@ static void drawsdl2_destroy_texture(sdl_info *sdl, texture_info *texture)
 		sdl->texlist = NULL;
 	else
 		p->next = texture->next;
-	osd_free(texture);
+	global_free(texture);
 }
 
 static void drawsdl2_destroy_all_textures(sdl_window_info *window)

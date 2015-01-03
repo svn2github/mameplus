@@ -174,11 +174,11 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/video/gf6800gt.h,VIDEOS += GF6800GT
+#@src/emu/video/gf7600gs.h,VIDEOS += GF7600GS
 #-------------------------------------------------
 
-ifneq ($(filter GF6800GT,$(VIDEOS)),)
-VIDEOOBJS+= $(VIDEOOBJ)/gf6800gt.o
+ifneq ($(filter GF7600GS,$(VIDEOS)),)
+VIDEOOBJS+= $(VIDEOOBJ)/gf7600gs.o
 endif
 
 #-------------------------------------------------
@@ -479,6 +479,15 @@ endif
 
 ifneq ($(filter T6A04,$(VIDEOS)),)
 VIDEOOBJS+= $(VIDEOOBJ)/t6a04.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/video/tea1002.h,VIDEOS += TEA1002
+#-------------------------------------------------
+
+ifneq ($(filter TEA1002,$(VIDEOS)),)
+VIDEOOBJS += $(VIDEOOBJ)/tea1002.o
 endif
 
 #-------------------------------------------------

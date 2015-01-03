@@ -303,7 +303,7 @@ VIDEOS += DM9368
 #VIDEOS += EF9340_1
 #VIDEOS += EF9345
 #VIDEOS += GF4500
-VIDEOS += GF6800GT
+VIDEOS += GF7600GS
 VIDEOS += EPIC12
 VIDEOS += FIXFREQ
 VIDEOS += H63484
@@ -511,6 +511,9 @@ MACHINES += PIC8259
 MACHINES += PIT8253
 MACHINES += PLA
 #MACHINES += PROFILE
+MACHINES += R10696
+MACHINES += R10788
+MACHINES += RA17XX
 #MACHINES += R64H156
 MACHINES += RF5C296
 #MACHINES += RIOT6532
@@ -722,6 +725,7 @@ DRVLIBS += \
 	$(MAMEOBJ)/jpm.a \
 	$(MAMEOBJ)/kaneko.a \
 	$(MAMEOBJ)/konami.a \
+	$(MAMEOBJ)/matic.a \
 	$(MAMEOBJ)/maygay.a \
 	$(MAMEOBJ)/meadows.a \
 	$(MAMEOBJ)/merit.a \
@@ -1005,6 +1009,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/alien.o \
 	$(DRIVERS)/bionicc.o $(VIDEO)/bionicc.o \
 	$(DRIVERS)/supduck.o \
+	$(VIDEO)/tigeroad_spr.o \
 	$(DRIVERS)/blktiger.o $(VIDEO)/blktiger.o \
 	$(DRIVERS)/cbasebal.o $(VIDEO)/cbasebal.o \
 	$(DRIVERS)/commando.o $(VIDEO)/commando.o \
@@ -1445,6 +1450,8 @@ $(MAMEOBJ)/konami.a: \
 	$(VIDEO)/k001005.o \
 	$(VIDEO)/k001604.o \
 
+$(MAMEOBJ)/matic.a: \
+	$(DRIVERS)/barata.o
 
 $(MAMEOBJ)/maygay.a: \
 	$(DRIVERS)/maygay1b.o \
@@ -1711,7 +1718,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/bingoc.o \
 	$(DRIVERS)/blockade.o $(AUDIO)/blockade.o $(VIDEO)/blockade.o \
 	$(DRIVERS)/calorie.o \
-	$(DRIVERS)/chihiro.o \
+	$(DRIVERS)/chihiro.o $(VIDEO)/chihiro.o  \
 	$(DRIVERS)/coolridr.o \
 	$(DRIVERS)/deniam.o $(VIDEO)/deniam.o \
 	$(DRIVERS)/dotrikun.o \
@@ -2542,6 +2549,8 @@ $(DRIVERS)/avalnche.o:  $(LAYOUT)/avalnche.lh
 
 $(DRIVERS)/balsente.o:  $(LAYOUT)/stocker.lh
 
+$(DRIVERS)/barata.o:   $(LAYOUT)/barata.lh
+
 $(DRIVERS)/beaminv.o:   $(LAYOUT)/beaminv.lh
 
 $(DRIVERS)/bfm_sc1.o:   $(LAYOUT)/sc1_vfd.lh \
@@ -2666,6 +2675,7 @@ $(DRIVERS)/goldnpkr.o:  $(LAYOUT)/goldnpkr.lh \
 			$(LAYOUT)/pmpoker.lh \
 			$(LAYOUT)/upndown.lh
 
+$(DRIVERS)/gts1.o:      $(LAYOUT)/gts1.lh
 $(DRIVERS)/gts3.o:      $(LAYOUT)/gts3.lh
 $(DRIVERS)/gts80.o:     $(LAYOUT)/gts80.lh
 $(DRIVERS)/gts80a.o:    $(LAYOUT)/gts80a.lh

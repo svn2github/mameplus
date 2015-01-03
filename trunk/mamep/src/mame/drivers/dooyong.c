@@ -813,35 +813,35 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_FRAGMENT( sound_2151 )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_YM2151_ADD("ymsnd", 3579545)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz )
 	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
-	MCFG_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH)
+	MCFG_OKIM6295_ADD("oki", XTAL_1MHz, OKIM6295_PIN7_HIGH)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_FRAGMENT( sound_2151_m68k )
+static MACHINE_CONFIG_FRAGMENT( sound_2151_4mhz )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz/4)  /* 4MHz (16MHz/4 for most, 8Mhz/2 for Super-X) */
 	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
-	MCFG_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH)
+	MCFG_OKIM6295_ADD("oki", XTAL_16MHz/16, OKIM6295_PIN7_HIGH)  /* 1MHz (16MHz/16 for most, 8Mhz/8 for Super-X) */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( lastday, dooyong_z80_ym2203_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, 8000000)   /* ??? */
+	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)   /* 8MHz verified for Last Day / D-day */
 	MCFG_CPU_PROGRAM_MAP(lastday_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", dooyong_state,  irq0_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 8000000)  /* ??? */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)  /* 4MHz verified for Last Day / D-day */
 	MCFG_CPU_PROGRAM_MAP(lastday_sound_map)
 
 	MCFG_MACHINE_START_OVERRIDE(dooyong_z80_state, cpu_z80)
@@ -869,12 +869,12 @@ static MACHINE_CONFIG_START( lastday, dooyong_z80_ym2203_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ym1", YM2203, 4000000)
+	MCFG_SOUND_ADD("ym1", YM2203, XTAL_16MHz/4)  /* 4MHz verified for Last Day / D-day */
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(dooyong_z80_ym2203_state, irqhandler_2203_1))
 	MCFG_AY8910_PORT_A_READ_CB(READ8(dooyong_z80_ym2203_state, unk_r))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("ym2", YM2203, 4000000)
+	MCFG_SOUND_ADD("ym2", YM2203, XTAL_16MHz/4)  /* 4MHz verified for Last Day / D-day */
 	MCFG_YM2203_IRQ_HANDLER(WRITELINE(dooyong_z80_ym2203_state, irqhandler_2203_2))
 	MCFG_AY8910_PORT_A_READ_CB(READ8(dooyong_z80_ym2203_state, unk_r))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
@@ -913,17 +913,17 @@ static MACHINE_CONFIG_START( gulfstrm, dooyong_z80_ym2203_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_z80_ym2203_state, gulfstrm)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2203 )
+	MCFG_FRAGMENT_ADD( sound_2203 ) /* 3.579545MHz */
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( pollux, dooyong_z80_ym2203_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, 8000000)   /* ??? */
+	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)   /* 8Mhz */
 	MCFG_CPU_PROGRAM_MAP(pollux_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", dooyong_state,  irq0_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 8000000)  /* ??? */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)  /* 4Mhz */
 	MCFG_CPU_PROGRAM_MAP(pollux_sound_map)
 
 	MCFG_MACHINE_START_OVERRIDE(dooyong_z80_state, cpu_z80)
@@ -948,7 +948,7 @@ static MACHINE_CONFIG_START( pollux, dooyong_z80_ym2203_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_z80_ym2203_state, pollux)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2203 )
+	MCFG_FRAGMENT_ADD( sound_2203 ) /* 3.579545MHz or 4Mhz ??? */
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( bluehawk, dooyong_z80_state )
@@ -982,17 +982,17 @@ static MACHINE_CONFIG_START( bluehawk, dooyong_z80_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_z80_state, bluehawk)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2151 )
+	MCFG_FRAGMENT_ADD( sound_2151 ) /* 3.579545MHz or 4Mhz ??? */
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( flytiger, dooyong_z80_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, 8000000)   /* ??? */
+	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)   /* 8MHz */
 	MCFG_CPU_PROGRAM_MAP(flytiger_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", dooyong_state,  irq0_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 4000000)  /* ??? */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)  /* 4Mhz */
 	MCFG_CPU_PROGRAM_MAP(bluehawk_sound_map)
 
 	MCFG_MACHINE_START_OVERRIDE(dooyong_z80_state, cpu_z80)
@@ -1022,11 +1022,11 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( primella, dooyong_z80_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, 8000000)   /* ??? */
+	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)   /* 8MHz */
 	MCFG_CPU_PROGRAM_MAP(primella_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", dooyong_state,  irq0_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 4000000)  /* ??? */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)   /* 4MHz */
 	MCFG_CPU_PROGRAM_MAP(bluehawk_sound_map)
 
 	MCFG_MACHINE_START_OVERRIDE(dooyong_z80_state, cpu_z80)
@@ -1047,7 +1047,7 @@ static MACHINE_CONFIG_START( primella, dooyong_z80_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_z80_state, primella)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2151 )
+	MCFG_FRAGMENT_ADD( sound_2151_4mhz ) /* PCB has only 1 OSC at 16Mhz */
 MACHINE_CONFIG_END
 
 
@@ -1092,17 +1092,17 @@ static MACHINE_CONFIG_START( rshark, dooyong_68k_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_68k_state, rshark)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2151_m68k )
+	MCFG_FRAGMENT_ADD( sound_2151_4mhz )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( superx, dooyong_68k_state ) // dif mem map
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000, 8000000)    /* measured on super-x */
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_8MHz)    /* 8MHz measured */
 	MCFG_CPU_PROGRAM_MAP(superx_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dooyong_68k_state, scanline, "screen", 0, 1)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 4000000)  /* measured on super-x */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2)  /* 4MHz measured */
 	MCFG_CPU_PROGRAM_MAP(bluehawk_sound_map)
 
 	/* video hardware */
@@ -1124,17 +1124,17 @@ static MACHINE_CONFIG_START( superx, dooyong_68k_state ) // dif mem map
 	MCFG_VIDEO_START_OVERRIDE(dooyong_68k_state, rshark)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2151_m68k )
+	MCFG_FRAGMENT_ADD( sound_2151_4mhz )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( popbingo, dooyong_68k_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000, 10000000)
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_20MHz/2) /* 10MHz measured */
 	MCFG_CPU_PROGRAM_MAP(popbingo_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dooyong_68k_state, scanline, "screen", 0, 1)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 4000000)  /* measured on super-x */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)  /* 4MHz measured */
 	MCFG_CPU_PROGRAM_MAP(bluehawk_sound_map)
 
 	/* video hardware */
@@ -1156,7 +1156,7 @@ static MACHINE_CONFIG_START( popbingo, dooyong_68k_state )
 	MCFG_VIDEO_START_OVERRIDE(dooyong_68k_state, popbingo)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD( sound_2151_m68k )
+	MCFG_FRAGMENT_ADD( sound_2151_4mhz )
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -1165,78 +1165,114 @@ MACHINE_CONFIG_END
 
 ***************************************************************************/
 
-ROM_START( lastday )
+ROM_START( lastday ) /* 90030003 PCB */
 	ROM_REGION( 0x30000, "maincpu", 0 ) /* 64k for code + 128k for banks */
-	ROM_LOAD( "lday3.bin",    0x00000, 0x10000, CRC(a06dfb1e) SHA1(c6220eda8c01d55862700e369db7291dbbedc8c8) )
+	ROM_LOAD( "lday3.s5",     0x00000, 0x10000, CRC(a06dfb1e) SHA1(c6220eda8c01d55862700e369db7291dbbedc8c8) )
 	ROM_RELOAD(               0x10000, 0x10000 )                /* banked at 0x8000-0xbfff */
-	ROM_LOAD( "lday4.bin",    0x20000, 0x10000, CRC(70961ea6) SHA1(245d3da67abb4a511a024f030de461b9a2b4804e) )  /* banked at 0x8000-0xbfff */
+	ROM_LOAD( "4.u5",         0x20000, 0x10000, CRC(70961ea6) SHA1(245d3da67abb4a511a024f030de461b9a2b4804e) )  /* banked at 0x8000-0xbfff */
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* sound */
-	ROM_LOAD( "lday1.bin",    0x0000, 0x8000, CRC(dd4316fd) SHA1(496e6657bb76d91f488a2464d1af1be095ab9105) )    /* empty */
-	ROM_CONTINUE(             0x0000, 0x8000 )
+	ROM_LOAD( "1.d3",    0x0000, 0x8000, CRC(dd4316fd) SHA1(496e6657bb76d91f488a2464d1af1be095ab9105) )    /* empty */
+	ROM_CONTINUE(        0x0000, 0x8000 )
 
 	ROM_REGION( 0x8000, "gfx1", 0 ) /* chars */
-	ROM_LOAD( "lday2.bin",    0x0000, 0x8000, CRC(83eb572c) SHA1(e915afd55d505bce202206c9ecfa89bad561ef6c) )    /* empty */
-	ROM_CONTINUE(             0x0000, 0x8000 )
+	ROM_LOAD( "2.j4",    0x0000, 0x8000, CRC(83eb572c) SHA1(e915afd55d505bce202206c9ecfa89bad561ef6c) )    /* empty */
+	ROM_CONTINUE(        0x0000, 0x8000 )
 
 	ROM_REGION( 0x40000, "gfx2", 0 )    /* sprites */
-	ROM_LOAD16_BYTE( "lday16.bin",   0x00000, 0x20000, CRC(df503504) SHA1(daa58a7bc24415b5f59b7c7cc918bc85de9702a3) )
-	ROM_LOAD16_BYTE( "lday15.bin",   0x00001, 0x20000, CRC(cd990442) SHA1(891b2163db23ab0bb40cbadce6e06fc067d0532f) )
+	ROM_LOAD16_BYTE( "16.d14",   0x00000, 0x20000, CRC(df503504) SHA1(daa58a7bc24415b5f59b7c7cc918bc85de9702a3) )
+	ROM_LOAD16_BYTE( "15.a14",   0x00001, 0x20000, CRC(cd990442) SHA1(891b2163db23ab0bb40cbadce6e06fc067d0532f) )
 
 	ROM_REGION( 0x80000, "gfx3", 0 )    /* tiles */
-	ROM_LOAD16_BYTE( "lday6.bin",    0x00000, 0x20000, CRC(1054361d) SHA1(52566786ca8177404be8b66fd7de94ac25fc49ea) )
-	ROM_LOAD16_BYTE( "lday9.bin",    0x00001, 0x20000, CRC(6952ef4d) SHA1(b4e5ec02e97df213fe0bd4cd8a2ca77d7ecf8ad5) )
-	ROM_LOAD16_BYTE( "lday7.bin",    0x40000, 0x20000, CRC(6e57a888) SHA1(8efe876ea3c788b83e8291f7fc6f55b90de158c8) )
-	ROM_LOAD16_BYTE( "lday10.bin",   0x40001, 0x20000, CRC(a5548dca) SHA1(9914e01c1739c3bfd868a01e53c9030726ced4ea) )
+	ROM_LOAD16_BYTE( "6.s9",     0x00000, 0x20000, CRC(1054361d) SHA1(52566786ca8177404be8b66fd7de94ac25fc49ea) )
+	ROM_LOAD16_BYTE( "9.s11",    0x00001, 0x20000, CRC(6952ef4d) SHA1(b4e5ec02e97df213fe0bd4cd8a2ca77d7ecf8ad5) )
+	ROM_LOAD16_BYTE( "7.u9",     0x40000, 0x20000, CRC(6e57a888) SHA1(8efe876ea3c788b83e8291f7fc6f55b90de158c8) )
+	ROM_LOAD16_BYTE( "10.u11",   0x40001, 0x20000, CRC(a5548dca) SHA1(9914e01c1739c3bfd868a01e53c9030726ced4ea) )
 
 	ROM_REGION( 0x40000, "gfx4", 0 )    /* tiles */
-	ROM_LOAD16_BYTE( "lday12.bin",   0x00000, 0x20000, CRC(992bc4af) SHA1(94570ebd1ee6acf1871cf914907acd12dca4026e) )
-	ROM_LOAD16_BYTE( "lday14.bin",   0x00001, 0x20000, CRC(a79abc85) SHA1(3e63dad11db9b7420331403a1d551d8c041c4cc2) )
+	ROM_LOAD16_BYTE( "12.s13",   0x00000, 0x20000, CRC(992bc4af) SHA1(94570ebd1ee6acf1871cf914907acd12dca4026e) )
+	ROM_LOAD16_BYTE( "14.s14",   0x00001, 0x20000, CRC(a79abc85) SHA1(3e63dad11db9b7420331403a1d551d8c041c4cc2) )
 
 	ROM_REGION( 0x20000, "gfx5", 0 )    /* background tilemaps */
-	ROM_LOAD16_BYTE( "lday5.bin",    0x00000, 0x10000, CRC(4789bae8) SHA1(6ffecc16eb8c9c783b02c4ef68cb5098b01fafef) )
-	ROM_LOAD16_BYTE( "lday8.bin",    0x00001, 0x10000, CRC(92402b9a) SHA1(2ca8078d2687afbe7b6fc5412de16c6fbc11a650) )
+	ROM_LOAD16_BYTE( "5.r9",     0x00000, 0x10000, CRC(4789bae8) SHA1(6ffecc16eb8c9c783b02c4ef68cb5098b01fafef) )
+	ROM_LOAD16_BYTE( "8.r11",    0x00001, 0x10000, CRC(92402b9a) SHA1(2ca8078d2687afbe7b6fc5412de16c6fbc11a650) )
 
 	ROM_REGION( 0x20000, "gfx6", 0 )    /* fg tilemaps */
-	ROM_LOAD16_BYTE( "lday11.bin",   0x00000, 0x10000, CRC(04b961de) SHA1(7a94c9d0800d79048660cf3758708a346ead33f9) )
-	ROM_LOAD16_BYTE( "lday13.bin",   0x00001, 0x10000, CRC(6bdbd887) SHA1(a54f26f9ddd72b8b8f7a030610c1c4a5f94a3358) )
-ROM_END
+	ROM_LOAD16_BYTE( "11.r13",   0x00000, 0x10000, CRC(04b961de) SHA1(7a94c9d0800d79048660cf3758708a346ead33f9) )
+	ROM_LOAD16_BYTE( "13.r14",   0x00001, 0x10000, CRC(6bdbd887) SHA1(a54f26f9ddd72b8b8f7a030610c1c4a5f94a3358) )ROM_END
 
-ROM_START( lastdaya )
+ROM_START( lastdaya ) /* 90030003 PCB */
 	ROM_REGION( 0x30000, "maincpu", 0 ) /* 64k for code + 128k for banks */
-	ROM_LOAD( "lday3.bin",    0x00000, 0x10000, CRC(a06dfb1e) SHA1(c6220eda8c01d55862700e369db7291dbbedc8c8) )
+	ROM_LOAD( "lday3.s5",     0x00000, 0x10000, CRC(a06dfb1e) SHA1(c6220eda8c01d55862700e369db7291dbbedc8c8) )
 	ROM_RELOAD(               0x10000, 0x10000 )                /* banked at 0x8000-0xbfff */
-	ROM_LOAD( "lday4.bin",    0x20000, 0x10000, CRC(70961ea6) SHA1(245d3da67abb4a511a024f030de461b9a2b4804e) )  /* banked at 0x8000-0xbfff */
+	ROM_LOAD( "4.u5",         0x20000, 0x10000, CRC(70961ea6) SHA1(245d3da67abb4a511a024f030de461b9a2b4804e) )  /* banked at 0x8000-0xbfff */
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* sound */
-	ROM_LOAD( "e1",           0x0000, 0x8000, CRC(ce96e106) SHA1(5ef1f221618abd757e02db79c3d7016100f30c07) )    /* empty */
+	ROM_LOAD( "e1.d3",        0x0000, 0x8000, CRC(ce96e106) SHA1(5ef1f221618abd757e02db79c3d7016100f30c07) )    /* empty */
 	ROM_CONTINUE(             0x0000, 0x8000 )
 
 	ROM_REGION( 0x8000, "gfx1", 0 ) /* chars */
-	ROM_LOAD( "lday2.bin",    0x0000, 0x8000, CRC(83eb572c) SHA1(e915afd55d505bce202206c9ecfa89bad561ef6c) )    /* empty */
-	ROM_CONTINUE(             0x0000, 0x8000 )
+	ROM_LOAD( "2.j4",    0x0000, 0x8000, CRC(83eb572c) SHA1(e915afd55d505bce202206c9ecfa89bad561ef6c) )    /* empty */
+	ROM_CONTINUE(        0x0000, 0x8000 )
 
 	ROM_REGION( 0x40000, "gfx2", 0 )    /* sprites */
-	ROM_LOAD16_BYTE( "lday16.bin",   0x00000, 0x20000, CRC(df503504) SHA1(daa58a7bc24415b5f59b7c7cc918bc85de9702a3) )
-	ROM_LOAD16_BYTE( "lday15.bin",   0x00001, 0x20000, CRC(cd990442) SHA1(891b2163db23ab0bb40cbadce6e06fc067d0532f) )
+	ROM_LOAD16_BYTE( "16.d14",   0x00000, 0x20000, CRC(df503504) SHA1(daa58a7bc24415b5f59b7c7cc918bc85de9702a3) )
+	ROM_LOAD16_BYTE( "15.a14",   0x00001, 0x20000, CRC(cd990442) SHA1(891b2163db23ab0bb40cbadce6e06fc067d0532f) )
 
 	ROM_REGION( 0x80000, "gfx3", 0 )    /* tiles */
-	ROM_LOAD16_BYTE( "e6",           0x00000, 0x20000, CRC(7623c443) SHA1(abfed648a8cc438dbb7de9c23a663082667ca366) )
-	ROM_LOAD16_BYTE( "e9",           0x00001, 0x20000, CRC(717f6a0e) SHA1(0b2d98fa5b8734210df18bce7725972fd42a6e4a) )
-	ROM_LOAD16_BYTE( "lday7.bin",    0x40000, 0x20000, CRC(6e57a888) SHA1(8efe876ea3c788b83e8291f7fc6f55b90de158c8) )
-	ROM_LOAD16_BYTE( "lday10.bin",   0x40001, 0x20000, CRC(a5548dca) SHA1(9914e01c1739c3bfd868a01e53c9030726ced4ea) )
+	ROM_LOAD16_BYTE( "e6.s9",    0x00000, 0x20000, CRC(7623c443) SHA1(abfed648a8cc438dbb7de9c23a663082667ca366) )
+	ROM_LOAD16_BYTE( "e9.s11",   0x00001, 0x20000, CRC(717f6a0e) SHA1(0b2d98fa5b8734210df18bce7725972fd42a6e4a) )
+	ROM_LOAD16_BYTE( "7.u9",     0x40000, 0x20000, CRC(6e57a888) SHA1(8efe876ea3c788b83e8291f7fc6f55b90de158c8) )
+	ROM_LOAD16_BYTE( "10.u11",   0x40001, 0x20000, CRC(a5548dca) SHA1(9914e01c1739c3bfd868a01e53c9030726ced4ea) )
 
 	ROM_REGION( 0x40000, "gfx4", 0 )    /* tiles */
-	ROM_LOAD16_BYTE( "lday12.bin",   0x00000, 0x20000, CRC(992bc4af) SHA1(94570ebd1ee6acf1871cf914907acd12dca4026e) )
-	ROM_LOAD16_BYTE( "lday14.bin",   0x00001, 0x20000, CRC(a79abc85) SHA1(3e63dad11db9b7420331403a1d551d8c041c4cc2) )
+	ROM_LOAD16_BYTE( "12.s13",   0x00000, 0x20000, CRC(992bc4af) SHA1(94570ebd1ee6acf1871cf914907acd12dca4026e) )
+	ROM_LOAD16_BYTE( "14.s14",   0x00001, 0x20000, CRC(a79abc85) SHA1(3e63dad11db9b7420331403a1d551d8c041c4cc2) )
 
 	ROM_REGION( 0x20000, "gfx5", 0 )    /* bg tilemaps */
-	ROM_LOAD16_BYTE( "e5",           0x00000, 0x10000, CRC(5f801410) SHA1(382c1bcd69a6a5c245d2ba7603bc273fba840c8f) )
-	ROM_LOAD16_BYTE( "e8",           0x00001, 0x10000, CRC(a7b8250b) SHA1(4bd79c09dacf69e1993353d7fcc7746d1324e9b0) )
+	ROM_LOAD16_BYTE( "e5.r9",           0x00000, 0x10000, CRC(5f801410) SHA1(382c1bcd69a6a5c245d2ba7603bc273fba840c8f) )
+	ROM_LOAD16_BYTE( "e8.r11",          0x00001, 0x10000, CRC(a7b8250b) SHA1(4bd79c09dacf69e1993353d7fcc7746d1324e9b0) )
 
 	ROM_REGION( 0x20000, "gfx6", 0 )    /* fg tilemaps */
-	ROM_LOAD16_BYTE( "lday11.bin",   0x00000, 0x10000, CRC(04b961de) SHA1(7a94c9d0800d79048660cf3758708a346ead33f9) )
-	ROM_LOAD16_BYTE( "lday13.bin",   0x00001, 0x10000, CRC(6bdbd887) SHA1(a54f26f9ddd72b8b8f7a030610c1c4a5f94a3358) )
+	ROM_LOAD16_BYTE( "11.r13",   0x00000, 0x10000, CRC(04b961de) SHA1(7a94c9d0800d79048660cf3758708a346ead33f9) )
+	ROM_LOAD16_BYTE( "13.r14",   0x00001, 0x10000, CRC(6bdbd887) SHA1(a54f26f9ddd72b8b8f7a030610c1c4a5f94a3358) )
+ROM_END
+
+ROM_START( ddaydoo ) /* 90030003 PCB */
+	ROM_REGION( 0x30000, "maincpu", 0 ) /* 64k for code + 128k for banks */
+	ROM_LOAD( "3.s5",    0x00000, 0x10000, CRC(7817d4f3) SHA1(b85db234c04f248fd2927a2224380783780673f5)) /* closest to 'lastday' set */
+	ROM_RELOAD(          0x10000, 0x10000 )                /* banked at 0x8000-0xbfff */
+	ROM_LOAD( "4.u5",    0x20000, 0x10000, CRC(70961ea6) SHA1(245d3da67abb4a511a024f030de461b9a2b4804e) )  /* banked at 0x8000-0xbfff */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )    /* sound */
+	ROM_LOAD( "1.d3",    0x0000, 0x8000, CRC(dd4316fd) SHA1(496e6657bb76d91f488a2464d1af1be095ab9105) )    /* empty */
+	ROM_CONTINUE(        0x0000, 0x8000 )
+
+	ROM_REGION( 0x8000, "gfx1", 0 ) /* chars */
+	ROM_LOAD( "2.j4",    0x0000, 0x8000, CRC(83eb572c) SHA1(e915afd55d505bce202206c9ecfa89bad561ef6c) )    /* empty */
+	ROM_CONTINUE(        0x0000, 0x8000 )
+
+	ROM_REGION( 0x40000, "gfx2", 0 )    /* sprites */
+	ROM_LOAD16_BYTE( "16.d14",   0x00000, 0x20000, CRC(df503504) SHA1(daa58a7bc24415b5f59b7c7cc918bc85de9702a3) )
+	ROM_LOAD16_BYTE( "15.a14",   0x00001, 0x20000, CRC(cd990442) SHA1(891b2163db23ab0bb40cbadce6e06fc067d0532f) )
+
+	ROM_REGION( 0x80000, "gfx3", 0 )    /* tiles */
+	ROM_LOAD16_BYTE( "6.s9",     0x00000, 0x20000, CRC(1054361d) SHA1(52566786ca8177404be8b66fd7de94ac25fc49ea) )
+	ROM_LOAD16_BYTE( "9.s11",    0x00001, 0x20000, CRC(6952ef4d) SHA1(b4e5ec02e97df213fe0bd4cd8a2ca77d7ecf8ad5) )
+	ROM_LOAD16_BYTE( "7.u9",     0x40000, 0x20000, CRC(6e57a888) SHA1(8efe876ea3c788b83e8291f7fc6f55b90de158c8) )
+	ROM_LOAD16_BYTE( "10.u11",   0x40001, 0x20000, CRC(a5548dca) SHA1(9914e01c1739c3bfd868a01e53c9030726ced4ea) )
+
+	ROM_REGION( 0x40000, "gfx4", 0 )    /* tiles */
+	ROM_LOAD16_BYTE( "12.s13",   0x00000, 0x20000, CRC(992bc4af) SHA1(94570ebd1ee6acf1871cf914907acd12dca4026e) )
+	ROM_LOAD16_BYTE( "14.s14",   0x00001, 0x20000, CRC(a79abc85) SHA1(3e63dad11db9b7420331403a1d551d8c041c4cc2) )
+
+	ROM_REGION( 0x20000, "gfx5", 0 )    /* background tilemaps */
+	ROM_LOAD16_BYTE( "5.r9",     0x00000, 0x10000, CRC(4789bae8) SHA1(6ffecc16eb8c9c783b02c4ef68cb5098b01fafef) )
+	ROM_LOAD16_BYTE( "8.r11",    0x00001, 0x10000, CRC(92402b9a) SHA1(2ca8078d2687afbe7b6fc5412de16c6fbc11a650) )
+
+	ROM_REGION( 0x20000, "gfx6", 0 )    /* fg tilemaps */
+	ROM_LOAD16_BYTE( "11.r13",   0x00000, 0x10000, CRC(04b961de) SHA1(7a94c9d0800d79048660cf3758708a346ead33f9) )
+	ROM_LOAD16_BYTE( "13.r14",   0x00001, 0x10000, CRC(6bdbd887) SHA1(a54f26f9ddd72b8b8f7a030610c1c4a5f94a3358) )
 ROM_END
 
 ROM_START( gulfstrm )
@@ -2032,11 +2068,11 @@ ROM_END
 
 ***************************************************************************/
 
-/* The differences between the two lastday sets are only in the sound program
-   and graphics. The main program is the same. */
+/* The differences between the two lastday sets are only in the sound program and graphics. The main program is the same. */
 
 GAME( 1990, lastday,  0,        lastday,  lastday, driver_device,  0, ROT270, "Dooyong",                       "The Last Day (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, lastdaya, lastday,  lastday,  lastday, driver_device,  0, ROT270, "Dooyong",                       "The Last Day (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1990, ddaydoo,  lastday,  lastday,  lastday, driver_device,  0, ROT270, "Dooyong",                       "Chulgyeok D-Day (Korea)", GAME_SUPPORTS_SAVE )
 
 GAME( 1991, gulfstrm, 0,        gulfstrm, gulfstrm, driver_device, 0, ROT270, "Dooyong",                       "Gulf Storm (set 1)",        GAME_SUPPORTS_SAVE )
 GAME( 1991, gulfstrma,gulfstrm, gulfstrm, gulfstrm, driver_device, 0, ROT270, "Dooyong",                       "Gulf Storm (set 2)",        GAME_SUPPORTS_SAVE )

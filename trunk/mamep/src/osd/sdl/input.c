@@ -167,7 +167,7 @@ static UINT8                input_paused;
 static sdl_window_info *    focus_window = NULL;
 
 // input buffer - only for SDLMAME_EVENTS_IN_WORKER_THREAD
-#define MAX_BUF_EVENTS      (500)       /* 100 not enough for SDL 1.3 */
+#define MAX_BUF_EVENTS      (1000)       /* 100 not enough for SDL 1.3 */
 static SDL_Event            event_buf[MAX_BUF_EVENTS];
 static int                  event_buf_count;
 
@@ -757,7 +757,7 @@ static void sdlinput_register_joysticks(running_machine &machine)
 
 		osd_printf_verbose("Joystick: %s\n", devinfo->name.cstr());
 		osd_printf_verbose("Joystick:   ...  %d axes, %d buttons %d hats %d balls\n", SDL_JoystickNumAxes(joy), SDL_JoystickNumButtons(joy), SDL_JoystickNumHats(joy), SDL_JoystickNumBalls(joy));
-		osd_printf_verbose("Joystick:   ...  Physical id %d mapped to logical id %d\n", physical_stick, stick);
+		osd_printf_verbose("Joystick:   ...  Physical id %d mapped to logical id %d\n", physical_stick, stick + 1);
 
 		// loop over all axes
 		for (axis = 0; axis < SDL_JoystickNumAxes(joy); axis++)
@@ -1566,7 +1566,7 @@ INLINE void resize_all_windows(void)
 		{
 			if (w->resize_width && w->resize_height && ((now - w->last_resize) > osd_ticks_per_second() / 10))
 			{
-				sdlwindow_resize(w, w->resize_width, w->resize_height);
+				w->window_resize(w->resize_width, w->resize_height);
 				w->resize_width = 0;
 				w->resize_height = 0;
 			}
@@ -1941,7 +1941,7 @@ void sdlinput_poll(running_machine &machine)
 			machine.schedule_exit();
 			break;
 		case SDL_VIDEORESIZE:
-			sdlwindow_resize(sdl_window_list, event.resize.w, event.resize.h);
+			sdl_window_list->window_resize(event.resize.w, event.resize.h);
 			break;
 #else
 		case SDL_TEXTINPUT:
@@ -1973,7 +1973,7 @@ void sdlinput_poll(running_machine &machine)
 				app_has_mouse_focus = 0;
 				break;
 			case SDL_WINDOWEVENT_MOVED:
-				sdlwindow_clear(window);
+				window->window_clear();
 				focus_window = window;
 				break;
 			case SDL_WINDOWEVENT_RESIZED:
@@ -1986,7 +1986,7 @@ void sdlinput_poll(running_machine &machine)
 				else
 				{
 					if (event.window.data1 != window->width || event.window.data2 != window->height)
-						sdlwindow_resize(window, event.window.data1, event.window.data2);
+						window->window_resize(event.window.data1, event.window.data2);
 				}
 				focus_window = window;
 				break;
