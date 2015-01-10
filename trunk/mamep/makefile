@@ -293,15 +293,6 @@ ifdef SANITIZE
 SYMBOLS = 1
 endif
 
-# specify a default optimization level if none explicitly stated
-ifndef OPTIMIZE
-ifndef SYMBOLS
-OPTIMIZE = 3
-else
-OPTIMIZE = 0
-endif
-endif
-
 # profiler defaults to on for DEBUG builds
 ifdef DEBUG
 ifndef PROFILER
@@ -309,7 +300,6 @@ PROFILER = 1
 endif
 endif
 
-# TODO: also move it up, so it isn't optimized by default?
 # allow gprof profiling as well, which overrides the internal PROFILER
 # also enable symbols as it is useless without them
 ifdef PROFILE
@@ -317,6 +307,15 @@ PROFILER =
 SYMBOLS = 1
 ifndef SYMLEVEL
 SYMLEVEL = 1
+endif
+endif
+
+# specify a default optimization level if none explicitly stated
+ifndef OPTIMIZE
+ifndef SYMBOLS
+OPTIMIZE = 3
+else
+OPTIMIZE = 0
 endif
 endif
 
@@ -342,8 +341,14 @@ ifeq ($(TARGETOS),os2)
 EXE = .exe
 endif
 
-ifndef BUILD_EXE
-BUILD_EXE = $(EXE)
+# extension for build tools
+BUILD_EXE = 
+
+ifeq ($(OS),Windows_NT)
+BUILD_EXE = .exe
+endif
+ifneq ($(OS2_SHELL),)
+BUILD_EXE = .exe
 endif
 
 # compiler, linker and utilities
@@ -352,7 +357,7 @@ AR = @ar
 CC = @gcc
 LD = @g++
 endif
-MD = -mkdir$(EXE)
+MD = -mkdir$(BUILD_EXE)
 RM = @rm -f
 OBJDUMP = @objdump
 PYTHON = @python
@@ -564,7 +569,6 @@ ifneq ($(USE_HISCORE),)
 DEFS += -DUSE_HISCORE
 endif
 
-
 #-------------------------------------------------
 # compile flags
 # CCOMFLAGS are common flags
@@ -595,6 +599,11 @@ CCOMFLAGS += -pipe
 # add -g if we need symbols, and ensure we have frame pointers
 ifdef SYMBOLS
 CCOMFLAGS += -g$(SYMLEVEL) -fno-omit-frame-pointer -fno-optimize-sibling-calls
+endif
+
+# we need to disable some additional implicit optimizations for profiling
+ifdef PROFILE
+CCOMFLAGS += -mno-omit-leaf-frame-pointer
 endif
 
 # add -v if we need verbose build information
@@ -940,6 +949,13 @@ CDEFS = $(DEFS)
 # TODO: -x c++ should not be hard-coded
 CPPCHECKFLAGS = $(CDEFS) $(INCPATH) -x c++ --enable=style
 
+#-------------------------------------------------
+# sanity check OSD additions
+#-------------------------------------------------
+
+ifeq (,$(findstring -DOSD_,$(CDEFS)))
+$(error $(OSD).mak should have defined -DOSD_)
+endif
 
 #-------------------------------------------------
 # primary targets

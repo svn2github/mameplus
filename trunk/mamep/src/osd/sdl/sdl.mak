@@ -77,6 +77,7 @@ USE_DISPATCH_GL = 1
 # change for custom OS X installations
 SDL_FRAMEWORK_PATH = /Library/Frameworks/
 
+# uncomment to use SDL1.2 (depracated)
 # SDL_LIBVER = sdl
 
 ###########################################################################
@@ -84,6 +85,9 @@ SDL_FRAMEWORK_PATH = /Library/Frameworks/
 ###########################################################################
 OSDSRC = $(SRC)/osd
 OSDOBJ = $(OBJ)/osd
+
+# add a define identifying the target osd
+DEFS += -DOSD_SDL
 
 # default to SDL2 for non-OS/2, non-Emscripten builds now
 ifndef SDL_LIBVER
@@ -321,7 +325,7 @@ endif
 
 ifeq ($(TARGETOS),win32)
 BASE_TARGETOS = win32
-SYNC_IMPLEMENTATION = win32
+SYNC_IMPLEMENTATION = windows
 NO_X11 = 1
 NO_USE_XINPUT = 1
 DEFS += -DSDLMAME_WIN32 -DX64_WINDOWS_ABI
@@ -390,7 +394,10 @@ endif
 SDLSRC = $(SRC)/osd/$(OSD)
 SDLOBJ = $(OBJ)/osd/$(OSD)
 
-OBJDIRS += $(SDLOBJ)
+OBJDIRS += $(SDLOBJ) \
+	$(OSDOBJ)/modules/sync \
+	$(OSDOBJ)/modules/lib \
+	$(OSDOBJ)/modules/midi \
 
 #-------------------------------------------------
 # OSD core library
@@ -404,8 +411,14 @@ OSDCOREOBJS = \
 	$(SDLOBJ)/sdlsocket.o   \
 	$(SDLOBJ)/sdlmisc_$(BASE_TARGETOS).o    \
 	$(SDLOBJ)/sdlos_$(SDLOS_TARGETOS).o \
-	$(SDLOBJ)/sdlsync_$(SYNC_IMPLEMENTATION).o     \
-	$(SDLOBJ)/sdlwork.o
+	$(OSDOBJ)/modules/lib/osdlib_$(SDLOS_TARGETOS).o \
+	$(OSDOBJ)/modules/sync/sync_$(SYNC_IMPLEMENTATION).o
+
+ifdef NOASM
+OSDCOREOBJS += $(OSDOBJ)/modules/sync/work_mini.o
+else
+OSDCOREOBJS += $(OSDOBJ)/modules/sync/work_osd.o
+endif
 
 # any "main" must be in LIBOSD or else the build will fail!
 # for the windows build, we just add it to libocore as well.
@@ -420,12 +433,14 @@ OSDOBJS = \
 	$(SDLOBJ)/output.o \
 	$(SDLOBJ)/watchdog.o \
 
-ifeq ($(BASE_TARGETOS),win32)
-	OSDOBJS += $(OSDOBJ)/modules/sound/direct_sound.o
+ifdef NO_USE_MIDI
+	OSDOBJS += $(OSDOBJ)/modules/midi/none.o
+else
+	OSDOBJS += $(OSDOBJ)/modules/midi/portmidi.o
 endif
 
-ifdef NO_USE_MIDI
-DEFS += -DDISABLE_MIDI=1
+ifeq ($(BASE_TARGETOS),win32)
+	OSDOBJS += $(OSDOBJ)/modules/sound/direct_sound.o
 endif
 
 # Add SDL2.0 support
@@ -651,10 +666,11 @@ MOC = @moc
 endif
 
 ifeq ($(SDL_LIBVER),sdl2)
-LIBS += -lSDL2 -lImm32 -lversion -lole32 -loleaut32 -static
-BASELIBS += -lImm32 -lversion -lole32 -loleaut32 -static
+LIBS += -lSDL2 -limm32 -lversion -lole32 -loleaut32 -lws2_32 -static
+BASELIBS += -lSDL2 -limm32 -lversion -lole32 -loleaut32 -lws2_32 -static
 else
 LIBS += -lSDL -static
+BASELIBS += -lSDL -static
 endif
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 BASELIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
@@ -741,6 +757,9 @@ else
 # Default libs
 DEFS += -DSDLMAME_X11
 LIBS += -lX11 -lXinerama
+ifneq ($(SDL_LIBVER),sdl2)
+BASELIBS += -lX11
+endif
 
 # The newer debugger uses QT
 ifndef NO_USE_QTDEBUG

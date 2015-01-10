@@ -73,6 +73,9 @@
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
 
+# add a define identifying the target osd
+DEFS += -DOSD_WINDOWS
+
 
 #-------------------------------------------------
 # object and source roots
@@ -84,7 +87,10 @@ WINOBJ = $(OBJ)/osd/$(OSD)
 OSDSRC = $(SRC)/osd
 OSDOBJ = $(OBJ)/osd
 
-OBJDIRS += $(WINOBJ)
+OBJDIRS += $(WINOBJ) \
+	$(OSDOBJ)/modules/sync \
+	$(OSDOBJ)/modules/lib \
+	$(OSDOBJ)/modules/midi \
 
 ifdef USE_QTDEBUG
 OBJDIRS += $(OSDOBJ)/modules/debugger/qt
@@ -304,6 +310,10 @@ include $(SRC)/build/cc_detection.mak
 # ensure we statically link the gcc runtime lib
 LDFLAGS += -static-libgcc
 
+ifeq ($(CROSS_BUILD),1)
+	LDFLAGS += -static
+endif	
+
 # TODO: needs to use $(CC)
 TEST_GCC := $(shell gcc --version)
 ifeq ($(findstring 4.4.,$(TEST_GCC)),)
@@ -339,15 +349,14 @@ OSDCOREOBJS = \
 	$(WINOBJ)/windir.o \
 	$(WINOBJ)/winfile.o \
 	$(WINOBJ)/winmisc.o \
-	$(WINOBJ)/winsync.o \
-	$(WINOBJ)/wintime.o \
+	$(OSDOBJ)/modules/sync/sync_windows.o \
 	$(WINOBJ)/winutf8.o \
 	$(WINOBJ)/winutil.o \
 	$(WINOBJ)/winclip.o \
 	$(WINOBJ)/winsocket.o \
-	$(WINOBJ)/winwork.o \
+	$(OSDOBJ)/modules/sync/work_osd.o \
+	$(OSDOBJ)/modules/lib/osdlib_win32.o \
 	$(WINOBJ)/winptty.o \
-	$(WINOBJ)/winos.o \
 
 
 #-------------------------------------------------
@@ -367,7 +376,8 @@ OSDOBJS = \
 	$(WINOBJ)/video.o \
 	$(WINOBJ)/window.o \
 	$(WINOBJ)/winmenu.o \
-	$(WINOBJ)/winmain.o
+	$(WINOBJ)/winmain.o \
+	$(OSDOBJ)/modules/midi/portmidi.o \
 
 ifdef USE_SDL
 OSDOBJS += \

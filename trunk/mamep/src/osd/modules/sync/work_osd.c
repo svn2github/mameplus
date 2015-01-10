@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:Aaron Giles
 //============================================================
 //
 //  sdlwork.c - SDL OSD core work item functions
@@ -5,33 +7,35 @@
 //  Copyright (c) 1996-2010, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
-//  SDLMAME by Olivier Galibert and R. Belmont
-//
 //============================================================
 
-#if defined(SDLMAME_NOASM)
+#if defined(OSD_WINDOWS)
+// standard windows headers
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <process.h>
+#include <tchar.h>
+#include <stdlib.h>
 
-/* must be exported
- * FIXME: NOASM should be taken care of in sdlsync.c
- *        This is not really a sound solution.
- */
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
+#endif
 
-int osd_num_processors = 0;
-
-#include "../osdmini/miniwork.c"
-
-#else
-
+// MAME headers
 #include "osdcore.h"
-#include "osinline.h"
 
-#include "sdlsync.h"
-#include "sdlos.h"
+#include "modules/sync/osdsync.h"
+#include "modules/lib/osdlib.h"
 
 #include "eminline.h"
 
 #if defined(SDLMAME_MACOSX)
 #include "osxutils.h"
+#endif
+
+#if defined(OSD_SDL)
+typedef void *PVOID;
 #endif
 
 //============================================================
@@ -47,9 +51,7 @@ int osd_num_processors = 0;
 #define ENV_PROCESSORS               "OSDPROCESSORS"
 #define ENV_WORKQUEUEMAXTHREADS      "OSDWORKQUEUEMAXTHREADS"
 
-#define INFINITE                (osd_ticks_per_second() *  (osd_ticks_t) 10000)
 #define SPIN_LOOP_TIME          (osd_ticks_per_second() / 10000)
-
 
 //============================================================
 //  MACROS
@@ -65,6 +67,26 @@ int osd_num_processors = 0;
 #define end_timing(v)           do { } while (0)
 #endif
 
+template<typename _PtrType>
+static void spin_while(const volatile _PtrType * volatile ptr, const _PtrType val, const osd_ticks_t timeout, const int invert = 0)
+{
+    osd_ticks_t stopspin = osd_ticks() + timeout;
+
+    do {
+        int spin = 10000;
+        while (--spin)
+        {
+            if ((*ptr != val) ^ invert)
+                return;
+        }
+    } while (((*ptr == val) ^ invert) && osd_ticks() < stopspin);
+}
+
+template<typename _PtrType>
+static void spin_while_not(const volatile _PtrType * volatile ptr, const _PtrType val, const osd_ticks_t timeout)
+{
+    spin_while(ptr, val, timeout, 1);
+}
 
 
 //============================================================
@@ -124,8 +146,6 @@ struct osd_work_item
 	volatile INT32      done;           // is the item done?
 };
 
-typedef void *PVOID;
-
 //============================================================
 //  GLOBAL VARIABLES
 //============================================================
@@ -148,10 +168,12 @@ static bool queue_has_list_items(osd_work_queue *queue);
 
 osd_work_queue *osd_work_queue_alloc(int flags)
 {
+	int threadnum;
 	int numprocs = effective_num_processors();
 	osd_work_queue *queue;
-	int threadnum;
-	char *osdworkqueuemaxthreads = osd_getenv("OSDWORKQUEUEMAXTHREADS");
+	int osdthreadnum = 0;
+	int allocthreadnum;
+	char *osdworkqueuemaxthreads = osd_getenv(ENV_WORKQUEUEMAXTHREADS);
 
 	// allocate a new queue
 	queue = (osd_work_queue *)osd_malloc(sizeof(*queue));
@@ -176,24 +198,31 @@ osd_work_queue *osd_work_queue_alloc(int flags)
 	// determine how many threads to create...
 	// on a single-CPU system, create 1 thread for I/O queues, and 0 threads for everything else
 	if (numprocs == 1)
-		queue->threads = (flags & WORK_QUEUE_FLAG_IO) ? 1 : 0;
-
-	// on an n-CPU system, create (n-1) threads for multi queues, and 1 thread for everything else
+		threadnum = (flags & WORK_QUEUE_FLAG_IO) ? 1 : 0;
+	// on an n-CPU system, create n-1 threads for multi queues, and 1 thread for everything else
 	else
-		queue->threads = (flags & WORK_QUEUE_FLAG_MULTI) ? (numprocs - 1) : 1;
+		threadnum = (flags & WORK_QUEUE_FLAG_MULTI) ? (numprocs - 1) : 1;
 
-	if (osdworkqueuemaxthreads != NULL && sscanf(osdworkqueuemaxthreads, "%d", &threadnum) == 1 && queue->threads > threadnum)
-		queue->threads = threadnum;
-
+	if (osdworkqueuemaxthreads != NULL && sscanf(osdworkqueuemaxthreads, "%d", &osdthreadnum) == 1 && threadnum > osdthreadnum)
+		threadnum = osdthreadnum;
 
 	// clamp to the maximum
-	queue->threads = MIN(queue->threads, WORK_MAX_THREADS);
+	queue->threads = MIN(threadnum, WORK_MAX_THREADS);
 
-	// allocate memory for thread array (+1 to count the calling thread)
-	queue->thread = (work_thread_info *)osd_malloc_array((queue->threads + 1) * sizeof(queue->thread[0]));
+	// allocate memory for thread array (+1 to count the calling thread if WORK_QUEUE_FLAG_MULTI)
+	if (flags & WORK_QUEUE_FLAG_MULTI)
+		allocthreadnum = queue->threads + 1;
+	else
+		allocthreadnum = queue->threads;
+
+#if KEEP_STATISTICS
+	printf("osdprocs: %d effecprocs: %d threads: %d allocthreads: %d osdthreads: %d maxthreads: %d queuethreads: %d\n", osd_num_processors, numprocs, threadnum, allocthreadnum, osdthreadnum, WORK_MAX_THREADS, queue->threads);
+#endif
+
+	queue->thread = (work_thread_info *)osd_malloc_array(allocthreadnum * sizeof(queue->thread[0]));
 	if (queue->thread == NULL)
 		goto error;
-	memset(queue->thread, 0, (queue->threads + 1) * sizeof(queue->thread[0]));
+	memset(queue->thread, 0, allocthreadnum * sizeof(queue->thread[0]));
 
 	// iterate over threads
 	for (threadnum = 0; threadnum < queue->threads; threadnum++)
@@ -222,7 +251,10 @@ osd_work_queue *osd_work_queue_alloc(int flags)
 	}
 
 	// start a timer going for "waittime" on the main thread
-	begin_timing(queue->thread[queue->threads].waittime);
+	if (flags & WORK_QUEUE_FLAG_MULTI)
+	{
+		begin_timing(queue->thread[queue->threads].waittime);
+	}
 	return queue;
 
 error:
@@ -269,16 +301,9 @@ int osd_work_queue_wait(osd_work_queue *queue, osd_ticks_t timeout)
 		// if we're a high frequency queue, spin until done
 		if (queue->flags & WORK_QUEUE_FLAG_HIGH_FREQ && queue->items != 0)
 		{
-			osd_ticks_t stopspin = osd_ticks() + timeout;
-
 			// spin until we're done
 			begin_timing(thread->spintime);
-
-			do {
-				int spin = 10000;
-				while (--spin && queue->items != 0)
-					osd_yield_processor();
-			} while (queue->items != 0 && osd_ticks() < stopspin);
+			spin_while_not(&queue->items, 0, timeout);
 			end_timing(thread->spintime);
 
 			begin_timing(thread->waittime);
@@ -311,7 +336,10 @@ void osd_work_queue_free(osd_work_queue *queue)
 		int threadnum;
 
 		// stop the timer for "waittime" on the main thread
-		end_timing(queue->thread[queue->threads].waittime);
+		if (queue->flags & WORK_QUEUE_FLAG_MULTI)
+		{
+			end_timing(queue->thread[queue->threads].waittime);
+		}
 
 		// signal all the threads to exit
 		atomic_exchange32(&queue->exiting, TRUE);
@@ -339,8 +367,14 @@ void osd_work_queue_free(osd_work_queue *queue)
 		}
 
 #if KEEP_STATISTICS
+		int allocthreadnum;
+		if (queue->flags & WORK_QUEUE_FLAG_MULTI)
+			allocthreadnum = queue->threads + 1;
+		else
+			allocthreadnum = queue->threads;
+
 		// output per-thread statistics
-		for (threadnum = 0; threadnum <= queue->threads; threadnum++)
+		for (threadnum = 0; threadnum < allocthreadnum; threadnum++)
 		{
 			work_thread_info *thread = &queue->thread[threadnum];
 			osd_ticks_t total = thread->runtime + thread->waittime + thread->spintime;
@@ -518,12 +552,8 @@ int osd_work_item_wait(osd_work_item *item, osd_ticks_t timeout)
 	// if we don't have an event, we need to spin (shouldn't ever really happen)
 	if (item->event == NULL)
 	{
-		osd_ticks_t stopspin = osd_ticks() + timeout;
-		do {
-			int spin = 10000;
-			while (--spin && !item->done)
-				osd_yield_processor();
-		} while (!item->done && osd_ticks() < stopspin);
+		// TODO: do we need to measure the spin time here as well? and how can we do it?
+        spin_while(&item->done, 0, timeout);
 	}
 
 	// otherwise, block on the event until done
@@ -606,9 +636,9 @@ static void *worker_thread_entry(void *param)
 	work_thread_info *thread = (work_thread_info *)param;
 	osd_work_queue *queue = thread->queue;
 
-	#if defined(SDLMAME_MACOSX)
+#if defined(SDLMAME_MACOSX)
 	void *arp = NewAutoreleasePool();
-	#endif
+#endif
 
 	// loop until we exit
 	for ( ;; )
@@ -621,7 +651,7 @@ static void *worker_thread_entry(void *param)
 		if (!queue_has_list_items(queue))
 		{
 			begin_timing(thread->waittime);
-			osd_event_wait(thread->wakeevent, INFINITE);
+			osd_event_wait(thread->wakeevent, OSD_EVENT_WAIT_INFINITE);
 			end_timing(thread->waittime);
 		}
 
@@ -635,8 +665,6 @@ static void *worker_thread_entry(void *param)
 		// process work items
 		for ( ;; )
 		{
-			osd_ticks_t stopspin;
-
 			// process as much as we can
 			worker_thread_process(queue, thread);
 
@@ -645,13 +673,7 @@ static void *worker_thread_entry(void *param)
 			{
 				// spin for a while looking for more work
 				begin_timing(thread->spintime);
-				stopspin = osd_ticks() + SPIN_LOOP_TIME;
-
-				do {
-					int spin = 10000;
-					while (--spin && queue->list == NULL)
-						osd_yield_processor();
-				} while (queue->list == NULL && osd_ticks() < stopspin);
+				spin_while(&queue->list, (osd_work_item *)NULL, SPIN_LOOP_TIME);
 				end_timing(thread->spintime);
 			}
 
@@ -666,9 +688,9 @@ static void *worker_thread_entry(void *param)
 		atomic_decrement32(&queue->livethreads);
 	}
 
-	#if defined(SDLMAME_MACOSX)
+#if defined(SDLMAME_MACOSX)
 	ReleaseAutoreleasePool(arp);
-	#endif
+#endif
 
 	return NULL;
 }
@@ -687,7 +709,7 @@ static void worker_thread_process(osd_work_queue *queue, work_thread_info *threa
 	// loop until everything is processed
 	while (true)
 	{
-		osd_work_item *item;
+		osd_work_item *item = NULL;
 
 		bool end_loop = false;
 
@@ -767,4 +789,3 @@ bool queue_has_list_items(osd_work_queue *queue)
 	osd_scalable_lock_release(queue->lock, lockslot);
 	return has_list_items;
 }
-#endif // SDLMAME_NOASM

@@ -37,6 +37,8 @@
 #
 ###########################################################################
 
+# add a define identifying the target osd
+DEFS += -DOSD_MINI
 
 #-------------------------------------------------
 # object and source roots
@@ -45,7 +47,10 @@
 MINISRC = $(SRC)/osd/$(OSD)
 MINIOBJ = $(OBJ)/osd/$(OSD)
 
-OBJDIRS += $(MINIOBJ)
+OSDSRC = $(SRC)/osd
+OSDOBJ = $(OBJ)/osd
+
+OBJDIRS += $(MINIOBJ) $(OSDOBJ)/modules/sync
 
 
 
@@ -59,9 +64,7 @@ OSDCOREOBJS = \
 	$(MINIOBJ)/minimisc.o \
 	$(MINIOBJ)/minisync.o \
 	$(MINIOBJ)/minitime.o \
-	$(MINIOBJ)/miniwork.o \
-
-
+	$(OSDOBJ)/modules/sync/work_mini.o \
 
 #-------------------------------------------------
 # OSD mini library

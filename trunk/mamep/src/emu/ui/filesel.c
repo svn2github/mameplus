@@ -54,7 +54,7 @@ static void input_character(char *buffer, size_t buffer_length, unicode_char uni
 {
 	size_t buflen = strlen(buffer);
 
-	if ((unichar == 8) && (buflen > 0))
+	if ((unichar == 8 || unichar == 0x7f) && (buflen > 0))
 	{
 		*(char *)utf8_previous_char(&buffer[buflen]) = 0;
 	}
@@ -64,7 +64,6 @@ static void input_character(char *buffer, size_t buffer_length, unicode_char uni
 		buffer[buflen] = 0;
 	}
 }
-
 
 //-------------------------------------------------
 //  extra_text_draw_box - generically adds header
@@ -220,12 +219,14 @@ static int is_valid_filename_char(unicode_char unichar)
 //  ctor
 //-------------------------------------------------
 
-ui_menu_file_create::ui_menu_file_create(running_machine &machine, render_container *container, device_image_interface *image, astring &current_directory, astring &current_file)
+ui_menu_file_create::ui_menu_file_create(running_machine &machine, render_container *container, device_image_interface *image, astring &current_directory, astring &current_file, bool *ok)
 	: ui_menu(machine, container),
 		m_current_directory(current_directory),
 		m_current_file(current_file)
 {
 	m_image = image;
+	m_ok = ok;
+	*m_ok = true;
 }
 
 
@@ -328,11 +329,13 @@ void ui_menu_file_create::handle()
 					reset(UI_MENU_RESET_REMEMBER_POSITION);
 				}
 				break;
+
+			case IPT_UI_CANCEL:
+				*m_ok = false;
+				break;
 		}
 	}
 }
-
-
 
 /***************************************************************************
     FILE SELECTOR MENU
@@ -857,7 +860,7 @@ void ui_menu_select_rw::populate()
 {
 	item_append(_("Select access mode"), NULL, MENU_FLAG_DISABLE, NULL);
 	item_append(_("Read-only"), 0, 0, (void *)READONLY);
-	if(m_can_in_place)
+	if (m_can_in_place)
 		item_append(_("Read-write"), 0, 0, (void *)READWRITE);
 	item_append(_("Read this image, write to another image"), 0, 0, (void *)WRITE_OTHER);
 	item_append(_("Read this image, write to diff"), 0, 0, (void *)WRITE_DIFF);

@@ -48,24 +48,14 @@
 #define min(x,y) fmin(x,y)
 #define max(x,y) fmax(x,y)
 #endif
+#ifdef _MSC_VER
+#if _MSC_VER < 1800
+#define _USE_MATH_DEFINES
+#include <math.h>
+static __inline double fmin(double x, double y){ return (x < y) ? x : y; }
+static __inline double fmax(double x, double y){ return (x > y) ? x : y; }
+static __inline double log2(double x) { return log(x) * M_LOG2E; }
+#endif
+#endif
 
 #define PATH_SEPARATOR      "\\"
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-
-/* Turn off type mismatch warnings */
-#pragma warning(disable:592)		// "variable is used before its value is set"
-#pragma warning(disable:4018)		// "signed/unsigned mismatch"
-#pragma warning(disable:4022)		// "pointer mismatch for actual parameter"
-#pragma warning(disable:4090)		// "different 'const' qualifiers"
-#pragma warning(disable:4142)		// "benign redefinition of type"
-#pragma warning(disable:4146)		// "unary minus operator applied to unsigned type"
-#pragma warning(disable:4244)		// "possible loss of data"
-#pragma warning(disable:4305)		// "truncation from 'type' to 'type'
-#pragma warning(disable:4550)		// "expression evaluates .. missing an argument list"
-#pragma warning(disable:4552)		// "operator has no effect"
-#pragma warning(disable:4761)		// "integral size mismatch in argument"
-#pragma warning(disable:4799)
-#pragma warning(disable:4819)
-#endif /* _MSC_VER */

@@ -219,8 +219,6 @@ private:
 // this line prevents globbing on the command line
 int _CRT_glob = 0;
 
-
-
 //**************************************************************************
 //  LOCAL VARIABLES
 //**************************************************************************
@@ -1867,4 +1865,29 @@ void sampling_profiler::thread_run()
 		// sleep for 1ms
 		Sleep(1);
 	}
+}
+
+//-------------------------------------------------
+// FIXME: Doesn't belong here but there's no better
+//        place currently.
+//-------------------------------------------------
+
+bool osd_interface::midi_init()
+{
+    // this should be done on the OS_level
+    return osd_midi_init();
+}
+
+//-------------------------------------------------
+//  list_midi_devices - list available midi devices
+//-------------------------------------------------
+
+void osd_interface::list_midi_devices(void)
+{
+    osd_list_midi_devices();
+}
+
+void osd_interface::midi_exit()
+{
+    osd_midi_exit();
 }
